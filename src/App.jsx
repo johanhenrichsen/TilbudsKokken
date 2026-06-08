@@ -63,7 +63,7 @@ export default function App() {
     const varer = [...selected].map((k) => k.split("|")[1]);
 
     try {
-      const response = await fetch("/api/v1/messages", {
+    const response = await fetch("/api/recipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
