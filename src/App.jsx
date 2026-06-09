@@ -46,6 +46,9 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [shoppingList, setShoppingList] = useState([]);
+  const [diet, setDiet] = useState("Alle");
+
+  const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
 
   function toggle(key) {
     setSelected((prev) => {
@@ -99,7 +102,7 @@ export default function App() {
           messages: [
             {
               role: "user",
-              content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
+              content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer${diet !== "Alle" ? ` (${diet.toLowerCase()})` : ""} der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
             },
           ],
         }),
@@ -138,6 +141,14 @@ export default function App() {
         <div style={{ display: "inline-block", background: "#3a5a3a", color: "#a8c0a8", fontSize: 11, padding: "3px 10px", borderRadius: 20, marginBottom: 10, position: "relative" }}>UGE 24 · 2026</div>
         <div style={{ fontSize: 26, fontWeight: 600, margin: "0 0 4px", position: "relative" }}>Ugens tilbud</div>
         <p style={{ fontSize: 13, color: "#a8c0a8", margin: 0, position: "relative" }}>Vælg varer og få en opskrift genereret automatisk</p>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: "1rem", flexWrap: "wrap" }}>
+        {dietFilters.map(f => (
+          <button key={f} onClick={() => setDiet(f)} style={{ background: diet === f ? "#1a2e1a" : "#f0f7f0", color: diet === f ? "#f0ead6" : "#2a5a2a", border: diet === f ? "none" : "1px solid #c8ddc8", borderRadius: 20, padding: "5px 14px", fontSize: 12, fontWeight: diet === f ? 600 : 400, cursor: "pointer" }}>
+            {f}
+          </button>
+        ))}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: "1.5rem" }}>
