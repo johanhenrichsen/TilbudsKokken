@@ -372,6 +372,93 @@
 }
 .shopping-item-remove:hover { color: #e05050; background: #fef2f2; }
 
+/* ─── Save button ────────────────────────────── */
+.save-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f4f7f4;
+  border: 1.5px solid #c8d9c8;
+  color: #4a6a4a;
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+.save-btn:hover:not(.saved) {
+  background: #e8f0e8;
+  border-color: #7a9e7a;
+  color: #3a5a3a;
+  transform: translateY(-1px);
+}
+.save-btn.saved {
+  background: #eef5ee;
+  border-color: #8ab88a;
+  color: #3a6040;
+  cursor: default;
+}
+
+/* ─── Saved recipes ──────────────────────────── */
+.saved-recipes-card {
+  background: white;
+  border-radius: 22px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+.saved-recipe-row {
+  border: 1.5px solid #f0f0f0;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.saved-recipe-row:hover { border-color: #e0ece0; }
+.saved-recipe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  gap: 8px;
+}
+.saved-recipe-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+.saved-recipe-meta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+.saved-recipe-chevron {
+  font-size: 9px;
+  color: #aaa;
+}
+.saved-recipe-delete {
+  background: none;
+  border: none;
+  color: #c8c8c8;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+.saved-recipe-delete:hover { color: #e05050; background: #fef2f2; }
+.saved-recipe-body {
+  padding: 0 14px 14px;
+  border-top: 1px solid #f5f5f5;
+}
+
 /* ─── Responsive ─────────────────────────────── */
 @media (max-width: 600px) {
   .app { padding: 1rem; }

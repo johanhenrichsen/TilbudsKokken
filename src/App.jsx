@@ -48,6 +48,11 @@ export default function App() {
   const [error, setError] = useState(null);
   const [shoppingList, setShoppingList] = useState([]);
   const [diet, setDiet] = useState("Alle");
+  const [savedRecipes, setSavedRecipes] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("savedRecipes") || "[]"); }
+    catch { return []; }
+  });
+  const [expandedSaved, setExpandedSaved] = useState(new Set());
 
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
 
@@ -99,6 +104,29 @@ export default function App() {
   function clearShoppingList() {
     setShoppingList([]);
   }
+
+  function saveRecipe(r) {
+    const entry = { ...r, savedAt: Date.now() };
+    const next = [entry, ...savedRecipes];
+    setSavedRecipes(next);
+    localStorage.setItem("savedRecipes", JSON.stringify(next));
+  }
+
+  function deleteSavedRecipe(savedAt) {
+    const next = savedRecipes.filter(r => r.savedAt !== savedAt);
+    setSavedRecipes(next);
+    localStorage.setItem("savedRecipes", JSON.stringify(next));
+  }
+
+  function toggleExpanded(savedAt) {
+    setExpandedSaved(prev => {
+      const next = new Set(prev);
+      next.has(savedAt) ? next.delete(savedAt) : next.add(savedAt);
+      return next;
+    });
+  }
+
+  const isRecipeSaved = recipe && savedRecipes.some(r => r.title === recipe.title && r.savedAt);
 
   function scaleIngredient(ingredient, baseServings, currentServings) {
     const ratio = currentServings / baseServings;
@@ -259,7 +287,17 @@ export default function App() {
       {/* Recipe card */}
       {recipe && (
         <div className="recipe-card">
-          <h2 className="recipe-title">{recipe.title}</h2>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
+            <h2 className="recipe-title" style={{ margin: 0 }}>{recipe.title}</h2>
+            <button
+              className={`save-btn${isRecipeSaved ? " saved" : ""}`}
+              onClick={() => !isRecipeSaved && saveRecipe(recipe)}
+              title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
+            >
+              {isRecipeSaved ? "🔖" : "🔖"}
+              <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
+            </button>
+          </div>
           <div className="recipe-meta-bar">
             <span>⏱ {recipe.time}</span>
             <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
@@ -339,6 +377,65 @@ export default function App() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Saved recipes */}
+      {savedRecipes.length > 0 && (
+        <div className="saved-recipes-card">
+          <div className="section-label" style={{ margin: "0 0 12px" }}>
+            🔖 Gemte opskrifter · {savedRecipes.length}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {savedRecipes.map(r => {
+              const open = expandedSaved.has(r.savedAt);
+              return (
+                <div key={r.savedAt} className="saved-recipe-row">
+                  <div className="saved-recipe-header" onClick={() => toggleExpanded(r.savedAt)}>
+                    <div>
+                      <div className="saved-recipe-title">{r.title}</div>
+                      <div className="saved-recipe-meta">⏱ {r.time} · 👥 {r.servings}</div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span className="saved-recipe-chevron">{open ? "▲" : "▼"}</span>
+                      <button
+                        className="saved-recipe-delete"
+                        onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}
+                        title="Slet opskrift"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                  {open && (
+                    <div className="saved-recipe-body">
+                      <div className="section-label" style={{ margin: "0 0 8px" }}>Ingredienser</div>
+                      <ul className="ingredient-grid" style={{ marginBottom: "1rem" }}>
+                        {r.ingredients.map((ing, i) => (
+                          <li key={i} className="ingredient-item" style={{ gap: 6 }}>
+                            <span style={{ width: 5, height: 5, background: "#7a9e7a", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />
+                            {ing}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="section-label" style={{ margin: "0 0 8px" }}>Fremgangsmåde</div>
+                      <ol style={{ listStyle: "none", padding: 0, margin: "0 0 1rem" }}>
+                        {r.steps.map((step, i) => (
+                          <li key={i} className="step-item">
+                            <span className="step-number">{i + 1}</span>
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                      {r.tip && (
+                        <div className="recipe-tip"><strong>Tips:</strong> {r.tip}</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
