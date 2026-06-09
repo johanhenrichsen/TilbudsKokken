@@ -42,7 +42,7 @@ const stores = [
 export default function App() {
   const [selected, setSelected] = useState(new Set());
   const [recipe, setRecipe] = useState(null);
-const [servings, setServings] = useState(null);
+  const [servings, setServings] = useState(4);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -55,6 +55,14 @@ const [servings, setServings] = useState(null);
     });
   }
 
+  function scaleIngredient(ingredient, baseServings, currentServings) {
+    const ratio = currentServings / baseServings;
+    return ingredient.replace(/(\d+([.,]\d+)?)/g, (match) => {
+      const scaled = parseFloat(match.replace(",", ".")) * ratio;
+      return Number.isInteger(scaled) ? scaled : scaled.toFixed(1).replace(".", ",");
+    });
+  }
+
   async function generateRecipe() {
     if (selected.size === 0) return;
     setLoading(true);
@@ -64,13 +72,13 @@ const [servings, setServings] = useState(null);
     const varer = [...selected].map((k) => k.split("|")[1]);
 
     try {
-    const response = await fetch("/api/recipe", {
+      const response = await fetch("/api/recipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": import.meta.env.VITE_CLAUDE_KEY,
           "anthropic-version": "2023-06-01",
-  "anthropic-dangerous-direct-browser-access": "true",
+          "anthropic-dangerous-direct-browser-access": "true",
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-5",
@@ -78,7 +86,7 @@ const [servings, setServings] = useState(null);
           messages: [
             {
               role: "user",
-              content: `Du er en dansk kogebog-assistent. Lav en opskrift der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "X personer", "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
+              content: `Du er en dansk kogebog-assistent. Lav en opskrift der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "X personer", "servings_count": 4, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
             },
           ],
         }),
@@ -92,12 +100,9 @@ const [servings, setServings] = useState(null);
       const data = await response.json();
       const text = data.content[0].text;
       const clean = text.replace(/```json|```/g, "").trim();
-console.log("AI svarede:", clean);
-const parsed = JSON.parse(clean);
       const parsed = JSON.parse(clean);
-setRecipe(parsed);
-setServings(parsed.servings_count || 4);
       setRecipe(parsed);
+      setServings(parsed.servings_count || 4);
     } catch (err) {
       setError("Fejl: " + err.message);
       console.error(err);
@@ -105,13 +110,7 @@ setServings(parsed.servings_count || 4);
       setLoading(false);
     }
   }
-function scaleIngredient(ingredient, baseServings, currentServings) {
-  const ratio = currentServings / baseServings;
-  return ingredient.replace(/(\d+([.,]\d+)?)/g, (match) => {
-    const scaled = parseFloat(match.replace(",", ".")) * ratio;
-    return Number.isInteger(scaled) ? scaled : scaled.toFixed(1).replace(".", ",");
-  });
-}
+
   const chips = [...selected].slice(0, 4).map((k) => k.split("|")[1].split(" ").slice(0, 2).join(" "));
   const extraChips = selected.size > 4 ? selected.size - 4 : 0;
 
@@ -175,18 +174,18 @@ function scaleIngredient(ingredient, baseServings, currentServings) {
           <div style={{ fontSize: 12, color: "#7a8a7a", marginBottom: "1rem", display: "flex", gap: 12 }}>
             <span>⏱ {recipe.time}</span>
             <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-  👥
-  <button onClick={() => setServings(s => Math.max(1, s - 1))} style={{ background: "#e8f3e8", border: "none", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontWeight: "bold", fontSize: 14, lineHeight: 1 }}>−</button>
-  {servings} personer
-  <button onClick={() => setServings(s => Math.min(10, s + 1))} style={{ background: "#e8f3e8", border: "none", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontWeight: "bold", fontSize: 14, lineHeight: 1 }}>+</button>
-</span>
+              👥
+              <button onClick={() => setServings(s => Math.max(1, s - 1))} style={{ background: "#e8f3e8", border: "none", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontWeight: "bold", fontSize: 14, lineHeight: 1 }}>−</button>
+              {servings} personer
+              <button onClick={() => setServings(s => Math.min(10, s + 1))} style={{ background: "#e8f3e8", border: "none", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontWeight: "bold", fontSize: 14, lineHeight: 1 }}>+</button>
+            </span>
           </div>
           <div style={{ fontSize: 11, fontWeight: 600, color: "#5a7a5a", letterSpacing: 1, textTransform: "uppercase", margin: "1rem 0 8px" }}>Ingredienser</div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }}>
             {recipe.ingredients.map((ing, i) => (
-             <li key={i} style={{ fontSize: 13, color: "#333", padding: "3px 0", display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 5, height: 5, background: "#5a9a5a", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />{scaleIngredient(ing, recipe.servings_count || 4, servings)}
-                <span style={{ width: 5, height: 5, background: "#5a9a5a", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />{ing}
+              <li key={i} style={{ fontSize: 13, color: "#333", padding: "3px 0", display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 5, height: 5, background: "#5a9a5a", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />
+                {scaleIngredient(ing, recipe.servings_count || 4, servings)}
               </li>
             ))}
           </ul>
