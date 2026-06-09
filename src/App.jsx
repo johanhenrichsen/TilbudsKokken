@@ -179,7 +179,7 @@ export default function App() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: "1.5rem" }}>
+      <div className="store-grid">
         {stores.map((store, si) => (
           <div key={si} style={{ background: "#fff", border: "1px solid #e5e5e5", borderRadius: 12, overflow: "hidden" }}>
             <div style={{ padding: "10px 12px 8px", display: "flex", alignItems: "center", gap: 8, borderBottom: "1px solid #e5e5e5" }}>
@@ -248,7 +248,7 @@ export default function App() {
             </span>
           </div>
           <div style={{ fontSize: 11, fontWeight: 600, color: "#5a7a5a", letterSpacing: 1, textTransform: "uppercase", margin: "1rem 0 8px" }}>Ingredienser</div>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }}>
+          <ul className="ingredient-grid">
             {recipe.ingredients.map((ing, i) => {
               const scaledIng = scaleIngredient(ing, recipe.servings_count || 4, servings);
               const inList = shoppingList.includes(scaledIng);
