@@ -45,6 +45,7 @@ export default function App() {
   const [servings, setServings] = useState(4);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [shoppingList, setShoppingList] = useState([]);
 
   function toggle(key) {
     setSelected((prev) => {
@@ -53,6 +54,18 @@ export default function App() {
       else next.add(key);
       return next;
     });
+  }
+
+  function addToShoppingList(ingredient) {
+    setShoppingList(prev => prev.includes(ingredient) ? prev : [...prev, ingredient]);
+  }
+
+  function removeFromShoppingList(index) {
+    setShoppingList(prev => prev.filter((_, i) => i !== index));
+  }
+
+  function clearShoppingList() {
+    setShoppingList([]);
   }
 
   function scaleIngredient(ingredient, baseServings, currentServings) {
@@ -182,12 +195,23 @@ export default function App() {
           </div>
           <div style={{ fontSize: 11, fontWeight: 600, color: "#5a7a5a", letterSpacing: 1, textTransform: "uppercase", margin: "1rem 0 8px" }}>Ingredienser</div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 16px" }}>
-            {recipe.ingredients.map((ing, i) => (
-              <li key={i} style={{ fontSize: 13, color: "#333", padding: "3px 0", display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 5, height: 5, background: "#5a9a5a", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />
-                {scaleIngredient(ing, recipe.servings_count || 4, servings)}
-              </li>
-            ))}
+            {recipe.ingredients.map((ing, i) => {
+              const scaledIng = scaleIngredient(ing, recipe.servings_count || 4, servings);
+              const inList = shoppingList.includes(scaledIng);
+              return (
+                <li key={i} style={{ fontSize: 13, color: "#333", padding: "3px 0", display: "flex", alignItems: "center", gap: 6 }}>
+                  <button
+                    onClick={() => addToShoppingList(scaledIng)}
+                    title={inList ? "Allerede i indkøbsliste" : "Tilføj til indkøbsliste"}
+                    disabled={inList}
+                    style={{ width: 16, height: 16, background: inList ? "#c8e6c8" : "#5a9a5a", border: "none", borderRadius: "50%", cursor: inList ? "default" : "pointer", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", color: inList ? "#3a7a3a" : "white", fontSize: 11, fontWeight: "bold", lineHeight: 1, padding: 0 }}
+                  >
+                    {inList ? "✓" : "+"}
+                  </button>
+                  {scaledIng}
+                </li>
+              );
+            })}
           </ul>
           <div style={{ fontSize: 11, fontWeight: 600, color: "#5a7a5a", letterSpacing: 1, textTransform: "uppercase", margin: "1rem 0 8px" }}>Fremgangsmåde</div>
           <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -201,6 +225,39 @@ export default function App() {
           <div style={{ background: "#f0f7f0", borderLeft: "2px solid #5a9a5a", padding: "10px 12px", borderRadius: "0 8px 8px 0", fontSize: 12, color: "#3a6a3a", marginTop: "1rem" }}>
             <strong>Tips:</strong> {recipe.tip}
           </div>
+        </div>
+      )}
+
+      {shoppingList.length > 0 && (
+        <div style={{ background: "#fffdf7", border: "1px solid #d4c9a8", borderRadius: 12, padding: "1.5rem", marginTop: "1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#5a7a5a", letterSpacing: 1, textTransform: "uppercase" }}>
+              Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+            </div>
+            <button
+              onClick={clearShoppingList}
+              style={{ background: "transparent", border: "1px solid #c8a870", color: "#8a6a2a", borderRadius: 6, padding: "4px 10px", fontSize: 11, cursor: "pointer" }}
+            >
+              Ryd liste
+            </button>
+          </div>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {shoppingList.map((item, i) => (
+              <li key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "6px 0", borderBottom: i < shoppingList.length - 1 ? "1px solid #ede8d8" : "none", fontSize: 13, color: "#333" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ width: 5, height: 5, background: "#5a9a5a", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />
+                  {item}
+                </div>
+                <button
+                  onClick={() => removeFromShoppingList(i)}
+                  title="Fjern fra liste"
+                  style={{ background: "transparent", border: "none", color: "#bbb", cursor: "pointer", fontSize: 18, lineHeight: 1, padding: "0 4px" }}
+                >
+                  ×
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
