@@ -125,6 +125,11 @@ export default function App() {
 
   const chips = [...selected].slice(0, 4).map((k) => k.split("|")[1].split(" ").slice(0, 2).join(" "));
   const extraChips = selected.size > 4 ? selected.size - 4 : 0;
+  const total = [...selected].reduce((sum, key) => {
+    const [si, name] = key.split("|");
+    const item = stores[+si]?.items.find(it => it.name === name);
+    return sum + (item?.price || 0);
+  }, 0);
 
   return (
     <div style={{ fontFamily: "sans-serif", padding: "1rem", maxWidth: 700, margin: "0 auto" }}>
@@ -163,7 +168,10 @@ export default function App() {
 
       <div style={{ background: "#f7f7f7", border: "1px solid #e5e5e5", borderRadius: 12, padding: "12px 16px", marginBottom: "1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
         <div>
-          <div style={{ fontSize: 13, color: "#555" }}><strong>{selected.size} {selected.size === 1 ? "vare" : "varer"}</strong> valgt</div>
+          <div style={{ fontSize: 13, color: "#555", display: "flex", alignItems: "center", gap: 12 }}>
+            <span><strong>{selected.size} {selected.size === 1 ? "vare" : "varer"}</strong> valgt</span>
+            {selected.size > 0 && <span style={{ color: "#2d6a2d", fontWeight: 500 }}>💰 I alt: {total.toFixed(2).replace(".", ",")} kr</span>}
+          </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 }}>
             {chips.map((c, i) => <span key={i} style={{ background: "#e8f3e8", color: "#2a5a2a", fontSize: 11, padding: "3px 10px", borderRadius: 20 }}>{c}</span>)}
             {extraChips > 0 && <span style={{ background: "#e8f3e8", color: "#2a5a2a", fontSize: 11, padding: "3px 10px", borderRadius: 20 }}>+{extraChips} mere</span>}
