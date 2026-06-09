@@ -50,6 +50,34 @@ export default function App() {
 
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
 
+  const dietExcludes = {
+    Alle: [],
+    Vegetar: ["oksekød", "kylling", "laks"],
+    Veganer: ["oksekød", "kylling", "laks", "smør", "fløde", "mozzarella", "parmesan", "æg"],
+    Glutenfri: ["spaghetti", "pasta"],
+    Mælkefri: ["smør", "fløde", "mozzarella", "parmesan"],
+  };
+
+  const dietInstructions = {
+    Vegetar: "Opskriften skal være vegetarisk – uden kød og fisk.",
+    Veganer: "Opskriften skal være vegansk – uden kød, fisk, æg og mejeriprodukter.",
+    Glutenfri: "Opskriften må ikke indeholde gluten (ingen pasta, spaghetti eller hvedemel).",
+    Mælkefri: "Opskriften må ikke indeholde mælkeprodukter (ingen smør, fløde, ost eller mælk).",
+  };
+
+  function changeDiet(f) {
+    setDiet(f);
+    const excluded = dietExcludes[f];
+    setSelected(prev => {
+      const next = new Set(prev);
+      [...next].forEach(key => {
+        const name = key.split("|")[1].toLowerCase();
+        if (excluded.some(kw => name.includes(kw))) next.delete(key);
+      });
+      return next;
+    });
+  }
+
   function toggle(key) {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -102,7 +130,7 @@ export default function App() {
           messages: [
             {
               role: "user",
-              content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer${diet !== "Alle" ? ` (${diet.toLowerCase()})` : ""} der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
+              content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}.${dietInstructions[diet] ? ` ${dietInstructions[diet]}` : ""} Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
             },
           ],
         }),
@@ -145,7 +173,7 @@ export default function App() {
 
       <div style={{ display: "flex", gap: 8, marginBottom: "1rem", flexWrap: "wrap" }}>
         {dietFilters.map(f => (
-          <button key={f} onClick={() => setDiet(f)} style={{ background: diet === f ? "#1a2e1a" : "#f0f7f0", color: diet === f ? "#f0ead6" : "#2a5a2a", border: diet === f ? "none" : "1px solid #c8ddc8", borderRadius: 20, padding: "5px 14px", fontSize: 12, fontWeight: diet === f ? 600 : 400, cursor: "pointer" }}>
+          <button key={f} onClick={() => changeDiet(f)} style={{ background: diet === f ? "#1a2e1a" : "#f0f7f0", color: diet === f ? "#f0ead6" : "#2a5a2a", border: diet === f ? "none" : "1px solid #c8ddc8", borderRadius: 20, padding: "5px 14px", fontSize: 12, fontWeight: diet === f ? 600 : 400, cursor: "pointer" }}>
             {f}
           </button>
         ))}
@@ -159,7 +187,7 @@ export default function App() {
               <span style={{ fontSize: 13, fontWeight: 500 }}>{store.name}</span>
             </div>
             <div>
-              {store.items.map((item, ii) => {
+              {store.items.filter(item => !dietExcludes[diet].some(kw => item.name.toLowerCase().includes(kw))).map((item, ii) => {
                 const key = `${si}|${item.name}`;
                 const isSel = selected.has(key);
                 return (
