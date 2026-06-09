@@ -99,7 +99,7 @@ export default function App() {
           messages: [
             {
               role: "user",
-              content: `Du er en dansk kogebog-assistent. Lav en opskrift der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "X personer", "servings_count": 4, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
+              content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}. Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
             },
           ],
         }),
@@ -115,7 +115,6 @@ export default function App() {
       const clean = text.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
       setRecipe(parsed);
-      setServings(parsed.servings_count || 4);
     } catch (err) {
       setError("Fejl: " + err.message);
       console.error(err);
@@ -170,9 +169,17 @@ export default function App() {
             {extraChips > 0 && <span style={{ background: "#e8f3e8", color: "#2a5a2a", fontSize: 11, padding: "3px 10px", borderRadius: 20 }}>+{extraChips} mere</span>}
           </div>
         </div>
-        <button onClick={generateRecipe} disabled={loading || selected.size === 0} style={{ background: "#1a2e1a", color: "#f0ead6", border: "none", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: selected.size === 0 ? "not-allowed" : "pointer", opacity: selected.size === 0 ? 0.5 : 1 }}>
-          {loading ? "Genererer..." : "Generér opskrift"}
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#555" }}>
+            👥
+            <button onClick={() => setServings(s => Math.max(1, s - 1))} style={{ background: "#e8f3e8", border: "none", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontWeight: "bold", fontSize: 14, lineHeight: 1 }}>−</button>
+            {servings} personer
+            <button onClick={() => setServings(s => Math.min(10, s + 1))} style={{ background: "#e8f3e8", border: "none", borderRadius: "50%", width: 20, height: 20, cursor: "pointer", fontWeight: "bold", fontSize: 14, lineHeight: 1 }}>+</button>
+          </span>
+          <button onClick={generateRecipe} disabled={loading || selected.size === 0} style={{ background: "#1a2e1a", color: "#f0ead6", border: "none", padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: selected.size === 0 ? "not-allowed" : "pointer", opacity: selected.size === 0 ? 0.5 : 1 }}>
+            {loading ? "Genererer..." : "Generér opskrift"}
+          </button>
+        </div>
       </div>
 
       {error && (
