@@ -136,7 +136,7 @@ export default function App() {
     });
   }
 
-  async function generateRecipe() {
+  async function generateRecipe(retry = false) {
     if (selected.size === 0) return;
     setLoading(true);
     setRecipe(null);
@@ -158,7 +158,7 @@ export default function App() {
           max_tokens: 1000,
           messages: [{
             role: "user",
-            content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}.${dietInstructions[diet] ? ` ${dietInstructions[diet]}` : ""} Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
+            content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}.${dietInstructions[diet] ? ` ${dietInstructions[diet]}` : ""}${retry ? " Lav en anderledes opskrift end sidst — vær kreativ med køkken og tilberedningsmetode." : ""} Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
           }],
         }),
       });
@@ -273,7 +273,7 @@ export default function App() {
           </span>
           <button
             className="btn-primary"
-            onClick={generateRecipe}
+            onClick={() => generateRecipe()}
             disabled={loading || selected.size === 0}
           >
             {loading ? "Genererer…" : "Generér opskrift"}
@@ -289,14 +289,23 @@ export default function App() {
         <div className="recipe-card">
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
             <h2 className="recipe-title" style={{ margin: 0 }}>{recipe.title}</h2>
-            <button
-              className={`save-btn${isRecipeSaved ? " saved" : ""}`}
-              onClick={() => !isRecipeSaved && saveRecipe(recipe)}
-              title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
-            >
-              {isRecipeSaved ? "🔖" : "🔖"}
-              <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
-            </button>
+            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <button
+                className="retry-btn"
+                onClick={() => generateRecipe(true)}
+                disabled={loading}
+                title="Prøv en anden opskrift"
+              >
+                🔄 <span>Prøv anden</span>
+              </button>
+              <button
+                className={`save-btn${isRecipeSaved ? " saved" : ""}`}
+                onClick={() => !isRecipeSaved && saveRecipe(recipe)}
+                title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
+              >
+                🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
+              </button>
+            </div>
           </div>
           <div className="recipe-meta-bar">
             <span>⏱ {recipe.time}</span>

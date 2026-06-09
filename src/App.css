@@ -372,6 +372,31 @@
 }
 .shopping-item-remove:hover { color: #e05050; background: #fef2f2; }
 
+/* ─── Retry button ───────────────────────────── */
+.retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1.5px solid #c8d9c8;
+  color: #4a6a4a;
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+.retry-btn:hover:not(:disabled) {
+  background: #f5faf5;
+  border-color: #7a9e7a;
+  color: #3a5a3a;
+}
+.retry-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* ─── Save button ────────────────────────────── */
 .save-btn {
   display: flex;
