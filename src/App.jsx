@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
-import Logo, { LogoMark } from "./Logo";
+import LogoIcon from "./LogoIcon";
+import LogoFull from "./LogoFull";
 
 const CHAIN_COLORS = {
   "Netto": "#e6a800",
@@ -575,10 +576,10 @@ export default function App() {
         <div className={`splash-screen${splashExiting ? " exiting" : ""}`}>
           <div className="splash-content">
             <div className="splash-icon">
-              <LogoMark size={80} />
+              <LogoIcon size={100} />
             </div>
             <h1 className="splash-title">Tilbudskokken</h1>
-            <p className="splash-tagline">Lav mad på ugens tilbud</p>
+            <p className="splash-tagline">BEDRE TILBUD. BEDRE MAD.</p>
           </div>
         </div>
       )}
@@ -593,8 +594,7 @@ export default function App() {
               <div className="ob-welcome-deco-1" />
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
-                <Logo variant="vertical" size="xl" className="ob-welcome-logo" />
-                <p className="ob-welcome-tagline">Lav mad på ugens tilbud</p>
+                <LogoFull size="lg" className="ob-welcome-logo" />
                 <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
                 <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
                   Kom i gang →
@@ -751,14 +751,17 @@ export default function App() {
         </div>
       )}
 
-      {/* Header */}
-      <header className="app-header">
+      {/* Hero banner */}
+      <div className="app-hero">
         <div className="app-header-deco-1" />
         <div className="app-header-deco-2" />
 
-        {/* Top bar: brand + controls */}
-        <div className="header-topbar">
-          <Logo variant="horizontal" size="sm" className="header-brand" />
+        {/* Top bar: small brand left + controls right */}
+        <div className="hero-topbar">
+          <div className="hero-brand">
+            <LogoIcon size={28} />
+            <span className="hero-brand-name">Tilbudskokken</span>
+          </div>
           <div className="header-actions">
             <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
             <button
@@ -771,11 +774,10 @@ export default function App() {
           </div>
         </div>
 
-        {/* Hero: large mark + week badge + tagline */}
-        <div className="header-hero">
-          <LogoMark size={80} className="hero-logo-mark" />
+        {/* Logo hero — centered, full logo with wordmark + tagline */}
+        <div className="hero-center">
+          <LogoFull size="lg" />
           <div className="week-badge">{weekBadge}</div>
-          <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
         </div>
 
         <div className="local-store-badge">
@@ -787,7 +789,7 @@ export default function App() {
           <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
           <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>skift</button>
         </div>
-      </header>
+      </div>
 
       {/* Search */}
       <div className="search-wrap">
