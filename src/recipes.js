@@ -2,7 +2,7 @@ export const recipeBank = [
   // ── PASTA ──────────────────────────────────────────────────────────
   {
     id: 1, title: "Spaghetti Bolognese", emoji: "🍝", time: "45 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
@@ -28,7 +28,7 @@ export const recipeBank = [
   },
   {
     id: 2, title: "Pasta Carbonara", emoji: "🍳", time: "25 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
       { name: "Æg 10 stk.", store: "Rema 1000" },
@@ -54,7 +54,7 @@ export const recipeBank = [
   },
   {
     id: 3, title: "Penne Arrabbiata", emoji: "🌶️", time: "25 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Pasta penne 500g", store: "Coop 365" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -79,7 +79,7 @@ export const recipeBank = [
   },
   {
     id: 4, title: "Pasta med Kylling og Fløde", emoji: "🍗", time: "35 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Pasta penne 500g", store: "Coop 365" },
@@ -105,7 +105,7 @@ export const recipeBank = [
   },
   {
     id: 5, title: "Pasta Bake med Oksekød", emoji: "🫙", time: "50 min",
-    servings_count: 6, category: "Pasta",
+    servings_count: 6, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Pasta penne 500g", store: "Coop 365" },
@@ -131,7 +131,7 @@ export const recipeBank = [
   },
   {
     id: 6, title: "Pasta med Spinat og Parmesan", emoji: "🌿", time: "20 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Pasta penne 500g", store: "Coop 365" },
       { name: "Spinat frisk 200g", store: "Coop 365" },
@@ -155,7 +155,7 @@ export const recipeBank = [
   },
   {
     id: 7, title: "Spaghetti med Mozzarella og Basilikum", emoji: "🍅", time: "20 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -181,7 +181,7 @@ export const recipeBank = [
   },
   {
     id: 8, title: "Pasta Primavera med Gulerødder og Spinat", emoji: "🥕", time: "25 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
       { name: "Gulerødder 1kg", store: "Rema 1000" },
@@ -207,7 +207,7 @@ export const recipeBank = [
   },
   {
     id: 9, title: "Pasta med Laks og Fløde", emoji: "🐟", time: "30 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Pasta penne 500g", store: "Coop 365" },
@@ -234,7 +234,7 @@ export const recipeBank = [
   },
   {
     id: 10, title: "Spaghetti Aglio e Olio med Parmesan", emoji: "🧄", time: "15 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
       { name: "Parmesan revet 80g", store: "Coop 365" },
@@ -257,7 +257,7 @@ export const recipeBank = [
   },
   {
     id: 11, title: "Hurtig Lasagne", emoji: "🫕", time: "55 min",
-    servings_count: 6, category: "Pasta",
+    servings_count: 6, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Pasta penne 500g", store: "Coop 365" },
@@ -285,7 +285,7 @@ export const recipeBank = [
   },
   {
     id: 12, title: "Pasta Frittata", emoji: "🥚", time: "25 min",
-    servings_count: 3, category: "Pasta",
+    servings_count: 3, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
       { name: "Æg 10 stk.", store: "Rema 1000" },
@@ -310,7 +310,7 @@ export const recipeBank = [
   // ── KYLLING ───────────────────────────────────────────────────────
   {
     id: 13, title: "Kylling i Ovn med Kartofler", emoji: "🍗", time: "55 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Kartofler 2kg", store: "Coop 365" },
@@ -334,7 +334,7 @@ export const recipeBank = [
   },
   {
     id: 14, title: "Hakkebøffer med Kartofler", emoji: "🥩", time: "35 min",
-    servings_count: 4, category: "Oksekød",
+    servings_count: 4, category: "Oksekød", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Kartofler 2kg", store: "Coop 365" },
@@ -358,7 +358,7 @@ export const recipeBank = [
   },
   {
     id: 15, title: "Kylling Wok med Ris og Gulerødder", emoji: "🥢", time: "30 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇯🇵 Asiatisk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Ris 1kg", store: "Netto" },
@@ -383,7 +383,7 @@ export const recipeBank = [
   },
   {
     id: 16, title: "Oksekødsgryde med Gulerødder og Kartofler", emoji: "🫕", time: "60 min",
-    servings_count: 4, category: "Oksekød",
+    servings_count: 4, category: "Oksekød", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Gulerødder 1kg", store: "Rema 1000" },
@@ -408,7 +408,7 @@ export const recipeBank = [
   },
   {
     id: 17, title: "Kylling i Flødesauce med Spinat", emoji: "🍲", time: "30 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇫🇷 Fransk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -433,7 +433,7 @@ export const recipeBank = [
   },
   {
     id: 18, title: "Kyllingesuppe med Gulerødder og Kartofler", emoji: "🍜", time: "45 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Gulerødder 1kg", store: "Rema 1000" },
@@ -458,7 +458,7 @@ export const recipeBank = [
   },
   {
     id: 19, title: "Kylling med Tomatsauce", emoji: "🍅", time: "35 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇬🇷 Middelhavet",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -482,7 +482,7 @@ export const recipeBank = [
   },
   {
     id: 20, title: "Oksekød Stir-fry med Ris", emoji: "🍚", time: "30 min",
-    servings_count: 4, category: "Oksekød",
+    servings_count: 4, category: "Oksekød", cuisine: "🇯🇵 Asiatisk",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Ris 1kg", store: "Netto" },
@@ -506,7 +506,7 @@ export const recipeBank = [
   },
   {
     id: 21, title: "Kylling Tikka Masala", emoji: "🍛", time: "40 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇮🇳 Indisk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -532,7 +532,7 @@ export const recipeBank = [
   },
   {
     id: 22, title: "Fyldt Paprika med Oksekød og Ris", emoji: "🫑", time: "55 min",
-    servings_count: 4, category: "Oksekød",
+    servings_count: 4, category: "Oksekød", cuisine: "🇬🇷 Middelhavet",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -557,7 +557,7 @@ export const recipeBank = [
   },
   {
     id: 23, title: "Kylling Rice Bowl med Spinat", emoji: "🥗", time: "30 min",
-    servings_count: 4, category: "Kylling",
+    servings_count: 4, category: "Kylling", cuisine: "🇯🇵 Asiatisk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Ris 1kg", store: "Netto" },
@@ -583,7 +583,7 @@ export const recipeBank = [
   // ── LAKS ──────────────────────────────────────────────────────────
   {
     id: 24, title: "Bagt Laks med Kartofler", emoji: "🐟", time: "40 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Kartofler 2kg", store: "Coop 365" },
@@ -607,7 +607,7 @@ export const recipeBank = [
   },
   {
     id: 25, title: "Laks i Flødesauce med Spinat", emoji: "🐠", time: "25 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇫🇷 Fransk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -632,7 +632,7 @@ export const recipeBank = [
   },
   {
     id: 26, title: "Laks Risotto", emoji: "🍚", time: "40 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Ris 1kg", store: "Netto" },
@@ -658,7 +658,7 @@ export const recipeBank = [
   },
   {
     id: 27, title: "Ovnbagt Laks med Gulerødder", emoji: "🥕", time: "35 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Gulerødder 1kg", store: "Rema 1000" },
@@ -682,7 +682,7 @@ export const recipeBank = [
   },
   {
     id: 28, title: "Laks med Spinat og Parmesan", emoji: "🐟", time: "25 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Spinat frisk 200g", store: "Coop 365" },
@@ -707,7 +707,7 @@ export const recipeBank = [
   },
   {
     id: 29, title: "Laks Bowl med Ris og Gulerødder", emoji: "🥗", time: "30 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇯🇵 Asiatisk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Ris 1kg", store: "Netto" },
@@ -732,7 +732,7 @@ export const recipeBank = [
   },
   {
     id: 30, title: "Røræg med Laks og Gulerødder", emoji: "🥚", time: "20 min",
-    servings_count: 3, category: "Æg",
+    servings_count: 3, category: "Æg", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Æg 10 stk.", store: "Rema 1000" },
@@ -757,7 +757,7 @@ export const recipeBank = [
   },
   {
     id: 31, title: "Fiskesuppe med Laks og Kartofler", emoji: "🐠", time: "40 min",
-    servings_count: 4, category: "Fisk",
+    servings_count: 4, category: "Fisk", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Laks filet 400g", store: "Coop 365" },
       { name: "Kartofler 2kg", store: "Coop 365" },
@@ -783,7 +783,7 @@ export const recipeBank = [
   // ── ÆG ────────────────────────────────────────────────────────────
   {
     id: 32, title: "Spinat Frittata med Parmesan", emoji: "🥚", time: "25 min",
-    servings_count: 4, category: "Æg",
+    servings_count: 4, category: "Æg", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Æg 10 stk.", store: "Rema 1000" },
       { name: "Spinat frisk 200g", store: "Coop 365" },
@@ -807,7 +807,7 @@ export const recipeBank = [
   },
   {
     id: 33, title: "Æggekage med Gulerødder og Spinat", emoji: "🍳", time: "20 min",
-    servings_count: 3, category: "Æg",
+    servings_count: 3, category: "Æg", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Æg 10 stk.", store: "Rema 1000" },
       { name: "Gulerødder 1kg", store: "Rema 1000" },
@@ -831,7 +831,7 @@ export const recipeBank = [
   },
   {
     id: 34, title: "Kartoffelgratin med Fløde og Parmesan", emoji: "🥔", time: "60 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇫🇷 Fransk",
     dealItems: [
       { name: "Kartofler 2kg", store: "Coop 365" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -857,7 +857,7 @@ export const recipeBank = [
   },
   {
     id: 35, title: "Risotto med Spinat og Parmesan", emoji: "🍚", time: "40 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Ris 1kg", store: "Netto" },
       { name: "Spinat frisk 200g", store: "Coop 365" },
@@ -883,7 +883,7 @@ export const recipeBank = [
   },
   {
     id: 36, title: "Caprese Salat med Basilikum", emoji: "🍅", time: "10 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Mozzarella 125g", store: "Netto" },
       { name: "Basilikum", store: "Netto" },
@@ -906,7 +906,7 @@ export const recipeBank = [
   },
   {
     id: 37, title: "Cremet Tomatsuppe", emoji: "🍲", time: "25 min",
-    servings_count: 4, category: "Suppe",
+    servings_count: 4, category: "Suppe", cuisine: "🇫🇷 Fransk",
     dealItems: [
       { name: "Dåsetomater 400g", store: "Netto" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -930,7 +930,7 @@ export const recipeBank = [
   },
   {
     id: 38, title: "Spinat og Mozzarella Omelet", emoji: "🍳", time: "15 min",
-    servings_count: 2, category: "Æg",
+    servings_count: 2, category: "Æg", cuisine: "🇫🇷 Fransk",
     dealItems: [
       { name: "Æg 10 stk.", store: "Rema 1000" },
       { name: "Spinat frisk 200g", store: "Coop 365" },
@@ -954,7 +954,7 @@ export const recipeBank = [
   },
   {
     id: 39, title: "Bagte Kartofler med Parmesan", emoji: "🥔", time: "50 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Kartofler 2kg", store: "Coop 365" },
       { name: "Parmesan revet 80g", store: "Coop 365" },
@@ -977,7 +977,7 @@ export const recipeBank = [
   },
   {
     id: 40, title: "Fried Rice med Æg og Gulerødder", emoji: "🍳", time: "20 min",
-    servings_count: 4, category: "Æg",
+    servings_count: 4, category: "Æg", cuisine: "🇯🇵 Asiatisk",
     dealItems: [
       { name: "Ris 1kg", store: "Netto" },
       { name: "Æg 10 stk.", store: "Rema 1000" },
@@ -1002,7 +1002,7 @@ export const recipeBank = [
   },
   {
     id: 41, title: "Mozzarella Toast med Tomatsauce", emoji: "🍞", time: "20 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Mozzarella 125g", store: "Netto" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -1028,7 +1028,7 @@ export const recipeBank = [
   // ── SUPPER ────────────────────────────────────────────────────────
   {
     id: 42, title: "Gulerodssuppe med Fløde", emoji: "🥕", time: "30 min",
-    servings_count: 4, category: "Suppe",
+    servings_count: 4, category: "Suppe", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Gulerødder 1kg", store: "Rema 1000" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -1052,7 +1052,7 @@ export const recipeBank = [
   },
   {
     id: 43, title: "Kartoffelsuppe med Fløde", emoji: "🥔", time: "35 min",
-    servings_count: 4, category: "Suppe",
+    servings_count: 4, category: "Suppe", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Kartofler 2kg", store: "Coop 365" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -1076,7 +1076,7 @@ export const recipeBank = [
   },
   {
     id: 44, title: "Tomatsuppe med Fløde og Basilikum", emoji: "🍅", time: "25 min",
-    servings_count: 4, category: "Suppe",
+    servings_count: 4, category: "Suppe", cuisine: "🇫🇷 Fransk",
     dealItems: [
       { name: "Dåsetomater 400g", store: "Netto" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -1101,7 +1101,7 @@ export const recipeBank = [
   },
   {
     id: 45, title: "Kyllingesuppe med Spinat og Fløde", emoji: "🍵", time: "40 min",
-    servings_count: 4, category: "Suppe",
+    servings_count: 4, category: "Suppe", cuisine: "🇩🇰 Nordisk",
     dealItems: [
       { name: "Kyllingefilet 600g", store: "Netto" },
       { name: "Spinat frisk 200g", store: "Coop 365" },
@@ -1126,7 +1126,7 @@ export const recipeBank = [
   },
   {
     id: 46, title: "Spinatsuppe med Fløde og Parmesan", emoji: "🥬", time: "20 min",
-    servings_count: 4, category: "Suppe",
+    servings_count: 4, category: "Suppe", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spinat frisk 200g", store: "Coop 365" },
       { name: "Fløde 38% 0.5L", store: "Coop 365" },
@@ -1152,7 +1152,7 @@ export const recipeBank = [
   // ── DIVERSE ───────────────────────────────────────────────────────
   {
     id: 47, title: "Kødboller i Tomatsauce", emoji: "🍝", time: "40 min",
-    servings_count: 4, category: "Oksekød",
+    servings_count: 4, category: "Oksekød", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Hakket oksekød 500g", store: "Rema 1000" },
       { name: "Dåsetomater 400g", store: "Netto" },
@@ -1177,7 +1177,7 @@ export const recipeBank = [
   },
   {
     id: 48, title: "Gulerods-Wok med Ris og Æg", emoji: "🥢", time: "25 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇯🇵 Asiatisk",
     dealItems: [
       { name: "Gulerødder 1kg", store: "Rema 1000" },
       { name: "Ris 1kg", store: "Netto" },
@@ -1202,7 +1202,7 @@ export const recipeBank = [
   },
   {
     id: 49, title: "Parmesan Risotto med Spinat", emoji: "🍚", time: "40 min",
-    servings_count: 4, category: "Vegetar",
+    servings_count: 4, category: "Vegetar", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Ris 1kg", store: "Netto" },
       { name: "Parmesan revet 80g", store: "Coop 365" },
@@ -1228,7 +1228,7 @@ export const recipeBank = [
   },
   {
     id: 50, title: "Spaghetti Aglio e Olio", emoji: "🧄", time: "15 min",
-    servings_count: 4, category: "Pasta",
+    servings_count: 4, category: "Pasta", cuisine: "🇮🇹 Italiensk",
     dealItems: [
       { name: "Spaghetti 500g", store: "Rema 1000" },
     ],

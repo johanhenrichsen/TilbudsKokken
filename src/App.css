@@ -650,6 +650,7 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   padding: 16px;
   cursor: pointer;
+  position: relative;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .recipe-browse-card:hover {
@@ -1317,11 +1318,99 @@
 
 /* ─── Responsive ─────────────────────────────── */
 @media (max-width: 600px) {
-  .app { padding: 1rem; }
+  .app { padding: 0.875rem; }
   .app-hero { padding: 1.25rem 1.25rem 1.5rem; border-radius: 20px; }
   .app-title { font-size: 24px; }
-  .recipe-card { padding: 1.5rem; }
+  .recipe-card { padding: 1.25rem; }
   .recipe-browse-grid { grid-template-columns: 1fr; }
+
+  /* Filter chips — horizontal scroll, no wrapping */
+  .diet-filters,
+  .cuisine-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    gap: 6px;
+    margin-right: -0.875rem;
+    padding-right: 0.875rem;
+  }
+  .diet-filters::-webkit-scrollbar,
+  .cuisine-filters::-webkit-scrollbar { display: none; }
+
+  /* Tap targets min 44px */
+  .diet-btn { min-height: 40px; }
+  .add-to-plan-btn { min-height: 44px; }
+  .day-picker-btn { min-height: 60px; }
+  .back-btn { min-height: 44px; display: flex; align-items: center; }
+  .header-icon-btn { width: 40px; height: 40px; }
+
+  /* Local store badge — allow wrap on narrow screens */
+  .local-store-badge {
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 6px;
+  }
+
+  /* Hero — compact */
+  .hero-center { padding-bottom: 0.75rem; }
+  .hero-topbar { margin-bottom: 1rem; }
+
+  /* Meal plan — scroll snap */
+  .meal-plan-grid { scroll-snap-type: x mandatory; }
+  .meal-plan-day { scroll-snap-align: start; }
+
+  /* Onboarding store cards — 2 column grid */
+  .ob-chain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .ob-chain-card { padding: 14px 12px; gap: 8px; }
+  .ob-chain-name { font-size: 14px; }
+
+  /* Recipe detail — full-screen overlay */
+  body.recipe-open { overflow: hidden; }
+  .recipe-detail-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  html.dark .recipe-detail-sheet { background: #0d1f0d; }
+  .recipe-detail-sheet .back-btn {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 14px 16px;
+    margin: 0;
+    background: rgba(13,31,13,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-dark);
+    z-index: 10;
+    border-radius: 0;
+    box-sizing: border-box;
+    display: flex;
+  }
+  .recipe-detail-sheet .recipe-card {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    padding: 1.25rem;
+  }
+  .recipe-detail-sheet .shopping-list-card {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    padding: 1.25rem;
+  }
+  .recipe-title { font-size: 22px; }
+
 }
 
 /* (dark-mode-btn merged into .header-icon-btn) */
@@ -2157,93 +2246,59 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
 /* ── Week badge spacing inside hero ─────────────*/
 .hero-center .week-badge { margin-top: 12px; }
 
-/* ─── Popular this week section ──────────────── */
-.popular-section {
-  margin-bottom: 1.75rem;
-}
-.popular-header {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 8px 12px 10px;
-  margin: 0 -12px;
-}
-.popular-title {
-  font-family: var(--font-serif);
-  font-size: 19px;
-  font-weight: 800;
-  color: var(--cream);
-  letter-spacing: -0.3px;
-}
-.popular-subtitle {
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 500;
-  white-space: nowrap;
-}
-.popular-carousel {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 4px 2px 14px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.popular-carousel::-webkit-scrollbar { display: none; }
-.popular-card {
-  flex: 0 0 190px;
-  background: linear-gradient(145deg, #1a2e12 0%, #15240f 100%);
-  border: 1.5px solid rgba(232,147,74,0.22);
-  border-radius: 20px;
-  padding: 16px 14px 14px;
-  cursor: pointer;
-  scroll-snap-align: start;
-  position: relative;
-  transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.22s ease, border-color 0.2s ease;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.45);
-}
-.popular-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 14px 44px rgba(0,0,0,0.65), 0 0 28px rgba(232,147,74,0.1);
-  border-color: rgba(232,147,74,0.5);
-}
-.popular-fire-badge {
+/* ─── Popular badge (inline on recipe cards) ─── */
+.popular-badge-pill {
   position: absolute;
-  top: 11px;
-  right: 11px;
-  background: rgba(232,147,74,0.14);
-  border: 1px solid rgba(232,147,74,0.3);
+  top: 10px;
+  right: 10px;
+  background: rgba(232,147,74,0.12);
+  border: 1px solid rgba(232,147,74,0.28);
   color: var(--accent);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 3px 7px;
   border-radius: 50px;
   letter-spacing: 0.1px;
   white-space: nowrap;
+  pointer-events: none;
 }
-.popular-card-title {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--cream);
-  line-height: 1.25;
-  margin: 6px 0 8px;
-  padding-right: 56px;
-}
-.popular-card .recipe-category-tag {
-  background: rgba(232,147,74,0.1);
-  color: var(--accent);
-}
-.popular-card .recipe-browse-meta {
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-.popular-card-count {
+
+/* ─── Cuisine badge (recipe cards) ──────────── */
+.cuisine-badge {
+  display: inline-block;
   font-size: 10px;
-  color: rgba(232,147,74,0.6);
   font-weight: 600;
-  margin-top: 4px;
+  color: #6a8a6a;
+  background: rgba(106,138,106,0.08);
+  border-radius: 50px;
+  padding: 2px 8px;
+  margin-bottom: 5px;
+  letter-spacing: 0.1px;
+}
+html.dark .cuisine-badge {
+  color: var(--sage);
+  background: rgba(122,158,126,0.08);
+}
+
+/* ─── Cuisine badge (detail view) ────────────── */
+.cuisine-badge-detail {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-radius: 50px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* ─── Cuisine filter chips ───────────────────── */
+.cuisine-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: -6px;
 }
 

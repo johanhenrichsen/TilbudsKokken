@@ -72,6 +72,23 @@ const STORE_BRANCHES = [
   { name: "Bilka Næstved",         chain: "Bilka", city: "Næstved",          zip: "4700" },
 ];
 
+const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
+const CUISINE_SEARCH_MAP = {
+  "japan": "🇯🇵 Asiatisk", "japansk": "🇯🇵 Asiatisk", "sushi": "🇯🇵 Asiatisk",
+  "asiatisk": "🇯🇵 Asiatisk", "wok": "🇯🇵 Asiatisk", "soja": "🇯🇵 Asiatisk",
+  "italia": "🇮🇹 Italiensk", "italiensk": "🇮🇹 Italiensk", "pasta": "🇮🇹 Italiensk",
+  "carbonara": "🇮🇹 Italiensk", "bolognese": "🇮🇹 Italiensk", "lasagne": "🇮🇹 Italiensk",
+  "risotto": "🇮🇹 Italiensk", "parmesan": "🇮🇹 Italiensk", "mozzarella": "🇮🇹 Italiensk",
+  "curry": "🇮🇳 Indisk", "tikka": "🇮🇳 Indisk", "masala": "🇮🇳 Indisk", "karry": "🇮🇳 Indisk",
+  "nordisk": "🇩🇰 Nordisk", "dansk": "🇩🇰 Nordisk", "hygge": "🇩🇰 Nordisk",
+  "frikadeller": "🇩🇰 Nordisk", "kartofler": "🇩🇰 Nordisk",
+  "fransk": "🇫🇷 Fransk", "gratin": "🇫🇷 Fransk", "bechamel": "🇫🇷 Fransk",
+  "tacos": "🇲🇽 Mexicansk", "burrito": "🇲🇽 Mexicansk", "mexicansk": "🇲🇽 Mexicansk",
+  "caprese": "🇬🇷 Middelhavet", "middelhavet": "🇬🇷 Middelhavet", "hummus": "🇬🇷 Middelhavet",
+};
+const _availCuisines = new Set(recipeBank.map(r => r.cuisine).filter(Boolean));
+const CUISINE_ORDER = ["Alle", ...ALL_CUISINES_ORDERED.filter(c => _availCuisines.has(c))];
+
 function getISOWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -242,6 +259,7 @@ export default function App() {
 
   const [search, setSearch] = useState("");
   const [timeFilter, setTimeFilter] = useState("Alle tider");
+  const [cuisineFilter, setCuisineFilter] = useState("Alle");
   const [planCopied, setPlanCopied] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState(() => {
     try {
@@ -288,6 +306,16 @@ export default function App() {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
+  useEffect(() => {
+    if (selectedRecipe) {
+      document.body.classList.add("recipe-open");
+      window.scrollTo(0, 0);
+    } else {
+      document.body.classList.remove("recipe-open");
+    }
+    return () => document.body.classList.remove("recipe-open");
+  }, [selectedRecipe]);
+
   // ── Matching ────────────────────────────────────────────────────
   function getAvailableItemNames() {
     const selectedChains = new Set((localStores || []).map(s => s.chain));
@@ -322,8 +350,19 @@ export default function App() {
   }
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
-    if (search && !r.title.toLowerCase().includes(searchQ) &&
-        !r.ingredients.some(ing => (ing.text || ing).toLowerCase().includes(searchQ))) return false;
+    if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
+    if (search) {
+      const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
+      if (cuisineFromKeyword) {
+        if (r.cuisine !== cuisineFromKeyword) return false;
+      } else if (
+        !r.title.toLowerCase().includes(searchQ) &&
+        !(r.cuisine || "").toLowerCase().includes(searchQ) &&
+        !r.ingredients.some(ing => (ing.text || ing).toLowerCase().includes(searchQ))
+      ) {
+        return false;
+      }
+    }
     const mins = parseMinutes(r.time);
     if (timeFilter === "Under 20 min" && mins >= 20) return false;
     if (timeFilter === "Under 45 min" && mins >= 45) return false;
@@ -332,7 +371,7 @@ export default function App() {
   }
   const filteredRecommended = recommended.filter(matchRecipe);
   const filteredOthers = others.filter(matchRecipe);
-  const noResults = (search || timeFilter !== "Alle tider") && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle") && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
@@ -559,31 +598,17 @@ export default function App() {
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
 
   // ── Recipe card (browse) ────────────────────────────────────────
-  function PopularCard({ r }) {
-    return (
-      <div className="popular-card" onClick={() => selectRecipe(r)}>
-        <div className="popular-fire-badge">🔥 Populær</div>
-        <div className="recipe-category-tag">{r.emoji} {r.category}</div>
-        <div className="popular-card-title">{r.title}</div>
-        <div className="recipe-browse-meta">
-          <span>⏱ {r.time}</span>
-          <span>🥘 {r.ingredients.length} ing.</span>
-        </div>
-        <div className="popular-card-count">
-          {popularityMap[r.id] >= 4 ? "🔥🔥" : "🔥"} {popularityMap[r.id]} interaktioner
-        </div>
-      </div>
-    );
-  }
-
   function RecipeCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
+    const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
     return (
       <div
         className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
         onClick={() => selectRecipe(r)}
       >
+        {isPopular && <div className="popular-badge-pill">🔥 Populær</div>}
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
+        {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
         <div className="recipe-browse-title">{r.title}</div>
         <div className="recipe-browse-meta">
           <span>⏱ {r.time}</span>
@@ -859,9 +884,24 @@ export default function App() {
         ))}
       </div>
 
+      {/* Cuisine filters */}
+      {CUISINE_ORDER.length > 2 && (
+        <div className="cuisine-filters">
+          {CUISINE_ORDER.map(c => (
+            <button
+              key={c}
+              onClick={() => setCuisineFilter(c)}
+              className={`diet-btn${cuisineFilter === c ? " active" : ""}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Detail view */}
       {selectedRecipe ? (
-        <>
+        <div className="recipe-detail-sheet">
           <button className="back-btn" onClick={() => { setSelectedRecipe(null); setShoppingList([]); }}>
             ← Tilbage til opskrifter
           </button>
@@ -910,6 +950,7 @@ export default function App() {
 
             <div className="recipe-meta-bar">
               <span>⏱ {selectedRecipe.time}</span>
+              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{selectedRecipe.cuisine}</span>}
               <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 👥
                 <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
@@ -988,22 +1029,10 @@ export default function App() {
               </ul>
             </div>
           )}
-        </>
+        </div>
       ) : (
         /* Browse view */
         <>
-          {popularRecipes.length > 0 && !search && timeFilter === "Alle tider" && (
-            <div className="popular-section">
-              <div className="popular-header">
-                <span className="popular-title">Populære denne uge 🔥</span>
-                <span className="popular-subtitle">Baseret på dine klik og gemte opskrifter</span>
-              </div>
-              <div className="popular-carousel">
-                {popularRecipes.map(r => <PopularCard key={r.id} r={r} />)}
-              </div>
-            </div>
-          )}
-
           {filteredRecommended.length > 0 && (
             <div className="recipe-browse-section">
               <button
