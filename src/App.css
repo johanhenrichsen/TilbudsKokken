@@ -2157,3 +2157,93 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
 /* ── Week badge spacing inside hero ─────────────*/
 .hero-center .week-badge { margin-top: 12px; }
 
+/* ─── Popular this week section ──────────────── */
+.popular-section {
+  margin-bottom: 1.75rem;
+}
+.popular-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 12px 10px;
+  margin: 0 -12px;
+}
+.popular-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--cream);
+  letter-spacing: -0.3px;
+}
+.popular-subtitle {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.popular-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 14px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.popular-carousel::-webkit-scrollbar { display: none; }
+.popular-card {
+  flex: 0 0 190px;
+  background: linear-gradient(145deg, #1a2e12 0%, #15240f 100%);
+  border: 1.5px solid rgba(232,147,74,0.22);
+  border-radius: 20px;
+  padding: 16px 14px 14px;
+  cursor: pointer;
+  scroll-snap-align: start;
+  position: relative;
+  transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.22s ease, border-color 0.2s ease;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.45);
+}
+.popular-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 14px 44px rgba(0,0,0,0.65), 0 0 28px rgba(232,147,74,0.1);
+  border-color: rgba(232,147,74,0.5);
+}
+.popular-fire-badge {
+  position: absolute;
+  top: 11px;
+  right: 11px;
+  background: rgba(232,147,74,0.14);
+  border: 1px solid rgba(232,147,74,0.3);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 50px;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+}
+.popular-card-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.25;
+  margin: 6px 0 8px;
+  padding-right: 56px;
+}
+.popular-card .recipe-category-tag {
+  background: rgba(232,147,74,0.1);
+  color: var(--accent);
+}
+.popular-card .recipe-browse-meta {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.popular-card-count {
+  font-size: 10px;
+  color: rgba(232,147,74,0.6);
+  font-weight: 600;
+  margin-top: 4px;
+}
+

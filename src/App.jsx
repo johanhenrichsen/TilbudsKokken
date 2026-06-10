@@ -72,6 +72,13 @@ const STORE_BRANCHES = [
   { name: "Bilka Næstved",         chain: "Bilka", city: "Næstved",          zip: "4700" },
 ];
 
+function getISOWeek(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return { week: Math.ceil(((d - yearStart) / 86400000 + 1) / 7), year: d.getUTCFullYear() };
+}
+
 function StorePickerContent({ search, onSearch, selected, onToggle }) {
   const q = search.toLowerCase();
   const filtered = STORE_BRANCHES.filter(s =>
@@ -244,6 +251,16 @@ export default function App() {
     return { recommended: false, others: true };
   });
 
+  // ── Popularity tracking ─────────────────────────────────────────
+  const [popularityMap, setPopularityMap] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("recipePopularity") || "null");
+      const { week, year } = getISOWeek(new Date());
+      if (stored && stored.week === week && stored.year === year) return stored.counts;
+    } catch {}
+    return {};
+  });
+
   // ── Onboarding ──────────────────────────────────────────────────
   const [onboardingStep, setOnboardingStep] = useState(() => {
     try {
@@ -317,9 +334,17 @@ export default function App() {
   const filteredOthers = others.filter(matchRecipe);
   const noResults = (search || timeFilter !== "Alle tider") && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
+  const popularRecipes = Object.keys(popularityMap).length > 0
+    ? [...recipeBank]
+        .filter(r => popularityMap[r.id])
+        .sort((a, b) => (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0))
+        .slice(0, 5)
+    : [];
+
   // ── Recipe selection ────────────────────────────────────────────
   function selectRecipe(r) {
     setSelectedRecipe(r);
+    trackRecipeInteraction(r.id, 1);
     const ds = parseInt(localStorage.getItem("defaultServings"));
     setServings(ds || r.servings_count || 4);
     setShoppingList([]);
@@ -340,6 +365,7 @@ export default function App() {
     const next = [entry, ...savedRecipes];
     setSavedRecipes(next);
     localStorage.setItem("savedRecipes", JSON.stringify(next));
+    trackRecipeInteraction(r.id, 3);
   }
   function deleteSavedRecipe(savedAt) {
     const next = savedRecipes.filter(r => r.savedAt !== savedAt);
@@ -451,6 +477,15 @@ export default function App() {
     });
   }
 
+  function trackRecipeInteraction(id, weight = 1) {
+    setPopularityMap(prev => {
+      const next = { ...prev, [id]: (prev[id] || 0) + weight };
+      const { week, year } = getISOWeek(new Date());
+      try { localStorage.setItem("recipePopularity", JSON.stringify({ week, year, counts: next })); } catch {}
+      return next;
+    });
+  }
+
   async function shareMealPlan() {
     const lines = mealPlan
       .map((entry, i) => entry ? `${DAY_FULL[i]}: ${entry.recipe.emoji} ${entry.recipe.title} (${entry.servings} pers.)` : null)
@@ -524,6 +559,23 @@ export default function App() {
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
 
   // ── Recipe card (browse) ────────────────────────────────────────
+  function PopularCard({ r }) {
+    return (
+      <div className="popular-card" onClick={() => selectRecipe(r)}>
+        <div className="popular-fire-badge">🔥 Populær</div>
+        <div className="recipe-category-tag">{r.emoji} {r.category}</div>
+        <div className="popular-card-title">{r.title}</div>
+        <div className="recipe-browse-meta">
+          <span>⏱ {r.time}</span>
+          <span>🥘 {r.ingredients.length} ing.</span>
+        </div>
+        <div className="popular-card-count">
+          {popularityMap[r.id] >= 4 ? "🔥🔥" : "🔥"} {popularityMap[r.id]} interaktioner
+        </div>
+      </div>
+    );
+  }
+
   function RecipeCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
     return (
@@ -940,6 +992,18 @@ export default function App() {
       ) : (
         /* Browse view */
         <>
+          {popularRecipes.length > 0 && !search && timeFilter === "Alle tider" && (
+            <div className="popular-section">
+              <div className="popular-header">
+                <span className="popular-title">Populære denne uge 🔥</span>
+                <span className="popular-subtitle">Baseret på dine klik og gemte opskrifter</span>
+              </div>
+              <div className="popular-carousel">
+                {popularRecipes.map(r => <PopularCard key={r.id} r={r} />)}
+              </div>
+            </div>
+          )}
+
           {filteredRecommended.length > 0 && (
             <div className="recipe-browse-section">
               <button
