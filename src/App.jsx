@@ -568,6 +568,9 @@ export default function App() {
       {/* ── Splash screen ──────────────────────────────────────── */}
       {showSplash && (
         <div className={`splash-screen${splashExiting ? " exiting" : ""}`}>
+          <div className="splash-glow" />
+          <div className="splash-ring" />
+          <div className="splash-ring splash-ring-2" />
           <div className="splash-content">
             <div className="splash-icon">
               <LogoIcon size={100} />
