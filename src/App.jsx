@@ -2,47 +2,80 @@ import { useState } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
 
-const CHAIN_COLORS = { Netto: "#e6a800", Føtex: "#0055a5", Bilka: "#c0141b" };
+const CHAIN_COLORS = {
+  "Netto": "#e6a800",
+  "Føtex": "#0055a5",
+  "Bilka": "#c0141b",
+  "Rema 1000": "#e63329",
+  "Coop 365": "#0066cc",
+};
+
+const CHAIN_ORDER = ["Rema 1000", "Netto", "Coop 365", "Føtex", "Bilka"];
 
 const STORE_BRANCHES = [
-  { name: "Netto Østerbro",     chain: "Netto", city: "Østerbro",     zip: "2100" },
-  { name: "Netto Frederiksberg",chain: "Netto", city: "Frederiksberg", zip: "2000" },
-  { name: "Netto Nørrebro",     chain: "Netto", city: "Nørrebro",     zip: "2200" },
-  { name: "Netto Vesterbro",    chain: "Netto", city: "Vesterbro",    zip: "1620" },
-  { name: "Netto Amager",       chain: "Netto", city: "Amager",       zip: "2300" },
-  { name: "Netto Hellerup",     chain: "Netto", city: "Hellerup",     zip: "2900" },
-  { name: "Netto Aarhus C",     chain: "Netto", city: "Aarhus",       zip: "8000" },
-  { name: "Netto Odense C",     chain: "Netto", city: "Odense",       zip: "5000" },
-  { name: "Netto Aalborg",      chain: "Netto", city: "Aalborg",      zip: "9000" },
-  { name: "Netto Esbjerg",      chain: "Netto", city: "Esbjerg",      zip: "6700" },
-  { name: "Føtex Lyngby",       chain: "Føtex", city: "Lyngby",       zip: "2800" },
-  { name: "Føtex Glostrup",     chain: "Føtex", city: "Glostrup",     zip: "2600" },
-  { name: "Føtex Valby",        chain: "Føtex", city: "Valby",        zip: "2500" },
-  { name: "Føtex Rødovre",      chain: "Føtex", city: "Rødovre",      zip: "2610" },
-  { name: "Føtex Hvidovre",     chain: "Føtex", city: "Hvidovre",     zip: "2650" },
-  { name: "Føtex Ballerup",     chain: "Føtex", city: "Ballerup",     zip: "2750" },
-  { name: "Føtex Aarhus",       chain: "Føtex", city: "Aarhus",       zip: "8000" },
-  { name: "Føtex Odense",       chain: "Føtex", city: "Odense",       zip: "5000" },
-  { name: "Føtex Aalborg",      chain: "Føtex", city: "Aalborg",      zip: "9000" },
-  { name: "Føtex Vejle",        chain: "Føtex", city: "Vejle",        zip: "7100" },
-  { name: "Bilka Hundige",      chain: "Bilka", city: "Hundige",      zip: "2670" },
-  { name: "Bilka Ishøj",        chain: "Bilka", city: "Ishøj",        zip: "2635" },
-  { name: "Bilka Roskildevej",  chain: "Bilka", city: "Brøndby",      zip: "2620" },
-  { name: "Bilka Aarhus",       chain: "Bilka", city: "Aarhus",       zip: "8210" },
-  { name: "Bilka Odense",       chain: "Bilka", city: "Odense",       zip: "5220" },
-  { name: "Bilka Aalborg",      chain: "Bilka", city: "Aalborg",      zip: "9200" },
-  { name: "Bilka Esbjerg",      chain: "Bilka", city: "Esbjerg",      zip: "6710" },
-  { name: "Bilka Vejle",        chain: "Bilka", city: "Vejle",        zip: "7100" },
-  { name: "Bilka Fredericia",   chain: "Bilka", city: "Fredericia",   zip: "7000" },
-  { name: "Bilka Næstved",      chain: "Bilka", city: "Næstved",      zip: "4700" },
+  // Rema 1000
+  { name: "Rema 1000 Nørrebro",    chain: "Rema 1000", city: "Nørrebro",     zip: "2200" },
+  { name: "Rema 1000 Østerbro",    chain: "Rema 1000", city: "Østerbro",     zip: "2100" },
+  { name: "Rema 1000 Frederiksberg",chain:"Rema 1000", city: "Frederiksberg", zip: "2000" },
+  { name: "Rema 1000 Vesterbro",   chain: "Rema 1000", city: "Vesterbro",    zip: "1620" },
+  { name: "Rema 1000 Vanløse",     chain: "Rema 1000", city: "Vanløse",      zip: "2720" },
+  { name: "Rema 1000 Aarhus C",    chain: "Rema 1000", city: "Aarhus",       zip: "8000" },
+  { name: "Rema 1000 Odense C",    chain: "Rema 1000", city: "Odense",       zip: "5000" },
+  { name: "Rema 1000 Aalborg",     chain: "Rema 1000", city: "Aalborg",      zip: "9000" },
+  { name: "Rema 1000 Esbjerg",     chain: "Rema 1000", city: "Esbjerg",      zip: "6700" },
+  { name: "Rema 1000 Horsens",     chain: "Rema 1000", city: "Horsens",      zip: "8700" },
+  // Netto
+  { name: "Netto Østerbro",        chain: "Netto", city: "Østerbro",         zip: "2100" },
+  { name: "Netto Frederiksberg",   chain: "Netto", city: "Frederiksberg",    zip: "2000" },
+  { name: "Netto Nørrebro",        chain: "Netto", city: "Nørrebro",         zip: "2200" },
+  { name: "Netto Vesterbro",       chain: "Netto", city: "Vesterbro",        zip: "1620" },
+  { name: "Netto Amager",          chain: "Netto", city: "Amager",           zip: "2300" },
+  { name: "Netto Hellerup",        chain: "Netto", city: "Hellerup",         zip: "2900" },
+  { name: "Netto Aarhus C",        chain: "Netto", city: "Aarhus",           zip: "8000" },
+  { name: "Netto Odense C",        chain: "Netto", city: "Odense",           zip: "5000" },
+  { name: "Netto Aalborg",         chain: "Netto", city: "Aalborg",          zip: "9000" },
+  { name: "Netto Esbjerg",         chain: "Netto", city: "Esbjerg",          zip: "6700" },
+  // Coop 365
+  { name: "Coop 365 Lyngby",       chain: "Coop 365", city: "Lyngby",        zip: "2800" },
+  { name: "Coop 365 Gentofte",     chain: "Coop 365", city: "Gentofte",      zip: "2820" },
+  { name: "Coop 365 Gladsaxe",     chain: "Coop 365", city: "Gladsaxe",      zip: "2860" },
+  { name: "Coop 365 Herlev",       chain: "Coop 365", city: "Herlev",        zip: "2730" },
+  { name: "Coop 365 Taastrup",     chain: "Coop 365", city: "Taastrup",      zip: "2630" },
+  { name: "Coop 365 Aarhus",       chain: "Coop 365", city: "Aarhus",        zip: "8000" },
+  { name: "Coop 365 Odense",       chain: "Coop 365", city: "Odense",        zip: "5000" },
+  { name: "Coop 365 Aalborg",      chain: "Coop 365", city: "Aalborg",       zip: "9000" },
+  { name: "Coop 365 Randers",      chain: "Coop 365", city: "Randers",       zip: "8900" },
+  { name: "Coop 365 Silkeborg",    chain: "Coop 365", city: "Silkeborg",     zip: "8600" },
+  // Føtex
+  { name: "Føtex Lyngby",          chain: "Føtex", city: "Lyngby",           zip: "2800" },
+  { name: "Føtex Glostrup",        chain: "Føtex", city: "Glostrup",         zip: "2600" },
+  { name: "Føtex Valby",           chain: "Føtex", city: "Valby",            zip: "2500" },
+  { name: "Føtex Rødovre",         chain: "Føtex", city: "Rødovre",          zip: "2610" },
+  { name: "Føtex Hvidovre",        chain: "Føtex", city: "Hvidovre",         zip: "2650" },
+  { name: "Føtex Ballerup",        chain: "Føtex", city: "Ballerup",         zip: "2750" },
+  { name: "Føtex Aarhus",          chain: "Føtex", city: "Aarhus",           zip: "8000" },
+  { name: "Føtex Odense",          chain: "Føtex", city: "Odense",           zip: "5000" },
+  { name: "Føtex Aalborg",         chain: "Føtex", city: "Aalborg",          zip: "9000" },
+  { name: "Føtex Vejle",           chain: "Føtex", city: "Vejle",            zip: "7100" },
+  // Bilka
+  { name: "Bilka Hundige",         chain: "Bilka", city: "Hundige",          zip: "2670" },
+  { name: "Bilka Ishøj",           chain: "Bilka", city: "Ishøj",            zip: "2635" },
+  { name: "Bilka Roskildevej",     chain: "Bilka", city: "Brøndby",          zip: "2620" },
+  { name: "Bilka Aarhus",          chain: "Bilka", city: "Aarhus",           zip: "8210" },
+  { name: "Bilka Odense",          chain: "Bilka", city: "Odense",           zip: "5220" },
+  { name: "Bilka Aalborg",         chain: "Bilka", city: "Aalborg",          zip: "9200" },
+  { name: "Bilka Esbjerg",         chain: "Bilka", city: "Esbjerg",          zip: "6710" },
+  { name: "Bilka Vejle",           chain: "Bilka", city: "Vejle",            zip: "7100" },
+  { name: "Bilka Fredericia",      chain: "Bilka", city: "Fredericia",       zip: "7000" },
+  { name: "Bilka Næstved",         chain: "Bilka", city: "Næstved",          zip: "4700" },
 ];
 
-function StorePickerContent({ search, onSearch, onPick }) {
+function StorePickerContent({ search, onSearch, selected, onToggle }) {
   const q = search.toLowerCase();
   const filtered = STORE_BRANCHES.filter(s =>
     !q || s.name.toLowerCase().includes(q) || s.zip.includes(q) || s.city.toLowerCase().includes(q)
   );
-  const grouped = ["Netto", "Føtex", "Bilka"]
+  const grouped = CHAIN_ORDER
     .map(chain => ({ chain, stores: filtered.filter(s => s.chain === chain) }))
     .filter(g => g.stores.length > 0);
 
@@ -65,15 +98,25 @@ function StorePickerContent({ search, onSearch, onPick }) {
               <span className="chain-dot" style={{ background: CHAIN_COLORS[g.chain] }} />
               {g.chain}
             </div>
-            {g.stores.map(s => (
-              <button key={s.name} className="store-branch-item" onClick={() => onPick(s)}>
-                <div>
-                  <span className="store-branch-name">{s.name}</span>
-                  <span className="store-branch-city">{s.city}</span>
-                </div>
-                <span className="store-branch-zip">{s.zip}</span>
-              </button>
-            ))}
+            {g.stores.map(s => {
+              const checked = selected.has(s.name);
+              return (
+                <button
+                  key={s.name}
+                  className={`store-branch-item${checked ? " selected" : ""}`}
+                  onClick={() => onToggle(s)}
+                >
+                  <div>
+                    <span className="store-branch-name">{s.name}</span>
+                    <span className="store-branch-city">{s.city}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span className="store-branch-zip">{s.zip}</span>
+                    <span className={`store-check${checked ? " checked" : ""}`}>✓</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         ))}
         {grouped.length === 0 && (
@@ -135,10 +178,17 @@ function getWeekNumber(d) {
 }
 
 export default function App() {
-  const [localStore, setLocalStore] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("localStore") || "null"); }
-    catch { return null; }
+  const [localStores, setLocalStores] = useState(() => {
+    try {
+      const v = localStorage.getItem("localStores");
+      if (v) return JSON.parse(v);
+      // migrate from old single-store key
+      const old = localStorage.getItem("localStore");
+      if (old) { const s = JSON.parse(old); return s ? [s] : null; }
+      return null;
+    } catch { return null; }
   });
+  const [pendingStores, setPendingStores] = useState(new Set()); // used during onboarding
   const [showStorePicker, setShowStorePicker] = useState(false);
   const [storeSearch, setStoreSearch] = useState("");
 
@@ -240,18 +290,47 @@ export default function App() {
     });
   }
 
-  function pickStore(store) {
-    setLocalStore(store);
-    localStorage.setItem("localStore", JSON.stringify(store));
-    setShowStorePicker(false);
-    setStoreSearch("");
+  // toggle during onboarding (pending, not saved yet)
+  function togglePending(store) {
+    setPendingStores(prev => {
+      const next = new Set(prev);
+      next.has(store.name) ? next.delete(store.name) : next.add(store.name);
+      return next;
+    });
+  }
+
+  // confirm onboarding selection
+  function confirmOnboarding() {
+    const selected = STORE_BRANCHES.filter(s => pendingStores.has(s.name));
+    setLocalStores(selected);
+    localStorage.setItem("localStores", JSON.stringify(selected));
+  }
+
+  // toggle in the modal — saves immediately
+  function toggleStore(store) {
+    setLocalStores(prev => {
+      const names = new Set((prev || []).map(s => s.name));
+      names.has(store.name) ? names.delete(store.name) : names.add(store.name);
+      const next = STORE_BRANCHES.filter(s => names.has(s.name));
+      localStorage.setItem("localStores", JSON.stringify(next));
+      return next;
+    });
+  }
+
+  const selectedNames = new Set((localStores || []).map(s => s.name));
+
+  function storeHeaderLabel(list) {
+    if (!list || list.length === 0) return "Ingen butik valgt";
+    if (list.length === 1) return list[0].name;
+    if (list.length === 2) return `${list[0].name} og ${list[1].name}`;
+    return `${list[0].name} og ${list.length - 1} andre`;
   }
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
 
-  // ── Onboarding (first visit, no local store chosen) ─────────────
-  if (!localStore) {
+  // ── Onboarding (first visit, no stores chosen yet) ───────────────
+  if (!localStores) {
     return (
       <div className="app">
         <header className="app-header">
@@ -259,12 +338,24 @@ export default function App() {
           <div className="app-header-deco-2" />
           <div className="week-badge">{weekBadge}</div>
           <h1 className="app-title">Tilbudskokken</h1>
-          <p className="app-subtitle">Opskrifter baseret på ugens tilbud – lige fra din butik</p>
+          <p className="app-subtitle">Opskrifter baseret på ugens tilbud – lige fra dine butikker</p>
         </header>
         <div className="store-picker-onboarding">
-          <h2 className="sp-title">Vælg din lokale butik</h2>
-          <p className="sp-desc">Tilbudskokken finder opskrifter der bruger tilbud fra netop din butik.</p>
-          <StorePickerContent search={storeSearch} onSearch={setStoreSearch} onPick={pickStore} />
+          <h2 className="sp-title">Vælg dine lokale butikker</h2>
+          <p className="sp-desc">Vælg én eller flere butikker du handler i. Du kan altid ændre det senere.</p>
+          <StorePickerContent
+            search={storeSearch}
+            onSearch={setStoreSearch}
+            selected={pendingStores}
+            onToggle={togglePending}
+          />
+          <button
+            className="sp-confirm-btn"
+            disabled={pendingStores.size === 0}
+            onClick={confirmOnboarding}
+          >
+            Fortsæt med {pendingStores.size > 0 ? `${pendingStores.size} butik${pendingStores.size !== 1 ? "ker" : ""}` : "valgte butikker"} →
+          </button>
         </div>
       </div>
     );
@@ -304,15 +395,21 @@ export default function App() {
   return (
     <div className="app">
 
-      {/* Store picker modal (skift) */}
+      {/* Store picker modal (skift / administrer) */}
       {showStorePicker && (
         <div className="store-picker-overlay" onClick={e => e.target === e.currentTarget && setShowStorePicker(false)}>
           <div className="store-picker-card">
             <div className="sp-modal-header">
-              <h2 className="sp-title">Skift butik</h2>
+              <h2 className="sp-title">Dine butikker</h2>
               <button className="sp-close-btn" onClick={() => { setShowStorePicker(false); setStoreSearch(""); }}>×</button>
             </div>
-            <StorePickerContent search={storeSearch} onSearch={setStoreSearch} onPick={pickStore} />
+            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Klik for at tilføje eller fjerne butikker.</p>
+            <StorePickerContent
+              search={storeSearch}
+              onSearch={setStoreSearch}
+              selected={selectedNames}
+              onToggle={toggleStore}
+            />
           </div>
         </div>
       )}
@@ -325,8 +422,12 @@ export default function App() {
         <h1 className="app-title">Tilbudskokken</h1>
         <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
         <div className="local-store-badge">
-          <span className="chain-dot" style={{ background: CHAIN_COLORS[localStore.chain] }} />
-          Din butik: <strong>{localStore.name}</strong>
+          <span className="local-store-dots">
+            {[...new Set((localStores || []).map(s => s.chain))].map(ch => (
+              <span key={ch} className="chain-dot" style={{ background: CHAIN_COLORS[ch] }} />
+            ))}
+          </span>
+          <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
           <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>skift</button>
         </div>
       </header>
