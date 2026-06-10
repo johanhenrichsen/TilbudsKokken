@@ -204,14 +204,15 @@ export default function App() {
       return null;
     } catch { return null; }
   });
-  const [pendingStores, setPendingStores] = useState(new Set()); // used during onboarding
   const [showStorePicker, setShowStorePicker] = useState(false);
   const [storeSearch, setStoreSearch] = useState("");
 
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
   const [shoppingList, setShoppingList] = useState([]);
-  const [diet, setDiet] = useState("Alle");
+  const [diet, setDiet] = useState(() => {
+    try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
+  });
   const [copied, setCopied] = useState(false);
   const [savedRecipes, setSavedRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem("savedRecipes") || "[]"); }
@@ -234,6 +235,18 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [timeFilter, setTimeFilter] = useState("Alle tider");
   const [planCopied, setPlanCopied] = useState(false);
+
+  // ── Onboarding ──────────────────────────────────────────────────
+  const [onboardingStep, setOnboardingStep] = useState(() => {
+    try {
+      if (localStorage.getItem("onboardingDone") === "true") return null;
+      if (localStorage.getItem("localStores") || localStorage.getItem("localStore")) return null;
+    } catch {}
+    return 0;
+  });
+  const [pendingChains, setPendingChains] = useState(new Set());
+  const [pendingDiet, setPendingDiet] = useState("Alle");
+  const [pendingServings, setPendingServings] = useState(4);
 
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
   const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
@@ -292,7 +305,8 @@ export default function App() {
   // ── Recipe selection ────────────────────────────────────────────
   function selectRecipe(r) {
     setSelectedRecipe(r);
-    setServings(r.servings_count || 4);
+    const ds = parseInt(localStorage.getItem("defaultServings"));
+    setServings(ds || r.servings_count || 4);
     setShoppingList([]);
   }
 
@@ -429,20 +443,38 @@ export default function App() {
     }
   }
 
-  // toggle during onboarding (pending, not saved yet)
-  function togglePending(store) {
-    setPendingStores(prev => {
+  // ── Onboarding functions ────────────────────────────────────────
+  function toggleChain(chain) {
+    setPendingChains(prev => {
       const next = new Set(prev);
-      next.has(store.name) ? next.delete(store.name) : next.add(store.name);
+      next.has(chain) ? next.delete(chain) : next.add(chain);
       return next;
     });
   }
 
-  // confirm onboarding selection
-  function confirmOnboarding() {
-    const selected = STORE_BRANCHES.filter(s => pendingStores.has(s.name));
-    setLocalStores(selected);
-    localStorage.setItem("localStores", JSON.stringify(selected));
+  function handleOnboardingContinue() {
+    if (onboardingStep < 3) {
+      setOnboardingStep(s => s + 1);
+    } else {
+      const storesArray = CHAIN_ORDER
+        .filter(ch => pendingChains.has(ch))
+        .map(ch => STORE_BRANCHES.find(b => b.chain === ch))
+        .filter(Boolean);
+      setLocalStores(storesArray);
+      localStorage.setItem("localStores", JSON.stringify(storesArray));
+      localStorage.setItem("defaultDiet", pendingDiet);
+      setDiet(pendingDiet);
+      localStorage.setItem("defaultServings", String(pendingServings));
+      localStorage.setItem("onboardingDone", "true");
+      setOnboardingStep(null);
+    }
+  }
+
+  function openSettings() {
+    setPendingChains(new Set((localStores || []).map(s => s.chain)));
+    setPendingDiet(diet);
+    setPendingServings(parseInt(localStorage.getItem("defaultServings")) || 4);
+    setOnboardingStep(1);
   }
 
   // toggle in the modal — saves immediately
@@ -467,38 +499,6 @@ export default function App() {
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
-
-  // ── Onboarding (first visit, no stores chosen yet) ───────────────
-  if (!localStores) {
-    return (
-      <div className="app">
-        <header className="app-header">
-          <div className="app-header-deco-1" />
-          <div className="app-header-deco-2" />
-          <div className="week-badge">{weekBadge}</div>
-          <h1 className="app-title">Tilbudskokken</h1>
-          <p className="app-subtitle">Opskrifter baseret på ugens tilbud – lige fra dine butikker</p>
-        </header>
-        <div className="store-picker-onboarding">
-          <h2 className="sp-title">Vælg dine lokale butikker</h2>
-          <p className="sp-desc">Vælg én eller flere butikker du handler i. Du kan altid ændre det senere.</p>
-          <StorePickerContent
-            search={storeSearch}
-            onSearch={setStoreSearch}
-            selected={pendingStores}
-            onToggle={togglePending}
-          />
-          <button
-            className="sp-confirm-btn"
-            disabled={pendingStores.size === 0}
-            onClick={confirmOnboarding}
-          >
-            Fortsæt med {pendingStores.size > 0 ? `${pendingStores.size} butik${pendingStores.size !== 1 ? "ker" : ""}` : "valgte butikker"} →
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   // ── Recipe card (browse) ────────────────────────────────────────
   function RecipeCard({ r }) {
@@ -541,6 +541,124 @@ export default function App() {
 
   return (
     <div className="app">
+
+      {/* ── Onboarding overlay ─────────────────────────────────── */}
+      {onboardingStep !== null && (
+        <div className="ob-overlay">
+
+          {/* Welcome screen */}
+          {onboardingStep === 0 && (
+            <div className="ob-welcome">
+              <div className="ob-welcome-deco-1" />
+              <div className="ob-welcome-deco-2" />
+              <div className="ob-welcome-content">
+                <div className="ob-welcome-icon">🍳</div>
+                <h1 className="ob-welcome-title">Tilbudskokken</h1>
+                <p className="ob-welcome-tagline">Lav mad på ugens tilbud</p>
+                <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
+                <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
+                  Kom i gang →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step screens 1-3 */}
+          {onboardingStep > 0 && (
+            <div className="ob-step-layout">
+              <div className="ob-topbar">
+                <button className="ob-back-btn" onClick={() => setOnboardingStep(s => s - 1)}>
+                  ← Tilbage
+                </button>
+                <div className="ob-progress">
+                  {[1, 2, 3].map(n => (
+                    <div key={n} className={`ob-progress-dot${onboardingStep >= n ? " active" : ""}${onboardingStep > n ? " done" : ""}`} />
+                  ))}
+                </div>
+                <span className="ob-step-counter">{onboardingStep}/3</span>
+              </div>
+
+              {/* Step 1 — Store selection */}
+              {onboardingStep === 1 && (
+                <div className="ob-content" key="s1">
+                  <h2 className="ob-title">Vælg dine butikker</h2>
+                  <p className="ob-desc">Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.</p>
+                  <div className="ob-chain-grid">
+                    {CHAIN_ORDER.map(chain => {
+                      const sel = pendingChains.has(chain);
+                      return (
+                        <button
+                          key={chain}
+                          className={`ob-chain-card${sel ? " selected" : ""}`}
+                          onClick={() => toggleChain(chain)}
+                        >
+                          <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                          <span className="ob-chain-name">{chain}</span>
+                          <span className={`ob-chain-check${sel ? " checked" : ""}`}>✓</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2 — Dietary preference */}
+              {onboardingStep === 2 && (
+                <div className="ob-content" key="s2">
+                  <h2 className="ob-title">Kostpræferencer</h2>
+                  <p className="ob-desc">Vælg din kostpræference — vi tilpasser opskrifterne.</p>
+                  <div className="ob-diet-grid">
+                    {[
+                      { label: "Ingen", val: "Alle",      icon: "🍽️" },
+                      { label: "Vegetar",  val: "Vegetar",  icon: "🥦" },
+                      { label: "Veganer",  val: "Veganer",  icon: "🌱" },
+                      { label: "Glutenfri",val: "Glutenfri",icon: "🌾" },
+                      { label: "Mælkefri", val: "Mælkefri", icon: "🥛" },
+                    ].map(({ label, val, icon }) => {
+                      const sel = pendingDiet === val;
+                      return (
+                        <button
+                          key={val}
+                          className={`ob-diet-chip${sel ? " selected" : ""}`}
+                          onClick={() => setPendingDiet(val)}
+                        >
+                          <span className="ob-diet-icon">{icon}</span>
+                          <span className="ob-diet-label">{label}</span>
+                          {sel && <span className="ob-diet-check">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3 — Serving size */}
+              {onboardingStep === 3 && (
+                <div className="ob-content" key="s3">
+                  <h2 className="ob-title">Hvor mange personer?</h2>
+                  <p className="ob-desc">Vi tilpasser portionsstørrelserne til dit husstand.</p>
+                  <div className="ob-servings-picker">
+                    <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.max(1, s - 1))}>−</button>
+                    <div className="ob-sv-display">
+                      <span className="ob-sv-number">{pendingServings}</span>
+                      <span className="ob-sv-label">person{pendingServings !== 1 ? "er" : ""}</span>
+                    </div>
+                    <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.min(10, s + 1))}>+</button>
+                  </div>
+                </div>
+              )}
+
+              <button
+                className="ob-continue-btn"
+                disabled={onboardingStep === 1 && pendingChains.size === 0}
+                onClick={handleOnboardingContinue}
+              >
+                {onboardingStep === 3 ? "Gå til opskrifter →" : "Fortsæt →"}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Store picker modal (skift / administrer) */}
       {showStorePicker && (
@@ -597,13 +715,16 @@ export default function App() {
       <header className="app-header">
         <div className="app-header-deco-1" />
         <div className="app-header-deco-2" />
-        <button
-          className="dark-mode-btn"
-          onClick={() => setDarkMode(d => !d)}
-          title={darkMode ? "Lys tilstand" : "Mørk tilstand"}
-        >
-          {darkMode ? "☀️" : "🌙"}
-        </button>
+        <div className="header-actions">
+          <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
+          <button
+            className="header-icon-btn"
+            onClick={() => setDarkMode(d => !d)}
+            title={darkMode ? "Lys tilstand" : "Mørk tilstand"}
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
         <div className="week-badge">{weekBadge}</div>
         <h1 className="app-title">Tilbudskokken</h1>
         <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
