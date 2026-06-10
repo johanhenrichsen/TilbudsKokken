@@ -2,6 +2,88 @@ import { useState } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
 
+const CHAIN_COLORS = { Netto: "#e6a800", Føtex: "#0055a5", Bilka: "#c0141b" };
+
+const STORE_BRANCHES = [
+  { name: "Netto Østerbro",     chain: "Netto", city: "Østerbro",     zip: "2100" },
+  { name: "Netto Frederiksberg",chain: "Netto", city: "Frederiksberg", zip: "2000" },
+  { name: "Netto Nørrebro",     chain: "Netto", city: "Nørrebro",     zip: "2200" },
+  { name: "Netto Vesterbro",    chain: "Netto", city: "Vesterbro",    zip: "1620" },
+  { name: "Netto Amager",       chain: "Netto", city: "Amager",       zip: "2300" },
+  { name: "Netto Hellerup",     chain: "Netto", city: "Hellerup",     zip: "2900" },
+  { name: "Netto Aarhus C",     chain: "Netto", city: "Aarhus",       zip: "8000" },
+  { name: "Netto Odense C",     chain: "Netto", city: "Odense",       zip: "5000" },
+  { name: "Netto Aalborg",      chain: "Netto", city: "Aalborg",      zip: "9000" },
+  { name: "Netto Esbjerg",      chain: "Netto", city: "Esbjerg",      zip: "6700" },
+  { name: "Føtex Lyngby",       chain: "Føtex", city: "Lyngby",       zip: "2800" },
+  { name: "Føtex Glostrup",     chain: "Føtex", city: "Glostrup",     zip: "2600" },
+  { name: "Føtex Valby",        chain: "Føtex", city: "Valby",        zip: "2500" },
+  { name: "Føtex Rødovre",      chain: "Føtex", city: "Rødovre",      zip: "2610" },
+  { name: "Føtex Hvidovre",     chain: "Føtex", city: "Hvidovre",     zip: "2650" },
+  { name: "Føtex Ballerup",     chain: "Føtex", city: "Ballerup",     zip: "2750" },
+  { name: "Føtex Aarhus",       chain: "Føtex", city: "Aarhus",       zip: "8000" },
+  { name: "Føtex Odense",       chain: "Føtex", city: "Odense",       zip: "5000" },
+  { name: "Føtex Aalborg",      chain: "Føtex", city: "Aalborg",      zip: "9000" },
+  { name: "Føtex Vejle",        chain: "Føtex", city: "Vejle",        zip: "7100" },
+  { name: "Bilka Hundige",      chain: "Bilka", city: "Hundige",      zip: "2670" },
+  { name: "Bilka Ishøj",        chain: "Bilka", city: "Ishøj",        zip: "2635" },
+  { name: "Bilka Roskildevej",  chain: "Bilka", city: "Brøndby",      zip: "2620" },
+  { name: "Bilka Aarhus",       chain: "Bilka", city: "Aarhus",       zip: "8210" },
+  { name: "Bilka Odense",       chain: "Bilka", city: "Odense",       zip: "5220" },
+  { name: "Bilka Aalborg",      chain: "Bilka", city: "Aalborg",      zip: "9200" },
+  { name: "Bilka Esbjerg",      chain: "Bilka", city: "Esbjerg",      zip: "6710" },
+  { name: "Bilka Vejle",        chain: "Bilka", city: "Vejle",        zip: "7100" },
+  { name: "Bilka Fredericia",   chain: "Bilka", city: "Fredericia",   zip: "7000" },
+  { name: "Bilka Næstved",      chain: "Bilka", city: "Næstved",      zip: "4700" },
+];
+
+function StorePickerContent({ search, onSearch, onPick }) {
+  const q = search.toLowerCase();
+  const filtered = STORE_BRANCHES.filter(s =>
+    !q || s.name.toLowerCase().includes(q) || s.zip.includes(q) || s.city.toLowerCase().includes(q)
+  );
+  const grouped = ["Netto", "Føtex", "Bilka"]
+    .map(chain => ({ chain, stores: filtered.filter(s => s.chain === chain) }))
+    .filter(g => g.stores.length > 0);
+
+  return (
+    <>
+      <div className="store-search-wrap">
+        <input
+          className="store-search-input"
+          type="text"
+          placeholder="Søg by eller postnummer..."
+          value={search}
+          onChange={e => onSearch(e.target.value)}
+          autoFocus
+        />
+      </div>
+      <div className="store-branch-list">
+        {grouped.map(g => (
+          <div key={g.chain} className="chain-group">
+            <div className="chain-group-label">
+              <span className="chain-dot" style={{ background: CHAIN_COLORS[g.chain] }} />
+              {g.chain}
+            </div>
+            {g.stores.map(s => (
+              <button key={s.name} className="store-branch-item" onClick={() => onPick(s)}>
+                <div>
+                  <span className="store-branch-name">{s.name}</span>
+                  <span className="store-branch-city">{s.city}</span>
+                </div>
+                <span className="store-branch-zip">{s.zip}</span>
+              </button>
+            ))}
+          </div>
+        ))}
+        {grouped.length === 0 && (
+          <p className="store-picker-empty">Ingen butikker fundet</p>
+        )}
+      </div>
+    </>
+  );
+}
+
 const stores = [
   {
     name: "Rema 1000", color: "#e63329",
@@ -53,6 +135,13 @@ function getWeekNumber(d) {
 }
 
 export default function App() {
+  const [localStore, setLocalStore] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("localStore") || "null"); }
+    catch { return null; }
+  });
+  const [showStorePicker, setShowStorePicker] = useState(false);
+  const [storeSearch, setStoreSearch] = useState("");
+
   const [activeStores, setActiveStores] = useState(new Set([0, 1, 2]));
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
@@ -151,8 +240,35 @@ export default function App() {
     });
   }
 
+  function pickStore(store) {
+    setLocalStore(store);
+    localStorage.setItem("localStore", JSON.stringify(store));
+    setShowStorePicker(false);
+    setStoreSearch("");
+  }
+
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
+
+  // ── Onboarding (first visit, no local store chosen) ─────────────
+  if (!localStore) {
+    return (
+      <div className="app">
+        <header className="app-header">
+          <div className="app-header-deco-1" />
+          <div className="app-header-deco-2" />
+          <div className="week-badge">{weekBadge}</div>
+          <h1 className="app-title">Tilbudskokken</h1>
+          <p className="app-subtitle">Opskrifter baseret på ugens tilbud – lige fra din butik</p>
+        </header>
+        <div className="store-picker-onboarding">
+          <h2 className="sp-title">Vælg din lokale butik</h2>
+          <p className="sp-desc">Tilbudskokken finder opskrifter der bruger tilbud fra netop din butik.</p>
+          <StorePickerContent search={storeSearch} onSearch={setStoreSearch} onPick={pickStore} />
+        </div>
+      </div>
+    );
+  }
 
   // ── Recipe card (browse) ────────────────────────────────────────
   function RecipeCard({ r }) {
@@ -188,6 +304,19 @@ export default function App() {
   return (
     <div className="app">
 
+      {/* Store picker modal (skift) */}
+      {showStorePicker && (
+        <div className="store-picker-overlay" onClick={e => e.target === e.currentTarget && setShowStorePicker(false)}>
+          <div className="store-picker-card">
+            <div className="sp-modal-header">
+              <h2 className="sp-title">Skift butik</h2>
+              <button className="sp-close-btn" onClick={() => { setShowStorePicker(false); setStoreSearch(""); }}>×</button>
+            </div>
+            <StorePickerContent search={storeSearch} onSearch={setStoreSearch} onPick={pickStore} />
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="app-header">
         <div className="app-header-deco-1" />
@@ -195,6 +324,11 @@ export default function App() {
         <div className="week-badge">{weekBadge}</div>
         <h1 className="app-title">Tilbudskokken</h1>
         <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
+        <div className="local-store-badge">
+          <span className="chain-dot" style={{ background: CHAIN_COLORS[localStore.chain] }} />
+          Din butik: <strong>{localStore.name}</strong>
+          <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>skift</button>
+        </div>
       </header>
 
       {/* Store selector */}
