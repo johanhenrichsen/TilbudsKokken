@@ -16,6 +16,11 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  --logo-hat: #1e361e;
+  --logo-leaf: #7a9e7e;
+  --logo-leaf-vein: #4a7050;
+  --logo-fold: rgba(255,255,255,0.12);
+  --logo-wordmark: #1e361e;
 }
 .app-header-deco-1 {
   position: absolute;
@@ -1305,6 +1310,10 @@ html.dark .app { color: #d8e8d8; }
 
 html.dark .app-header {
   background: linear-gradient(140deg, #162a16 0%, #1e2e1a 100%);
+  --logo-hat: #e4f2e4;
+  --logo-leaf: #8ab88a;
+  --logo-fold: rgba(255,255,255,0.1);
+  --logo-wordmark: #e4f0e4;
 }
 html.dark .app-header-deco-1 { background: rgba(255,255,255,0.05); }
 html.dark .app-header-deco-2 { background: rgba(255,255,255,0.04); }
@@ -1485,9 +1494,17 @@ html.dark .ob-overlay { background: #0c180c; }
   position: relative;
   background: linear-gradient(160deg, #d4e8d4 0%, #e8e0d0 55%, #f5f0e8 100%);
   overflow: hidden;
+  --logo-hat: #1e361e;
+  --logo-leaf: #7a9e7e;
+  --logo-leaf-vein: #4a7050;
+  --logo-fold: rgba(255,255,255,0.12);
+  --logo-wordmark: #1e361e;
 }
 html.dark .ob-welcome {
   background: linear-gradient(160deg, #0e2010 0%, #1a2010 55%, #1e1a0e 100%);
+  --logo-hat: #e4f2e4;
+  --logo-leaf: #8ab88a;
+  --logo-wordmark: #e4f2e4;
 }
 .ob-welcome-deco-1 {
   position: absolute;
@@ -1839,6 +1856,11 @@ html.dark .ob-continue-btn:hover:not(:disabled) { background: #5a8060; }
   justify-content: center;
   transition: transform 0.65s cubic-bezier(0.76, 0, 0.24, 1);
   will-change: transform;
+  --logo-hat: #f0ead6;
+  --logo-leaf: #8ab88a;
+  --logo-leaf-vein: #4a8050;
+  --logo-fold: rgba(255,255,255,0.15);
+  --logo-wordmark: #f0ead6;
 }
 .splash-screen.exiting {
   transform: translateY(-100%);
@@ -1889,3 +1911,68 @@ html.dark .ob-continue-btn:hover:not(:disabled) { background: #5a8060; }
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ─── Logo component ─────────────────────────── */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+.logo-horizontal {
+  flex-direction: row;
+}
+.logo-vertical {
+  flex-direction: column;
+  align-items: center;
+}
+.logo-wordmark {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--logo-wordmark, #1e361e);
+  font-family: -apple-system, 'Inter', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.1;
+}
+
+/* ── Logo in header ─────────────────────────── */
+.header-logo {
+  margin: 0 0 6px;
+  position: relative;
+}
+.header-logo .logo-wordmark {
+  --logo-wordmark: #1e361e;
+}
+
+/* ── Logo in splash (cream on dark green bg) ── */
+.splash-screen .logo-mark,
+.splash-screen .logo-wordmark {
+  --logo-hat: #f0ead6;
+  --logo-leaf: #8ab88a;
+  --logo-leaf-vein: #4a8050;
+  --logo-fold: rgba(255,255,255,0.15);
+  --logo-wordmark: #f0ead6;
+}
+.splash-icon .logo-mark {
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.25));
+}
+
+/* ── Logo in onboarding welcome ─────────────── */
+.ob-welcome-logo {
+  margin-bottom: 4px;
+}
+.ob-welcome-logo .logo-wordmark {
+  --logo-wordmark: #1e361e;
+}
+
+/* ── Dark mode logo overrides ────────────────── */
+html.dark .header-logo .logo-wordmark {
+  --logo-wordmark: #e4f0e4;
+}
+html.dark .header-logo .logo-mark {
+  --logo-hat: #e4f2e4;
+  --logo-leaf: #8ab88a;
+  --logo-fold: rgba(255,255,255,0.1);
+}
+html.dark .ob-welcome-logo .logo-wordmark {
+  --logo-wordmark: #1e361e;
+}
+

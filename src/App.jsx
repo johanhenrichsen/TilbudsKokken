@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
+import Logo, { LogoMark } from "./Logo";
 
 const CHAIN_COLORS = {
   "Netto": "#e6a800",
@@ -559,19 +560,7 @@ export default function App() {
         <div className={`splash-screen${splashExiting ? " exiting" : ""}`}>
           <div className="splash-content">
             <div className="splash-icon">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Fork */}
-                <line x1="26" y1="14" x2="26" y2="66" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
-                <line x1="20" y1="14" x2="20" y2="28" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
-                <line x1="32" y1="14" x2="32" y2="28" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M20 28 Q20 34 26 34 Q32 34 32 28" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                {/* Knife */}
-                <line x1="54" y1="34" x2="54" y2="66" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
-                <path d="M54 14 C54 14 60 18 60 26 C60 32 54 34 54 34" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round" fill="none"/>
-                {/* Leaf accent */}
-                <path d="M58 12 C62 7 70 11 66 21 C63 29 58 26 58 26 C58 26 54 18 58 12Z" fill="#7ab87a"/>
-                <path d="M58 12 L56 25" stroke="#4a7050" strokeWidth="1.8" strokeLinecap="round"/>
-              </svg>
+              <LogoMark size={80} />
             </div>
             <h1 className="splash-title">Tilbudskokken</h1>
             <p className="splash-tagline">Lav mad på ugens tilbud</p>
@@ -589,8 +578,7 @@ export default function App() {
               <div className="ob-welcome-deco-1" />
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
-                <div className="ob-welcome-icon">🍳</div>
-                <h1 className="ob-welcome-title">Tilbudskokken</h1>
+                <Logo variant="vertical" size="xl" className="ob-welcome-logo" />
                 <p className="ob-welcome-tagline">Lav mad på ugens tilbud</p>
                 <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
                 <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
@@ -763,7 +751,7 @@ export default function App() {
           </button>
         </div>
         <div className="week-badge">{weekBadge}</div>
-        <h1 className="app-title">Tilbudskokken</h1>
+        <Logo variant="vertical" size="md" className="header-logo" />
         <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
         <div className="local-store-badge">
           <span className="local-store-dots">
