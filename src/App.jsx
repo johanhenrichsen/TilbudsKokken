@@ -755,19 +755,29 @@ export default function App() {
       <header className="app-header">
         <div className="app-header-deco-1" />
         <div className="app-header-deco-2" />
-        <div className="header-actions">
-          <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
-          <button
-            className="header-icon-btn"
-            onClick={() => setDarkMode(d => !d)}
-            title={darkMode ? "Lys tilstand" : "Mørk tilstand"}
-          >
-            {darkMode ? "☀️" : "🌙"}
-          </button>
+
+        {/* Top bar: brand + controls */}
+        <div className="header-topbar">
+          <Logo variant="horizontal" size="sm" className="header-brand" />
+          <div className="header-actions">
+            <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
+            <button
+              className="header-icon-btn"
+              onClick={() => setDarkMode(d => !d)}
+              title={darkMode ? "Lys tilstand" : "Mørk tilstand"}
+            >
+              {darkMode ? "☀️" : "🌙"}
+            </button>
+          </div>
         </div>
-        <div className="week-badge">{weekBadge}</div>
-        <Logo variant="vertical" size="md" className="header-logo" />
-        <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
+
+        {/* Hero: large mark + week badge + tagline */}
+        <div className="header-hero">
+          <LogoMark size={80} className="hero-logo-mark" />
+          <div className="week-badge">{weekBadge}</div>
+          <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
+        </div>
+
         <div className="local-store-badge">
           <span className="local-store-dots">
             {[...new Set((localStores || []).map(s => s.chain))].map(ch => (

@@ -1,87 +1,93 @@
-const SIZE_MAP = {
-  sm:  { mark: 24, wordmark: 13, gap: 6 },
-  md:  { mark: 32, wordmark: 16, gap: 8 },
-  lg:  { mark: 48, wordmark: 22, gap: 12 },
-  xl:  { mark: 72, wordmark: 30, gap: 16 },
-};
+const MARK_PX  = { sm: 24, md: 36, lg: 56, xl: 88 };
+const FONT_PX  = { sm: 13, md: 17, lg: 26, xl: 38 };
+const GAP_PX   = { sm:  7, md:  9, lg: 14, xl: 20 };
 
 export function LogoMark({ size = 40, className = "" }) {
-  const w = size;
-  const h = size * 1.2;
   return (
     <svg
-      width={w}
-      height={h}
-      viewBox="0 0 40 48"
+      width={size}
+      height={size}
+      viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={`logo-mark${className ? ` ${className}` : ""}`}
       aria-hidden="true"
     >
-      {/* Chef hat dome */}
-      <path
-        d="M4 33 C3 26 2 18 5 12 C8 6 13 6 20 6 C27 6 32 6 35 12 C38 18 37 26 36 33 Z"
-        fill="var(--logo-hat, #1a2e1a)"
+      {/* Plate / circular price-tag — outer rim */}
+      <circle cx="30" cy="30" r="25"
+        fill="var(--logo-bg, #f0ead6)"
+        stroke="var(--logo-main, #1a2e1a)"
+        strokeWidth="2.5"
       />
-      {/* Hat band */}
-      <rect
-        x="8" y="33" width="24" height="11" rx="5"
-        fill="var(--logo-hat, #1a2e1a)"
-      />
-      {/* Fold crease */}
-      <path
-        d="M8 33 Q20 36.5 32 33"
-        stroke="var(--logo-fold, rgba(255,255,255,0.12))"
-        strokeWidth="1.5"
+      {/* Inner plate rim (subtle depth line) */}
+      <circle cx="30" cy="30" r="20.5"
         fill="none"
+        stroke="var(--logo-main, #1a2e1a)"
+        strokeWidth="0.8"
+        opacity="0.18"
       />
-      {/* Leaf sprouting from top-right */}
-      <path
-        d="M26 6 C30 0 39 4 34 15 C31 21 26 17 26 17 C26 17 22 10 26 6Z"
-        fill="var(--logo-leaf, #7a9e7e)"
+      {/* Price-tag hanging hole at top of circle */}
+      <circle cx="30" cy="5" r="2.2"
+        fill="var(--logo-bg, #f0ead6)"
+        stroke="var(--logo-main, #1a2e1a)"
+        strokeWidth="1.8"
       />
-      {/* Leaf center vein */}
-      <path
-        d="M26 6 L24 16"
-        stroke="var(--logo-leaf-vein, #4a7050)"
-        strokeWidth="1.5"
+
+      {/* Leek resting diagonally across the plate — 2 strokes */}
+      {/* Main body */}
+      <path d="M13 47 Q30 36 49 25"
+        stroke="var(--logo-accent, #7a9e7e)"
+        strokeWidth="4.5"
         strokeLinecap="round"
       />
+      {/* Parallel leaf (thinner, fans slightly upward) */}
+      <path d="M13 47 Q31 33 50 19"
+        stroke="var(--logo-accent, #7a9e7e)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        opacity="0.65"
+      />
+
+      {/* Small price-tag label inside the plate */}
+      <g transform="rotate(-8, 30, 35)">
+        <rect x="25.5" y="29" width="9" height="12" rx="2.5"
+          fill="none"
+          stroke="var(--logo-main, #1a2e1a)"
+          strokeWidth="1.5"
+        />
+        {/* Tag hanging hole */}
+        <circle cx="30" cy="29" r="1.3"
+          fill="var(--logo-bg, #f0ead6)"
+          stroke="var(--logo-main, #1a2e1a)"
+          strokeWidth="1.5"
+        />
+      </g>
     </svg>
   );
 }
 
 export default function Logo({ variant = "horizontal", size = "md", className = "" }) {
-  const s = SIZE_MAP[size] || SIZE_MAP.md;
+  const markPx = MARK_PX[size] || MARK_PX.md;
+  const fs     = FONT_PX[size] || FONT_PX.md;
+  const gap    = GAP_PX[size]  || GAP_PX.md;
 
   if (variant === "icon") {
-    return <LogoMark size={s.mark} className={className} />;
+    return <LogoMark size={markPx} className={className} />;
   }
 
   if (variant === "vertical") {
     return (
-      <div
-        className={`logo logo-vertical${className ? ` ${className}` : ""}`}
-        style={{ gap: s.gap }}
-      >
-        <LogoMark size={s.mark} />
-        <span className="logo-wordmark" style={{ fontSize: s.wordmark }}>
-          Tilbudskokken
-        </span>
+      <div className={`logo logo-vertical${className ? ` ${className}` : ""}`} style={{ gap }}>
+        <LogoMark size={markPx} />
+        <span className="logo-wordmark" style={{ fontSize: fs }}>Tilbudskokken</span>
       </div>
     );
   }
 
-  // horizontal (default)
   return (
-    <div
-      className={`logo logo-horizontal${className ? ` ${className}` : ""}`}
-      style={{ gap: s.gap }}
-    >
-      <LogoMark size={s.mark} />
-      <span className="logo-wordmark" style={{ fontSize: s.wordmark }}>
-        Tilbudskokken
-      </span>
+    <div className={`logo logo-horizontal${className ? ` ${className}` : ""}`} style={{ gap }}>
+      <LogoMark size={markPx} />
+      <span className="logo-wordmark" style={{ fontSize: fs }}>Tilbudskokken</span>
     </div>
   );
 }
