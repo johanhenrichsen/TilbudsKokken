@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./App.css";
+import { recipeBank } from "./recipes";
 
 const stores = [
   {
-    name: "Rema 1000",
-    color: "#e63329",
+    name: "Rema 1000", color: "#e63329",
     items: [
       { name: "Hakket oksekød 500g", price: 24.95, unit: "pr. pk." },
       { name: "Gulerødder 1kg", price: 7.95, unit: "pr. pose" },
@@ -15,8 +15,7 @@ const stores = [
     ],
   },
   {
-    name: "Netto",
-    color: "#e6a800",
+    name: "Netto", color: "#e6a800",
     items: [
       { name: "Kyllingefilet 600g", price: 29.95, unit: "pr. pk." },
       { name: "Ris 1kg", price: 11.95, unit: "pr. pose" },
@@ -27,8 +26,7 @@ const stores = [
     ],
   },
   {
-    name: "Coop 365",
-    color: "#0066cc",
+    name: "Coop 365", color: "#0066cc",
     items: [
       { name: "Kartofler 2kg", price: 12.95, unit: "pr. pose" },
       { name: "Laks filet 400g", price: 39.95, unit: "pr. pk." },
@@ -49,13 +47,13 @@ function getWeekNumber(d) {
 
 export default function App() {
   const [activeStores, setActiveStores] = useState(new Set([0, 1, 2]));
-  const [recipes, setRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const [loadingRecipes, setLoadingRecipes] = useState(false);
+  const [adaptingRecipe, setAdaptingRecipe] = useState(false);
   const [servings, setServings] = useState(4);
   const [shoppingList, setShoppingList] = useState([]);
   const [diet, setDiet] = useState("Alle");
   const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
   const [savedRecipes, setSavedRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem("savedRecipes") || "[]"); }
     catch { return []; }
@@ -73,39 +71,45 @@ export default function App() {
   };
 
   const dietInstructions = {
-    Vegetar: "Alle opskrifter skal være vegetariske – uden kød og fisk.",
-    Veganer: "Alle opskrifter skal være veganske – uden kød, fisk, æg og mejeriprodukter.",
-    Glutenfri: "Alle opskrifter må ikke indeholde gluten (ingen pasta, spaghetti eller hvedemel).",
-    Mælkefri: "Alle opskrifter må ikke indeholde mælkeprodukter (ingen smør, fløde, ost eller mælk).",
+    Vegetar: "Opskriften skal være vegetarisk – uden kød og fisk.",
+    Veganer: "Opskriften skal være vegansk – uden kød, fisk, æg og mejeriprodukter.",
+    Glutenfri: "Opskriften må ikke indeholde gluten (ingen pasta, spaghetti eller hvedemel).",
+    Mælkefri: "Opskriften må ikke indeholde mælkeprodukter (ingen smør, fløde, ost eller mælk).",
   };
 
-  useEffect(() => {
-    generateRecipes(new Set([0, 1, 2]), "Alle");
-  }, []);
-
-  async function generateRecipes(storeSet, dietFilter) {
-    if (storeSet.size === 0) { setRecipes([]); return; }
-    setLoadingRecipes(true);
-    setRecipes([]);
-    setSelectedRecipe(null);
-    setError(null);
-
-    const itemsByStore = stores
+  // ── Matching ────────────────────────────────────────────────────
+  function getDealItems(storeSet, dietFilter) {
+    return stores
       .filter((_, i) => storeSet.has(i))
-      .map(s => {
-        const filtered = s.items.filter(
-          it => !dietExcludes[dietFilter].some(kw => it.name.toLowerCase().includes(kw))
-        );
-        return filtered.length > 0
-          ? `${s.name}: ${filtered.map(it => it.name).join(", ")}`
-          : null;
-      })
-      .filter(Boolean)
-      .join("\n");
+      .flatMap(s => s.items)
+      .filter(it => !dietExcludes[dietFilter].some(kw => it.name.toLowerCase().includes(kw)));
+  }
 
-    const dietInstruction = dietInstructions[dietFilter]
-      ? `\n${dietInstructions[dietFilter]}`
-      : "";
+  function getScoredRecipes(storeSet, dietFilter) {
+    const dealNames = getDealItems(storeSet, dietFilter).map(it => it.name.toLowerCase());
+    const excluded = dietExcludes[dietFilter];
+    return recipeBank
+      .filter(r => !excluded.some(kw => r.keyIngredients.some(ki => ki.includes(kw))))
+      .map(r => ({
+        ...r,
+        matchCount: r.keyIngredients.filter(ki => dealNames.some(dn => dn.includes(ki))).length,
+      }));
+  }
+
+  const scoredRecipes = getScoredRecipes(activeStores, diet);
+  const recommended = scoredRecipes.filter(r => r.matchCount >= 2).sort((a, b) => b.matchCount - a.matchCount);
+  const others = scoredRecipes.filter(r => r.matchCount < 2);
+
+  // ── Recipe selection (AI tailoring) ────────────────────────────
+  async function selectRecipe(baseRecipe) {
+    const dealItems = getDealItems(activeStores, diet);
+    const dealList = dealItems.map(it => `${it.name} (${it.price.toFixed(2)} kr)`).join(", ");
+    const dietInstruction = dietInstructions[diet] || "";
+
+    setAdaptingRecipe(true);
+    setSelectedRecipe(null);
+    setShoppingList([]);
+    setError(null);
 
     try {
       const response = await fetch("/api/recipe", {
@@ -118,10 +122,10 @@ export default function App() {
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-5",
-          max_tokens: 4000,
+          max_tokens: 1500,
           messages: [{
             role: "user",
-            content: `Du er en dansk kogebog-assistent. Generer 10 forskellige og kreative opskrifter baseret på disse tilbudsvarer:\n\n${itemsByStore}${dietInstruction}\n\nBrug KUN ingredienser fra listen (salt, peber og olie anses som tilgængeligt). Vær kreativ med køkkener og tilberedningsmetoder – bland gerne nordisk, asiatisk, italiensk osv.\n\nSvar KUN med et JSON array uden markdown eller forklaringer:\n[{"title":"Spaghetti Bolognese","emoji":"🍝","category":"Pasta","time":"40 min","servings_count":4,"servings":"4 personer","stores":["Rema 1000","Netto"],"ingredients":["500g hakket oksekød","250g spaghetti","400g dåsetomater","2 fed hvidløg","1 løg"],"steps":["Kog spaghetti i saltet vand i 10 min.","Brun hakket oksekød i en pande.","Tilsæt dåsetomater og simmer 20 min.","Server kødsauce over spaghetti."],"tip":"Drys frisk basilikum over ved servering."}]`,
+            content: `Du er en dansk kogebog-assistent. Tilpas denne opskrift til ugens tilbudsvarer.\n\nOpskrift: ${baseRecipe.title}\nBasis ingredienser: ${baseRecipe.ingredients.join(", ")}\nFremgangsmåde: ${baseRecipe.steps.join(" ")}\n\nUgens tilbudsvarer tilgængelige:\n${dealList}\n\n${dietInstruction ? dietInstruction + "\n\n" : ""}Tilpas opskriften: brug de tilgængelige tilbudsvarer, juster mængder og fremhæv hvilke tilbudsvarer der er i spil. Svar KUN med JSON uden markdown:\n{"title":"...","time":"...","servings_count":4,"servings":"4 personer","ingredients":["500g hakket oksekød"],"steps":["Trin 1."],"tip":"..."}`,
           }],
         }),
       });
@@ -134,51 +138,38 @@ export default function App() {
       const data = await response.json();
       const text = data.content[0].text;
       const clean = text.replace(/```json|```/g, "").trim();
-      setRecipes(JSON.parse(clean));
+      setSelectedRecipe(JSON.parse(clean));
+      setServings(baseRecipe.servings_count || 4);
     } catch (err) {
-      setError("Kunne ikke hente opskrifter: " + err.message);
+      // Fallback to base recipe
+      setSelectedRecipe({ ...baseRecipe, servings: `${baseRecipe.servings_count || 4} personer` });
+      setError("Kunne ikke tilpasse opskrift – viser basis version.");
     } finally {
-      setLoadingRecipes(false);
+      setAdaptingRecipe(false);
     }
   }
 
-  function toggleStore(si) {
-    const next = new Set(activeStores);
-    next.has(si) ? next.delete(si) : next.add(si);
-    setActiveStores(next);
-    generateRecipes(next, diet);
-  }
-
-  function changeDiet(f) {
-    setDiet(f);
-    generateRecipes(activeStores, f);
-  }
-
+  // ── Shopping list ───────────────────────────────────────────────
   function addToShoppingList(ingredient) {
     setShoppingList(prev => prev.includes(ingredient) ? prev : [...prev, ingredient]);
   }
-
-  function removeFromShoppingList(index) {
-    setShoppingList(prev => prev.filter((_, i) => i !== index));
+  function removeFromShoppingList(i) {
+    setShoppingList(prev => prev.filter((_, idx) => idx !== i));
   }
+  function clearShoppingList() { setShoppingList([]); }
 
-  function clearShoppingList() {
-    setShoppingList([]);
-  }
-
+  // ── Save / delete ───────────────────────────────────────────────
   function saveRecipe(r) {
     const entry = { ...r, savedAt: Date.now() };
     const next = [entry, ...savedRecipes];
     setSavedRecipes(next);
     localStorage.setItem("savedRecipes", JSON.stringify(next));
   }
-
   function deleteSavedRecipe(savedAt) {
     const next = savedRecipes.filter(r => r.savedAt !== savedAt);
     setSavedRecipes(next);
     localStorage.setItem("savedRecipes", JSON.stringify(next));
   }
-
   function toggleExpanded(savedAt) {
     setExpandedSaved(prev => {
       const next = new Set(prev);
@@ -187,6 +178,19 @@ export default function App() {
     });
   }
 
+  // ── Share ───────────────────────────────────────────────────────
+  async function shareRecipe(r) {
+    const text = `${r.title}\n\nIngredienser:\n${r.ingredients.join("\n")}\n\nFremgangsmåde:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}\n\nTip: ${r.tip}`;
+    if (navigator.share) {
+      await navigator.share({ title: r.title, text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
+  // ── Scale ───────────────────────────────────────────────────────
   function scaleIngredient(ingredient, baseServings, currentServings) {
     const ratio = currentServings / baseServings;
     return ingredient.replace(/(\d+([.,]\d+)?)/g, match => {
@@ -195,10 +199,28 @@ export default function App() {
     });
   }
 
-  const isRecipeSaved = selectedRecipe &&
-    savedRecipes.some(r => r.title === selectedRecipe.title);
-
+  const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
+
+  // ── Recipe card (browse) ────────────────────────────────────────
+  function RecipeCard({ r }) {
+    return (
+      <div
+        className={`recipe-browse-card${r.matchCount >= 2 ? " featured" : ""}`}
+        onClick={() => selectRecipe(r)}
+      >
+        <div className="recipe-category-tag">{r.emoji} {r.category}</div>
+        <div className="recipe-browse-title">{r.title}</div>
+        <div className="recipe-browse-meta">
+          <span>⏱ {r.time}</span>
+          <span>🥘 {r.ingredients.length} ing.</span>
+        </div>
+        {r.matchCount > 0 && (
+          <div className="recipe-match-badge">🛒 {r.matchCount} tilbudsvare{r.matchCount !== 1 ? "r" : ""}</div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -209,7 +231,7 @@ export default function App() {
         <div className="app-header-deco-2" />
         <div className="week-badge">{weekBadge}</div>
         <h1 className="app-title">Tilbudskokken</h1>
-        <p className="app-subtitle">Vælg dine butikker og gennemse ugens opskrifter</p>
+        <p className="app-subtitle">Gennemse 50 opskrifter matchet til ugens tilbud</p>
       </header>
 
       {/* Store selector */}
@@ -218,7 +240,11 @@ export default function App() {
           <button
             key={si}
             className={`store-toggle${activeStores.has(si) ? " active" : ""}`}
-            onClick={() => toggleStore(si)}
+            onClick={() => {
+              const next = new Set(activeStores);
+              next.has(si) ? next.delete(si) : next.add(si);
+              setActiveStores(next);
+            }}
           >
             <span className="store-dot" style={{ background: store.color }} />
             {store.name}
@@ -231,7 +257,7 @@ export default function App() {
         {dietFilters.map(f => (
           <button
             key={f}
-            onClick={() => changeDiet(f)}
+            onClick={() => setDiet(f)}
             className={`diet-btn${diet === f ? " active" : ""}`}
           >
             {f}
@@ -239,172 +265,139 @@ export default function App() {
         ))}
       </div>
 
-      {/* Detail view */}
-      {selectedRecipe ? (
+      {/* Detail / loading view */}
+      {(selectedRecipe || adaptingRecipe) ? (
         <>
-          <button className="back-btn" onClick={() => setSelectedRecipe(null)}>
+          <button className="back-btn" onClick={() => { setSelectedRecipe(null); setAdaptingRecipe(false); setError(null); }}>
             ← Tilbage til opskrifter
           </button>
 
-          <div className="recipe-card">
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
-              <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
-              <button
-                className={`save-btn${isRecipeSaved ? " saved" : ""}`}
-                onClick={() => !isRecipeSaved && saveRecipe(selectedRecipe)}
-                title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
-              >
-                🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
-              </button>
-            </div>
-
-            <div className="recipe-meta-bar">
-              <span>⏱ {selectedRecipe.time}</span>
-              <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                👥
-                <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
-                {servings} personer
-                <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
-              </span>
-            </div>
-
-            <div className="section-label">Ingredienser</div>
-            <ul className="ingredient-grid">
-              {selectedRecipe.ingredients.map((ing, i) => {
-                const scaledIng = scaleIngredient(ing, selectedRecipe.servings_count || 4, servings);
-                const inList = shoppingList.includes(scaledIng);
-                return (
-                  <li key={i} className="ingredient-item">
-                    <button
-                      className="ingredient-add-btn"
-                      onClick={() => addToShoppingList(scaledIng)}
-                      title={inList ? "Allerede i indkøbsliste" : "Tilføj til indkøbsliste"}
-                      disabled={inList}
-                      style={{
-                        background: inList ? "#d4ead4" : "#4a7050",
-                        color: inList ? "#3a6040" : "white",
-                      }}
-                    >
-                      {inList ? "✓" : "+"}
-                    </button>
-                    {scaledIng}
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="section-label">Fremgangsmåde</div>
-            <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
-              {selectedRecipe.steps.map((step, i) => (
-                <li key={i} className="step-item">
-                  <span className="step-number">{i + 1}</span>
-                  {step}
-                </li>
-              ))}
-            </ol>
-
-            {selectedRecipe.tip && (
-              <div className="recipe-tip">
-                <strong>Tips:</strong> {selectedRecipe.tip}
+          {adaptingRecipe ? (
+            <div className="loading-screen">
+              <div className="loading-dots">
+                <div className="loading-dot" /><div className="loading-dot" /><div className="loading-dot" />
               </div>
-            )}
-          </div>
+              <p className="loading-text">Tilpasser opskrift til ugens tilbud...</p>
+            </div>
+          ) : (
+            <>
+              {error && <div className="error-box" style={{ marginBottom: "1rem" }}>{error}</div>}
 
-          {/* Shopping list */}
-          {shoppingList.length > 0 && (
-            <div className="shopping-list-card">
-              <div className="shopping-list-header">
-                <div className="section-label" style={{ margin: 0 }}>
-                  Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+              <div className="recipe-card">
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
+                  <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
+                  <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                    <button
+                      className="share-btn"
+                      onClick={() => shareRecipe(selectedRecipe)}
+                      title="Del opskrift"
+                    >
+                      {copied ? "✓" : "↗"} <span>{copied ? "Kopieret!" : "Del"}</span>
+                    </button>
+                    <button
+                      className={`save-btn${isRecipeSaved ? " saved" : ""}`}
+                      onClick={() => !isRecipeSaved && saveRecipe(selectedRecipe)}
+                      title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
+                    >
+                      🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
+                    </button>
+                  </div>
                 </div>
-                <button className="btn-outline" onClick={clearShoppingList}>Ryd liste</button>
+
+                <div className="recipe-meta-bar">
+                  <span>⏱ {selectedRecipe.time}</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    👥
+                    <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
+                    {servings} personer
+                    <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
+                  </span>
+                </div>
+
+                <div className="section-label">Ingredienser</div>
+                <ul className="ingredient-grid">
+                  {selectedRecipe.ingredients.map((ing, i) => {
+                    const scaled = scaleIngredient(ing, selectedRecipe.servings_count || 4, servings);
+                    const inList = shoppingList.includes(scaled);
+                    return (
+                      <li key={i} className="ingredient-item">
+                        <button
+                          className="ingredient-add-btn"
+                          onClick={() => addToShoppingList(scaled)}
+                          disabled={inList}
+                          style={{ background: inList ? "#d4ead4" : "#4a7050", color: inList ? "#3a6040" : "white" }}
+                        >
+                          {inList ? "✓" : "+"}
+                        </button>
+                        {scaled}
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div className="section-label">Fremgangsmåde</div>
+                <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                  {selectedRecipe.steps.map((step, i) => (
+                    <li key={i} className="step-item">
+                      <span className="step-number">{i + 1}</span>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
+
+                {selectedRecipe.tip && (
+                  <div className="recipe-tip"><strong>Tips:</strong> {selectedRecipe.tip}</div>
+                )}
               </div>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {shoppingList.map((item, i) => (
-                  <li key={i} className="shopping-item">
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span className="shopping-item-dot" />
-                      {item}
+
+              {/* Shopping list */}
+              {shoppingList.length > 0 && (
+                <div className="shopping-list-card">
+                  <div className="shopping-list-header">
+                    <div className="section-label" style={{ margin: 0 }}>
+                      Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
                     </div>
-                    <button
-                      className="shopping-item-remove"
-                      onClick={() => removeFromShoppingList(i)}
-                      title="Fjern fra liste"
-                    >
-                      ×
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    <button className="btn-outline" onClick={clearShoppingList}>Ryd liste</button>
+                  </div>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    {shoppingList.map((item, i) => (
+                      <li key={i} className="shopping-item">
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span className="shopping-item-dot" />
+                          {item}
+                        </div>
+                        <button className="shopping-item-remove" onClick={() => removeFromShoppingList(i)}>×</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
           )}
         </>
       ) : (
         /* Browse view */
-        activeStores.size === 0 ? (
-          <div className="empty-state">
-            Vælg mindst én butik for at se opskrifter
-          </div>
-        ) : loadingRecipes ? (
-          <div className="loading-screen">
-            <div className="loading-dots">
-              <div className="loading-dot" />
-              <div className="loading-dot" />
-              <div className="loading-dot" />
+        <>
+          {recommended.length > 0 && (
+            <div className="recipe-browse-section">
+              <h2 className="section-title">⭐ Denne uges anbefalinger · {recommended.length}</h2>
+              <div className="recipe-browse-grid">
+                {recommended.map(r => <RecipeCard key={r.id} r={r} />)}
+              </div>
             </div>
-            <p className="loading-text">Henter ugens opskrifter...</p>
-          </div>
-        ) : error ? (
-          <div className="error-box" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span>{error}</span>
-            <button className="btn-outline" onClick={() => generateRecipes(activeStores, diet)}>
-              Prøv igen
-            </button>
-          </div>
-        ) : (
+          )}
+
           <div className="recipe-browse-section">
-            <h2 className="section-title">Ugens opskrifter · {recipes.length}</h2>
+            <h2 className="section-title">Alle opskrifter · {others.length}</h2>
             <div className="recipe-browse-grid">
-              {recipes.map((r, i) => (
-                <div
-                  key={i}
-                  className="recipe-browse-card"
-                  onClick={() => {
-                    setSelectedRecipe(r);
-                    setServings(r.servings_count || 4);
-                    setShoppingList([]);
-                  }}
-                >
-                  <div className="recipe-category-tag">{r.emoji} {r.category}</div>
-                  <div className="recipe-browse-title">{r.title}</div>
-                  <div className="recipe-browse-meta">
-                    <span>⏱ {r.time}</span>
-                    <span>🥘 {r.ingredients?.length} ing.</span>
-                  </div>
-                  <div className="recipe-browse-stores">
-                    {r.stores?.map((storeName, si) => {
-                      const store = stores.find(s => s.name === storeName);
-                      return (
-                        <span key={si} className="store-tag">
-                          <span
-                            style={{
-                              width: 6, height: 6,
-                              background: store?.color || "#aaa",
-                              borderRadius: "50%",
-                              display: "inline-block",
-                              flexShrink: 0,
-                            }}
-                          />
-                          {storeName}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+              {others.map(r => <RecipeCard key={r.id} r={r} />)}
             </div>
           </div>
-        )
+
+          {scoredRecipes.length === 0 && (
+            <div className="empty-state">Ingen opskrifter matcher det valgte filter</div>
+          )}
+        </>
       )}
 
       {/* Saved recipes */}
@@ -425,13 +418,7 @@ export default function App() {
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span className="saved-recipe-chevron">{open ? "▲" : "▼"}</span>
-                      <button
-                        className="saved-recipe-delete"
-                        onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}
-                        title="Slet opskrift"
-                      >
-                        ×
-                      </button>
+                      <button className="saved-recipe-delete" onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}>×</button>
                     </div>
                   </div>
                   {open && (
@@ -449,14 +436,11 @@ export default function App() {
                       <ol style={{ listStyle: "none", padding: 0, margin: "0 0 1rem" }}>
                         {r.steps.map((step, i) => (
                           <li key={i} className="step-item">
-                            <span className="step-number">{i + 1}</span>
-                            {step}
+                            <span className="step-number">{i + 1}</span>{step}
                           </li>
                         ))}
                       </ol>
-                      {r.tip && (
-                        <div className="recipe-tip"><strong>Tips:</strong> {r.tip}</div>
-                      )}
+                      {r.tip && <div className="recipe-tip"><strong>Tips:</strong> {r.tip}</div>}
                     </div>
                   )}
                 </div>
