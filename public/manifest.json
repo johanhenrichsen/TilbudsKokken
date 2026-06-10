@@ -1,6 +1,6 @@
 {
-  "name": "Tilbudskokken",
-  "short_name": "Tilbudskokken",
+  "name": "TilbudsKokken",
+  "short_name": "TilbudsKokken",
   "description": "Generér opskrifter fra ugens tilbudsvarer",
   "start_url": "/",
   "display": "standalone",

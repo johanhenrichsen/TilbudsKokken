@@ -19,7 +19,7 @@ export default function LogoFull({ size = "md", className = "" }) {
     >
       <LogoIcon size={icon} />
       <div className="logo-wordmark" style={{ fontSize: font }}>
-        <span>Tilbudsk</span>
+        <span>TilbudsK</span>
         <span
           className="logo-wordmark-o"
           aria-label="ø"

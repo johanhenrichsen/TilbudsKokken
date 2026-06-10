@@ -578,7 +578,7 @@ export default function App() {
             <div className="splash-icon">
               <LogoIcon size={100} />
             </div>
-            <h1 className="splash-title">Tilbudskokken</h1>
+            <h1 className="splash-title">TilbudsKokken</h1>
             <p className="splash-tagline">BEDRE TILBUD. BEDRE MAD.</p>
           </div>
         </div>
@@ -760,7 +760,7 @@ export default function App() {
         <div className="hero-topbar">
           <div className="hero-brand">
             <LogoIcon size={28} />
-            <span className="hero-brand-name">Tilbudskokken</span>
+            <span className="hero-brand-name">TilbudsKokken</span>
           </div>
           <div className="header-actions">
             <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
