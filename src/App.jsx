@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 const stores = [
@@ -40,14 +40,22 @@ const stores = [
   },
 ];
 
+function getWeekNumber(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
 export default function App() {
-  const [selected, setSelected] = useState(new Set());
-  const [recipe, setRecipe] = useState(null);
+  const [activeStores, setActiveStores] = useState(new Set([0, 1, 2]));
+  const [recipes, setRecipes] = useState([]);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [loadingRecipes, setLoadingRecipes] = useState(false);
   const [servings, setServings] = useState(4);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [shoppingList, setShoppingList] = useState([]);
   const [diet, setDiet] = useState("Alle");
+  const [error, setError] = useState(null);
   const [savedRecipes, setSavedRecipes] = useState(() => {
     try { return JSON.parse(localStorage.getItem("savedRecipes") || "[]"); }
     catch { return []; }
@@ -65,32 +73,85 @@ export default function App() {
   };
 
   const dietInstructions = {
-    Vegetar: "Opskriften skal være vegetarisk – uden kød og fisk.",
-    Veganer: "Opskriften skal være vegansk – uden kød, fisk, æg og mejeriprodukter.",
-    Glutenfri: "Opskriften må ikke indeholde gluten (ingen pasta, spaghetti eller hvedemel).",
-    Mælkefri: "Opskriften må ikke indeholde mælkeprodukter (ingen smør, fløde, ost eller mælk).",
+    Vegetar: "Alle opskrifter skal være vegetariske – uden kød og fisk.",
+    Veganer: "Alle opskrifter skal være veganske – uden kød, fisk, æg og mejeriprodukter.",
+    Glutenfri: "Alle opskrifter må ikke indeholde gluten (ingen pasta, spaghetti eller hvedemel).",
+    Mælkefri: "Alle opskrifter må ikke indeholde mælkeprodukter (ingen smør, fløde, ost eller mælk).",
   };
 
-  function toggle(key) {
-    setSelected(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+  useEffect(() => {
+    generateRecipes(new Set([0, 1, 2]), "Alle");
+  }, []);
+
+  async function generateRecipes(storeSet, dietFilter) {
+    if (storeSet.size === 0) { setRecipes([]); return; }
+    setLoadingRecipes(true);
+    setRecipes([]);
+    setSelectedRecipe(null);
+    setError(null);
+
+    const itemsByStore = stores
+      .filter((_, i) => storeSet.has(i))
+      .map(s => {
+        const filtered = s.items.filter(
+          it => !dietExcludes[dietFilter].some(kw => it.name.toLowerCase().includes(kw))
+        );
+        return filtered.length > 0
+          ? `${s.name}: ${filtered.map(it => it.name).join(", ")}`
+          : null;
+      })
+      .filter(Boolean)
+      .join("\n");
+
+    const dietInstruction = dietInstructions[dietFilter]
+      ? `\n${dietInstructions[dietFilter]}`
+      : "";
+
+    try {
+      const response = await fetch("/api/recipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": import.meta.env.VITE_CLAUDE_KEY,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-5",
+          max_tokens: 4000,
+          messages: [{
+            role: "user",
+            content: `Du er en dansk kogebog-assistent. Generer 10 forskellige og kreative opskrifter baseret på disse tilbudsvarer:\n\n${itemsByStore}${dietInstruction}\n\nBrug KUN ingredienser fra listen (salt, peber og olie anses som tilgængeligt). Vær kreativ med køkkener og tilberedningsmetoder – bland gerne nordisk, asiatisk, italiensk osv.\n\nSvar KUN med et JSON array uden markdown eller forklaringer:\n[{"title":"Spaghetti Bolognese","emoji":"🍝","category":"Pasta","time":"40 min","servings_count":4,"servings":"4 personer","stores":["Rema 1000","Netto"],"ingredients":["500g hakket oksekød","250g spaghetti","400g dåsetomater","2 fed hvidløg","1 løg"],"steps":["Kog spaghetti i saltet vand i 10 min.","Brun hakket oksekød i en pande.","Tilsæt dåsetomater og simmer 20 min.","Server kødsauce over spaghetti."],"tip":"Drys frisk basilikum over ved servering."}]`,
+          }],
+        }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error?.message || "API fejl");
+      }
+
+      const data = await response.json();
+      const text = data.content[0].text;
+      const clean = text.replace(/```json|```/g, "").trim();
+      setRecipes(JSON.parse(clean));
+    } catch (err) {
+      setError("Kunne ikke hente opskrifter: " + err.message);
+    } finally {
+      setLoadingRecipes(false);
+    }
+  }
+
+  function toggleStore(si) {
+    const next = new Set(activeStores);
+    next.has(si) ? next.delete(si) : next.add(si);
+    setActiveStores(next);
+    generateRecipes(next, diet);
   }
 
   function changeDiet(f) {
     setDiet(f);
-    const excluded = dietExcludes[f];
-    setSelected(prev => {
-      const next = new Set(prev);
-      [...next].forEach(key => {
-        const name = key.split("|")[1].toLowerCase();
-        if (excluded.some(kw => name.includes(kw))) next.delete(key);
-      });
-      return next;
-    });
+    generateRecipes(activeStores, f);
   }
 
   function addToShoppingList(ingredient) {
@@ -126,8 +187,6 @@ export default function App() {
     });
   }
 
-  const isRecipeSaved = recipe && savedRecipes.some(r => r.title === recipe.title && r.savedAt);
-
   function scaleIngredient(ingredient, baseServings, currentServings) {
     const ratio = currentServings / baseServings;
     return ingredient.replace(/(\d+([.,]\d+)?)/g, match => {
@@ -136,57 +195,10 @@ export default function App() {
     });
   }
 
-  async function generateRecipe(retry = false) {
-    if (selected.size === 0) return;
-    setLoading(true);
-    setRecipe(null);
-    setError(null);
+  const isRecipeSaved = selectedRecipe &&
+    savedRecipes.some(r => r.title === selectedRecipe.title);
 
-    const varer = [...selected].map(k => k.split("|")[1]);
-
-    try {
-      const response = await fetch("/api/recipe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": import.meta.env.VITE_CLAUDE_KEY,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-5",
-          max_tokens: 1000,
-          messages: [{
-            role: "user",
-            content: `Du er en dansk kogebog-assistent. Lav en opskrift til ${servings} personer der bruger nogle eller alle af disse tilbudsvarer: ${varer.join(", ")}.${dietInstructions[diet] ? ` ${dietInstructions[diet]}` : ""}${retry ? " Lav en anderledes opskrift end sidst — vær kreativ med køkken og tilberedningsmetode." : ""} Svar KUN med et JSON-objekt uden markdown eller forklaringer: {"title": "navn", "time": "XX min", "servings": "${servings} personer", "servings_count": ${servings}, "ingredients": ["ingrediens 1"], "steps": ["trin 1"], "tip": "tip her"}`,
-          }],
-        }),
-      });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error?.message || "API fejl");
-      }
-
-      const data = await response.json();
-      const text = data.content[0].text;
-      const clean = text.replace(/```json|```/g, "").trim();
-      setRecipe(JSON.parse(clean));
-    } catch (err) {
-      setError("Fejl: " + err.message);
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const chips = [...selected].slice(0, 4).map(k => k.split("|")[1].split(" ").slice(0, 2).join(" "));
-  const extraChips = selected.size > 4 ? selected.size - 4 : 0;
-  const total = [...selected].reduce((sum, key) => {
-    const [si, name] = key.split("|");
-    const item = stores[+si]?.items.find(it => it.name === name);
-    return sum + (item?.price || 0);
-  }, 0);
+  const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
 
   return (
     <div className="app">
@@ -195,10 +207,24 @@ export default function App() {
       <header className="app-header">
         <div className="app-header-deco-1" />
         <div className="app-header-deco-2" />
-        <div className="week-badge">UGE 24 · 2026</div>
+        <div className="week-badge">{weekBadge}</div>
         <h1 className="app-title">Tilbudskokken</h1>
-        <p className="app-subtitle">Vælg ugens tilbud og få en opskrift på sekunder</p>
+        <p className="app-subtitle">Vælg dine butikker og gennemse ugens opskrifter</p>
       </header>
+
+      {/* Store selector */}
+      <div className="store-selector">
+        {stores.map((store, si) => (
+          <button
+            key={si}
+            className={`store-toggle${activeStores.has(si) ? " active" : ""}`}
+            onClick={() => toggleStore(si)}
+          >
+            <span className="store-dot" style={{ background: store.color }} />
+            {store.name}
+          </button>
+        ))}
+      </div>
 
       {/* Diet filters */}
       <div className="diet-filters">
@@ -213,180 +239,172 @@ export default function App() {
         ))}
       </div>
 
-      {/* Store grid */}
-      <div className="store-grid">
-        {stores.map((store, si) => (
-          <div key={si} className="store-card">
-            <div className="store-card-header">
-              <div className="store-dot" style={{ background: store.color }} />
-              <span className="store-name">{store.name}</span>
-            </div>
-            <div>
-              {store.items
-                .filter(item => !dietExcludes[diet].some(kw => item.name.toLowerCase().includes(kw)))
-                .map((item, ii) => {
-                  const key = `${si}|${item.name}`;
-                  const isSel = selected.has(key);
-                  return (
-                    <div
-                      key={ii}
-                      onClick={() => toggle(key)}
-                      className={`store-item${isSel ? " selected" : ""}`}
-                    >
-                      <span className="item-name">{item.name}</span>
-                      <div>
-                        <div className="item-price">{item.price.toFixed(2)} kr</div>
-                        <div className="item-unit">{item.unit}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom bar */}
-      <div className="bottom-bar">
-        <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span className="item-count">
-              <strong>{selected.size} {selected.size === 1 ? "vare" : "varer"}</strong> valgt
-            </span>
-            {selected.size > 0 && (
-              <span className="total-price">💰 {total.toFixed(2).replace(".", ",")} kr</span>
-            )}
-          </div>
-          {chips.length > 0 && (
-            <div className="item-chips">
-              {chips.map((c, i) => <span key={i} className="item-chip">{c}</span>)}
-              {extraChips > 0 && <span className="item-chip">+{extraChips} mere</span>}
-            </div>
-          )}
-        </div>
-        <div className="bottom-bar-controls">
-          <span className="servings-control">
-            👥
-            <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
-            {servings} pers.
-            <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
-          </span>
-          <button
-            className="btn-primary"
-            onClick={() => generateRecipe()}
-            disabled={loading || selected.size === 0}
-          >
-            {loading ? "Genererer…" : "Generér opskrift"}
+      {/* Detail view */}
+      {selectedRecipe ? (
+        <>
+          <button className="back-btn" onClick={() => setSelectedRecipe(null)}>
+            ← Tilbage til opskrifter
           </button>
-        </div>
-      </div>
 
-      {/* Error */}
-      {error && <div className="error-box">{error}</div>}
-
-      {/* Recipe card */}
-      {recipe && (
-        <div className="recipe-card">
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
-            <h2 className="recipe-title" style={{ margin: 0 }}>{recipe.title}</h2>
-            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-              <button
-                className="retry-btn"
-                onClick={() => generateRecipe(true)}
-                disabled={loading}
-                title="Prøv en anden opskrift"
-              >
-                🔄 <span>Prøv anden</span>
-              </button>
+          <div className="recipe-card">
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
+              <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
               <button
                 className={`save-btn${isRecipeSaved ? " saved" : ""}`}
-                onClick={() => !isRecipeSaved && saveRecipe(recipe)}
+                onClick={() => !isRecipeSaved && saveRecipe(selectedRecipe)}
                 title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
               >
                 🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
               </button>
             </div>
-          </div>
-          <div className="recipe-meta-bar">
-            <span>⏱ {recipe.time}</span>
-            <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              👥
-              <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
-              {servings} personer
-              <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
-            </span>
-          </div>
 
-          <div className="section-label">Ingredienser</div>
-          <ul className="ingredient-grid">
-            {recipe.ingredients.map((ing, i) => {
-              const scaledIng = scaleIngredient(ing, recipe.servings_count || 4, servings);
-              const inList = shoppingList.includes(scaledIng);
-              return (
-                <li key={i} className="ingredient-item">
-                  <button
-                    className="ingredient-add-btn"
-                    onClick={() => addToShoppingList(scaledIng)}
-                    title={inList ? "Allerede i indkøbsliste" : "Tilføj til indkøbsliste"}
-                    disabled={inList}
-                    style={{
-                      background: inList ? "#d4ead4" : "#4a7050",
-                      color: inList ? "#3a6040" : "white",
-                    }}
-                  >
-                    {inList ? "✓" : "+"}
-                  </button>
-                  {scaledIng}
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="section-label">Fremgangsmåde</div>
-          <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {recipe.steps.map((step, i) => (
-              <li key={i} className="step-item">
-                <span className="step-number">{i + 1}</span>
-                {step}
-              </li>
-            ))}
-          </ol>
-
-          <div className="recipe-tip">
-            <strong>Tips:</strong> {recipe.tip}
-          </div>
-        </div>
-      )}
-
-      {/* Shopping list */}
-      {shoppingList.length > 0 && (
-        <div className="shopping-list-card">
-          <div className="shopping-list-header">
-            <div className="section-label" style={{ margin: 0 }}>
-              Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+            <div className="recipe-meta-bar">
+              <span>⏱ {selectedRecipe.time}</span>
+              <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                👥
+                <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
+                {servings} personer
+                <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
+              </span>
             </div>
-            <button className="btn-outline" onClick={clearShoppingList}>
-              Ryd liste
+
+            <div className="section-label">Ingredienser</div>
+            <ul className="ingredient-grid">
+              {selectedRecipe.ingredients.map((ing, i) => {
+                const scaledIng = scaleIngredient(ing, selectedRecipe.servings_count || 4, servings);
+                const inList = shoppingList.includes(scaledIng);
+                return (
+                  <li key={i} className="ingredient-item">
+                    <button
+                      className="ingredient-add-btn"
+                      onClick={() => addToShoppingList(scaledIng)}
+                      title={inList ? "Allerede i indkøbsliste" : "Tilføj til indkøbsliste"}
+                      disabled={inList}
+                      style={{
+                        background: inList ? "#d4ead4" : "#4a7050",
+                        color: inList ? "#3a6040" : "white",
+                      }}
+                    >
+                      {inList ? "✓" : "+"}
+                    </button>
+                    {scaledIng}
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="section-label">Fremgangsmåde</div>
+            <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+              {selectedRecipe.steps.map((step, i) => (
+                <li key={i} className="step-item">
+                  <span className="step-number">{i + 1}</span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+
+            {selectedRecipe.tip && (
+              <div className="recipe-tip">
+                <strong>Tips:</strong> {selectedRecipe.tip}
+              </div>
+            )}
+          </div>
+
+          {/* Shopping list */}
+          {shoppingList.length > 0 && (
+            <div className="shopping-list-card">
+              <div className="shopping-list-header">
+                <div className="section-label" style={{ margin: 0 }}>
+                  Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+                </div>
+                <button className="btn-outline" onClick={clearShoppingList}>Ryd liste</button>
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {shoppingList.map((item, i) => (
+                  <li key={i} className="shopping-item">
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span className="shopping-item-dot" />
+                      {item}
+                    </div>
+                    <button
+                      className="shopping-item-remove"
+                      onClick={() => removeFromShoppingList(i)}
+                      title="Fjern fra liste"
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Browse view */
+        activeStores.size === 0 ? (
+          <div className="empty-state">
+            Vælg mindst én butik for at se opskrifter
+          </div>
+        ) : loadingRecipes ? (
+          <div className="loading-screen">
+            <div className="loading-dots">
+              <div className="loading-dot" />
+              <div className="loading-dot" />
+              <div className="loading-dot" />
+            </div>
+            <p className="loading-text">Henter ugens opskrifter...</p>
+          </div>
+        ) : error ? (
+          <div className="error-box" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span>{error}</span>
+            <button className="btn-outline" onClick={() => generateRecipes(activeStores, diet)}>
+              Prøv igen
             </button>
           </div>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {shoppingList.map((item, i) => (
-              <li key={i} className="shopping-item">
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span className="shopping-item-dot" />
-                  {item}
-                </div>
-                <button
-                  className="shopping-item-remove"
-                  onClick={() => removeFromShoppingList(i)}
-                  title="Fjern fra liste"
+        ) : (
+          <div className="recipe-browse-section">
+            <h2 className="section-title">Ugens opskrifter · {recipes.length}</h2>
+            <div className="recipe-browse-grid">
+              {recipes.map((r, i) => (
+                <div
+                  key={i}
+                  className="recipe-browse-card"
+                  onClick={() => {
+                    setSelectedRecipe(r);
+                    setServings(r.servings_count || 4);
+                    setShoppingList([]);
+                  }}
                 >
-                  ×
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <div className="recipe-category-tag">{r.emoji} {r.category}</div>
+                  <div className="recipe-browse-title">{r.title}</div>
+                  <div className="recipe-browse-meta">
+                    <span>⏱ {r.time}</span>
+                    <span>🥘 {r.ingredients?.length} ing.</span>
+                  </div>
+                  <div className="recipe-browse-stores">
+                    {r.stores?.map((storeName, si) => {
+                      const store = stores.find(s => s.name === storeName);
+                      return (
+                        <span key={si} className="store-tag">
+                          <span
+                            style={{
+                              width: 6, height: 6,
+                              background: store?.color || "#aaa",
+                              borderRadius: "50%",
+                              display: "inline-block",
+                              flexShrink: 0,
+                            }}
+                          />
+                          {storeName}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
       )}
 
       {/* Saved recipes */}
