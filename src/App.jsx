@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
 import LogoIcon from "./LogoIcon";
@@ -13,6 +13,33 @@ const CHAIN_COLORS = {
 };
 
 const CHAIN_ORDER = ["Rema 1000", "Netto", "Coop 365", "Føtex", "Bilka"];
+const SALLING_BRANDS = new Set(["Netto", "Føtex", "Bilka"]);
+
+// Maps keywords in Salling food-waste product descriptions → our recipe dealItem names
+const FOODWASTE_KEYWORDS = {
+  "kyllingebryst": "Kyllingefilet 600g",
+  "kyllingefilet": "Kyllingefilet 600g",
+  "kylling":       "Kyllingefilet 600g",
+  "laks":          "Laks filet 400g",
+  "hakket oksekød":"Hakket oksekød 500g",
+  "oksekød":       "Hakket oksekød 500g",
+  "mozzarella":    "Mozzarella 125g",
+  "spinat":        "Spinat frisk 200g",
+  "parmesan":      "Parmesan revet 80g",
+  "gulerødder":    "Gulerødder 1kg",
+  "gulerod":       "Gulerødder 1kg",
+  "kartofler":     "Kartofler 2kg",
+  "kartoffel":     "Kartofler 2kg",
+  "fløde":         "Fløde 38% 0.5L",
+  "spaghetti":     "Spaghetti 500g",
+  "pasta":         "Pasta penne 500g",
+  "penne":         "Pasta penne 500g",
+  "ris":           "Ris 1kg",
+  "æg":            "Æg 10 stk.",
+  "basilikum":     "Basilikum",
+  "dåsetomat":     "Dåsetomater 400g",
+  "tomat":         "Dåsetomater 400g",
+};
 
 const STORE_BRANCHES = [
   // Rema 1000
@@ -303,6 +330,10 @@ export default function App() {
     return {};
   });
 
+  // ── Live deals (Salling food-waste API) ─────────────────────────
+  const [dealsData, setDealsData] = useState(null);
+  const [dealsLoading, setDealsLoading] = useState(false);
+
   // ── Pantry ──────────────────────────────────────────────────────
   const [pantryItems, setPantryItems] = useState(() => {
     try {
@@ -351,6 +382,23 @@ export default function App() {
     }
     return () => document.body.classList.remove("recipe-open");
   }, [selectedRecipe]);
+
+  // ── Fetch live food-waste deals from Salling API ─────────────────
+  const localStoresKey = (localStores || []).map(s => s.name).join(",");
+  useEffect(() => {
+    const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
+    if (sallingStores.length === 0 || onboardingStep !== null) {
+      setDealsData(null);
+      return;
+    }
+    setDealsLoading(true);
+    const zips = [...new Set(sallingStores.map(s => s.zip))].slice(0, 3);
+    fetch(`/api/deals?zip=${zips.join(",")}`)
+      .then(r => r.ok ? r.json() : [])
+      .catch(() => [])
+      .then(data => { setDealsData(Array.isArray(data) ? data : []); })
+      .finally(() => setDealsLoading(false));
+  }, [localStoresKey, onboardingStep]);
 
   // ── Matching ────────────────────────────────────────────────────
   function getAvailableItemNames() {
@@ -414,6 +462,44 @@ export default function App() {
   const filteredRecommended = sortByPantry(recommended.filter(matchRecipe));
   const filteredOthers = sortByPantry(others.filter(matchRecipe));
   const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || onlyMakeable) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+
+  // ── Madspild helpers ────────────────────────────────────────────
+  function matchDealToIngredient(deal) {
+    const desc = (deal.description || "").toLowerCase();
+    // Check multi-word keys first (longer → more specific)
+    for (const [kw, ing] of Object.entries(FOODWASTE_KEYWORDS).sort((a, b) => b[0].length - a[0].length)) {
+      if (desc.includes(kw)) return ing;
+    }
+    return null;
+  }
+
+  function isExpiringSoon(endTime) {
+    if (!endTime) return false;
+    const hours = (new Date(endTime) - Date.now()) / 3_600_000;
+    return hours > 0 && hours <= 24;
+  }
+
+  const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
+  const hasSallingStores = sallingStores.length > 0;
+
+  const madspildRecipes = useMemo(() => {
+    if (!dealsData || dealsData.length === 0) return [];
+    const ingredientDeals = new Map(); // dealItem name → best deal object
+    for (const deal of dealsData) {
+      const ing = matchDealToIngredient(deal);
+      if (ing && !ingredientDeals.has(ing)) ingredientDeals.set(ing, deal);
+    }
+    return recipeBank
+      .filter(r => r.dealItems.some(di => ingredientDeals.has(di.name)))
+      .map(r => ({
+        ...r,
+        madspildDeals: r.dealItems
+          .filter(di => ingredientDeals.has(di.name))
+          .map(di => ({ name: di.name, deal: ingredientDeals.get(di.name) })),
+      }))
+      .sort((a, b) => b.madspildDeals.length - a.madspildDeals.length)
+      .slice(0, 8);
+  }, [dealsData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
@@ -682,6 +768,52 @@ export default function App() {
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
+
+  // ── Madspild card ────────────────────────────────────────────────
+  function MadspildCard({ r }) {
+    const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
+    return (
+      <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
+        <div className="card-badges">
+          <span className="madspild-badge">🌱 Madspild</span>
+        </div>
+        <div className="recipe-category-tag">{r.emoji} {r.category}</div>
+        {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
+        <div className="recipe-browse-title">{r.title}</div>
+        <div className="recipe-browse-meta">
+          <span>⏱ {r.time}</span>
+          <span>🥘 {r.ingredients.length} ing.</span>
+        </div>
+        <div className="madspild-deals-list">
+          {r.madspildDeals.map(({ name, deal }) => (
+            <div key={name} className="madspild-deal-row">
+              <span className="madspild-deal-desc">{deal.description || name.replace(/ \d+.*$/, "")}</span>
+              <span className="madspild-deal-pricing">
+                {deal.originalPrice != null && (
+                  <span className="madspild-original">{deal.originalPrice.toFixed(0)} kr</span>
+                )}
+                {deal.price != null && (
+                  <span className="madspild-price">{deal.price.toFixed(0)} kr</span>
+                )}
+                {deal.discount != null && (
+                  <span className="madspild-pct">-{deal.discount}%</span>
+                )}
+              </span>
+              {isExpiringSoon(deal.endTime) && (
+                <span className="madspild-expiry-pill">⚠ Udløber snart</span>
+              )}
+            </div>
+          ))}
+        </div>
+        <button
+          className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
+          onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
+        >
+          {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+        </button>
+      </div>
+    );
+  }
 
   // ── Recipe card (browse) ────────────────────────────────────────
   function RecipeCard({ r }) {
@@ -1068,7 +1200,10 @@ export default function App() {
 
           <div className="recipe-card">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
-              <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
+              <div>
+                <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
+                {selectedRecipe.subtitle && <p className="recipe-subtitle">{selectedRecipe.subtitle}</p>}
+              </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
                 <button
                   className="share-btn"
@@ -1108,9 +1243,36 @@ export default function App() {
               ))}
             </div>
 
+            {/* Live madspild pricing banner */}
+            {selectedRecipe.madspildDeals && selectedRecipe.madspildDeals.length > 0 && (
+              <div className="madspild-detail-banner">
+                <div className="madspild-detail-banner-title">🌱 Madspild — aktuelle priser</div>
+                {selectedRecipe.madspildDeals.map(({ name, deal }) => (
+                  <div key={name} className="madspild-detail-row">
+                    <span className="madspild-detail-desc">{deal.description || name}</span>
+                    <span className="madspild-detail-pricing">
+                      {deal.originalPrice != null && <s className="madspild-detail-original">{deal.originalPrice.toFixed(2)} kr</s>}
+                      {deal.price != null && <strong className="madspild-detail-price">{deal.price.toFixed(2)} kr</strong>}
+                      {deal.discount != null && <span className="madspild-detail-pct">-{deal.discount}%</span>}
+                    </span>
+                    {isExpiringSoon(deal.endTime) && (
+                      <span className="madspild-expiry-pill">⚠ Udløber snart</span>
+                    )}
+                    {deal.store && <span className="madspild-detail-store">{deal.store}</span>}
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="recipe-meta-bar">
               <span>⏱ {selectedRecipe.time}</span>
               {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{selectedRecipe.cuisine}</span>}
+              {selectedRecipe.difficulty && (
+                <span className={`difficulty-badge difficulty-${selectedRecipe.difficulty === "Nem" ? "nem" : selectedRecipe.difficulty === "Avanceret" ? "avanceret" : "mellem"}`}>
+                  {selectedRecipe.difficulty}
+                </span>
+              )}
+              {selectedRecipe.calories && <span className="calories-meta">🔥 {selectedRecipe.calories} kcal</span>}
               <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 👥
                 <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
@@ -1162,8 +1324,14 @@ export default function App() {
               ))}
             </ol>
 
-            {selectedRecipe.tip && (
-              <div className="recipe-tip"><strong>Tips:</strong> {selectedRecipe.tip}</div>
+            {(selectedRecipe.tips || selectedRecipe.tip) && (
+              <div className="recipe-tips-block">
+                <div className="recipe-tips-label">💡 Tips</div>
+                {selectedRecipe.tips
+                  ? selectedRecipe.tips.map((t, i) => <p key={i} className="recipe-tip-item">{t}</p>)
+                  : <p className="recipe-tip-item">{selectedRecipe.tip}</p>
+                }
+              </div>
             )}
           </div>
 
@@ -1193,6 +1361,40 @@ export default function App() {
       ) : (
         /* Browse view */
         <>
+          {/* ── Madspild section ──────────────────────────────── */}
+          {hasSallingStores ? (
+            <div className="madspild-section">
+              <div className="madspild-section-header">
+                <div className="madspild-icon">🌱</div>
+                <div>
+                  <h2 className="madspild-title">Madspild</h2>
+                  <p className="madspild-tagline">Lav mad på varer der skal bruges nu — spar penge og reducer madspild</p>
+                </div>
+              </div>
+
+              {dealsLoading ? (
+                <div className="madspild-loading">
+                  <div className="madspild-dots"><span /><span /><span /></div>
+                  <p>Henter aktuelle madspildstilbud…</p>
+                </div>
+              ) : madspildRecipes.length > 0 ? (
+                <div className="recipe-browse-grid">
+                  {madspildRecipes.map(r => <MadspildCard key={r.id} r={r} />)}
+                </div>
+              ) : dealsData !== null ? (
+                <p className="madspild-empty">Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.</p>
+              ) : null}
+            </div>
+          ) : (
+            <div className="madspild-cta">
+              <span className="madspild-cta-icon">🌱</span>
+              <span className="madspild-cta-text">Tilføj Netto eller Føtex for at se madspildstilbud</span>
+              <button className="madspild-cta-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>
+                Tilføj butik
+              </button>
+            </div>
+          )}
+
           {filteredRecommended.length > 0 && (
             <div className="recipe-browse-section">
               <button

@@ -343,6 +343,58 @@
   justify-content: center;
   font-weight: 700;
 }
+.recipe-subtitle {
+  font-size: 14px;
+  color: #5a7a5a;
+  margin: 4px 0 0 0;
+  font-style: italic;
+  line-height: 1.4;
+}
+.recipe-tips-block {
+  background: linear-gradient(135deg, #e8f0e0 0%, #f0ebe0 100%);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-top: 1.25rem;
+}
+.recipe-tips-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #4a7050;
+  margin-bottom: 8px;
+}
+.recipe-tip-item {
+  font-size: 13px;
+  color: #3a5a3a;
+  line-height: 1.6;
+  margin: 0 0 6px 0;
+  padding-left: 14px;
+  position: relative;
+}
+.recipe-tip-item::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #6a9470;
+}
+.recipe-tip-item:last-child { margin-bottom: 0; }
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+.difficulty-nem { background: #d4ead4; color: #2a5a2a; }
+.difficulty-mellem { background: #fff0cc; color: #7a5500; }
+.difficulty-avanceret { background: #fde8e8; color: #8a2020; }
+.calories-meta {
+  font-size: 12px;
+  color: #7a8a7a;
+}
 .recipe-tip {
   background: linear-gradient(135deg, #e8f0e0 0%, #f0ebe0 100%);
   border-radius: 14px;
@@ -1581,6 +1633,15 @@ html.dark .ingredient-pantry-dot { background: #2a3d2a; }
 html.dark .step-item { color: #b8ceb8; }
 html.dark .step-item:not(:last-child) { border-color: #1e2e1e; }
 html.dark .recipe-tip { background: linear-gradient(135deg, #162616 0%, #1e2a18 100%); color: #8aaa8a; }
+html.dark .recipe-subtitle { color: #5a7a5a; }
+html.dark .recipe-tips-block { background: linear-gradient(135deg, #162616 0%, #1e2a18 100%); }
+html.dark .recipe-tips-label { color: #6a9470; }
+html.dark .recipe-tip-item { color: #8aaa8a; }
+html.dark .recipe-tip-item::before { color: #4a7050; }
+html.dark .difficulty-nem { background: #1a2e1a; color: #7abf7a; }
+html.dark .difficulty-mellem { background: #2a2010; color: #c8a030; }
+html.dark .difficulty-avanceret { background: #2a1010; color: #c06060; }
+html.dark .calories-meta { color: #5a7a5a; }
 
 html.dark .ingredient-legend { background: #141e14; color: #4a6a4a; }
 html.dark .section-label { color: var(--sage); }
@@ -2321,6 +2382,230 @@ html.dark .cuisine-badge {
   margin-bottom: 1.25rem;
   flex-wrap: wrap;
   margin-top: -6px;
+}
+
+/* ─── Madspild section ───────────────────────── */
+.madspild-section {
+  margin: 0 0 2rem;
+  padding: 0;
+}
+.madspild-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 20px 20px 16px;
+  background: linear-gradient(135deg, #1a2e18 0%, #2a3820 60%, #1e2e16 100%);
+  border-radius: 18px;
+  border: 1px solid #3a5030;
+}
+.madspild-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(60,120,40,0.5));
+}
+.madspild-title {
+  font-family: var(--font-serif, "Playfair Display", serif);
+  font-size: 22px;
+  font-weight: 800;
+  color: #a8d898;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+.madspild-tagline {
+  font-size: 12px;
+  color: #6a9460;
+  margin: 0;
+  line-height: 1.4;
+}
+.madspild-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  color: #6a9460;
+  font-size: 13px;
+}
+.madspild-dots {
+  display: flex;
+  gap: 4px;
+}
+.madspild-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4a7040;
+  animation: madspild-bounce 1.2s infinite;
+}
+.madspild-dots span:nth-child(2) { animation-delay: 0.2s; }
+.madspild-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes madspild-bounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.madspild-empty {
+  font-size: 13px;
+  color: #6a9460;
+  padding: 12px 20px;
+  text-align: center;
+}
+/* The card variant */
+.madspild-card {
+  border-color: #3a5030 !important;
+  background: linear-gradient(160deg, #141e12 0%, #1a2a16 100%) !important;
+}
+.madspild-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: #2a4020;
+  color: #7abf5a;
+  border: 1px solid #3a5828;
+  letter-spacing: 0.2px;
+}
+.madspild-deals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 6px 0 8px;
+}
+.madspild-deal-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+.madspild-deal-desc {
+  color: #8aaa80;
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.madspild-deal-pricing {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.madspild-original {
+  text-decoration: line-through;
+  color: #5a7050;
+  font-size: 11px;
+}
+.madspild-price {
+  font-weight: 700;
+  color: #7abf5a;
+  font-size: 13px;
+}
+.madspild-pct {
+  background: #2a4020;
+  color: #6abf4a;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 8px;
+}
+.madspild-expiry-pill {
+  font-size: 10px;
+  font-weight: 600;
+  color: #c89040;
+  background: #2a2010;
+  border: 1px solid #4a3820;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+/* CTA for users without Salling stores */
+.madspild-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 1.5rem;
+  background: #141e12;
+  border: 1px dashed #2a4020;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #6a9460;
+}
+.madspild-cta-icon { font-size: 18px; flex-shrink: 0; }
+.madspild-cta-text { flex: 1; }
+.madspild-cta-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7abf5a;
+  background: #1e3018;
+  border: 1px solid #3a5028;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.madspild-cta-btn:hover { background: #243820; }
+/* Detail view banner */
+.madspild-detail-banner {
+  background: linear-gradient(135deg, #141e12 0%, #1a2a16 100%);
+  border: 1px solid #3a5030;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.madspild-detail-banner-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6a9460;
+  margin-bottom: 10px;
+}
+.madspild-detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid #1e2e1e;
+  font-size: 13px;
+}
+.madspild-detail-row:last-child { border-bottom: none; }
+.madspild-detail-desc {
+  flex: 1;
+  color: #8aaa80;
+  font-weight: 500;
+}
+.madspild-detail-pricing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.madspild-detail-original {
+  color: #5a7050;
+  font-size: 12px;
+}
+.madspild-detail-price {
+  color: #7abf5a;
+  font-size: 14px;
+}
+.madspild-detail-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6abf4a;
+  background: #1e3018;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+.madspild-detail-store {
+  font-size: 11px;
+  color: #4a7040;
+  margin-left: auto;
 }
 
 /* ─── Pantry trigger button ──────────────────── */
