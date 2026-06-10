@@ -208,7 +208,6 @@ export default function App() {
   const [showStorePicker, setShowStorePicker] = useState(false);
   const [storeSearch, setStoreSearch] = useState("");
 
-  const [activeStores, setActiveStores] = useState(new Set([0, 1, 2]));
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
   const [shoppingList, setShoppingList] = useState([]);
@@ -234,14 +233,15 @@ export default function App() {
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
 
   // ── Matching ────────────────────────────────────────────────────
-  function getAvailableItemNames(storeSet) {
+  function getAvailableItemNames() {
+    const selectedChains = new Set((localStores || []).map(s => s.chain));
     return new Set(
-      stores.filter((_, i) => storeSet.has(i)).flatMap(s => s.items.map(it => it.name))
+      stores.filter(s => selectedChains.has(s.name)).flatMap(s => s.items.map(it => it.name))
     );
   }
 
-  function getScoredRecipes(storeSet, dietFilter) {
-    const available = getAvailableItemNames(storeSet);
+  function getScoredRecipes(dietFilter) {
+    const available = getAvailableItemNames();
     const excluded = dietExcludeItems[dietFilter];
     return recipeBank
       .filter(r => !r.dealItems.some(di => excluded.has(di.name)))
@@ -255,7 +255,7 @@ export default function App() {
       });
   }
 
-  const scoredRecipes = getScoredRecipes(activeStores, diet);
+  const scoredRecipes = getScoredRecipes(diet);
   const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => b.dealItems.length - a.dealItems.length);
   const others = scoredRecipes.filter(r => !r.fullyMatched);
 
@@ -471,7 +471,7 @@ export default function App() {
         </div>
         <div className="recipe-deal-tags">
           {r.dealItems.map(di => {
-            const available = getAvailableItemNames(activeStores).has(di.name);
+            const available = getAvailableItemNames().has(di.name);
             return (
               <span
                 key={di.name}
@@ -565,24 +565,6 @@ export default function App() {
           <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>skift</button>
         </div>
       </header>
-
-      {/* Store selector */}
-      <div className="store-selector">
-        {stores.map((store, si) => (
-          <button
-            key={si}
-            className={`store-toggle${activeStores.has(si) ? " active" : ""}`}
-            onClick={() => {
-              const next = new Set(activeStores);
-              next.has(si) ? next.delete(si) : next.add(si);
-              setActiveStores(next);
-            }}
-          >
-            <span className="store-dot" style={{ background: store.color }} />
-            {store.name}
-          </button>
-        ))}
-      </div>
 
       {/* Diet filters */}
       <div className="diet-filters">
