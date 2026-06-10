@@ -980,6 +980,246 @@
 .sp-close-btn:hover { background: #eee; }
 .store-picker-card .store-branch-list { flex: 1; overflow-y: auto; }
 
+/* ─── Add-to-plan button ─────────────────────── */
+.add-to-plan-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  width: 100%;
+  justify-content: center;
+  background: transparent;
+  border: 1.5px dashed #c8d9c8;
+  color: #4a7050;
+  border-radius: 50px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+.add-to-plan-btn:hover { background: #f0f7f0; border-color: #7ab87a; border-style: solid; }
+.add-to-plan-btn.in-plan { background: #eef5ee; border-color: #7ab87a; border-style: solid; color: #2a5030; cursor: default; }
+.add-to-plan-btn.detail {
+  background: #f4f7f4;
+  border: 1.5px solid #c8d9c8;
+  border-style: solid;
+  padding: 6px 14px;
+  font-size: 12px;
+  width: auto;
+}
+.add-to-plan-btn.detail:hover:not(.in-plan) { background: #e8f0e8; border-color: #7a9e7a; }
+.add-to-plan-btn.detail.in-plan { background: #eef5ee; border-color: #8ab88a; color: #3a6040; cursor: default; }
+
+/* ─── Day picker modal ───────────────────────── */
+.day-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.day-picker-card {
+  background: white;
+  border-radius: 22px 22px 0 0;
+  width: 100%;
+  max-width: 720px;
+  padding: 1.5rem 1.5rem 2.5rem;
+  box-sizing: border-box;
+}
+.day-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 1rem;
+}
+.day-picker-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  background: #fafafa;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.day-picker-btn:hover:not(.occupied) { background: #f0f7f0; border-color: #b4d4b4; }
+.day-picker-btn.occupied { background: #fff8e6; border-color: #f0d080; }
+.day-picker-short { font-size: 11px; font-weight: 700; color: #1a1a1a; }
+.day-picker-full { display: none; }
+.day-picker-recipe { font-size: 9px; color: #9ca3af; text-align: center; line-height: 1.3; max-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-picker-empty-label { font-size: 9px; color: #c4ddc4; font-weight: 600; }
+
+/* ─── Meal plan card ─────────────────────────── */
+.meal-plan-card {
+  background: white;
+  border-radius: 22px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+.meal-plan-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 8px;
+}
+.combined-list-btn {
+  background: #4a7050;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.combined-list-btn:hover { background: #3a5a40; }
+
+/* ─── Meal plan weekly grid ──────────────────── */
+.meal-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(80px, 1fr));
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.meal-plan-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 16px;
+  padding: 10px 6px;
+  min-height: 110px;
+  position: relative;
+  transition: all 0.15s;
+  min-width: 0;
+}
+.meal-plan-day.empty {
+  background: #fafafa;
+  border: 1.5px dashed #e5e5e5;
+}
+.meal-plan-day.filled {
+  background: linear-gradient(160deg, #f5faf4 0%, #eef5ee 100%);
+  border: 1.5px solid #c4ddc4;
+  cursor: grab;
+}
+.meal-plan-day.filled:active { cursor: grabbing; }
+.meal-plan-day.dragging { opacity: 0.5; transform: scale(0.97); }
+.meal-plan-day-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+.meal-plan-day.filled .meal-plan-day-name { color: #4a7050; }
+.meal-plan-emoji { font-size: 20px; margin-bottom: 4px; }
+.meal-plan-recipe-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #1a2e1a;
+  text-align: center;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  width: 100%;
+}
+.meal-plan-recipe-meta { font-size: 9px; color: #6b7280; margin-top: 3px; }
+.meal-plan-servings {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #4a7050;
+  font-weight: 600;
+}
+.plan-sv-btn {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #c4ddc4;
+  background: white;
+  color: #4a7050;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit;
+  padding: 0;
+  transition: background 0.12s;
+}
+.plan-sv-btn:hover { background: #eef5ee; }
+.meal-plan-empty-label { font-size: 10px; color: #d1d5db; margin-top: auto; }
+.meal-plan-remove {
+  position: absolute;
+  top: 5px; right: 5px;
+  background: none;
+  border: none;
+  color: #c8c8c8;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-family: inherit;
+  transition: color 0.12s, background 0.12s;
+}
+.meal-plan-remove:hover { color: #e05050; background: #fef2f2; }
+
+/* ─── Combined shopping list ─────────────────── */
+.combined-list {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.combined-list-store-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+.combined-list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.combined-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #1a1a1a;
+  padding: 5px 0;
+  border-bottom: 1px solid #f8f8f8;
+}
+
 /* ─── Responsive ─────────────────────────────── */
 @media (max-width: 600px) {
   .app { padding: 1rem; }

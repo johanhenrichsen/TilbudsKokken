@@ -170,6 +170,22 @@ const dietExcludeItems = {
   Mælkefri: new Set(["Fløde 38% 0.5L", "Mozzarella 125g", "Parmesan revet 80g"]),
 };
 
+const DAY_SHORT = ["Man", "Tirs", "Ons", "Tors", "Fre", "Lør", "Søn"];
+const DAY_FULL  = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"];
+
+function mergeIngredientTexts(texts) {
+  if (texts.length === 1) return texts[0];
+  const re = /^(\d+(?:[.,]\d+)?)\s*([a-zA-ZæøåÆØÅ]*)\s+(.+)$/;
+  const parsed = texts.map(t => { const m = t.match(re); return m ? { amount: parseFloat(m[1].replace(",",".")), unit: m[2].toLowerCase(), rest: m[3].trim() } : null; });
+  if (parsed.every(p => p && p.unit === parsed[0].unit && p.rest === parsed[0].rest)) {
+    const total = parsed.reduce((s, p) => s + p.amount, 0);
+    const str = Number.isInteger(total) ? total : parseFloat(total.toFixed(1));
+    return `${str}${parsed[0].unit ? parsed[0].unit + " " : ""}${parsed[0].rest}`;
+  }
+  if (texts.every(t => t === texts[0])) return `${texts.length}× ${texts[0]}`;
+  return texts.join(" + ");
+}
+
 function getWeekNumber(d) {
   const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
@@ -203,6 +219,17 @@ export default function App() {
     catch { return []; }
   });
   const [expandedSaved, setExpandedSaved] = useState(new Set());
+
+  // ── Meal plan ───────────────────────────────────────────────────
+  const [mealPlan, setMealPlan] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("mealPlan") || "null");
+      return saved && saved.length === 7 ? saved : Array(7).fill(null);
+    } catch { return Array(7).fill(null); }
+  });
+  const [addingToPlan, setAddingToPlan] = useState(null); // recipe waiting for day pick
+  const [showCombinedList, setShowCombinedList] = useState(false);
+  const [dragFromDay, setDragFromDay] = useState(null);
 
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
 
@@ -290,6 +317,73 @@ export default function App() {
     });
   }
 
+  // ── Meal plan functions ─────────────────────────────────────────
+  function saveMealPlanState(plan) {
+    localStorage.setItem("mealPlan", JSON.stringify(plan));
+  }
+  function addToPlan(recipe, dayIdx) {
+    setMealPlan(prev => {
+      const next = [...prev];
+      next[dayIdx] = { recipe, servings: recipe.servings_count || 4 };
+      saveMealPlanState(next);
+      return next;
+    });
+    setAddingToPlan(null);
+  }
+  function removeFromPlan(dayIdx) {
+    setMealPlan(prev => {
+      const next = [...prev];
+      next[dayIdx] = null;
+      saveMealPlanState(next);
+      return next;
+    });
+  }
+  function setPlanServings(dayIdx, val) {
+    setMealPlan(prev => {
+      const next = [...prev];
+      if (next[dayIdx]) next[dayIdx] = { ...next[dayIdx], servings: val };
+      saveMealPlanState(next);
+      return next;
+    });
+  }
+  function handleDayDrop(toDayIdx) {
+    if (dragFromDay === null || dragFromDay === toDayIdx) { setDragFromDay(null); return; }
+    setMealPlan(prev => {
+      const next = [...prev];
+      [next[toDayIdx], next[dragFromDay]] = [next[dragFromDay], next[toDayIdx]];
+      saveMealPlanState(next);
+      return next;
+    });
+    setDragFromDay(null);
+  }
+  function buildCombinedList() {
+    const byStore = {};
+    for (const entry of mealPlan) {
+      if (!entry) continue;
+      const { recipe, servings: sv } = entry;
+      for (const ing of recipe.ingredients) {
+        if (!ing.dealItem) continue;
+        const di = recipe.dealItems.find(d => d.name === ing.dealItem);
+        if (!di) continue;
+        const store = di.store;
+        const scaled = scaleIngredient(ing.text, recipe.servings_count || 4, sv);
+        if (!byStore[store]) byStore[store] = {};
+        if (!byStore[store][ing.dealItem]) byStore[store][ing.dealItem] = [];
+        byStore[store][ing.dealItem].push(scaled);
+      }
+    }
+    return Object.entries(byStore).map(([store, items]) => ({
+      store,
+      color: storeColorMap[store] || "#888",
+      items: Object.entries(items).map(([dealItem, texts]) => ({
+        dealItem,
+        merged: mergeIngredientTexts(texts),
+      })),
+    }));
+  }
+  const combinedList = showCombinedList ? buildCombinedList() : [];
+  const planCount = mealPlan.filter(Boolean).length;
+
   // toggle during onboarding (pending, not saved yet)
   function togglePending(store) {
     setPendingStores(prev => {
@@ -363,6 +457,7 @@ export default function App() {
 
   // ── Recipe card (browse) ────────────────────────────────────────
   function RecipeCard({ r }) {
+    const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
     return (
       <div
         className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
@@ -388,6 +483,13 @@ export default function App() {
             );
           })}
         </div>
+        <button
+          className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
+          onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
+          title={inPlan ? "Allerede i madplan" : "Tilføj til madplan"}
+        >
+          {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+        </button>
       </div>
     );
   }
@@ -410,6 +512,38 @@ export default function App() {
               selected={selectedNames}
               onToggle={toggleStore}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Day picker modal */}
+      {addingToPlan && (
+        <div className="day-picker-overlay" onClick={e => e.target === e.currentTarget && setAddingToPlan(null)}>
+          <div className="day-picker-card">
+            <div className="sp-modal-header">
+              <div>
+                <h2 className="sp-title">Vælg dag</h2>
+                <p style={{ margin: 0, fontSize: 13, color: "#6b7280" }}>{addingToPlan.emoji} {addingToPlan.title}</p>
+              </div>
+              <button className="sp-close-btn" onClick={() => setAddingToPlan(null)}>×</button>
+            </div>
+            <div className="day-picker-grid">
+              {DAY_FULL.map((day, i) => {
+                const occupied = mealPlan[i];
+                return (
+                  <button
+                    key={i}
+                    className={`day-picker-btn${occupied ? " occupied" : ""}`}
+                    onClick={() => addToPlan(addingToPlan, i)}
+                  >
+                    <span className="day-picker-short">{DAY_SHORT[i]}</span>
+                    <span className="day-picker-full">{day}</span>
+                    {occupied && <span className="day-picker-recipe">{occupied.recipe.emoji} {occupied.recipe.title}</span>}
+                    {!occupied && <span className="day-picker-empty-label">Ledig</span>}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -473,7 +607,7 @@ export default function App() {
           <div className="recipe-card">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
               <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
-              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <div style={{ display: "flex", gap: 8, flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
                 <button
                   className="share-btn"
                   onClick={() => shareRecipe(selectedRecipe)}
@@ -488,6 +622,17 @@ export default function App() {
                 >
                   🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
                 </button>
+                {(() => {
+                  const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
+                  return (
+                    <button
+                      className={`add-to-plan-btn detail${inPlan ? " in-plan" : ""}`}
+                      onClick={() => !inPlan && setAddingToPlan(selectedRecipe)}
+                    >
+                      📅 <span>{inPlan ? "I madplan" : "Madplan"}</span>
+                    </button>
+                  );
+                })()}
               </div>
             </div>
 
@@ -607,6 +752,77 @@ export default function App() {
             <div className="empty-state">Ingen opskrifter matcher det valgte filter</div>
           )}
         </>
+      )}
+
+      {/* Meal plan */}
+      {planCount > 0 && (
+        <div className="meal-plan-card">
+          <div className="meal-plan-header">
+            <div className="section-label" style={{ margin: 0 }}>📅 Madplan · {planCount} {planCount === 1 ? "dag" : "dage"}</div>
+            <button
+              className="combined-list-btn"
+              onClick={() => setShowCombinedList(v => !v)}
+            >
+              {showCombinedList ? "Skjul indkøbsliste" : "Samlet indkøbsliste"}
+            </button>
+          </div>
+
+          <div className="meal-plan-grid">
+            {mealPlan.map((entry, i) => (
+              <div
+                key={i}
+                className={`meal-plan-day${entry ? " filled" : " empty"}${dragFromDay === i ? " dragging" : ""}`}
+                draggable={!!entry}
+                onDragStart={() => setDragFromDay(i)}
+                onDragOver={e => e.preventDefault()}
+                onDrop={() => handleDayDrop(i)}
+                onDragEnd={() => setDragFromDay(null)}
+              >
+                <div className="meal-plan-day-name">{DAY_SHORT[i]}</div>
+                {entry ? (
+                  <>
+                    <div className="meal-plan-emoji">{entry.recipe.emoji}</div>
+                    <div className="meal-plan-recipe-title">{entry.recipe.title}</div>
+                    <div className="meal-plan-recipe-meta">⏱ {entry.recipe.time}</div>
+                    <div className="meal-plan-servings">
+                      <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.max(1, entry.servings - 1))}>−</button>
+                      <span>{entry.servings}</span>
+                      <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.min(10, entry.servings + 1))}>+</button>
+                    </div>
+                    <button className="meal-plan-remove" onClick={() => removeFromPlan(i)} title="Fjern">×</button>
+                  </>
+                ) : (
+                  <div className="meal-plan-empty-label">Ledig</div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {showCombinedList && (
+            <div className="combined-list">
+              {combinedList.length === 0 ? (
+                <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
+              ) : (
+                combinedList.map(group => (
+                  <div key={group.store} className="combined-list-store">
+                    <div className="combined-list-store-label">
+                      <span className="deal-store-dot" style={{ background: group.color }} />
+                      {group.store}
+                    </div>
+                    <ul className="combined-list-items">
+                      {group.items.map(it => (
+                        <li key={it.dealItem} className="combined-list-item">
+                          <span className="shopping-item-dot" />
+                          {it.merged}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
       )}
 
       {/* Saved recipes */}
