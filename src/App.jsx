@@ -233,7 +233,6 @@ export default function App() {
   const [showCombinedList, setShowCombinedList] = useState(false);
   const [dragFromDay, setDragFromDay] = useState(null);
 
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
   const [search, setSearch] = useState("");
   const [timeFilter, setTimeFilter] = useState("Alle tider");
   const [planCopied, setPlanCopied] = useState(false);
@@ -263,11 +262,6 @@ export default function App() {
 
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
   const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("darkMode", String(darkMode));
-  }, [darkMode]);
 
   useEffect(() => {
     if (!showSplash) return;
@@ -764,13 +758,6 @@ export default function App() {
           </div>
           <div className="header-actions">
             <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
-            <button
-              className="header-icon-btn"
-              onClick={() => setDarkMode(d => !d)}
-              title={darkMode ? "Lys tilstand" : "Mørk tilstand"}
-            >
-              {darkMode ? "☀️" : "🌙"}
-            </button>
           </div>
         </div>
 

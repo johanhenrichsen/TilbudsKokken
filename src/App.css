@@ -1367,8 +1367,8 @@
 .share-plan-btn:hover { background: #f0f7f0; border-color: #7ab87a; }
 .share-plan-btn.copied { background: #eef5ee; border-color: #7ab87a; color: #2a5030; cursor: default; }
 
-/* ─── Dark mode overrides ────────────────────── */
-html.dark body { background: #0c180c; }
+/* ─── Dark mode (permanent) ──────────────────── */
+body { background: #0c180c; }
 html.dark .app { color: #d8e8d8; }
 
 html.dark .app-hero {
