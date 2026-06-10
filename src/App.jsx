@@ -236,6 +236,13 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [timeFilter, setTimeFilter] = useState("Alle tider");
   const [planCopied, setPlanCopied] = useState(false);
+  const [collapsedSections, setCollapsedSections] = useState(() => {
+    try {
+      const saved = localStorage.getItem("collapsedSections");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { recommended: false, others: true };
+  });
 
   // ── Onboarding ──────────────────────────────────────────────────
   const [onboardingStep, setOnboardingStep] = useState(() => {
@@ -440,6 +447,14 @@ export default function App() {
   }
   const combinedList = showCombinedList ? buildCombinedList() : [];
   const planCount = mealPlan.filter(Boolean).length;
+
+  function toggleSection(key) {
+    setCollapsedSections(prev => {
+      const next = { ...prev, [key]: !prev[key] };
+      try { localStorage.setItem("collapsedSections", JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }
 
   async function shareMealPlan() {
     const lines = mealPlan
@@ -925,18 +940,54 @@ export default function App() {
         <>
           {filteredRecommended.length > 0 && (
             <div className="recipe-browse-section">
-              <h2 className="section-title">⭐ Denne uges anbefalinger · {filteredRecommended.length}</h2>
-              <div className="recipe-browse-grid">
-                {filteredRecommended.map(r => <RecipeCard key={r.id} r={r} />)}
+              <button
+                className="section-toggle-btn"
+                onClick={() => toggleSection("recommended")}
+                aria-expanded={!collapsedSections.recommended}
+              >
+                <span className="section-toggle-label">⭐ Denne uges anbefalinger</span>
+                <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
+                <svg
+                  className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
+                <div className="section-body-inner">
+                  <div className="recipe-browse-grid section-body-grid">
+                    {filteredRecommended.map(r => <RecipeCard key={r.id} r={r} />)}
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {filteredOthers.length > 0 && (
             <div className="recipe-browse-section">
-              <h2 className="section-title">Kræver andre butikker · {filteredOthers.length}</h2>
-              <div className="recipe-browse-grid">
-                {filteredOthers.map(r => <RecipeCard key={r.id} r={r} />)}
+              <button
+                className="section-toggle-btn"
+                onClick={() => toggleSection("others")}
+                aria-expanded={!collapsedSections.others}
+              >
+                <span className="section-toggle-label">Kræver andre butikker</span>
+                <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
+                <svg
+                  className={`section-chevron${collapsedSections.others ? "" : " open"}`}
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
+                <div className="section-body-inner">
+                  <div className="recipe-browse-grid section-body-grid">
+                    {filteredOthers.map(r => <RecipeCard key={r.id} r={r} />)}
+                  </div>
+                </div>
               </div>
             </div>
           )}

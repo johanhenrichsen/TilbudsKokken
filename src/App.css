@@ -551,13 +551,73 @@
 }
 
 /* ─── Recipe browse ──────────────────────────── */
-.recipe-browse-section { margin-bottom: 1.5rem; }
-.section-title {
+.recipe-browse-section { margin-bottom: 1rem; }
+
+/* Collapsible section toggle button */
+.section-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  margin: 0 -12px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.15s ease;
+  text-align: left;
+}
+.section-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+.section-toggle-btn:active {
+  background: rgba(0, 0, 0, 0.07);
+}
+.section-toggle-label {
   font-size: 16px;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 12px;
   letter-spacing: -0.3px;
+  flex: 1;
+}
+.section-count-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #5a7a5a;
+  background: rgba(90, 120, 90, 0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.section-chevron {
+  color: #7a9a7a;
+  flex-shrink: 0;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: rotate(180deg);
+}
+.section-chevron.open {
+  transform: rotate(0deg);
+}
+
+/* Collapsible body — grid-row animation */
+.section-body-wrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.section-body-wrap.collapsed {
+  grid-template-rows: 0fr;
+}
+.section-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.section-body-grid {
+  padding-top: 10px;
+  padding-bottom: 4px;
 }
 .recipe-browse-grid {
   display: grid;
@@ -1342,7 +1402,11 @@ html.dark .recipe-browse-card.featured {
   background: linear-gradient(135deg, #192819 0%, #1d2f1d 100%);
 }
 
-html.dark .section-title { color: #e4f0e4; }
+html.dark .section-toggle-label { color: #e4f0e4; }
+html.dark .section-count-badge { color: #7ab87a; background: rgba(122, 184, 122, 0.12); }
+html.dark .section-chevron { color: #5a8a5a; }
+html.dark .section-toggle-btn:hover { background: rgba(255,255,255,0.06); }
+html.dark .section-toggle-btn:active { background: rgba(255,255,255,0.1); }
 html.dark .recipe-title { color: #e4f0e4; }
 html.dark .recipe-browse-title { color: #e4f0e4; }
 html.dark .recipe-browse-meta { color: #6a8a6a; }
