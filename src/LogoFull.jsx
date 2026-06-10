@@ -1,29 +1,18 @@
-import LogoIcon from "./LogoIcon";
+import logoTextSrc from "./assets/logo-text.svg";
 
-const SIZES = {
-  sm: { icon: 40,  font: 16, tagline: 0,  gap: 8  },
-  md: { icon: 60,  font: 24, tagline: 0,  gap: 12 },
-  lg: { icon: 90,  font: 34, tagline: 11, gap: 14 },
-  xl: { icon: 130, font: 48, tagline: 15, gap: 18 },
-};
+// Width in px for each named size (SVG is square so height = width)
+const SIZE_PX = { sm: 90, md: 130, lg: 175, xl: 230 };
 
 export default function LogoFull({ size = "md", className = "" }) {
-  const { icon, font, tagline, gap } = SIZES[size] || SIZES.md;
-
+  const px = SIZE_PX[size] ?? SIZE_PX.md;
   return (
-    <div
+    <img
+      src={logoTextSrc}
+      width={px}
+      height={px}
       className={`logo-full${className ? ` ${className}` : ""}`}
-      style={{ gap }}
-    >
-      <LogoIcon size={icon} />
-      <div className="logo-wordmark" style={{ fontSize: font }}>
-        TilbudsKokken
-      </div>
-      {tagline > 0 && (
-        <p className="logo-tagline" style={{ fontSize: tagline }}>
-          BEDRE TILBUD. BEDRE MAD.
-        </p>
-      )}
-    </div>
+      alt="TilbudsKokken"
+      style={{ display: "block" }}
+    />
   );
 }

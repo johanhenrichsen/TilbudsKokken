@@ -873,10 +873,9 @@ export default function App() {
           <div className="splash-ring" />
           <div className="splash-ring splash-ring-2" />
           <div className="splash-content">
-            <div className="splash-icon">
-              <LogoIcon size={100} />
+            <div className="splash-logo">
+              <LogoFull size="xl" />
             </div>
-            <h1 className="splash-title">TilbudsKokken</h1>
             <p className="splash-tagline">BEDRE TILBUD. BEDRE MAD.</p>
           </div>
         </div>
