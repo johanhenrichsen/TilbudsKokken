@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
 
@@ -230,7 +230,18 @@ export default function App() {
   const [showCombinedList, setShowCombinedList] = useState(false);
   const [dragFromDay, setDragFromDay] = useState(null);
 
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  const [search, setSearch] = useState("");
+  const [timeFilter, setTimeFilter] = useState("Alle tider");
+  const [planCopied, setPlanCopied] = useState(false);
+
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
+  const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", String(darkMode));
+  }, [darkMode]);
 
   // ── Matching ────────────────────────────────────────────────────
   function getAvailableItemNames() {
@@ -258,6 +269,25 @@ export default function App() {
   const scoredRecipes = getScoredRecipes(diet);
   const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => b.dealItems.length - a.dealItems.length);
   const others = scoredRecipes.filter(r => !r.fullyMatched);
+
+  function parseMinutes(timeStr) {
+    const h = timeStr.match(/(\d+)\s*t/);
+    const m = timeStr.match(/(\d+)\s*min/);
+    return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
+  }
+  const searchQ = search.toLowerCase();
+  function matchRecipe(r) {
+    if (search && !r.title.toLowerCase().includes(searchQ) &&
+        !r.ingredients.some(ing => (ing.text || ing).toLowerCase().includes(searchQ))) return false;
+    const mins = parseMinutes(r.time);
+    if (timeFilter === "Under 20 min" && mins >= 20) return false;
+    if (timeFilter === "Under 45 min" && mins >= 45) return false;
+    if (timeFilter === "Over 45 min" && mins < 45) return false;
+    return true;
+  }
+  const filteredRecommended = recommended.filter(matchRecipe);
+  const filteredOthers = others.filter(matchRecipe);
+  const noResults = (search || timeFilter !== "Alle tider") && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   // ── Recipe selection ────────────────────────────────────────────
   function selectRecipe(r) {
@@ -383,6 +413,21 @@ export default function App() {
   }
   const combinedList = showCombinedList ? buildCombinedList() : [];
   const planCount = mealPlan.filter(Boolean).length;
+
+  async function shareMealPlan() {
+    const lines = mealPlan
+      .map((entry, i) => entry ? `${DAY_FULL[i]}: ${entry.recipe.emoji} ${entry.recipe.title} (${entry.servings} pers.)` : null)
+      .filter(Boolean)
+      .join("\n");
+    const text = `📅 Min madplan:\n\n${lines}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: "Min madplan", text }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(text);
+      setPlanCopied(true);
+      setTimeout(() => setPlanCopied(false), 2000);
+    }
+  }
 
   // toggle during onboarding (pending, not saved yet)
   function togglePending(store) {
@@ -552,6 +597,13 @@ export default function App() {
       <header className="app-header">
         <div className="app-header-deco-1" />
         <div className="app-header-deco-2" />
+        <button
+          className="dark-mode-btn"
+          onClick={() => setDarkMode(d => !d)}
+          title={darkMode ? "Lys tilstand" : "Mørk tilstand"}
+        >
+          {darkMode ? "☀️" : "🌙"}
+        </button>
         <div className="week-badge">{weekBadge}</div>
         <h1 className="app-title">Tilbudskokken</h1>
         <p className="app-subtitle">50 opskrifter bygget på ugens tilbud</p>
@@ -566,16 +618,29 @@ export default function App() {
         </div>
       </header>
 
+      {/* Search */}
+      <div className="search-wrap">
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Søg opskrifter, ingredienser..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+        {search && <button className="search-clear" onClick={() => setSearch("")}>×</button>}
+      </div>
+
       {/* Diet filters */}
       <div className="diet-filters">
         {dietFilters.map(f => (
-          <button
-            key={f}
-            onClick={() => setDiet(f)}
-            className={`diet-btn${diet === f ? " active" : ""}`}
-          >
-            {f}
-          </button>
+          <button key={f} onClick={() => setDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
+        ))}
+      </div>
+
+      {/* Time filters */}
+      <div className="diet-filters time-filters">
+        {timeFilters.map(f => (
+          <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{f}</button>
         ))}
       </div>
 
@@ -712,25 +777,28 @@ export default function App() {
       ) : (
         /* Browse view */
         <>
-          {recommended.length > 0 && (
+          {filteredRecommended.length > 0 && (
             <div className="recipe-browse-section">
-              <h2 className="section-title">⭐ Denne uges anbefalinger · {recommended.length}</h2>
+              <h2 className="section-title">⭐ Denne uges anbefalinger · {filteredRecommended.length}</h2>
               <div className="recipe-browse-grid">
-                {recommended.map(r => <RecipeCard key={r.id} r={r} />)}
+                {filteredRecommended.map(r => <RecipeCard key={r.id} r={r} />)}
               </div>
             </div>
           )}
 
-          {others.length > 0 && (
+          {filteredOthers.length > 0 && (
             <div className="recipe-browse-section">
-              <h2 className="section-title">Kræver andre butikker · {others.length}</h2>
+              <h2 className="section-title">Kræver andre butikker · {filteredOthers.length}</h2>
               <div className="recipe-browse-grid">
-                {others.map(r => <RecipeCard key={r.id} r={r} />)}
+                {filteredOthers.map(r => <RecipeCard key={r.id} r={r} />)}
               </div>
             </div>
           )}
 
-          {scoredRecipes.length === 0 && (
+          {noResults && (
+            <div className="empty-state">Ingen opskrifter fundet</div>
+          )}
+          {!noResults && scoredRecipes.length === 0 && (
             <div className="empty-state">Ingen opskrifter matcher det valgte filter</div>
           )}
         </>
@@ -741,12 +809,20 @@ export default function App() {
         <div className="meal-plan-card">
           <div className="meal-plan-header">
             <div className="section-label" style={{ margin: 0 }}>📅 Madplan · {planCount} {planCount === 1 ? "dag" : "dage"}</div>
-            <button
-              className="combined-list-btn"
-              onClick={() => setShowCombinedList(v => !v)}
-            >
-              {showCombinedList ? "Skjul indkøbsliste" : "Samlet indkøbsliste"}
-            </button>
+            <div className="meal-plan-header-btns">
+              <button
+                className={`share-plan-btn${planCopied ? " copied" : ""}`}
+                onClick={shareMealPlan}
+              >
+                {planCopied ? "✓ Kopieret!" : "Del madplan"}
+              </button>
+              <button
+                className="combined-list-btn"
+                onClick={() => setShowCombinedList(v => !v)}
+              >
+                {showCombinedList ? "Skjul" : "Indkøbsliste"}
+              </button>
+            </div>
           </div>
 
           <div className="meal-plan-grid">
