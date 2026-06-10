@@ -317,7 +317,7 @@ export default function App() {
       const saved = localStorage.getItem("collapsedSections");
       if (saved) return JSON.parse(saved);
     } catch {}
-    return { recommended: false, others: true };
+    return { recommended: false, others: true, madspild: false };
   });
 
   // ── Popularity tracking ─────────────────────────────────────────
@@ -1363,27 +1363,47 @@ export default function App() {
         <>
           {/* ── Madspild section ──────────────────────────────── */}
           {hasSallingStores ? (
-            <div className="madspild-section">
-              <div className="madspild-section-header">
-                <div className="madspild-icon">🌱</div>
-                <div>
-                  <h2 className="madspild-title">Madspild</h2>
-                  <p className="madspild-tagline">Lav mad på varer der skal bruges nu — spar penge og reducer madspild</p>
+            <div className="madspild-section recipe-browse-section">
+              <button
+                className="section-toggle-btn madspild-toggle-btn"
+                onClick={() => toggleSection("madspild")}
+                aria-expanded={!collapsedSections.madspild}
+              >
+                <span className="madspild-toggle-left">
+                  <span className="madspild-icon">🌱</span>
+                  <span className="madspild-title">Madspild</span>
+                </span>
+                {collapsedSections.madspild && madspildRecipes.length > 0 && (
+                  <span className="section-count-badge">{madspildRecipes.length} opskrifter</span>
+                )}
+                {!collapsedSections.madspild && (
+                  <span className="madspild-tagline-inline">spar penge · reducer madspild</span>
+                )}
+                <svg
+                  className={`section-chevron${collapsedSections.madspild ? "" : " open"}`}
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+
+              <div className={`section-body-wrap${collapsedSections.madspild ? " collapsed" : ""}`}>
+                <div className="section-body-inner">
+                  {dealsLoading ? (
+                    <div className="madspild-loading">
+                      <div className="madspild-dots"><span /><span /><span /></div>
+                      <p>Henter aktuelle madspildstilbud…</p>
+                    </div>
+                  ) : madspildRecipes.length > 0 ? (
+                    <div className="recipe-browse-grid section-body-grid">
+                      {madspildRecipes.map(r => <MadspildCard key={r.id} r={r} />)}
+                    </div>
+                  ) : dealsData !== null ? (
+                    <p className="madspild-empty">Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.</p>
+                  ) : null}
                 </div>
               </div>
-
-              {dealsLoading ? (
-                <div className="madspild-loading">
-                  <div className="madspild-dots"><span /><span /><span /></div>
-                  <p>Henter aktuelle madspildstilbud…</p>
-                </div>
-              ) : madspildRecipes.length > 0 ? (
-                <div className="recipe-browse-grid">
-                  {madspildRecipes.map(r => <MadspildCard key={r.id} r={r} />)}
-                </div>
-              ) : dealsData !== null ? (
-                <p className="madspild-empty">Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.</p>
-              ) : null}
             </div>
           ) : (
             <div className="madspild-cta">

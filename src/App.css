@@ -2385,38 +2385,41 @@ html.dark .cuisine-badge {
 }
 
 /* ─── Madspild section ───────────────────────── */
-.madspild-section {
-  margin: 0 0 2rem;
-  padding: 0;
+.madspild-toggle-btn {
+  background: linear-gradient(135deg, #1a2e18 0%, #2a3820 60%, #1e2e16 100%) !important;
+  border-color: #3a5030 !important;
 }
-.madspild-section-header {
+.madspild-toggle-btn:hover {
+  background: linear-gradient(135deg, #1e3420 0%, #2e4224 60%, #223218 100%) !important;
+}
+.madspild-toggle-left {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
-  padding: 20px 20px 16px;
-  background: linear-gradient(135deg, #1a2e18 0%, #2a3820 60%, #1e2e16 100%);
-  border-radius: 18px;
-  border: 1px solid #3a5030;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 .madspild-icon {
-  font-size: 32px;
+  font-size: 20px;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 8px rgba(60,120,40,0.5));
 }
 .madspild-title {
   font-family: var(--font-serif, "Playfair Display", serif);
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 800;
   color: #a8d898;
-  margin: 0 0 4px;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
 }
-.madspild-tagline {
-  font-size: 12px;
-  color: #6a9460;
-  margin: 0;
-  line-height: 1.4;
+.madspild-tagline-inline {
+  font-size: 11px;
+  color: #5a8450;
+  flex: 1;
+  text-align: right;
+  padding-right: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .madspild-loading {
   display: flex;
