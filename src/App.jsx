@@ -89,6 +89,30 @@ const CUISINE_SEARCH_MAP = {
 const _availCuisines = new Set(recipeBank.map(r => r.cuisine).filter(Boolean));
 const CUISINE_ORDER = ["Alle", ...ALL_CUISINES_ORDERED.filter(c => _availCuisines.has(c))];
 
+const PANTRY_CATEGORIES = [
+  {
+    id: "koed", label: "🥩 Kød & fisk",
+    items: ["Hakket oksekød", "Kyllingefilet", "Kylling", "Laks", "Rejer", "Tun", "Æg", "Bacon"],
+  },
+  {
+    id: "groent", label: "🥦 Grøntsager",
+    items: ["Løg", "Hvidløg", "Gulerødder", "Kartofler", "Tomater", "Peberfrugt", "Spinat", "Broccoli", "Squash", "Champignon", "Selleri", "Porrer"],
+  },
+  {
+    id: "mejeri", label: "🧀 Mejeri",
+    items: ["Smør", "Mælk", "Fløde", "Ost", "Mozzarella", "Yoghurt", "Creme fraiche", "Parmesan"],
+  },
+  {
+    id: "toervarer", label: "🍝 Tørvarer",
+    items: ["Pasta", "Ris", "Mel", "Dåsetomater", "Bouillon", "Olivenolie", "Sojasauce", "Kokosmælk", "Brødkrummer", "Linser"],
+  },
+  {
+    id: "krydderier", label: "🫙 Krydderier",
+    items: ["Paprika", "Spidskommen", "Karry", "Oregano", "Timian", "Rosmarin", "Basilikum", "Chili", "Ingefær", "Kanel", "Sennep"],
+  },
+];
+const ALWAYS_AVAILABLE = new Set(["salt", "peber", "sort peber", "olie", "vand", "sukker"]);
+
 function getISOWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -279,6 +303,18 @@ export default function App() {
     return {};
   });
 
+  // ── Pantry ──────────────────────────────────────────────────────
+  const [pantryItems, setPantryItems] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("pantryItems") || "null");
+      return stored ? new Set(stored) : new Set();
+    } catch { return new Set(); }
+  });
+  const [showPantry, setShowPantry] = useState(false);
+  const [onlyMakeable, setOnlyMakeable] = useState(() => {
+    try { return localStorage.getItem("onlyMakeable") === "true"; } catch { return false; }
+  });
+
   // ── Onboarding ──────────────────────────────────────────────────
   const [onboardingStep, setOnboardingStep] = useState(() => {
     try {
@@ -350,6 +386,7 @@ export default function App() {
   }
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
+    if (onlyMakeable && !canMakeNow(r)) return false;
     if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
     if (search) {
       const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
@@ -369,9 +406,14 @@ export default function App() {
     if (timeFilter === "Over 45 min" && mins < 45) return false;
     return true;
   }
-  const filteredRecommended = recommended.filter(matchRecipe);
-  const filteredOthers = others.filter(matchRecipe);
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle") && filteredRecommended.length === 0 && filteredOthers.length === 0;
+
+  function sortByPantry(recipes) {
+    if (pantryItems.size === 0) return recipes;
+    return [...recipes].sort((a, b) => pantryScore(b) - pantryScore(a));
+  }
+  const filteredRecommended = sortByPantry(recommended.filter(matchRecipe));
+  const filteredOthers = sortByPantry(others.filter(matchRecipe));
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || onlyMakeable) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
@@ -525,6 +567,50 @@ export default function App() {
     });
   }
 
+  // ── Pantry functions ────────────────────────────────────────────
+  function togglePantryItem(item) {
+    setPantryItems(prev => {
+      const next = new Set(prev);
+      next.has(item) ? next.delete(item) : next.add(item);
+      try { localStorage.setItem("pantryItems", JSON.stringify([...next])); } catch {}
+      return next;
+    });
+  }
+
+  function clearPantry() {
+    setPantryItems(new Set());
+    try { localStorage.removeItem("pantryItems"); } catch {}
+  }
+
+  function toggleOnlyMakeable() {
+    setOnlyMakeable(v => {
+      const next = !v;
+      try { localStorage.setItem("onlyMakeable", String(next)); } catch {}
+      return next;
+    });
+  }
+
+  function isIngCovered(ingText) {
+    const lower = ingText.toLowerCase();
+    if ([...ALWAYS_AVAILABLE].some(s => lower.includes(s))) return true;
+    return [...pantryItems].some(p => lower.includes(p.toLowerCase()));
+  }
+
+  function canMakeNow(r) {
+    if (pantryItems.size === 0) return false;
+    return r.ingredients
+      .filter(ing => !ing.dealItem)
+      .every(ing => isIngCovered(ing.text || ing));
+  }
+
+  function pantryScore(r) {
+    if (pantryItems.size === 0) return 0;
+    return r.ingredients
+      .filter(ing => !ing.dealItem)
+      .filter(ing => isIngCovered(ing.text || ing))
+      .length;
+  }
+
   async function shareMealPlan() {
     const lines = mealPlan
       .map((entry, i) => entry ? `${DAY_FULL[i]}: ${entry.recipe.emoji} ${entry.recipe.title} (${entry.servings} pers.)` : null)
@@ -601,12 +687,18 @@ export default function App() {
   function RecipeCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
     const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
+    const makeable = canMakeNow(r);
     return (
       <div
         className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
         onClick={() => selectRecipe(r)}
       >
-        {isPopular && <div className="popular-badge-pill">🔥 Populær</div>}
+        {(isPopular || makeable) && (
+          <div className="card-badges">
+            {isPopular && <span className="popular-badge-pill">🔥 Populær</span>}
+            {makeable && <span className="makeable-badge">✓ Kan laves nu</span>}
+          </div>
+        )}
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
         {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
         <div className="recipe-browse-title">{r.title}</div>
@@ -825,6 +917,61 @@ export default function App() {
         </div>
       )}
 
+      {/* Pantry modal */}
+      {showPantry && (
+        <div className="pantry-overlay" onClick={e => e.target === e.currentTarget && setShowPantry(false)}>
+          <div className="pantry-sheet">
+            <div className="pantry-sheet-header">
+              <h2 className="pantry-sheet-title">🧺 Hvad har jeg derhjemme?</h2>
+              <button className="sp-close-btn" onClick={() => setShowPantry(false)}>×</button>
+            </div>
+
+            <div className="pantry-controls">
+              <div className="pantry-makeable-row">
+                <span className="pantry-makeable-label">Vis kun opskrifter jeg kan lave nu</span>
+                <div
+                  className={`pantry-toggle-switch${onlyMakeable ? " on" : ""}`}
+                  onClick={toggleOnlyMakeable}
+                  role="switch"
+                  aria-checked={onlyMakeable}
+                >
+                  <div className="pantry-toggle-track" />
+                  <div className="pantry-toggle-thumb" />
+                </div>
+              </div>
+              {pantryItems.size > 0 && (
+                <button className="pantry-clear-btn" onClick={clearPantry}>
+                  Ryd ({pantryItems.size})
+                </button>
+              )}
+            </div>
+
+            <div className="pantry-body">
+              {PANTRY_CATEGORIES.map(cat => (
+                <div key={cat.id} className="pantry-category">
+                  <div className="pantry-cat-label">{cat.label}</div>
+                  <div className="pantry-chips">
+                    {cat.items.map(item => {
+                      const selected = pantryItems.has(item);
+                      return (
+                        <button
+                          key={item}
+                          className={`pantry-chip${selected ? " selected" : ""}`}
+                          onClick={() => togglePantryItem(item)}
+                        >
+                          {selected && <span className="pantry-chip-check">✓</span>}
+                          {item}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero banner */}
       <div className="app-hero">
         <div className="app-header-deco-1" />
@@ -898,6 +1045,19 @@ export default function App() {
           ))}
         </div>
       )}
+
+      {/* Pantry trigger */}
+      <button
+        className={`pantry-trigger-btn${pantryItems.size > 0 ? " has-items" : ""}`}
+        onClick={() => setShowPantry(true)}
+      >
+        <span>🧺 Hvad har jeg derhjemme?</span>
+        {pantryItems.size > 0 ? (
+          <span className="pantry-count-badge">{pantryItems.size} varer</span>
+        ) : (
+          <span className="pantry-trigger-meta">Tilpas opskrifter til dit køleskab</span>
+        )}
+      </button>
 
       {/* Detail view */}
       {selectedRecipe ? (
