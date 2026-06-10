@@ -666,6 +666,98 @@
 }
 .back-btn:hover { color: #2a5030; }
 
+/* ─── Deal item tags ─────────────────────────── */
+.recipe-deal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+.deal-item-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 50px;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.deal-item-tag.available {
+  background: #eef5ee;
+  color: #2a5030;
+  border: 1px solid #c4ddc4;
+}
+.deal-item-tag.unavailable {
+  background: #f5f5f5;
+  color: #9ca3af;
+  border: 1px solid #e5e5e5;
+  opacity: 0.7;
+}
+.deal-store-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* ─── Ingredient deal/pantry styling ────────── */
+.ingredient-item.ingredient-deal {
+  background: #f5faf4;
+  border-radius: 8px;
+  padding: 4px 6px;
+  font-weight: 600;
+  color: #1a2e1a;
+}
+.ingredient-item.ingredient-pantry {
+  padding: 4px 6px;
+  color: #6b7280;
+}
+.ingredient-deal-text {
+  font-size: 13px;
+  color: #1a3020;
+  font-weight: 600;
+}
+.ingredient-pantry-text {
+  font-size: 13px;
+  color: #6b7280;
+}
+.ingredient-pantry-dot {
+  width: 5px;
+  height: 5px;
+  background: #d1d5db;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* ─── Ingredient legend ──────────────────────── */
+.ingredient-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 10px;
+  color: #9ca3af;
+  margin: 8px 0 1.25rem;
+  padding: 8px 10px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+.ingredient-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.legend-dot.deal { background: #4a7050; }
+.legend-dot.pantry { background: #d1d5db; }
+
 /* ─── Responsive ─────────────────────────────── */
 @media (max-width: 600px) {
   .app { padding: 1rem; }
