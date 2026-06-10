@@ -248,6 +248,10 @@ export default function App() {
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
 
+  // ── Splash screen ────────────────────────────────────────────────
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
+  const [splashExiting, setSplashExiting] = useState(false);
+
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
   const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
 
@@ -255,6 +259,14 @@ export default function App() {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("darkMode", String(darkMode));
   }, [darkMode]);
+
+  useEffect(() => {
+    if (!showSplash) return;
+    sessionStorage.setItem("splashShown", "true");
+    const t1 = setTimeout(() => setSplashExiting(true), 2000);
+    const t2 = setTimeout(() => setShowSplash(false), 2650);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
 
   // ── Matching ────────────────────────────────────────────────────
   function getAvailableItemNames() {
@@ -541,6 +553,31 @@ export default function App() {
 
   return (
     <div className="app">
+
+      {/* ── Splash screen ──────────────────────────────────────── */}
+      {showSplash && (
+        <div className={`splash-screen${splashExiting ? " exiting" : ""}`}>
+          <div className="splash-content">
+            <div className="splash-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Fork */}
+                <line x1="26" y1="14" x2="26" y2="66" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
+                <line x1="20" y1="14" x2="20" y2="28" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
+                <line x1="32" y1="14" x2="32" y2="28" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M20 28 Q20 34 26 34 Q32 34 32 28" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round" fill="none"/>
+                {/* Knife */}
+                <line x1="54" y1="34" x2="54" y2="66" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M54 14 C54 14 60 18 60 26 C60 32 54 34 54 34" stroke="#f0ede6" strokeWidth="3" strokeLinecap="round" fill="none"/>
+                {/* Leaf accent */}
+                <path d="M58 12 C62 7 70 11 66 21 C63 29 58 26 58 26 C58 26 54 18 58 12Z" fill="#7ab87a"/>
+                <path d="M58 12 L56 25" stroke="#4a7050" strokeWidth="1.8" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h1 className="splash-title">Tilbudskokken</h1>
+            <p className="splash-tagline">Lav mad på ugens tilbud</p>
+          </div>
+        </div>
+      )}
 
       {/* ── Onboarding overlay ─────────────────────────────────── */}
       {onboardingStep !== null && (
