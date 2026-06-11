@@ -1652,82 +1652,6 @@ export default function App() {
         </>
       )}
 
-      {/* Mobile meal plan bottom sheet */}
-      {showMealPlanPanel && (
-        <div className="mp-sheet-overlay" onClick={() => setShowMealPlanPanel(false)}>
-          <div className="mp-sheet" onClick={e => e.stopPropagation()}>
-            <div className="mp-sheet-drag-handle" />
-            <div className="mp-sheet-header">
-              <div className="mp-sheet-title">📅 Madplan</div>
-              <button className="mp-sheet-close" onClick={() => setShowMealPlanPanel(false)}>×</button>
-            </div>
-            <div className="mp-days-list">
-              {mealPlan.map((entry, i) => (
-                <div key={i} className={`mp-sheet-day${entry ? " filled" : " empty"}`}>
-                  <div className="mp-sheet-day-name">{DAY_FULL[i]}</div>
-                  {entry ? (
-                    <div className="mp-sheet-day-content">
-                      <span className="mp-sheet-emoji">{entry.recipe.emoji}</span>
-                      <div className="mp-sheet-recipe-info">
-                        <div className="mp-sheet-recipe-title">{entry.recipe.title}</div>
-                        <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} pers.</div>
-                      </div>
-                      <button className="mp-sheet-remove" onClick={() => removeFromPlan(i)}>×</button>
-                    </div>
-                  ) : (
-                    <div className="mp-sheet-empty">Ingen opskrift planlagt</div>
-                  )}
-                </div>
-              ))}
-            </div>
-            {planCount > 0 && (
-              <div className="mp-sheet-actions">
-                <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan}>
-                  {planCopied ? "✓ Kopieret!" : "Del madplan"}
-                </button>
-                <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)}>
-                  {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
-                </button>
-              </div>
-            )}
-            {confirmClearPlan ? (
-              <div className="mp-clear-confirm">
-                <span>Ryd hele madplanen?</span>
-                <div className="mp-clear-confirm-btns">
-                  <button className="mp-clear-yes" onClick={clearMealPlan}>Ja, ryd</button>
-                  <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>Annuller</button>
-                </div>
-              </div>
-            ) : (
-              <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)} style={{ marginTop: 8 }}>Ryd madplan</button>
-            )}
-            {showCombinedList && planCount > 0 && (
-              <div className="combined-list">
-                {combinedList.length === 0 ? (
-                  <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
-                ) : (
-                  combinedList.map(group => (
-                    <div key={group.store} className="combined-list-store">
-                      <div className="combined-list-store-label">
-                        <span className="deal-store-dot" style={{ background: group.color }} />
-                        {group.store}
-                      </div>
-                      <ul className="combined-list-items">
-                        {group.items.map(it => (
-                          <li key={it.dealItem} className="combined-list-item">
-                            <span className="shopping-item-dot" />
-                            {it.merged}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Saved recipes */}
       {savedRecipes.length > 0 && (
@@ -1780,6 +1704,83 @@ export default function App() {
       )}
 
     </div>
+
+  {/* Mobile meal plan bottom sheet */}
+  {showMealPlanPanel && (
+    <div className="mp-sheet-overlay" onClick={() => setShowMealPlanPanel(false)}>
+      <div className="mp-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <div className="mp-sheet-header">
+          <div className="mp-sheet-title">📅 Madplan</div>
+          <button className="mp-sheet-close" onClick={() => setShowMealPlanPanel(false)}>×</button>
+        </div>
+        <div className="mp-days-list">
+          {mealPlan.map((entry, i) => (
+            <div key={i} className={`mp-sheet-day${entry ? " filled" : " empty"}`}>
+              <div className="mp-sheet-day-name">{DAY_FULL[i]}</div>
+              {entry ? (
+                <div className="mp-sheet-day-content">
+                  <span className="mp-sheet-emoji">{entry.recipe.emoji}</span>
+                  <div className="mp-sheet-recipe-info">
+                    <div className="mp-sheet-recipe-title">{entry.recipe.title}</div>
+                    <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} pers.</div>
+                  </div>
+                  <button className="mp-sheet-remove" onClick={() => removeFromPlan(i)}>×</button>
+                </div>
+              ) : (
+                <div className="mp-sheet-empty">Ingen opskrift planlagt</div>
+              )}
+            </div>
+          ))}
+        </div>
+        {planCount > 0 && (
+          <div className="mp-sheet-actions">
+            <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan}>
+              {planCopied ? "✓ Kopieret!" : "Del madplan"}
+            </button>
+            <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)}>
+              {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
+            </button>
+          </div>
+        )}
+        {confirmClearPlan ? (
+          <div className="mp-clear-confirm">
+            <span>Ryd hele madplanen?</span>
+            <div className="mp-clear-confirm-btns">
+              <button className="mp-clear-yes" onClick={clearMealPlan}>Ja, ryd</button>
+              <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>Annuller</button>
+            </div>
+          </div>
+        ) : (
+          <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)} style={{ marginTop: 8 }}>Ryd madplan</button>
+        )}
+        {showCombinedList && planCount > 0 && (
+          <div className="combined-list">
+            {combinedList.length === 0 ? (
+              <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
+            ) : (
+              combinedList.map(group => (
+                <div key={group.store} className="combined-list-store">
+                  <div className="combined-list-store-label">
+                    <span className="deal-store-dot" style={{ background: group.color }} />
+                    {group.store}
+                  </div>
+                  <ul className="combined-list-items">
+                    {group.items.map(it => (
+                      <li key={it.dealItem} className="combined-list-item">
+                        <span className="shopping-item-dot" />
+                        {it.merged}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )}
 
     {/* Mobile FAB */}
     {planCount > 0 && (
@@ -1874,7 +1875,7 @@ export default function App() {
 
   {/* Shopping cart FAB */}
   {shoppingList.length > 0 && (
-    <button className="shopping-cart-fab" onClick={() => setShowShoppingSheet(true)} aria-label="Indkøbsliste">
+    <button className={`shopping-cart-fab${showMealPlanPanel ? " mp-open" : ""}`} onClick={() => setShowShoppingSheet(true)} aria-label="Indkøbsliste">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
