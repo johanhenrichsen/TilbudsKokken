@@ -2405,15 +2405,17 @@ html.dark .cuisine-badge {
   letter-spacing: -0.2px;
   white-space: nowrap;
 }
-.madspild-tagline-inline {
-  font-size: 11px;
-  color: #5a8450;
-  flex: 1;
-  text-align: right;
-  padding-right: 6px;
+.madspild-teaser-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #e8934a;
+  background: rgba(232, 147, 74, 0.12);
+  border: 1px solid rgba(232, 147, 74, 0.3);
+  border-radius: 20px;
+  padding: 2px 9px;
+  letter-spacing: 0.2px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 .madspild-loading {
   display: flex;

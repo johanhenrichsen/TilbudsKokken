@@ -1409,12 +1409,10 @@ export default function App() {
                   <span className="madspild-icon">🌱</span>
                   <span className="madspild-title">Madspild</span>
                 </span>
-                {collapsedSections.madspild && madspildRecipes.length > 0 && (
-                  <span className="section-count-badge">{madspildRecipes.length} opskrifter</span>
-                )}
-                {!collapsedSections.madspild && (
-                  <span className="madspild-tagline-inline">spar penge · reducer madspild</span>
-                )}
+                {madspildRecipes.length > 0
+                  ? <span className="madspild-teaser-badge">{madspildRecipes.length} tilbud klar</span>
+                  : !dealsLoading && <span className="madspild-teaser-badge">Spar op til 50%</span>
+                }
                 <svg
                   className={`section-chevron${collapsedSections.madspild ? "" : " open"}`}
                   width="16" height="16" viewBox="0 0 16 16" fill="none"
