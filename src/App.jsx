@@ -325,7 +325,7 @@ export default function App() {
   const [collapsedSections, setCollapsedSections] = useState(() => {
     try {
       const saved = localStorage.getItem("collapsedSections");
-      if (saved) return JSON.parse(saved);
+      if (saved) return { ...JSON.parse(saved), recommended: false };
     } catch {}
     return { recommended: false, others: true, madspild: true };
   });
