@@ -1893,7 +1893,7 @@ html.dark .ob-welcome-tagline { color: #7ab87a; }
   font-size: 14px;
   color: #5a7050;
   line-height: 1.6;
-  margin: 0 0 2.5rem;
+  margin: 0 0 1.5rem;
 }
 html.dark .ob-welcome-desc { color: #6a8a6a; }
 .ob-cta-btn {
@@ -2296,7 +2296,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
 }
 
 /* ── Onboarding welcome logo ─────────────────── */
-.ob-welcome-logo { margin: 16px auto 32px; width: min(260px, 54vw); height: auto; display: block; }
+.ob-welcome-logo { margin: 16px auto 16px; width: min(120px, 32vw); height: auto; display: block; }
 
 /* ── Week badge spacing inside hero ─────────────*/
 .hero-center .week-badge { margin-top: 12px; }
