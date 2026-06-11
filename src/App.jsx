@@ -1517,19 +1517,16 @@ export default function App() {
         <>
           {/* ── Madspild section ──────────────────────────────── */}
           {hasSallingStores ? (
-            <div className="madspild-section recipe-browse-section">
+            <div className="recipe-browse-section">
               <button
-                className="section-toggle-btn madspild-toggle-btn"
+                className="section-toggle-btn"
                 onClick={() => toggleSection("madspild")}
                 aria-expanded={!collapsedSections.madspild}
               >
-                <span className="madspild-toggle-left">
-                  <span className="madspild-icon">🌱</span>
-                  <span className="madspild-title">Madspild</span>
-                </span>
+                <span className="section-toggle-label">🌱 Madspild</span>
                 {madspildRecipes.length > 0
-                  ? <span className="madspild-teaser-badge">{madspildRecipes.length} tilbud klar</span>
-                  : !dealsLoading && <span className="madspild-teaser-badge">Spar op til 50%</span>
+                  ? <span className="section-count-badge">{madspildRecipes.length} tilbud</span>
+                  : !dealsLoading && <span className="section-count-badge">Spar op til 50%</span>
                 }
                 <svg
                   className={`section-chevron${collapsedSections.madspild ? "" : " open"}`}
