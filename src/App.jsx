@@ -891,7 +891,7 @@ export default function App() {
               <div className="ob-welcome-deco-1" />
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
-                <LogoFull size="lg" className="ob-welcome-logo" />
+                <LogoFull size="3xl" className="ob-welcome-logo" />
                 <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
                 <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
                   Kom i gang →
@@ -1111,7 +1111,7 @@ export default function App() {
         {/* Top bar: small brand left + controls right */}
         <div className="hero-topbar">
           <div className="hero-brand">
-            <LogoIcon size={36} />
+            <LogoIcon size={52} />
             <span className="hero-brand-name">TilbudsKokken</span>
           </div>
           <div className="header-actions">
@@ -1121,7 +1121,7 @@ export default function App() {
 
         {/* Logo hero — centered, full logo with wordmark + tagline */}
         <div className="hero-center">
-          <LogoFull size="xl" />
+          <LogoFull size="2xl" />
           <div className="week-badge">{weekBadge}</div>
         </div>
 

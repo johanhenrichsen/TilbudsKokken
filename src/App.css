@@ -1376,6 +1376,11 @@
   .recipe-card { padding: 1.25rem; }
   .recipe-browse-grid { grid-template-columns: 1fr; }
 
+  /* Logo scaling on mobile */
+  .hero-center .logo-full { width: min(260px, 100%) !important; height: auto !important; }
+  .ob-welcome-logo { width: min(320px, 100%) !important; height: auto !important; }
+  .hero-brand-name { font-size: 15px; }
+
   /* Filter chips — horizontal scroll, no wrapping */
   .diet-filters,
   .cuisine-filters {
@@ -1737,11 +1742,11 @@ html.dark .day-picker-empty-label { color: #2a3d2a; }
 .hero-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   opacity: 0.88;
 }
 .hero-brand-name {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--logo-wordmark, var(--cream, #f0ead6));
   letter-spacing: -0.2px;
@@ -1756,7 +1761,7 @@ html.dark .day-picker-empty-label { color: #2a3d2a; }
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0.25rem 0 1.25rem;
+  padding: 0.75rem 0 1.75rem;
   position: relative;
 }
 .header-icon-btn {
@@ -1837,7 +1842,8 @@ html.dark .ob-welcome-deco-2 { background: rgba(74,112,80,0.15); }
 .ob-welcome-content {
   position: relative;
   text-align: center;
-  max-width: 380px;
+  max-width: 480px;
+  width: 100%;
   animation: obFadeUp 0.6s ease forwards;
 }
 .ob-welcome-icon {
@@ -2268,7 +2274,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
 }
 
 /* ── Onboarding welcome logo ─────────────────── */
-.ob-welcome-logo { margin-bottom: 4px; }
+.ob-welcome-logo { margin-bottom: 24px; max-width: 100%; }
 
 /* ── Week badge spacing inside hero ─────────────*/
 .hero-center .week-badge { margin-top: 12px; }
