@@ -954,6 +954,15 @@ export default function App() {
                 <div className="ob-content" key="s1">
                   <h2 className="ob-title">Vælg dine butikker</h2>
                   <p className="ob-desc">Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.</p>
+                  <button
+                    className="ob-select-all-btn"
+                    onClick={() => pendingChains.size === CHAIN_ORDER.length
+                      ? setPendingChains(new Set())
+                      : setPendingChains(new Set(CHAIN_ORDER))
+                    }
+                  >
+                    {pendingChains.size === CHAIN_ORDER.length ? "Fravælg alle" : "Vælg alle"}
+                  </button>
                   <div className="ob-chain-grid">
                     {CHAIN_ORDER.map(chain => {
                       const sel = pendingChains.has(chain);

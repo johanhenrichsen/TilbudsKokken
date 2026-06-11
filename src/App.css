@@ -2000,6 +2000,25 @@ html.dark .ob-title { color: var(--cream); font-family: var(--font-serif); }
 }
 html.dark .ob-desc { color: #5a7a5a; }
 
+/* Select all / deselect all */
+.ob-select-all-btn {
+  display: block;
+  margin: 0 0 10px auto;
+  background: none;
+  border: 1.5px solid #4a7050;
+  border-radius: 8px;
+  color: #4a7050;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ob-select-all-btn:hover { background: #4a7050; color: white; }
+html.dark .ob-select-all-btn { border-color: #5a8a5a; color: #7ab87a; }
+html.dark .ob-select-all-btn:hover { background: #3a5a3a; color: #c0e0c0; border-color: #3a5a3a; }
+
 /* Chain cards */
 .ob-chain-grid {
   display: flex;
