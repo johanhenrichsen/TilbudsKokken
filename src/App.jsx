@@ -799,22 +799,31 @@ export default function App() {
             <div key={name} className="madspild-deal-row">
               <span className="madspild-deal-desc">{deal.description || name.replace(/ \d+.*$/, "")}</span>
               <span className="madspild-deal-pricing">
-                {deal.originalPrice != null && (
-                  <span className="madspild-original">{deal.originalPrice.toFixed(0)} kr</span>
-                )}
                 {deal.price != null && (
-                  <span className="madspild-price">{deal.price.toFixed(0)} kr</span>
+                  <span className="madspild-price">{deal.price.toFixed(0)} kr.</span>
+                )}
+                {deal.originalPrice != null && (
+                  <span className="madspild-original">{deal.originalPrice.toFixed(0)} kr.</span>
                 )}
                 {deal.discount != null && (
                   <span className="madspild-pct">-{deal.discount}%</span>
                 )}
+                {isExpiringSoon(deal.endTime) && (
+                  <span className="madspild-expiry-pill">⚠ Snart</span>
+                )}
               </span>
-              {isExpiringSoon(deal.endTime) && (
-                <span className="madspild-expiry-pill">⚠ Udløber snart</span>
-              )}
             </div>
           ))}
         </div>
+        {(() => {
+          const total = r.madspildDeals.reduce((sum, { deal }) => sum + (deal.price ?? 0), 0);
+          if (total === 0) return null;
+          return (
+            <div className="madspild-card-total">
+              ca. {Math.round(total)} kr. for {r.servings_count || 4} personer
+            </div>
+          );
+        })()}
         <button
           className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
           onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
