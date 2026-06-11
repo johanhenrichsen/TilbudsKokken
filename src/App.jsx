@@ -361,6 +361,7 @@ export default function App() {
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
+  const [pendingLocation, setPendingLocation] = useState("");
 
   // ── Splash screen ────────────────────────────────────────────────
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
@@ -725,14 +726,26 @@ export default function App() {
     });
   }
 
+  const pendingLocationQ = pendingLocation.trim().toLowerCase();
+  const pendingLocationBranches = pendingLocationQ
+    ? STORE_BRANCHES.filter(s =>
+        pendingChains.has(s.chain) &&
+        (s.city.toLowerCase().includes(pendingLocationQ) ||
+         s.zip.includes(pendingLocationQ) ||
+         s.name.toLowerCase().includes(pendingLocationQ))
+      )
+    : [];
+
   function handleOnboardingContinue() {
-    if (onboardingStep < 3) {
+    if (onboardingStep < 4) {
       setOnboardingStep(s => s + 1);
     } else {
-      const storesArray = CHAIN_ORDER
-        .filter(ch => pendingChains.has(ch))
-        .map(ch => STORE_BRANCHES.find(b => b.chain === ch))
-        .filter(Boolean);
+      const storesArray = pendingLocationBranches.length > 0
+        ? pendingLocationBranches
+        : CHAIN_ORDER
+            .filter(ch => pendingChains.has(ch))
+            .map(ch => STORE_BRANCHES.find(b => b.chain === ch))
+            .filter(Boolean);
       setLocalStores(storesArray);
       localStorage.setItem("localStores", JSON.stringify(storesArray));
       localStorage.setItem("defaultDiet", pendingDiet);
@@ -747,6 +760,7 @@ export default function App() {
     setPendingChains(new Set((localStores || []).map(s => s.chain)));
     setPendingDiet(diet);
     setPendingServings(parseInt(localStorage.getItem("defaultServings")) || 4);
+    setPendingLocation("");
     setOnboardingStep(1);
   }
 
@@ -928,11 +942,11 @@ export default function App() {
                   ← Tilbage
                 </button>
                 <div className="ob-progress">
-                  {[1, 2, 3].map(n => (
+                  {[1, 2, 3, 4].map(n => (
                     <div key={n} className={`ob-progress-dot${onboardingStep >= n ? " active" : ""}${onboardingStep > n ? " done" : ""}`} />
                   ))}
                 </div>
-                <span className="ob-step-counter">{onboardingStep}/3</span>
+                <span className="ob-step-counter">{onboardingStep}/4</span>
               </div>
 
               {/* Step 1 — Store selection */}
@@ -959,9 +973,54 @@ export default function App() {
                 </div>
               )}
 
-              {/* Step 2 — Dietary preference */}
+              {/* Step 2 — Location */}
               {onboardingStep === 2 && (
-                <div className="ob-content" key="s2">
+                <div className="ob-content" key="s2loc">
+                  <h2 className="ob-title">Hvor bor du?</h2>
+                  <p className="ob-desc">Skriv din by eller postnummer — vi finder butikker tæt på dig.</p>
+                  <input
+                    className="ob-location-input"
+                    type="text"
+                    inputMode="search"
+                    placeholder="F.eks. Nørrebro eller 2200"
+                    value={pendingLocation}
+                    onChange={e => setPendingLocation(e.target.value)}
+                    autoFocus
+                  />
+                  {pendingLocationBranches.length > 0 && (
+                    <div className="ob-location-results">
+                      {CHAIN_ORDER
+                        .filter(chain => pendingLocationBranches.some(s => s.chain === chain))
+                        .map(chain => (
+                          <div key={chain} className="ob-location-chain-group">
+                            <div className="ob-location-chain-label">
+                              <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                              {chain}
+                            </div>
+                            <div className="ob-location-chips">
+                              {pendingLocationBranches
+                                .filter(s => s.chain === chain)
+                                .map(s => (
+                                  <span key={s.name} className="ob-location-chip">{s.city} · {s.zip}</span>
+                                ))}
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  )}
+                  {pendingLocationQ && pendingLocationBranches.length === 0 && (
+                    <p className="ob-location-empty">Ingen butikker fundet — prøv et andet søgeord.</p>
+                  )}
+                  {!pendingLocationQ && (
+                    <p className="ob-location-hint">Du kan springe over og vælge butikker manuelt senere.</p>
+                  )}
+                </div>
+              )}
+
+              {/* Step 3 — Dietary preference */}
+              {onboardingStep === 3 && (
+                <div className="ob-content" key="s3">
                   <h2 className="ob-title">Kostpræferencer</h2>
                   <p className="ob-desc">Vælg din kostpræference — vi tilpasser opskrifterne.</p>
                   <div className="ob-diet-grid">
@@ -989,9 +1048,9 @@ export default function App() {
                 </div>
               )}
 
-              {/* Step 3 — Serving size */}
-              {onboardingStep === 3 && (
-                <div className="ob-content" key="s3">
+              {/* Step 4 — Serving size */}
+              {onboardingStep === 4 && (
+                <div className="ob-content" key="s4">
                   <h2 className="ob-title">Hvor mange personer?</h2>
                   <p className="ob-desc">Vi tilpasser portionsstørrelserne til dit husstand.</p>
                   <div className="ob-servings-picker">
@@ -1010,7 +1069,7 @@ export default function App() {
                 disabled={onboardingStep === 1 && pendingChains.size === 0}
                 onClick={handleOnboardingContinue}
               >
-                {onboardingStep === 3 ? "Gå til opskrifter →" : "Fortsæt →"}
+                {onboardingStep === 4 ? "Gå til opskrifter →" : "Fortsæt →"}
               </button>
             </div>
           )}
