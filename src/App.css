@@ -3374,7 +3374,7 @@ html.dark .pantry-chip.selected { background: rgba(232,147,74,0.1); border-color
   font-family: inherit;
   box-shadow: 0 4px 16px rgba(232,147,74,0.45);
   z-index: 86;
-  transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease, box-shadow 0.15s ease;
+  transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), right 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease, box-shadow 0.15s ease;
 }
 /* When meal plan panel is open, slide the cart FAB above the sheet */
 @media (max-width: 1099px) {
@@ -3407,9 +3407,9 @@ html.dark .pantry-chip.selected { background: rgba(232,147,74,0.1); border-color
   font-family: inherit;
 }
 
-/* On desktop with sidebar, move FAB left of sidebar */
+/* On desktop with sidebar visible, shift FAB left by exactly the sidebar width */
 @media (min-width: 1100px) {
-  body.has-mp-sidebar .shopping-cart-fab { right: 330px; }
+  .shopping-cart-fab.sidebar-visible { right: 320px; }
 }
 
 /* On mobile, meal plan FAB sits above the cart FAB */
