@@ -618,8 +618,8 @@
   width: 100%;
   background: none;
   border: none;
-  padding: 10px 12px;
-  margin: 0 -12px;
+  padding: 10px 16px;
+  margin: 0;
   border-radius: 12px;
   cursor: pointer;
   color: inherit;
@@ -1384,11 +1384,12 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .ob-welcome-logo { height: auto !important; }
   .ob-welcome-content { max-width: calc(100vw - 2rem); }
 
-  /* ── Touch targets (minimum 44px) ── */
+  /* ── Filter chips — compact and no-wrap ── */
   .diet-btn {
-    min-height: 44px;
-    padding: 10px 16px;
-    font-size: 13px;
+    min-height: 36px;
+    padding: 7px 13px;
+    font-size: 12px;
+    white-space: nowrap;
   }
   .skift-btn {
     min-height: 44px;
@@ -1425,6 +1426,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Filter chips — horizontal scroll, no wrapping ── */
   .diet-filters,
+  .time-filters,
   .cuisine-filters {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -1436,6 +1438,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     padding-right: 0.75rem;
   }
   .diet-filters::-webkit-scrollbar,
+  .time-filters::-webkit-scrollbar,
   .cuisine-filters::-webkit-scrollbar { display: none; }
 
   /* ── Search ── */
@@ -1457,7 +1460,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .local-store-badge { flex-wrap: wrap; gap: 4px; font-size: 12px; }
 
   /* ── Section headings ── */
-  .section-toggle-btn { padding: 12px 12px; }
+  .section-toggle-btn { padding: 10px 16px; }
   .section-toggle-label { font-size: 15px; }
 
   /* ── Meal plan grid — scroll snap ── */
@@ -2891,6 +2894,15 @@ html.dark .cuisine-badge {
   flex-wrap: wrap;
   margin-top: -6px;
 }
+@media (max-width: 600px) {
+  .cuisine-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .cuisine-filters::-webkit-scrollbar { display: none; }
+}
 
 /* ─── Madspild section ───────────────────────── */
 .madspild-toggle-btn {
@@ -3343,4 +3355,141 @@ html.dark .pantry-chip { background: #0f190f; border-color: var(--border-dark); 
 html.dark .pantry-chip:hover { background: var(--surface); border-color: #4a7050; color: #d0ecd0; }
 html.dark .pantry-chip.selected { background: rgba(232,147,74,0.1); border-color: rgba(232,147,74,0.45); color: var(--accent); }
 .pantry-chip-check { font-size: 10px; font-weight: 800; }
+
+/* ─── Shopping cart FAB ──────────────────────── */
+.shopping-cart-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--accent, #e8934a);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 4px 16px rgba(232,147,74,0.45);
+  z-index: 86;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.shopping-cart-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 22px rgba(232,147,74,0.55);
+}
+.shopping-cart-fab:active { transform: scale(0.96); }
+.cart-fab-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #2a5a2a;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid white;
+  font-family: inherit;
+}
+
+/* On desktop with sidebar, move FAB left of sidebar */
+@media (min-width: 1100px) {
+  body.has-mp-sidebar .shopping-cart-fab { right: 330px; }
+}
+
+/* On mobile, meal plan FAB sits above the cart FAB */
+@media (max-width: 1099px) {
+  .meal-plan-fab { bottom: 90px; }
+}
+
+/* ─── Shopping list bottom sheet ─────────────── */
+.shopping-sheet {
+  background: white;
+  border-radius: 24px 24px 0 0;
+  animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0 0 env(safe-area-inset-bottom, 0);
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.shopping-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  flex-shrink: 0;
+}
+.shopping-sheet-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.shopping-sheet-list {
+  list-style: none;
+  padding: 0 0 4px;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+.shopping-sheet-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: opacity 0.15s;
+}
+.shopping-sheet-item.checked {
+  opacity: 0.45;
+}
+.shopping-check-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #c8d9c8;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s;
+  color: white;
+}
+.shopping-sheet-item.checked .shopping-check-btn {
+  background: #4a7050;
+  border-color: #4a7050;
+}
+.shopping-sheet-text {
+  flex: 1;
+  font-size: 15px;
+  color: #1a1a1a;
+}
+.shopping-sheet-item.checked .shopping-sheet-text {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+.shopping-sheet-footer {
+  padding: 12px 20px 16px;
+  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+html.dark .shopping-sheet {
+  background: #1a2a1a;
+}
+html.dark .shopping-sheet-title { color: var(--cream); }
+html.dark .shopping-sheet-item { border-bottom-color: rgba(255,255,255,0.07); }
+html.dark .shopping-sheet-text { color: var(--cream); }
+html.dark .shopping-sheet-footer { border-top-color: rgba(255,255,255,0.07); }
+html.dark .shopping-check-btn { border-color: #3a5a3a; }
+html.dark .shopping-sheet-item.checked .shopping-sheet-text { color: #5a7a5a; }
 

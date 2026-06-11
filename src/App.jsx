@@ -303,7 +303,11 @@ export default function App() {
 
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
-  const [shoppingList, setShoppingList] = useState([]);
+  const [shoppingList, setShoppingList] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("shoppingList") || "[]"); } catch { return []; }
+  });
+  const [checkedItems, setCheckedItems] = useState(new Set());
+  const [showShoppingSheet, setShowShoppingSheet] = useState(false);
   const [diet, setDiet] = useState(() => {
     try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
   });
@@ -535,17 +539,38 @@ export default function App() {
     trackRecipeInteraction(r.id, 1);
     const ds = parseInt(localStorage.getItem("defaultServings"));
     setServings(ds || r.servings_count || 4);
-    setShoppingList([]);
   }
 
   // ── Shopping list ───────────────────────────────────────────────
   function addToShoppingList(text) {
-    setShoppingList(prev => prev.includes(text) ? prev : [...prev, text]);
+    setShoppingList(prev => {
+      if (prev.includes(text)) return prev;
+      const next = [...prev, text];
+      try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
+      return next;
+    });
   }
   function removeFromShoppingList(i) {
-    setShoppingList(prev => prev.filter((_, idx) => idx !== i));
+    setShoppingList(prev => {
+      const removed = prev[i];
+      const next = prev.filter((_, idx) => idx !== i);
+      setCheckedItems(c => { const s = new Set(c); s.delete(removed); return s; });
+      try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
+      return next;
+    });
   }
-  function clearShoppingList() { setShoppingList([]); }
+  function clearShoppingList() {
+    setShoppingList([]);
+    setCheckedItems(new Set());
+    try { localStorage.removeItem("shoppingList"); } catch {}
+  }
+  function toggleCheckedItem(item) {
+    setCheckedItems(prev => {
+      const next = new Set(prev);
+      if (next.has(item)) next.delete(item); else next.add(item);
+      return next;
+    });
+  }
 
   // ── Save / delete ───────────────────────────────────────────────
   function saveRecipe(r) {
@@ -1338,7 +1363,7 @@ export default function App() {
       {/* Detail view */}
       {selectedRecipe ? (
         <div className="recipe-detail-sheet">
-          <button className="back-btn" onClick={() => { setSelectedRecipe(null); setShoppingList([]); }}>
+          <button className="back-btn" onClick={() => setSelectedRecipe(null)}>
             ← Tilbage til opskrifter
           </button>
 
@@ -1846,6 +1871,51 @@ export default function App() {
         </div>
       )}
     </aside>}
+
+  {/* Shopping cart FAB */}
+  {shoppingList.length > 0 && (
+    <button className="shopping-cart-fab" onClick={() => setShowShoppingSheet(true)} aria-label="Indkøbsliste">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      <span className="cart-fab-badge">{shoppingList.length}</span>
+    </button>
+  )}
+
+  {/* Shopping list bottom sheet */}
+  {showShoppingSheet && (
+    <div className="mp-sheet-overlay" onClick={() => setShowShoppingSheet(false)}>
+      <div className="shopping-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <div className="shopping-sheet-header">
+          <div className="shopping-sheet-title">🛒 Indkøbsliste</div>
+          <button className="mp-sheet-close" onClick={() => setShowShoppingSheet(false)}>×</button>
+        </div>
+        <ul className="shopping-sheet-list">
+          {shoppingList.map((item, i) => {
+            const checked = checkedItems.has(item);
+            return (
+              <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`}>
+                <button className="shopping-check-btn" onClick={() => toggleCheckedItem(item)} aria-label={checked ? "Fjern hak" : "Sæt hak"}>
+                  {checked ? (
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="2,7 6,11 12,3"/>
+                    </svg>
+                  ) : null}
+                </button>
+                <span className="shopping-sheet-text">{item}</span>
+                <button className="shopping-item-remove" onClick={() => removeFromShoppingList(i)}>×</button>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="shopping-sheet-footer">
+          <button className="mp-clear-btn" onClick={clearShoppingList}>Ryd liste</button>
+        </div>
+      </div>
+    </div>
+  )}
     </>
   );
 }
