@@ -45,7 +45,7 @@ export default async function handler(req, res) {
             id: key,
             description: product.description || "",
             ean: product.ean || null,
-            price: offer.price ?? null,
+            price: offer.newPrice ?? offer.price ?? null,
             originalPrice: offer.originalPrice ?? null,
             discount: offer.percentDiscount ?? null,
             endTime: offer.endTime || null,

@@ -782,6 +782,7 @@ export default function App() {
   // ── Madspild card ────────────────────────────────────────────────
   function MadspildCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
+    console.log('madspildDeals:', r.id, JSON.stringify(r.madspildDeals, null, 2));
     return (
       <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
         <div className="card-badges">
@@ -800,10 +801,10 @@ export default function App() {
               <span className="madspild-deal-desc">{deal.description || name.replace(/ \d+.*$/, "")}</span>
               <span className="madspild-deal-pricing">
                 {deal.price != null && (
-                  <span className="madspild-price">{deal.price.toFixed(0)} kr.</span>
+                  <span className="madspild-price">{Number(deal.price).toFixed(0)} kr.</span>
                 )}
                 {deal.originalPrice != null && (
-                  <span className="madspild-original">{deal.originalPrice.toFixed(0)} kr.</span>
+                  <span className="madspild-original">{Number(deal.originalPrice).toFixed(0)} kr.</span>
                 )}
                 {deal.discount != null && (
                   <span className="madspild-pct">-{deal.discount}%</span>
