@@ -330,6 +330,7 @@ export default function App() {
   const [cuisineFilter, setCuisineFilter] = useState("Alle");
   const [planCopied, setPlanCopied] = useState(false);
   const [showMealPlanPanel, setShowMealPlanPanel] = useState(false);
+  const [confirmClearPlan, setConfirmClearPlan] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState(() => {
     try {
       const saved = localStorage.getItem("collapsedSections");
@@ -609,6 +610,14 @@ export default function App() {
       saveMealPlanState(next);
       return next;
     });
+  }
+  function clearMealPlan() {
+    const empty = Array(7).fill(null);
+    setMealPlan(empty);
+    saveMealPlanState(empty);
+    setShowCombinedList(false);
+    setShowMealPlanPanel(false);
+    setConfirmClearPlan(false);
   }
   function setPlanServings(dayIdx, val) {
     setMealPlan(prev => {
@@ -1653,6 +1662,17 @@ export default function App() {
                 </button>
               </div>
             )}
+            {confirmClearPlan ? (
+              <div className="mp-clear-confirm">
+                <span>Ryd hele madplanen?</span>
+                <div className="mp-clear-confirm-btns">
+                  <button className="mp-clear-yes" onClick={clearMealPlan}>Ja, ryd</button>
+                  <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>Annuller</button>
+                </div>
+              </div>
+            ) : (
+              <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)} style={{ marginTop: 8 }}>Ryd madplan</button>
+            )}
             {showCombinedList && planCount > 0 && (
               <div className="combined-list">
                 {combinedList.length === 0 ? (
@@ -1734,12 +1754,14 @@ export default function App() {
     </div>
 
     {/* Mobile FAB */}
-    <button className="meal-plan-fab" onClick={() => setShowMealPlanPanel(true)} aria-label="Vis madplan">
-      📅{planCount > 0 && <span className="mp-fab-badge">{planCount}</span>}
-    </button>
+    {planCount > 0 && (
+      <button className="meal-plan-fab" onClick={() => setShowMealPlanPanel(true)} aria-label="Vis madplan">
+        📅<span className="mp-fab-badge">{planCount}</span>
+      </button>
+    )}
 
     {/* Desktop sidebar */}
-    <aside className="meal-plan-sidebar">
+    {planCount > 0 && <aside className="meal-plan-sidebar">
       <div className="mp-sidebar-header">
         <div className="mp-sidebar-title">📅 Madplan</div>
         {planCount > 0 && <span className="mp-sidebar-count">{planCount}/7</span>}
@@ -1777,16 +1799,25 @@ export default function App() {
           </div>
         ))}
       </div>
-      {planCount > 0 && (
-        <div className="mp-sidebar-footer">
-          <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan} style={{ width: "100%" }}>
-            {planCopied ? "✓ Kopieret!" : "Del madplan"}
-          </button>
-          <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)} style={{ width: "100%" }}>
-            {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
-          </button>
-        </div>
-      )}
+      <div className="mp-sidebar-footer">
+        <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan} style={{ width: "100%" }}>
+          {planCopied ? "✓ Kopieret!" : "Del madplan"}
+        </button>
+        <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)} style={{ width: "100%" }}>
+          {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
+        </button>
+        {confirmClearPlan ? (
+          <div className="mp-clear-confirm">
+            <span>Ryd hele madplanen?</span>
+            <div className="mp-clear-confirm-btns">
+              <button className="mp-clear-yes" onClick={clearMealPlan}>Ja, ryd</button>
+              <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>Annuller</button>
+            </div>
+          </div>
+        ) : (
+          <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)}>Ryd madplan</button>
+        )}
+      </div>
       {showCombinedList && planCount > 0 && (
         <div className="combined-list" style={{ marginTop: 12 }}>
           {combinedList.length === 0 ? (
@@ -1811,7 +1842,7 @@ export default function App() {
           )}
         </div>
       )}
-    </aside>
+    </aside>}
     </>
   );
 }
