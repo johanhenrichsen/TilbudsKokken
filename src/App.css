@@ -2230,19 +2230,44 @@ html.dark .ob-location-chain-label { color: #6a9a6a; }
   gap: 6px;
 }
 .ob-location-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: #eef5ee;
-  border: 1px solid #c0d8c0;
+  border: 1.5px solid #c0d8c0;
   color: #2a5a2a;
   padding: 5px 13px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
+.ob-location-chip:hover { background: #ddf0dd; border-color: #4a7050; }
+.ob-location-chip.selected {
+  background: #4a7050;
+  border-color: #4a7050;
+  color: white;
+}
+.ob-location-chip.selected:hover { background: #3a6040; border-color: #3a6040; }
+.ob-location-chip-check { font-size: 11px; font-weight: 700; }
 html.dark .ob-location-chip {
   background: #1a2e1a;
   border-color: #2a4a2a;
   color: #90c090;
 }
+html.dark .ob-location-chip:hover { background: #1e381e; border-color: #4a7050; }
+html.dark .ob-location-chip.selected {
+  background: #3a5a3a;
+  border-color: #5a8a5a;
+  color: #c8e8c8;
+}
+.ob-location-hint--selected {
+  color: #4a7050;
+  font-weight: 600;
+}
+html.dark .ob-location-hint--selected { color: #6a9a6a; }
 .ob-location-empty, .ob-location-hint {
   font-size: 13px;
   color: #9a9a8a;

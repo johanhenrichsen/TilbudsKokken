@@ -362,6 +362,7 @@ export default function App() {
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
   const [pendingLocation, setPendingLocation] = useState("");
+  const [pendingSelectedBranches, setPendingSelectedBranches] = useState(new Set());
 
   // ── Splash screen ────────────────────────────────────────────────
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
@@ -740,8 +741,8 @@ export default function App() {
     if (onboardingStep < 4) {
       setOnboardingStep(s => s + 1);
     } else {
-      const storesArray = pendingLocationBranches.length > 0
-        ? pendingLocationBranches
+      const storesArray = pendingSelectedBranches.size > 0
+        ? STORE_BRANCHES.filter(s => pendingSelectedBranches.has(s.name))
         : CHAIN_ORDER
             .filter(ch => pendingChains.has(ch))
             .map(ch => STORE_BRANCHES.find(b => b.chain === ch))
@@ -761,6 +762,7 @@ export default function App() {
     setPendingDiet(diet);
     setPendingServings(parseInt(localStorage.getItem("defaultServings")) || 4);
     setPendingLocation("");
+    setPendingSelectedBranches(new Set());
     setOnboardingStep(1);
   }
 
@@ -1009,9 +1011,23 @@ export default function App() {
                             <div className="ob-location-chips">
                               {pendingLocationBranches
                                 .filter(s => s.chain === chain)
-                                .map(s => (
-                                  <span key={s.name} className="ob-location-chip">{s.city} · {s.zip}</span>
-                                ))}
+                                .map(s => {
+                                  const sel = pendingSelectedBranches.has(s.name);
+                                  return (
+                                    <button
+                                      key={s.name}
+                                      className={`ob-location-chip${sel ? " selected" : ""}`}
+                                      onClick={() => setPendingSelectedBranches(prev => {
+                                        const next = new Set(prev);
+                                        sel ? next.delete(s.name) : next.add(s.name);
+                                        return next;
+                                      })}
+                                    >
+                                      {sel && <span className="ob-location-chip-check">✓</span>}
+                                      {s.city} · {s.zip}
+                                    </button>
+                                  );
+                                })}
                             </div>
                           </div>
                         ))
@@ -1020,6 +1036,14 @@ export default function App() {
                   )}
                   {pendingLocationQ && pendingLocationBranches.length === 0 && (
                     <p className="ob-location-empty">Ingen butikker fundet — prøv et andet søgeord.</p>
+                  )}
+                  {pendingLocationBranches.length > 0 && pendingSelectedBranches.size === 0 && (
+                    <p className="ob-location-hint">Tryk på en butik for at vælge den.</p>
+                  )}
+                  {pendingSelectedBranches.size > 0 && (
+                    <p className="ob-location-hint ob-location-hint--selected">
+                      ✓ {pendingSelectedBranches.size} {pendingSelectedBranches.size === 1 ? "butik" : "butikker"} valgt
+                    </p>
                   )}
                   {!pendingLocationQ && (
                     <p className="ob-location-hint">Du kan springe over og vælge butikker manuelt senere.</p>
