@@ -665,6 +665,10 @@ export default function App() {
   const combinedList = showCombinedList ? buildCombinedList() : [];
   const planCount = mealPlan.filter(Boolean).length;
 
+  useEffect(() => {
+    document.body.classList.toggle("has-mp-sidebar", planCount > 0);
+  }, [planCount]);
+
   function toggleSection(key) {
     setCollapsedSections(prev => {
       const next = { ...prev, [key]: !prev[key] };
@@ -1239,29 +1243,22 @@ export default function App() {
         </div>
       )}
 
-      {/* Hero banner */}
+      {/* Slim app header */}
       <div className="app-hero">
-        <div className="app-header-deco-1" />
-        <div className="app-header-deco-2" />
-
-        {/* Top bar: small brand left + controls right */}
         <div className="hero-topbar">
           <div className="hero-brand">
-            <LogoIcon size={52} />
+            <LogoIcon size={30} />
             <span className="hero-brand-name">TilbudsKokken</span>
           </div>
-          <div className="header-actions">
-            <button className="header-icon-btn" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
-              {darkMode ? "☀️" : "🌙"}
-            </button>
-            <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
+          <div className="hero-topbar-right">
+            <div className="week-badge">{weekBadge}</div>
+            <div className="header-actions">
+              <button className="header-icon-btn" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
+                {darkMode ? "☀️" : "🌙"}
+              </button>
+              <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
+            </div>
           </div>
-        </div>
-
-        {/* Logo hero — centered, full logo with wordmark + tagline */}
-        <div className="hero-center">
-          <LogoFull size="2xl" />
-          <div className="week-badge">{weekBadge}</div>
         </div>
 
         <div className="local-store-badge">
