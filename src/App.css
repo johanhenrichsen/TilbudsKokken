@@ -21,6 +21,7 @@
   max-width: 720px;
   margin: 0 auto;
   color: #1a1a1a;
+  overflow-x: hidden;
 }
 
 /* ─── Header ─────────────────────────────────── */
@@ -281,7 +282,7 @@
   margin: 1.25rem 0 10px;
 }
 .ingredient-add-btn {
-  width: 18px; height: 18px;
+  width: 26px; height: 26px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -289,7 +290,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1;
   padding: 0;
@@ -1114,6 +1115,22 @@
   transition: background 0.15s;
 }
 .sp-close-btn:hover { background: #eee; }
+.sp-clear-btn {
+  background: none;
+  border: 1.5px solid #f0c0c0;
+  border-radius: 50px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c07070;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+.sp-clear-btn:hover { background: #fff0f0; border-color: #e09090; }
+html.dark .sp-clear-btn { border-color: #5a2a2a; color: #e07070; }
+html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .store-picker-card .store-branch-list { flex: 1; overflow-y: auto; }
 
 /* ─── Add-to-plan button ─────────────────────── */
@@ -1128,12 +1145,13 @@
   border: 1.5px dashed #c8d9c8;
   color: #4a7050;
   border-radius: 50px;
-  padding: 6px 10px;
-  font-size: 11px;
+  padding: 10px 12px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s ease;
+  min-height: 44px;
 }
 .add-to-plan-btn:hover { background: #f0f7f0; border-color: #7ab87a; border-style: solid; }
 .add-to-plan-btn.in-plan { background: #eef5ee; border-color: #7ab87a; border-style: solid; color: #2a5030; cursor: default; }
@@ -1287,12 +1305,12 @@
   font-weight: 600;
 }
 .plan-sv-btn {
-  width: 18px; height: 18px;
+  width: 24px; height: 24px;
   border-radius: 50%;
   border: 1.5px solid #c4ddc4;
   background: white;
   color: #4a7050;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -1358,16 +1376,54 @@
 
 /* ─── Responsive ─────────────────────────────── */
 @media (max-width: 600px) {
-  .app { padding: 0.875rem; }
-  .app-hero { padding: 0.6rem 0.875rem; }
+  .app { padding: 0.75rem; }
+  .app-hero { padding: 0.6rem 0.75rem; }
   .app-title { font-size: 24px; }
-  .recipe-card { padding: 1.25rem; }
   .recipe-browse-grid { grid-template-columns: 1fr; }
 
   .ob-welcome-logo { height: auto !important; }
   .ob-welcome-content { max-width: calc(100vw - 2rem); }
 
-  /* Filter chips — horizontal scroll, no wrapping */
+  /* ── Touch targets (minimum 44px) ── */
+  .diet-btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .skift-btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .header-icon-btn { width: 44px; height: 44px; font-size: 18px; }
+  .add-to-plan-btn { min-height: 48px; padding: 12px 16px; font-size: 13px; }
+  .add-to-plan-btn.detail { padding: 10px 16px; font-size: 13px; width: auto; }
+  .save-btn, .share-btn, .retry-btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .back-btn { min-height: 44px; display: flex; align-items: center; }
+  .day-picker-btn { min-height: 60px; }
+  .plan-sv-btn { width: 30px; height: 30px; font-size: 14px; }
+  .ingredient-add-btn { width: 32px; height: 32px; font-size: 14px; }
+  .shopping-item-remove {
+    min-width: 44px; min-height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .saved-recipe-header { padding: 14px; min-height: 52px; }
+  .saved-recipe-delete {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mp-sheet-remove {
+    min-width: 44px; min-height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mp-sheet-close { width: 40px; height: 40px; }
+  .store-branch-item { padding: 14px; }
+
+  /* ── Filter chips — horizontal scroll, no wrapping ── */
   .diet-filters,
   .cuisine-filters {
     flex-wrap: nowrap;
@@ -1376,31 +1432,39 @@
     scrollbar-width: none;
     padding-bottom: 4px;
     gap: 6px;
-    margin-right: -0.875rem;
-    padding-right: 0.875rem;
+    margin-right: -0.75rem;
+    padding-right: 0.75rem;
   }
   .diet-filters::-webkit-scrollbar,
   .cuisine-filters::-webkit-scrollbar { display: none; }
 
-  /* Tap targets min 44px */
-  .diet-btn { min-height: 40px; }
-  .add-to-plan-btn { min-height: 44px; }
-  .day-picker-btn { min-height: 60px; }
-  .back-btn { min-height: 44px; display: flex; align-items: center; }
-  .header-icon-btn { width: 40px; height: 40px; }
+  /* ── Search ── */
+  .search-input { padding: 12px 44px 12px 16px; font-size: 15px; }
 
-  /* Local store badge — allow wrap on narrow screens */
-  .local-store-badge {
-    flex-wrap: wrap;
-    max-width: 100%;
-    gap: 6px;
-  }
+  /* ── Recipe cards ── */
+  .recipe-card { padding: 1.25rem; }
+  .recipe-title { font-size: 22px; }
+  .recipe-browse-card { padding: 14px; }
+  .recipe-browse-title { font-size: 15px; }
+  .recipe-meta-bar { gap: 12px; font-size: 12px; }
 
-  /* Meal plan — scroll snap */
+  /* ── Hero topbar — prevent overflow on very narrow screens ── */
+  .hero-brand-name { font-size: 14px; }
+  .hero-topbar-right { gap: 6px; }
+  .week-badge { font-size: 10px; padding: 3px 8px; }
+
+  /* ── Local store badge ── */
+  .local-store-badge { flex-wrap: wrap; gap: 4px; font-size: 12px; }
+
+  /* ── Section headings ── */
+  .section-toggle-btn { padding: 12px 12px; }
+  .section-toggle-label { font-size: 15px; }
+
+  /* ── Meal plan grid — scroll snap ── */
   .meal-plan-grid { scroll-snap-type: x mandatory; }
   .meal-plan-day { scroll-snap-align: start; }
 
-  /* Onboarding store cards — 2 column grid */
+  /* ── Onboarding store cards — 2 column grid ── */
   .ob-chain-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1409,7 +1473,7 @@
   .ob-chain-card { padding: 14px 12px; gap: 8px; }
   .ob-chain-name { font-size: 14px; }
 
-  /* Recipe detail — full-screen overlay */
+  /* ── Recipe detail — full-screen overlay ── */
   body.recipe-open { overflow: hidden; }
   .recipe-detail-sheet {
     position: fixed;
@@ -1421,9 +1485,7 @@
   html.dark .recipe-detail-sheet { background: #0d1f0d; }
   .recipe-detail-sheet .back-btn {
     position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     width: 100%;
     padding: 14px 16px;
     margin: 0;
@@ -1448,8 +1510,6 @@
     margin: 0;
     padding: 1.25rem;
   }
-  .recipe-title { font-size: 22px; }
-
 }
 
 /* (dark-mode-btn merged into .header-icon-btn) */

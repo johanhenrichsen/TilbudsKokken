@@ -803,6 +803,10 @@ export default function App() {
       return next;
     });
   }
+  function clearStores() {
+    setLocalStores([]);
+    localStorage.setItem("localStores", JSON.stringify([]));
+  }
 
   const selectedNames = new Set((localStores || []).map(s => s.name));
 
@@ -1143,7 +1147,12 @@ export default function App() {
           <div className="store-picker-card">
             <div className="sp-modal-header">
               <h2 className="sp-title">Dine butikker</h2>
-              <button className="sp-close-btn" onClick={() => { setShowStorePicker(false); setStoreSearch(""); }}>×</button>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {selectedNames.size > 0 && (
+                  <button className="sp-clear-btn" onClick={clearStores}>Ryd butikker</button>
+                )}
+                <button className="sp-close-btn" onClick={() => { setShowStorePicker(false); setStoreSearch(""); }}>×</button>
+              </div>
             </div>
             <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Klik for at tilføje eller fjerne butikker.</p>
             <StorePickerContent
@@ -1334,12 +1343,12 @@ export default function App() {
           </button>
 
           <div className="recipe-card">
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
-              <div>
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
+              <div style={{ minWidth: 0, flex: 1 }}>
                 <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
                 {selectedRecipe.subtitle && <p className="recipe-subtitle">{selectedRecipe.subtitle}</p>}
               </div>
-              <div style={{ display: "flex", gap: 8, flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button
                   className="share-btn"
                   onClick={() => shareRecipe(selectedRecipe)}
