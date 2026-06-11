@@ -239,6 +239,16 @@ const stores = [
 
 const storeColorMap = Object.fromEntries(stores.map(s => [s.name, s.color]));
 
+const itemPriceMap = Object.fromEntries(
+  stores.flatMap(s => s.items.map(it => [it.name, it.price]))
+);
+
+function calcRecipePrice(recipe, forServings) {
+  const base = recipe.dealItems.reduce((sum, di) => sum + (itemPriceMap[di.name] ?? 0), 0);
+  if (base === 0) return null;
+  return base * (forServings / (recipe.servings_count || 4));
+}
+
 const dietExcludeItems = {
   Alle: new Set(),
   Vegetar: new Set(["Hakket oksekød 500g", "Kyllingefilet 600g", "Laks filet 400g"]),
@@ -820,6 +830,7 @@ export default function App() {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
     const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
     const makeable = canMakeNow(r);
+    const cardPrice = calcRecipePrice(r, r.servings_count || 4);
     return (
       <div
         className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
@@ -838,6 +849,12 @@ export default function App() {
           <span>⏱ {r.time}</span>
           <span>🥘 {r.ingredients.length} ing.</span>
         </div>
+        {cardPrice != null && (
+          <div className="recipe-card-price">
+            ca. {Math.round(cardPrice)} kr.
+            <span className="recipe-card-price-pp"> · {Math.round(cardPrice / (r.servings_count || 4))} kr. pr. person</span>
+          </div>
+        )}
         <div className="recipe-deal-tags">
           {r.dealItems.map(di => {
             const available = getAvailableItemNames().has(di.name);
@@ -1279,6 +1296,16 @@ export default function App() {
                 <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
               </span>
             </div>
+            {(() => {
+              const price = calcRecipePrice(selectedRecipe, servings);
+              if (price == null) return null;
+              return (
+                <div className="recipe-detail-price">
+                  ca. {Math.round(price)} kr.
+                  <span className="recipe-detail-price-pp"> · {Math.round(price / servings)} kr. pr. person</span>
+                </div>
+              );
+            })()}
 
             <div className="section-label">Ingredienser</div>
             <ul className="ingredient-grid">
