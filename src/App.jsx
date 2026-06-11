@@ -1111,7 +1111,7 @@ export default function App() {
         {/* Top bar: small brand left + controls right */}
         <div className="hero-topbar">
           <div className="hero-brand">
-            <LogoIcon size={28} />
+            <LogoIcon size={36} />
             <span className="hero-brand-name">TilbudsKokken</span>
           </div>
           <div className="header-actions">
@@ -1121,7 +1121,7 @@ export default function App() {
 
         {/* Logo hero — centered, full logo with wordmark + tagline */}
         <div className="hero-center">
-          <LogoFull size="lg" />
+          <LogoFull size="xl" />
           <div className="week-badge">{weekBadge}</div>
         </div>
 
