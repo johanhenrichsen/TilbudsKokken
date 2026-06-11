@@ -911,7 +911,7 @@ export default function App() {
               <div className="ob-welcome-deco-1" />
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
-                <LogoIcon size={120} className="ob-welcome-logo" />
+                <LogoIcon size={200} className="ob-welcome-logo" />
                 <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
                 <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
                   Kom i gang →

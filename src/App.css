@@ -1818,35 +1818,27 @@ html.dark .ob-overlay { background: #0d1f0d; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 3rem 2rem;
   position: relative;
-  background: linear-gradient(160deg, #d4e8d4 0%, #e8e0d0 55%, #f5f0e8 100%);
+  background: linear-gradient(160deg, #0c1a0c 0%, #141f0e 50%, #0a1208 100%);
   overflow: hidden;
-  --logo-main: #1a2e1a;
-  --logo-bg: rgba(255,255,255,0.88);
-  --logo-leaf: #3d6b2a;
-  --logo-tomato: #d94a28;
-  --logo-bottle: #f0a030;
-  --logo-cap: #2d5222;
-  --logo-wordmark: #1a2e1a;
-  --logo-tagline: #5a8a3a;
-}
-html.dark .ob-welcome {
-  background: linear-gradient(160deg, #0d1f0d 0%, #111c11 55%, #161008 100%);
   --logo-main: #c8dcc8;
   --logo-bg: #0a160a;
   --logo-leaf: #5aaa3a;
   --logo-tomato: #e85a3a;
   --logo-bottle: #f0b040;
   --logo-cap: #4a9a3a;
-  --logo-wordmark: var(--cream, #f0ead6);
-  --logo-tagline: var(--accent, #e8934a);
+  --logo-wordmark: #f0ead6;
+  --logo-tagline: #e8934a;
+}
+html.dark .ob-welcome {
+  background: linear-gradient(160deg, #070f07 0%, #0a1008 50%, #060a05 100%);
 }
 .ob-welcome-deco-1 {
   position: absolute;
   top: -80px; right: -80px;
   width: 320px; height: 320px;
-  background: rgba(255,255,255,0.35);
+  background: rgba(232,147,74,0.07);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -1854,12 +1846,10 @@ html.dark .ob-welcome {
   position: absolute;
   bottom: -60px; left: -40px;
   width: 200px; height: 200px;
-  background: rgba(74,112,80,0.12);
+  background: rgba(74,180,74,0.1);
   border-radius: 50%;
   pointer-events: none;
 }
-html.dark .ob-welcome-deco-1 { background: rgba(255,255,255,0.04); }
-html.dark .ob-welcome-deco-2 { background: rgba(74,112,80,0.15); }
 .ob-welcome-content {
   position: relative;
   text-align: center;
@@ -1890,33 +1880,39 @@ html.dark .ob-welcome-title { color: var(--cream); font-family: var(--font-serif
 }
 html.dark .ob-welcome-tagline { color: #7ab87a; }
 .ob-welcome-desc {
-  font-size: 14px;
-  color: #5a7050;
-  line-height: 1.6;
-  margin: 0 0 1.5rem;
+  font-size: 19px;
+  font-weight: 500;
+  color: #a8c8a0;
+  line-height: 1.75;
+  margin: 0 0 3rem;
 }
-html.dark .ob-welcome-desc { color: #6a8a6a; }
+html.dark .ob-welcome-desc { color: #8ab890; }
 .ob-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
+  width: min(360px, 90%);
+  margin: 0 auto;
   background: linear-gradient(135deg, #e8934a 0%, #d4753a 100%);
   color: white;
   border: none;
   border-radius: 50px;
-  padding: 16px 36px;
-  font-size: 16px;
-  font-weight: 700;
+  padding: 22px 48px;
+  font-size: 20px;
+  font-weight: 800;
   cursor: pointer;
   font-family: var(--font-sans);
-  letter-spacing: -0.1px;
-  box-shadow: 0 6px 28px rgba(232,147,74,0.45);
-  transition: background 0.2s, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+  letter-spacing: 0.2px;
+  box-shadow: 0 8px 40px rgba(232,147,74,0.65), 0 0 80px rgba(232,147,74,0.2);
+  animation: ctaGlow 2.8s ease-in-out infinite;
+  transition: background 0.2s, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .ob-cta-btn:hover {
   background: linear-gradient(135deg, #f0a060 0%, #e08040 100%);
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 14px 44px rgba(232,147,74,0.6);
+  animation-play-state: paused;
+}
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 8px 40px rgba(232,147,74,0.65), 0 0 80px rgba(232,147,74,0.18); }
+  50%       { box-shadow: 0 12px 55px rgba(232,147,74,0.85), 0 0 110px rgba(232,147,74,0.38); }
 }
 
 /* Step layout */
@@ -2296,7 +2292,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
 }
 
 /* ── Onboarding welcome logo ─────────────────── */
-.ob-welcome-logo { margin: 16px auto 16px; width: min(120px, 32vw); height: auto; display: block; }
+.ob-welcome-logo { margin: 0 auto 2.5rem; width: min(240px, 52vw); height: auto; display: block; }
 
 /* ── Week badge spacing inside hero ─────────────*/
 .hero-center .week-badge { margin-top: 12px; }
