@@ -275,6 +275,19 @@ function mergeIngredientTexts(texts) {
 
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved) return saved === "dark";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    } catch { return true; }
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    try { localStorage.setItem("theme", darkMode ? "dark" : "light"); } catch {}
+  }, [darkMode]);
+
   const [localStores, setLocalStores] = useState(() => {
     try {
       const v = localStorage.getItem("localStores");
@@ -316,6 +329,7 @@ export default function App() {
   const [timeFilter, setTimeFilter] = useState("Alle tider");
   const [cuisineFilter, setCuisineFilter] = useState("Alle");
   const [planCopied, setPlanCopied] = useState(false);
+  const [showMealPlanPanel, setShowMealPlanPanel] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState(() => {
     try {
       const saved = localStorage.getItem("collapsedSections");
@@ -900,6 +914,7 @@ export default function App() {
   }
 
   return (
+    <>
     <div className="app">
 
       {/* ── Splash screen ──────────────────────────────────────── */}
@@ -1227,6 +1242,9 @@ export default function App() {
             <span className="hero-brand-name">TilbudsKokken</span>
           </div>
           <div className="header-actions">
+            <button className="header-icon-btn" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
+              {darkMode ? "☀️" : "🌙"}
+            </button>
             <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
           </div>
         </div>
@@ -1597,82 +1615,69 @@ export default function App() {
         </>
       )}
 
-      {/* Meal plan */}
-      {planCount > 0 && (
-        <div className="meal-plan-card">
-          <div className="meal-plan-header">
-            <div className="section-label" style={{ margin: 0 }}>📅 Madplan · {planCount} {planCount === 1 ? "dag" : "dage"}</div>
-            <div className="meal-plan-header-btns">
-              <button
-                className={`share-plan-btn${planCopied ? " copied" : ""}`}
-                onClick={shareMealPlan}
-              >
-                {planCopied ? "✓ Kopieret!" : "Del madplan"}
-              </button>
-              <button
-                className="combined-list-btn"
-                onClick={() => setShowCombinedList(v => !v)}
-              >
-                {showCombinedList ? "Skjul" : "Indkøbsliste"}
-              </button>
+      {/* Mobile meal plan bottom sheet */}
+      {showMealPlanPanel && (
+        <div className="mp-sheet-overlay" onClick={() => setShowMealPlanPanel(false)}>
+          <div className="mp-sheet" onClick={e => e.stopPropagation()}>
+            <div className="mp-sheet-drag-handle" />
+            <div className="mp-sheet-header">
+              <div className="mp-sheet-title">📅 Madplan</div>
+              <button className="mp-sheet-close" onClick={() => setShowMealPlanPanel(false)}>×</button>
             </div>
-          </div>
-
-          <div className="meal-plan-grid">
-            {mealPlan.map((entry, i) => (
-              <div
-                key={i}
-                className={`meal-plan-day${entry ? " filled" : " empty"}${dragFromDay === i ? " dragging" : ""}`}
-                draggable={!!entry}
-                onDragStart={() => setDragFromDay(i)}
-                onDragOver={e => e.preventDefault()}
-                onDrop={() => handleDayDrop(i)}
-                onDragEnd={() => setDragFromDay(null)}
-              >
-                <div className="meal-plan-day-name">{DAY_SHORT[i]}</div>
-                {entry ? (
-                  <>
-                    <div className="meal-plan-emoji">{entry.recipe.emoji}</div>
-                    <div className="meal-plan-recipe-title">{entry.recipe.title}</div>
-                    <div className="meal-plan-recipe-meta">⏱ {entry.recipe.time}</div>
-                    <div className="meal-plan-servings">
-                      <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.max(1, entry.servings - 1))}>−</button>
-                      <span>{entry.servings}</span>
-                      <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.min(10, entry.servings + 1))}>+</button>
+            <div className="mp-days-list">
+              {mealPlan.map((entry, i) => (
+                <div key={i} className={`mp-sheet-day${entry ? " filled" : " empty"}`}>
+                  <div className="mp-sheet-day-name">{DAY_FULL[i]}</div>
+                  {entry ? (
+                    <div className="mp-sheet-day-content">
+                      <span className="mp-sheet-emoji">{entry.recipe.emoji}</span>
+                      <div className="mp-sheet-recipe-info">
+                        <div className="mp-sheet-recipe-title">{entry.recipe.title}</div>
+                        <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} pers.</div>
+                      </div>
+                      <button className="mp-sheet-remove" onClick={() => removeFromPlan(i)}>×</button>
                     </div>
-                    <button className="meal-plan-remove" onClick={() => removeFromPlan(i)} title="Fjern">×</button>
-                  </>
+                  ) : (
+                    <div className="mp-sheet-empty">Ingen opskrift planlagt</div>
+                  )}
+                </div>
+              ))}
+            </div>
+            {planCount > 0 && (
+              <div className="mp-sheet-actions">
+                <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan}>
+                  {planCopied ? "✓ Kopieret!" : "Del madplan"}
+                </button>
+                <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)}>
+                  {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
+                </button>
+              </div>
+            )}
+            {showCombinedList && planCount > 0 && (
+              <div className="combined-list">
+                {combinedList.length === 0 ? (
+                  <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
                 ) : (
-                  <div className="meal-plan-empty-label">Ledig</div>
+                  combinedList.map(group => (
+                    <div key={group.store} className="combined-list-store">
+                      <div className="combined-list-store-label">
+                        <span className="deal-store-dot" style={{ background: group.color }} />
+                        {group.store}
+                      </div>
+                      <ul className="combined-list-items">
+                        {group.items.map(it => (
+                          <li key={it.dealItem} className="combined-list-item">
+                            <span className="shopping-item-dot" />
+                            {it.merged}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
                 )}
               </div>
-            ))}
+            )}
           </div>
-
-          {showCombinedList && (
-            <div className="combined-list">
-              {combinedList.length === 0 ? (
-                <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
-              ) : (
-                combinedList.map(group => (
-                  <div key={group.store} className="combined-list-store">
-                    <div className="combined-list-store-label">
-                      <span className="deal-store-dot" style={{ background: group.color }} />
-                      {group.store}
-                    </div>
-                    <ul className="combined-list-items">
-                      {group.items.map(it => (
-                        <li key={it.dealItem} className="combined-list-item">
-                          <span className="shopping-item-dot" />
-                          {it.merged}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))
-              )}
-            </div>
-          )}
         </div>
       )}
 
@@ -1727,5 +1732,86 @@ export default function App() {
       )}
 
     </div>
+
+    {/* Mobile FAB */}
+    <button className="meal-plan-fab" onClick={() => setShowMealPlanPanel(true)} aria-label="Vis madplan">
+      📅{planCount > 0 && <span className="mp-fab-badge">{planCount}</span>}
+    </button>
+
+    {/* Desktop sidebar */}
+    <aside className="meal-plan-sidebar">
+      <div className="mp-sidebar-header">
+        <div className="mp-sidebar-title">📅 Madplan</div>
+        {planCount > 0 && <span className="mp-sidebar-count">{planCount}/7</span>}
+      </div>
+      <div className="mp-sidebar-days">
+        {mealPlan.map((entry, i) => (
+          <div key={i}
+            className={`mp-sidebar-day${entry ? " filled" : " empty"}${dragFromDay === i ? " dragging" : ""}`}
+            draggable={!!entry}
+            onDragStart={() => setDragFromDay(i)}
+            onDragOver={e => e.preventDefault()}
+            onDrop={() => handleDayDrop(i)}
+            onDragEnd={() => setDragFromDay(null)}
+          >
+            <div className="mp-sidebar-day-name">{DAY_SHORT[i]}</div>
+            {entry ? (
+              <div className="mp-sidebar-day-content">
+                <span className="mp-sidebar-emoji">{entry.recipe.emoji}</span>
+                <div className="mp-sidebar-recipe-info">
+                  <div className="mp-sidebar-recipe-title">{entry.recipe.title}</div>
+                  <div className="mp-sidebar-servings">
+                    <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.max(1, entry.servings - 1))}>−</button>
+                    <span>{entry.servings}p</span>
+                    <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.min(10, entry.servings + 1))}>+</button>
+                  </div>
+                </div>
+                <button className="mp-sidebar-remove" onClick={() => removeFromPlan(i)} title="Fjern">×</button>
+              </div>
+            ) : (
+              <div className="mp-sidebar-empty">
+                <span className="mp-sidebar-plus">+</span>
+                <span className="mp-sidebar-empty-text">Ledig</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      {planCount > 0 && (
+        <div className="mp-sidebar-footer">
+          <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan} style={{ width: "100%" }}>
+            {planCopied ? "✓ Kopieret!" : "Del madplan"}
+          </button>
+          <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)} style={{ width: "100%" }}>
+            {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
+          </button>
+        </div>
+      )}
+      {showCombinedList && planCount > 0 && (
+        <div className="combined-list" style={{ marginTop: 12 }}>
+          {combinedList.length === 0 ? (
+            <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
+          ) : (
+            combinedList.map(group => (
+              <div key={group.store} className="combined-list-store">
+                <div className="combined-list-store-label">
+                  <span className="deal-store-dot" style={{ background: group.color }} />
+                  {group.store}
+                </div>
+                <ul className="combined-list-items">
+                  {group.items.map(it => (
+                    <li key={it.dealItem} className="combined-list-item">
+                      <span className="shopping-item-dot" />
+                      {it.merged}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </aside>
+    </>
   );
 }
