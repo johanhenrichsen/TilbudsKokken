@@ -273,12 +273,6 @@ function mergeIngredientTexts(texts) {
   return texts.join(" + ");
 }
 
-function getWeekNumber(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-}
 
 export default function App() {
   const [localStores, setLocalStores] = useState(() => {
@@ -777,12 +771,11 @@ export default function App() {
   }
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
-  const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
+  const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
 
   // ── Madspild card ────────────────────────────────────────────────
   function MadspildCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
-    console.log('madspildDeals:', r.id, JSON.stringify(r.madspildDeals, null, 2));
     return (
       <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
         <div className="card-badges">
