@@ -327,7 +327,7 @@ export default function App() {
       const saved = localStorage.getItem("collapsedSections");
       if (saved) return JSON.parse(saved);
     } catch {}
-    return { recommended: false, others: true, madspild: false };
+    return { recommended: false, others: true, madspild: true };
   });
 
   // ── Popularity tracking ─────────────────────────────────────────
