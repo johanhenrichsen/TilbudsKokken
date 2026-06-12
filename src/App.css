@@ -3376,13 +3376,6 @@ html.dark .pantry-chip.selected { background: rgba(232,147,74,0.1); border-color
   z-index: 86;
   transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s ease, box-shadow 0.15s ease;
 }
-/* When meal plan panel is open, slide the cart FAB above the sheet */
-@media (max-width: 1099px) {
-  .shopping-cart-fab.mp-open {
-    bottom: calc(88vh + 12px);
-    z-index: 300;
-  }
-}
 .shopping-cart-fab:hover {
   transform: scale(1.06);
   box-shadow: 0 6px 22px rgba(232,147,74,0.55);
