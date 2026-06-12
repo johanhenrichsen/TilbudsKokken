@@ -70,8 +70,10 @@ Ingen matches: {"matches":[]}`;
     }
 
     const data = await response.json();
-    const text = (data.content?.[0]?.text || '').trim();
-    console.log(`[match-recipes] Claude raw response (${text.length} chars):`, text.slice(0, 500));
+    const rawText = (data.content?.[0]?.text || '').trim();
+    // Strip markdown code fences — Claude adds ```json despite the instruction
+    const text = rawText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+    console.log(`[match-recipes] stop_reason=${data.stop_reason}, ${text.length} chars:`, text.slice(0, 300));
 
     try {
       const parsed = JSON.parse(text);
@@ -82,12 +84,12 @@ Ingen matches: {"matches":[]}`;
       if (match) {
         try {
           const parsed = JSON.parse(match[0]);
-          console.log('[match-recipes] Parsed via regex fallback');
+          console.log(`[match-recipes] Parsed via regex — ${parsed.matches?.length ?? 0} matches`);
           return res.status(200).json(parsed);
         } catch {}
       }
-      console.error('[match-recipes] Failed to parse Claude response:', text.slice(0, 300));
-      return res.status(200).json({ matches: [] });
+      console.error('[match-recipes] Failed to parse:', text.slice(0, 300));
+      return res.status(200).json({ matches: [], _error: `JSON parse failed. Raw: ${rawText.slice(0, 200)}` });
     }
   } catch (err) {
     console.error('[match-recipes] Unexpected error:', err);
