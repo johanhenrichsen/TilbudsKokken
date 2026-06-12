@@ -463,6 +463,8 @@ export default function App() {
         const results = body1.results ?? [];
         console.log(`[Madspild Agent 1] Returned ${results.length} classifications:`, results);
 
+        if (body1._error) console.error('[Madspild Agent 1] Server-side error:', body1._error);
+
         if (results.length > 0) {
           // Only persist cache when Agent 1 actually returned data — don't cache API failures
           for (const r of results) {
@@ -470,7 +472,7 @@ export default function App() {
           }
           try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
         } else {
-          console.warn('[Madspild Agent 1] No results returned — API key missing or Claude error. Raw body:', body1);
+          console.warn('[Madspild Agent 1] No results returned. Body:', body1);
         }
       }
 

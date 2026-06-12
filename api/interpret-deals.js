@@ -56,14 +56,18 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Claude API key not configured' });
   }
 
+  // Use short numeric indices instead of full composite IDs in the Claude round-trip.
+  // Full IDs (UUID + EAN, up to 60 chars each) would exhaust max_tokens before 60 results
+  // are classified — Claude's output gets truncated, JSON is invalid, results: [] is returned.
   const batch = deals.slice(0, 60).map(d => ({ id: d.id, description: d.description }));
+  const indexed = batch.map((d, i) => ({ idx: i, description: d.description }));
   console.log(`[interpret-deals] Classifying ${batch.length} deals`);
 
   const userContent = `Klassificer disse produktbeskrivelser fra Salling Groups madspild-API:
-${JSON.stringify(batch)}
+${JSON.stringify(indexed)}
 
-Returner præcis dette format for hvert produkt:
-{"results":[{"id":"...","ingredient":"...","category":"...","isIngredient":true,"confidence":"high"},...]}`;
+Returner præcis dette format for hvert produkt (brug "idx" fra input, ikke produktbeskrivelsen):
+{"results":[{"idx":0,"ingredient":"...","category":"...","isIngredient":true,"confidence":"high"},...]}`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -75,7 +79,7 @@ Returner præcis dette format for hvert produkt:
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2048,
+        max_tokens: 4096,
         system: SYSTEM,
         messages: [{ role: 'user', content: userContent }],
       }),
@@ -84,32 +88,50 @@ Returner præcis dette format for hvert produkt:
     if (!response.ok) {
       const errBody = await response.text().catch(() => '');
       console.error(`[interpret-deals] Claude API ${response.status}:`, errBody);
-      return res.status(200).json({ results: [] });
+      return res.status(200).json({ results: [], _error: `Claude API ${response.status}: ${errBody.slice(0, 300)}` });
     }
 
     const data = await response.json();
     const text = (data.content?.[0]?.text || '').trim();
-    console.log(`[interpret-deals] Claude raw response (${text.length} chars):`, text.slice(0, 500));
+    const stopReason = data.stop_reason;
+    console.log(`[interpret-deals] Claude stop_reason=${stopReason}, response ${text.length} chars:`, text.slice(0, 500));
+
+    // Warn if Claude hit the token limit — response will be truncated JSON
+    if (stopReason === 'max_tokens') {
+      console.error('[interpret-deals] Claude hit max_tokens — response is truncated. Increase max_tokens or reduce batch size.');
+      return res.status(200).json({ results: [], _error: 'Claude response truncated (max_tokens)' });
+    }
+
+    const mapResults = (raw) =>
+      (raw.results || [])
+        .map(r => {
+          const original = batch[r.idx];
+          if (!original) return null;
+          return { id: original.id, ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
+        })
+        .filter(Boolean);
 
     try {
       const parsed = JSON.parse(text);
-      const ingCount = (parsed.results || []).filter(r => r.isIngredient).length;
-      console.log(`[interpret-deals] Parsed OK — ${parsed.results?.length ?? 0} total, ${ingCount} isIngredient:true`);
-      return res.status(200).json(parsed);
+      const mapped = mapResults(parsed);
+      const ingCount = mapped.filter(r => r.isIngredient).length;
+      console.log(`[interpret-deals] Parsed OK — ${mapped.length} total, ${ingCount} isIngredient:true`);
+      return res.status(200).json({ results: mapped });
     } catch {
       const match = text.match(/\{[\s\S]*\}/);
       if (match) {
         try {
           const parsed = JSON.parse(match[0]);
-          console.log('[interpret-deals] Parsed via regex fallback');
-          return res.status(200).json(parsed);
+          const mapped = mapResults(parsed);
+          console.log(`[interpret-deals] Parsed via regex fallback — ${mapped.length} results`);
+          return res.status(200).json({ results: mapped });
         } catch {}
       }
       console.error('[interpret-deals] Failed to parse Claude response:', text.slice(0, 300));
-      return res.status(200).json({ results: [] });
+      return res.status(200).json({ results: [], _error: `JSON parse failed. Raw: ${text.slice(0, 200)}` });
     }
   } catch (err) {
     console.error('[interpret-deals] Unexpected error:', err);
-    return res.status(200).json({ results: [] });
+    return res.status(200).json({ results: [], _error: String(err) });
   }
 }
