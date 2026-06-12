@@ -426,29 +426,24 @@ export default function App() {
       .finally(() => setDealsLoading(false));
   }, [localStoresKey, onboardingStep]);
 
-  // ── AI Madspild pipeline (two-agent: interpret deals → match recipes) ──
+  // ── AI Madspild pipeline (two-agent: classify deals → match recipes) ──
   useEffect(() => {
     setAiMadspildRecipes(null);
     if (!dealsData || dealsData.length === 0) return;
 
     let cancelled = false;
-    const CACHE_KEY = "tilbudskokken_deal_interpret_v1";
-    const CACHE_TTL_MS = 48 * 60 * 60 * 1000;
+    // sessionStorage: cleared each session, no stale classifications across visits
+    const CACHE_KEY = "tilbudskokken_deal_classify_v2";
 
     async function runPipeline() {
-      // Load & prune expired entries from localStorage cache
+      // Load session cache
       let cache = {};
       try {
-        const raw = localStorage.getItem(CACHE_KEY);
-        if (raw) {
-          const now = Date.now();
-          cache = Object.fromEntries(
-            Object.entries(JSON.parse(raw)).filter(([, v]) => now - v.ts < CACHE_TTL_MS)
-          );
-        }
+        const raw = sessionStorage.getItem(CACHE_KEY);
+        if (raw) cache = JSON.parse(raw);
       } catch {}
 
-      // Agent 1: only interpret deals not already in cache
+      // Agent 1: classify uncached deals only
       const uncached = dealsData.filter(d => !cache[d.id]);
       if (uncached.length > 0) {
         const r1 = await fetch('/api/interpret-deals', {
@@ -458,23 +453,25 @@ export default function App() {
         });
         if (!r1.ok) throw new Error('interpret-deals HTTP ' + r1.status);
         const { results = [] } = await r1.json();
-        const now = Date.now();
         for (const r of results) {
-          cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, ts: now };
+          cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
         }
-        try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
       }
 
       if (cancelled) return;
 
-      // Build ingredient list for Agent 2 (only genuine raw ingredients)
+      // Only pass high/medium confidence raw ingredients to Agent 2 — discard uncertain ones
       const ingredients = dealsData
-        .filter(d => cache[d.id]?.isIngredient && cache[d.id]?.ingredient)
+        .filter(d => {
+          const c = cache[d.id];
+          return c?.isIngredient && c?.ingredient && c?.confidence !== 'low';
+        })
         .map(d => ({ id: d.id, ingredient: cache[d.id].ingredient, category: cache[d.id].category }));
 
-      if (ingredients.length === 0) { setAiMadspildRecipes(null); return; }
+      if (ingredients.length === 0) { setAiMadspildRecipes([]); return; }
 
-      // Agent 2: semantic recipe matching
+      // Agent 2: strict recipe matching
       const recipeList = recipeBank.map(r => ({
         id: r.id,
         title: r.title,
@@ -491,7 +488,6 @@ export default function App() {
 
       if (cancelled) return;
 
-      // Build madspildRecipes-compatible objects from AI matches
       const dealMap = new Map(dealsData.map(d => [d.id, d]));
       const result = matches
         .map(({ recipeId, matchedDealIds }) => {
@@ -516,8 +512,9 @@ export default function App() {
 
     runPipeline().catch(err => {
       if (!cancelled) {
-        console.warn('[Madspild AI] Pipeline failed, using keyword fallback:', err.message);
-        setAiMadspildRecipes(null);
+        // On failure: show empty rather than falling back to loose keyword matching
+        console.warn('[Madspild AI] Pipeline failed:', err.message);
+        setAiMadspildRecipes([]);
       }
     });
 
@@ -606,26 +603,8 @@ export default function App() {
   const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
   const hasSallingStores = sallingStores.length > 0;
 
-  const madspildRecipes = useMemo(() => {
-    // Prefer AI-matched results; fall back to keyword matching while AI runs or on error
-    if (aiMadspildRecipes !== null) return aiMadspildRecipes;
-    if (!dealsData || dealsData.length === 0) return [];
-    const ingredientDeals = new Map(); // dealItem name → best deal object
-    for (const deal of dealsData) {
-      const ing = matchDealToIngredient(deal);
-      if (ing && !ingredientDeals.has(ing)) ingredientDeals.set(ing, deal);
-    }
-    return recipeBank
-      .filter(r => r.dealItems.some(di => ingredientDeals.has(di.name)))
-      .map(r => ({
-        ...r,
-        madspildDeals: r.dealItems
-          .filter(di => ingredientDeals.has(di.name))
-          .map(di => ({ name: di.name, deal: ingredientDeals.get(di.name) })),
-      }))
-      .sort((a, b) => b.madspildDeals.length - a.madspildDeals.length)
-      .slice(0, 8);
-  }, [dealsData, aiMadspildRecipes]); // eslint-disable-line react-hooks/exhaustive-deps
+  // AI results only — null means pipeline hasn't finished yet, [] means done (empty or failed)
+  const madspildRecipes = useMemo(() => aiMadspildRecipes ?? [], [aiMadspildRecipes]);
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]

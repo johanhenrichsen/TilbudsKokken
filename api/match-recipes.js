@@ -1,16 +1,26 @@
-const SYSTEM = `Du er et opskrift-ingrediens-matchningssystem til en dansk madspild-app. Afgør hvilke opskrifter der genuint bruger de tilgængelige madspild-ingredienser som meningsfulde komponenter.
+const SYSTEM = `Du er et præcist opskrift-ingrediens-matchningssystem til en dansk madspild-app. Find opskrifter der SPECIFIKT kræver den tilgængelige råvare.
 
-MATCHNINGSREGLER:
-- Match KUN hvis ingrediensen faktisk bruges i opskriften (hoved- eller støtteingrediiens, ikke blot løst relateret)
-- "madlavningsfløde" eller "fløde" matcher opskrifter der kalder på fløde
-- Rå kylling (kyllingebryst/kyllingefilet) matcher kyllingeopskrifter
-- "laks" matcher lakseopskrifter; "tun" matcher tunopskrifter — de er ikke udskiftelige
-- Tørret pasta (spaghetti/penne/fusilli) matcher pasteopskrifter der bruger tørret pasta
-- "hakket oksekød" er ikke det samme som "oksebøf" eller "oksesteg" — vær præcis
-- "gulerødder" som grønt matcher opskrifter der bruger gulerødder som ingrediens
-- Vær STRICT: færre præcise matches er bedre end mange løse. Ingen gætterier.
+STRENGE REGLER:
+1. Match KUN hvis råvaren direkte svarer til et af opskriftens "dealItems" — tjek hvert dealItem eksplicit
+2. Godkendte matches (ingredient → dealItem):
+   - "kyllingebryst" eller "kyllingefilet" → "Kyllingefilet 600g" ✓
+   - "hakket oksekød" → "Hakket oksekød 500g" ✓
+   - "mozzarella" → "Mozzarella 125g" ✓
+   - "madlavningsfløde" eller "fløde" → "Fløde 38% 0.5L" ✓
+   - "laks" eller "laksfilet" → "Laks filet 400g" ✓
+   - "spaghetti" → "Spaghetti 500g" ✓
+   - "pasta" eller "penne" → "Pasta penne 500g" ✓
+   - "spinat" → "Spinat frisk 200g" ✓
+   - "parmesan" → "Parmesan revet 80g" ✓
+   - "gulerødder" → "Gulerødder 1kg" ✓
+3. Uacceptable matches:
+   - En ingrediens matcher IKKE et dealItem bare fordi det er samme kategori
+   - "laks" matcher IKKE en opskrift der bruger "Kyllingefilet" — begge er protein, men de er forskellige råvarer
+   - "tomat" (frisk) matcher IKKE nødvendigvis alle opskrifter med tomater — tjek det specifikke dealItem
+4. Vær hellere for strict end for løs. Vis frem for alt KORREKTE matches — ikke flest mulige.
+5. Returner KUN opskrifter med mindst ét klart, specifikt match.
 
-Returner KUN gyldig JSON, ingen forklaringstekst.`;
+Returner KUN gyldig JSON, ingen forklaringstekst, ingen markdown.`;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -23,14 +33,14 @@ export default async function handler(req, res) {
   const apiKey = process.env.VITE_CLAUDE_KEY;
   if (!apiKey) return res.status(500).json({ error: 'Claude API key not configured' });
 
-  const userContent = `Tilgængelige madspild-ingredienser (råvarer fra Salling Group):
+  const userContent = `Tilgængelige madspild-råvarer (allerede klassificeret som ægte råvarer):
 ${JSON.stringify(ingredients)}
 
-Opskrifter i opskriftsbanken (med de nøgleingredienser der potentielt kan matche madspild):
+Opskrifter med deres specifikke råvare-krav (dealItems):
 ${JSON.stringify(recipes)}
 
-Returner præcis dette JSON-format — inkludér kun opskrifter med mindst ét ægte match:
-{"matches":[{"recipeId":4,"matchedDealIds":["deal-id-1","deal-id-2"]},...]}
+For hver opskrift med mindst ét klart ingredient-match, returner recipe-ID og hvilke deal-IDs der matcher:
+{"matches":[{"recipeId":4,"matchedDealIds":["deal-id-1"]},...]}
 Ingen matches: {"matches":[]}`;
 
   try {
