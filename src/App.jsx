@@ -340,7 +340,7 @@ export default function App() {
       const saved = localStorage.getItem("collapsedSections");
       if (saved) return { ...JSON.parse(saved), recommended: false };
     } catch {}
-    return { recommended: false, others: true, madspild: true };
+    return { recommended: false, others: true, madspild: false };
   });
 
   // ── Popularity tracking ─────────────────────────────────────────
@@ -582,7 +582,13 @@ export default function App() {
         .slice(0, 8);
 
       console.log(`[Madspild] Final recipes: ${result.length}`, result.map(r => r.title));
-      if (!cancelled) setAiMadspildRecipes(result);
+      if (!cancelled) {
+        setAiMadspildRecipes(result);
+        // Auto-expand the section so recipes are visible the moment they arrive
+        if (result.length > 0) {
+          setCollapsedSections(prev => ({ ...prev, madspild: false }));
+        }
+      }
     }
 
     runPipeline().catch(err => {
