@@ -1540,6 +1540,10 @@ export default function App() {
               );
             })()}
 
+            {selectedRecipe.description && (
+              <p className="recipe-description">{selectedRecipe.description}</p>
+            )}
+
             <div className="section-label">Ingredienser</div>
             <ul className="ingredient-grid">
               {selectedRecipe.ingredients.map((ing, i) => {

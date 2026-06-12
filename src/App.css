@@ -335,6 +335,13 @@
   font-style: italic;
   line-height: 1.4;
 }
+.recipe-description {
+  font-size: 15px;
+  color: #4a6040;
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+  font-style: italic;
+}
 .recipe-tips-block {
   background: linear-gradient(135deg, #e8f0e0 0%, #f0ebe0 100%);
   border-radius: 14px;
@@ -2066,6 +2073,7 @@ html.dark .step-item { color: #b8ceb8; }
 html.dark .step-item:not(:last-child) { border-color: #1e2e1e; }
 html.dark .recipe-tip { background: linear-gradient(135deg, #162616 0%, #1e2a18 100%); color: #8aaa8a; }
 html.dark .recipe-subtitle { color: #5a7a5a; }
+html.dark .recipe-description { color: #6a9a6a; }
 html.dark .recipe-tips-block { background: linear-gradient(135deg, #162616 0%, #1e2a18 100%); }
 html.dark .recipe-tips-label { color: #6a9470; }
 html.dark .recipe-tip-item { color: #8aaa8a; }
