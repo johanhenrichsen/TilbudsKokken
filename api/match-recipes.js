@@ -37,14 +37,15 @@ export default async function handler(req, res) {
   }
   console.log(`[match-recipes] Matching ${ingredients.length} ingredients against ${recipes.length} recipes`);
 
-  const userContent = `Tilgængelige madspild-råvarer (allerede klassificeret som ægte råvarer):
+  // ingredients arrive as {n, ingredient, category} — short numeric index, no long IDs
+  const userContent = `Tilgængelige madspild-råvarer med korte indeksnumre (n):
 ${JSON.stringify(ingredients)}
 
-Opskrifter med deres specifikke råvare-krav (dealItems):
+Opskrifter med specifikke råvare-krav (dealItems):
 ${JSON.stringify(recipes)}
 
-For hver opskrift med mindst ét klart ingredient-match, returner recipe-ID og hvilke deal-IDs der matcher:
-{"matches":[{"recipeId":4,"matchedDealIds":["deal-id-1"]},...]}
+Returner matches som JSON — brug "n"-værdien (ikke ingrediensnavn) i matchedNs:
+{"matches":[{"recipeId":4,"matchedNs":[0,2]},{"recipeId":7,"matchedNs":[1]},...]}
 Ingen matches: {"matches":[]}`;
 
   try {

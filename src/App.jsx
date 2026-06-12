@@ -498,6 +498,12 @@ export default function App() {
       }
 
       // Agent 2: strict recipe matching
+      // Use short "n" indices for ingredients — Claude must not echo back long UUID deal IDs.
+      // If it did, any single character mismatch would cause dealMap.get() to return undefined
+      // and every recipe would be silently filtered out.
+      const indexedIngredients = ingredients.map((ing, i) => ({
+        n: i, ingredient: ing.ingredient, category: ing.category,
+      }));
       const recipeList = recipeBank.map(r => ({
         id: r.id,
         title: r.title,
@@ -507,25 +513,35 @@ export default function App() {
       const r2 = await fetch('/api/match-recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ingredients, recipes: recipeList }),
+        body: JSON.stringify({ ingredients: indexedIngredients, recipes: recipeList }),
       });
       if (!r2.ok) throw new Error('match-recipes HTTP ' + r2.status);
       const body2 = await r2.json();
+      if (body2._error) console.error('[Madspild Agent 2] Server error:', body2._error);
       const matches = body2.matches ?? [];
-      console.log(`[Madspild Agent 2] Returned ${matches.length} recipe matches:`, matches);
+      console.log(`[Madspild Agent 2] ${matches.length} recipe matches:`, matches);
 
       if (cancelled) return;
 
       const dealMap = new Map(dealsData.map(d => [d.id, d]));
       const result = matches
-        .map(({ recipeId, matchedDealIds }) => {
-          const recipe = recipeBank.find(r => r.id === recipeId);
-          if (!recipe) return null;
-          const madspildDeals = (matchedDealIds || [])
-            .map(did => {
-              const deal = dealMap.get(did);
-              if (!deal) return null;
-              return { name: cache[did]?.ingredient || deal.description, deal };
+        .map(({ recipeId, matchedNs }) => {
+          // recipeId may come back as a string — coerce to number
+          const recipe = recipeBank.find(r => r.id === Number(recipeId));
+          if (!recipe) {
+            console.warn(`[Madspild] recipeId ${recipeId} not found in recipeBank`);
+            return null;
+          }
+          const madspildDeals = (matchedNs || [])
+            .map(n => {
+              const ing = ingredients[n];
+              if (!ing) return null;
+              const deal = dealMap.get(ing.id);
+              if (!deal) {
+                console.warn(`[Madspild] deal id ${ing.id} not found in dealMap`);
+                return null;
+              }
+              return { name: ing.ingredient, deal };
             })
             .filter(Boolean);
           if (madspildDeals.length === 0) return null;
