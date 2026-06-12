@@ -356,6 +356,7 @@ export default function App() {
   // ── Live deals (Salling food-waste API) ─────────────────────────
   const [dealsData, setDealsData] = useState(null);
   const [dealsLoading, setDealsLoading] = useState(false);
+  const [aiMadspildRecipes, setAiMadspildRecipes] = useState(null);
 
   // ── Pantry ──────────────────────────────────────────────────────
   const [pantryItems, setPantryItems] = useState(() => {
@@ -424,6 +425,104 @@ export default function App() {
       .then(data => { setDealsData(Array.isArray(data) ? data : []); })
       .finally(() => setDealsLoading(false));
   }, [localStoresKey, onboardingStep]);
+
+  // ── AI Madspild pipeline (two-agent: interpret deals → match recipes) ──
+  useEffect(() => {
+    setAiMadspildRecipes(null);
+    if (!dealsData || dealsData.length === 0) return;
+
+    let cancelled = false;
+    const CACHE_KEY = "tilbudskokken_deal_interpret_v1";
+    const CACHE_TTL_MS = 48 * 60 * 60 * 1000;
+
+    async function runPipeline() {
+      // Load & prune expired entries from localStorage cache
+      let cache = {};
+      try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (raw) {
+          const now = Date.now();
+          cache = Object.fromEntries(
+            Object.entries(JSON.parse(raw)).filter(([, v]) => now - v.ts < CACHE_TTL_MS)
+          );
+        }
+      } catch {}
+
+      // Agent 1: only interpret deals not already in cache
+      const uncached = dealsData.filter(d => !cache[d.id]);
+      if (uncached.length > 0) {
+        const r1 = await fetch('/api/interpret-deals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ deals: uncached.map(d => ({ id: d.id, description: d.description })) }),
+        });
+        if (!r1.ok) throw new Error('interpret-deals HTTP ' + r1.status);
+        const { results = [] } = await r1.json();
+        const now = Date.now();
+        for (const r of results) {
+          cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, ts: now };
+        }
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
+      }
+
+      if (cancelled) return;
+
+      // Build ingredient list for Agent 2 (only genuine raw ingredients)
+      const ingredients = dealsData
+        .filter(d => cache[d.id]?.isIngredient && cache[d.id]?.ingredient)
+        .map(d => ({ id: d.id, ingredient: cache[d.id].ingredient, category: cache[d.id].category }));
+
+      if (ingredients.length === 0) { setAiMadspildRecipes(null); return; }
+
+      // Agent 2: semantic recipe matching
+      const recipeList = recipeBank.map(r => ({
+        id: r.id,
+        title: r.title,
+        dealItems: r.dealItems.map(di => di.name),
+      }));
+
+      const r2 = await fetch('/api/match-recipes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients, recipes: recipeList }),
+      });
+      if (!r2.ok) throw new Error('match-recipes HTTP ' + r2.status);
+      const { matches = [] } = await r2.json();
+
+      if (cancelled) return;
+
+      // Build madspildRecipes-compatible objects from AI matches
+      const dealMap = new Map(dealsData.map(d => [d.id, d]));
+      const result = matches
+        .map(({ recipeId, matchedDealIds }) => {
+          const recipe = recipeBank.find(r => r.id === recipeId);
+          if (!recipe) return null;
+          const madspildDeals = (matchedDealIds || [])
+            .map(did => {
+              const deal = dealMap.get(did);
+              if (!deal) return null;
+              return { name: cache[did]?.ingredient || deal.description, deal };
+            })
+            .filter(Boolean);
+          if (madspildDeals.length === 0) return null;
+          return { ...recipe, madspildDeals };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.madspildDeals.length - a.madspildDeals.length)
+        .slice(0, 8);
+
+      if (!cancelled) setAiMadspildRecipes(result);
+    }
+
+    runPipeline().catch(err => {
+      if (!cancelled) {
+        console.warn('[Madspild AI] Pipeline failed, using keyword fallback:', err.message);
+        setAiMadspildRecipes(null);
+      }
+    });
+
+    return () => { cancelled = true; };
+  }, [dealsData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Matching ────────────────────────────────────────────────────
   function getAvailableItemNames() {
@@ -508,6 +607,8 @@ export default function App() {
   const hasSallingStores = sallingStores.length > 0;
 
   const madspildRecipes = useMemo(() => {
+    // Prefer AI-matched results; fall back to keyword matching while AI runs or on error
+    if (aiMadspildRecipes !== null) return aiMadspildRecipes;
     if (!dealsData || dealsData.length === 0) return [];
     const ingredientDeals = new Map(); // dealItem name → best deal object
     for (const deal of dealsData) {
@@ -524,7 +625,7 @@ export default function App() {
       }))
       .sort((a, b) => b.madspildDeals.length - a.madspildDeals.length)
       .slice(0, 8);
-  }, [dealsData]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dealsData, aiMadspildRecipes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
