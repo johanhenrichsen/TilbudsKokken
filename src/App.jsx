@@ -43,6 +43,8 @@ const CHAIN_ORDER = [
   "Fakta", "Irma",
 ];
 const SALLING_BRANDS = new Set(["Netto", "Føtex", "Bilka"]);
+const REMA_BRANDS = new Set(["Rema 1000"]);
+const REMA_SESSION_KEY = "tilbudskokken_rema_deals_v1";
 
 // Maps keywords in Salling food-waste product descriptions → our recipe dealItem names
 const FOODWASTE_KEYWORDS = {
@@ -414,7 +416,7 @@ function StorePickerContent({ search, onSearch, selected, onToggle }) {
 
 const stores = [
   {
-    name: "Rema 1000", color: "#e63329",
+    name: "Rema 1000", color: "#CC0000",
     items: [
       { name: "Hakket oksekød 500g", price: 24.95, unit: "pr. pk." },
       { name: "Gulerødder 1kg", price: 7.95, unit: "pr. pose" },
@@ -619,20 +621,61 @@ export default function App() {
     return () => document.body.classList.remove("recipe-open");
   }, [selectedRecipe]);
 
-  // ── Fetch live food-waste deals from Salling API ─────────────────
+  // ── Fetch live deals (Salling food-waste + Rema 1000 campaigns) ──
   const localStoresKey = (localStores || []).map(s => s.name).join(",");
   useEffect(() => {
     const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
-    if (sallingStores.length === 0 || onboardingStep !== null) {
+    const remaStores    = (localStores || []).filter(s => REMA_BRANDS.has(s.chain));
+
+    if ((sallingStores.length === 0 && remaStores.length === 0) || onboardingStep !== null) {
       setDealsData(null);
       return;
     }
+
     setDealsLoading(true);
-    const zips = [...new Set(sallingStores.map(s => s.zip))].slice(0, 3);
-    fetch(`/api/deals?zip=${zips.join(",")}`)
-      .then(r => r.ok ? r.json() : [])
-      .catch(() => [])
-      .then(data => { setDealsData(Array.isArray(data) ? data : []); })
+    const fetches = [];
+
+    if (sallingStores.length > 0) {
+      const zips = [...new Set(sallingStores.map(s => s.zip))].slice(0, 3);
+      fetches.push(
+        fetch(`/api/deals?zip=${zips.join(",")}`)
+          .then(r => r.ok ? r.json() : [])
+          .catch(() => [])
+      );
+    }
+
+    if (remaStores.length > 0) {
+      let remaPromise;
+      try {
+        const cached = sessionStorage.getItem(REMA_SESSION_KEY);
+        if (cached) {
+          remaPromise = Promise.resolve(JSON.parse(cached));
+          console.log("[Rema] Using sessionStorage cache");
+        }
+      } catch {}
+
+      if (!remaPromise) {
+        remaPromise = fetch("/api/rema")
+          .then(r => r.ok ? r.json() : { deals: [] })
+          .then(data => {
+            const deals = data.deals || [];
+            if (deals.length > 0) {
+              try { sessionStorage.setItem(REMA_SESSION_KEY, JSON.stringify(deals)); } catch {}
+            }
+            console.log(`[Rema] Fetched ${deals.length} deals from API`);
+            return deals;
+          })
+          .catch(() => []);
+      }
+
+      fetches.push(remaPromise);
+    }
+
+    Promise.all(fetches)
+      .then(results => {
+        const allDeals = results.flat().filter(Boolean);
+        setDealsData(allDeals.length > 0 ? allDeals : []);
+      })
       .finally(() => setDealsLoading(false));
   }, [localStoresKey, onboardingStep]);
 
@@ -900,6 +943,7 @@ export default function App() {
 
   const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
   const hasSallingStores = sallingStores.length > 0;
+  const hasLiveDealStores = hasSallingStores || (localStores || []).some(s => REMA_BRANDS.has(s.chain));
 
   // AI results only — null means pipeline hasn't finished yet, [] means done (empty or failed)
   const madspildRecipes = useMemo(() => aiMadspildRecipes ?? [], [aiMadspildRecipes]);
@@ -1951,7 +1995,7 @@ export default function App() {
         /* Browse view */
         <>
           {/* ── Madspild section ──────────────────────────────── */}
-          {hasSallingStores ? (
+          {hasLiveDealStores ? (
             <div className="recipe-browse-section">
               <button
                 className="section-toggle-btn"
@@ -2010,7 +2054,7 @@ export default function App() {
           ) : (
             <div className="madspild-cta">
               <span className="madspild-cta-icon">🌱</span>
-              <span className="madspild-cta-text">Tilføj Netto eller Føtex for at se madspildstilbud</span>
+              <span className="madspild-cta-text">Tilføj Netto, Føtex eller Rema 1000 for at se live tilbud</span>
               <button className="madspild-cta-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>
                 Tilføj butik
               </button>
