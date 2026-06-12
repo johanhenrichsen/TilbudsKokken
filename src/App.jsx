@@ -524,27 +524,49 @@ export default function App() {
       if (cancelled) return;
 
       const dealMap = new Map(dealsData.map(d => [d.id, d]));
+
+      // Diagnostic: show exactly what Claude returned vs what's in the recipe bank
+      console.log('[Madspild] recipeIds from Agent 2:', matches.map(m => m.recipeId));
+      console.log('[Madspild] recipeBank ids:', recipeBank.map(r => r.id));
+      console.log('[Madspild] recipeBank titles:', recipeBank.map(r => r.title));
+
       const result = matches
-        .map(({ recipeId, matchedNs }) => {
-          // recipeId may come back as a string — coerce to number
-          const recipe = recipeBank.find(r => r.id === Number(recipeId));
+        .map(m => {
+          const { recipeId } = m;
+          // matchedNs is the new field; fall back to matchedDealIds if Claude used the old name
+          const ns = m.matchedNs ?? m.matchedDealIds ?? [];
+
+          // Robust recipe lookup: try numeric id, then title (exact), then title (case-insensitive)
+          const recipe =
+            recipeBank.find(r => r.id === Number(recipeId)) ||
+            recipeBank.find(r => r.title === recipeId) ||
+            recipeBank.find(r => r.title?.toLowerCase() === String(recipeId).toLowerCase().trim());
+
           if (!recipe) {
-            console.warn(`[Madspild] recipeId ${recipeId} not found in recipeBank`);
+            console.warn(`[Madspild] recipeId "${recipeId}" (${typeof recipeId}) matched nothing`);
             return null;
           }
-          const madspildDeals = (matchedNs || [])
+
+          const madspildDeals = ns
             .map(n => {
-              const ing = ingredients[n];
-              if (!ing) return null;
+              const ing = ingredients[Number(n)];
+              if (!ing) {
+                console.warn(`[Madspild] ingredient index ${n} out of range (length ${ingredients.length})`);
+                return null;
+              }
               const deal = dealMap.get(ing.id);
               if (!deal) {
-                console.warn(`[Madspild] deal id ${ing.id} not found in dealMap`);
+                console.warn(`[Madspild] deal ${ing.id} not in dealMap`);
                 return null;
               }
               return { name: ing.ingredient, deal };
             })
             .filter(Boolean);
-          if (madspildDeals.length === 0) return null;
+
+          if (madspildDeals.length === 0) {
+            console.warn(`[Madspild] recipe "${recipe.title}" matched but madspildDeals empty (ns=${JSON.stringify(ns)})`);
+            return null;
+          }
           return { ...recipe, madspildDeals };
         })
         .filter(Boolean)
