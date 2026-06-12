@@ -3400,10 +3400,6 @@ html.dark .pantry-chip.selected { background: rgba(232,147,74,0.1); border-color
   font-family: inherit;
 }
 
-/* On desktop with sidebar visible, shift FAB clear of sidebar + shadow */
-@media (min-width: 1100px) {
-  .shopping-cart-fab.sidebar-visible { right: 336px; }
-}
 
 /* On mobile, meal plan FAB sits above the cart FAB */
 @media (max-width: 1099px) {
