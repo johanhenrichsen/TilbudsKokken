@@ -448,9 +448,12 @@ export default function App() {
       const cachedCount = Object.keys(cache).length;
       console.log(`[Madspild] Cache: ${cachedCount} entries`);
 
-      // Agent 1: classify uncached deals only
-      const uncached = dealsData.filter(d => !cache[d.id]);
-      console.log(`[Madspild] Uncached deals to classify: ${uncached.length}`);
+      // Agent 1: classify uncached deals only, capped at 40
+      // Sending 1500+ deals per request just to have the server slice to a small batch
+      // is wasteful and causes the cache to grow only 40 entries per load.
+      // Cap on the client so the request body stays small and the cache fills efficiently.
+      const uncached = dealsData.filter(d => !cache[d.id]).slice(0, 40);
+      console.log(`[Madspild] Uncached (capped at 40): ${uncached.length} of ${dealsData.filter(d => !cache[d.id]).length} total uncached`);
 
       if (uncached.length > 0) {
         const r1 = await fetch('/api/interpret-deals', {
@@ -460,19 +463,24 @@ export default function App() {
         });
         if (!r1.ok) throw new Error('interpret-deals HTTP ' + r1.status);
         const body1 = await r1.json();
-        const results = body1.results ?? [];
-        console.log(`[Madspild Agent 1] Returned ${results.length} classifications:`, results);
 
-        if (body1._error) console.error('[Madspild Agent 1] Server-side error:', body1._error);
+        if (body1._error) {
+          console.error('[Madspild Agent 1] Server-side error:', body1._error);
+          if (body1._error.includes('429')) {
+            console.warn('[Madspild Agent 1] Rate limited — skipping to Agent 2 with existing cache');
+            // Fall through: proceed to Agent 2 using whatever is already cached
+          }
+        }
+
+        const results = body1.results ?? [];
+        console.log(`[Madspild Agent 1] Returned ${results.length} classifications`);
 
         if (results.length > 0) {
-          // Only persist cache when Agent 1 actually returned data — don't cache API failures
           for (const r of results) {
             cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
           }
           try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
-        } else {
-          console.warn('[Madspild Agent 1] No results returned. Body:', body1);
+          console.log(`[Madspild] Cache now has ${Object.keys(cache).length} entries`);
         }
       }
 

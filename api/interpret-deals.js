@@ -42,8 +42,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Claude API key not configured' });
   }
 
-  // Batch of 25: at ~60 chars/result, 25 results ≈ 500 tokens output — safe within 4096
-  const batch = deals.slice(0, 25).map(d => ({ id: d.id, description: d.description }));
+  // Batch of 40: at ~60 chars/result, 40 results ≈ 800 tokens output — safe within 4096
+  const batch = deals.slice(0, 40).map(d => ({ id: d.id, description: d.description }));
   // Send only "n" (short number) + description to Claude — long UUID IDs never appear in output
   const indexed = batch.map((d, i) => ({ n: i, description: d.description }));
   console.log(`[interpret-deals] Classifying ${batch.length} deals`);
