@@ -276,14 +276,64 @@ function getISOWeek(date) {
   return { week: Math.ceil(((d - yearStart) / 86400000 + 1) / 7), year: d.getUTCFullYear() };
 }
 
+// Module-level cache so re-opening the picker doesn't re-fetch
+let _sallingStoresCache = null;
+
 function StorePickerContent({ search, onSearch, selected, onToggle }) {
-  const q = search.toLowerCase();
-  const filtered = STORE_BRANCHES.filter(s =>
-    !q || s.name.toLowerCase().includes(q) || s.zip.includes(q) || s.city.toLowerCase().includes(q)
-  );
-  const grouped = CHAIN_ORDER
-    .map(chain => ({ chain, stores: filtered.filter(s => s.chain === chain) }))
-    .filter(g => g.stores.length > 0);
+  // null = still loading, {} or { Netto: [...] } = settled
+  const [liveStores, setLiveStores] = useState(_sallingStoresCache);
+  const [collapsedChains, setCollapsedChains] = useState(() => new Set(CHAIN_ORDER));
+
+  useEffect(() => {
+    if (_sallingStoresCache !== null) return;
+    let cancelled = false;
+    fetch("/api/salling-stores")
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null)
+      .then(data => {
+        if (cancelled) return;
+        const result = (data && typeof data === "object" && !data.error) ? data : {};
+        _sallingStoresCache = result;
+        setLiveStores(result);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  function toggleCollapse(chain) {
+    setCollapsedChains(prev => {
+      const next = new Set(prev);
+      next.has(chain) ? next.delete(chain) : next.add(chain);
+      return next;
+    });
+  }
+
+  const q = search.toLowerCase().trim();
+
+  const groups = CHAIN_ORDER.map(chain => {
+    const isLiveBrand = SALLING_BRANDS.has(chain);
+    const isLoading = isLiveBrand && liveStores === null;
+
+    let branches;
+    if (isLiveBrand && liveStores !== null) {
+      const live = liveStores[chain];
+      branches = (live && live.length > 0)
+        ? live
+        : STORE_BRANCHES.filter(s => s.chain === chain);
+    } else {
+      branches = STORE_BRANCHES.filter(s => s.chain === chain);
+    }
+
+    const filtered = q
+      ? branches.filter(s =>
+          s.name.toLowerCase().includes(q) ||
+          (s.city  || "").toLowerCase().includes(q) ||
+          (s.zip   || "").includes(q) ||
+          (s.street || "").toLowerCase().includes(q)
+        )
+      : branches;
+
+    return { chain, branches, filtered, isLoading };
+  }).filter(g => q ? g.filtered.length > 0 : true);
 
   return (
     <>
@@ -291,42 +341,71 @@ function StorePickerContent({ search, onSearch, selected, onToggle }) {
         <input
           className="store-search-input"
           type="text"
-          placeholder="Søg by eller postnummer..."
+          placeholder="Søg by, gade eller postnummer…"
           value={search}
           onChange={e => onSearch(e.target.value)}
           autoFocus
         />
       </div>
       <div className="store-branch-list">
-        {grouped.map(g => (
-          <div key={g.chain} className="chain-group">
-            <div className="chain-group-label">
-              <span className="chain-dot" style={{ background: CHAIN_COLORS[g.chain] }} />
-              {g.chain}
+        {groups.map(({ chain, branches, filtered, isLoading }) => {
+          const isCollapsed = !q && collapsedChains.has(chain);
+          const countLabel = isLoading ? "…" : (q ? filtered.length : branches.length);
+          const displayList = q ? filtered : branches;
+
+          return (
+            <div key={chain} className="chain-group">
+              <button
+                className={`chain-group-header${isCollapsed ? "" : " open"}`}
+                onClick={() => toggleCollapse(chain)}
+              >
+                <span className="chain-dot" style={{ background: CHAIN_COLORS[chain] }} />
+                <span className="chain-group-name">{chain}</span>
+                <span className="chain-group-count">{countLabel}</span>
+                <span className={`chain-group-chevron${isCollapsed ? "" : " open"}`}>▾</span>
+              </button>
+
+              {!isCollapsed && (
+                <div className="chain-group-body">
+                  {isLoading ? (
+                    <>
+                      <div className="chain-skeleton-item" />
+                      <div className="chain-skeleton-item" style={{ opacity: 0.7 }} />
+                      <div className="chain-skeleton-item" style={{ opacity: 0.4 }} />
+                    </>
+                  ) : displayList.length === 0 ? (
+                    <p className="store-picker-empty" style={{ padding: "0.5rem 0 0.5rem 8px", textAlign: "left" }}>
+                      Ingen resultater
+                    </p>
+                  ) : (
+                    displayList.map(s => {
+                      const checked = selected.has(s.name);
+                      const subtitle = [s.street, s.city].filter(Boolean).join(", ");
+                      return (
+                        <button
+                          key={s.name}
+                          className={`store-branch-item${checked ? " selected" : ""}`}
+                          onClick={() => onToggle(s)}
+                        >
+                          <div>
+                            <span className="store-branch-name">{s.name}</span>
+                            {subtitle && <span className="store-branch-city">{subtitle}</span>}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span className="store-branch-zip">{s.zip}</span>
+                            <span className={`store-check${checked ? " checked" : ""}`}>✓</span>
+                          </div>
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              )}
             </div>
-            {g.stores.map(s => {
-              const checked = selected.has(s.name);
-              return (
-                <button
-                  key={s.name}
-                  className={`store-branch-item${checked ? " selected" : ""}`}
-                  onClick={() => onToggle(s)}
-                >
-                  <div>
-                    <span className="store-branch-name">{s.name}</span>
-                    <span className="store-branch-city">{s.city}</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span className="store-branch-zip">{s.zip}</span>
-                    <span className={`store-check${checked ? " checked" : ""}`}>✓</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        ))}
-        {grouped.length === 0 && (
-          <p className="store-picker-empty">Ingen butikker fundet</p>
+          );
+        })}
+        {groups.length === 0 && q && (
+          <p className="store-picker-empty">Ingen butikker fundet for "{search}"</p>
         )}
       </div>
     </>

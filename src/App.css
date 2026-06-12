@@ -951,7 +951,7 @@
 .store-search-input:focus { border-color: #4a7050; background: white; color: #1a1a1a; }
 .store-search-input::placeholder { color: #9ca3af; }
 .store-branch-list { overflow-y: auto; }
-.chain-group { margin-bottom: 0.5rem; }
+.chain-group { margin-bottom: 2px; }
 .chain-group-label {
   display: flex;
   align-items: center;
@@ -962,6 +962,62 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 6px 2px 4px;
+}
+
+/* ─── Collapsible chain header ───────────────── */
+.chain-group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 6px;
+  font-family: inherit;
+  text-align: left;
+  border-radius: 10px;
+  transition: background 0.12s;
+  box-sizing: border-box;
+}
+.chain-group-header:hover { background: rgba(0,0,0,0.035); }
+.chain-group-name {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.chain-group-count {
+  font-size: 11px;
+  color: #c8c8c8;
+  font-weight: 500;
+  min-width: 18px;
+  text-align: right;
+}
+.chain-group-chevron {
+  font-size: 15px;
+  color: #c8c8c8;
+  line-height: 1;
+  transition: transform 0.18s ease;
+  flex-shrink: 0;
+}
+.chain-group-chevron.open { transform: rotate(180deg); }
+.chain-group-body { padding-bottom: 6px; }
+
+/* ─── Loading skeleton ───────────────────────── */
+@keyframes sp-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.chain-skeleton-item {
+  height: 52px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: sp-shimmer 1.4s ease infinite;
 }
 .store-branch-item {
   display: flex;
@@ -2162,6 +2218,14 @@ html.dark .store-branch-zip { color: #4a6a4a; }
 html.dark .store-check { border-color: #2a3d2a; }
 html.dark .store-picker-empty { color: #4a6a4a; }
 html.dark .store-picker-onboarding { background: var(--surface); }
+html.dark .chain-group-header:hover { background: rgba(255,255,255,0.05); }
+html.dark .chain-group-name { color: #4a6a4a; }
+html.dark .chain-group-count { color: #344a34; }
+html.dark .chain-group-chevron { color: #344a34; }
+html.dark .chain-skeleton-item {
+  background: linear-gradient(90deg, #1a2a1a 25%, #223022 37%, #1a2a1a 63%);
+  background-size: 400% 100%;
+}
 /* sp-confirm-btn dark handled by base orange styles */
 html.dark .day-picker-btn { background: #121e12; border-color: #243024; }
 html.dark .day-picker-btn:hover:not(.occupied) { background: #1a2e1a; border-color: #3a5a3a; }
