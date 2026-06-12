@@ -317,6 +317,7 @@ export default function App() {
     catch { return []; }
   });
   const [expandedSaved, setExpandedSaved] = useState(new Set());
+  const [showSavedPanel, setShowSavedPanel] = useState(false);
 
   // ── Meal plan ───────────────────────────────────────────────────
   const [mealPlan, setMealPlan] = useState(() => {
@@ -745,6 +746,11 @@ export default function App() {
     setSavedRecipes(next);
     localStorage.setItem("savedRecipes", JSON.stringify(next));
   }
+  function toggleSaveRecipe(r) {
+    const existing = savedRecipes.find(s => s.title === r.title);
+    if (existing) deleteSavedRecipe(existing.savedAt);
+    else saveRecipe(r);
+  }
   function toggleExpanded(savedAt) {
     setExpandedSaved(prev => {
       const next = new Set(prev);
@@ -1008,6 +1014,7 @@ export default function App() {
   // ── Madspild card ────────────────────────────────────────────────
   function MadspildCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
+    const isSaved = savedRecipes.some(s => s.title === r.title);
     return (
       <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
         <div className="card-badges">
@@ -1050,12 +1057,19 @@ export default function App() {
             </div>
           );
         })()}
-        <button
-          className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
-          onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
-        >
-          {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
-        </button>
+        <div className="card-action-row">
+          <button
+            className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
+            onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
+          >
+            {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+          </button>
+          <button
+            className={`card-save-btn${isSaved ? " saved" : ""}`}
+            onClick={e => { e.stopPropagation(); toggleSaveRecipe(r); }}
+            title={isSaved ? "Fjern fra gemte" : "Gem opskrift"}
+          >🔖</button>
+        </div>
       </div>
     );
   }
@@ -1063,6 +1077,7 @@ export default function App() {
   // ── Recipe card (browse) ────────────────────────────────────────
   function RecipeCard({ r }) {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
+    const isSaved = savedRecipes.some(s => s.title === r.title);
     const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
     const makeable = canMakeNow(r);
     const cardPrice = calcRecipePrice(r, r.servings_count || 4);
@@ -1104,13 +1119,20 @@ export default function App() {
             );
           })}
         </div>
-        <button
-          className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
-          onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
-          title={inPlan ? "Allerede i madplan" : "Tilføj til madplan"}
-        >
-          {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
-        </button>
+        <div className="card-action-row">
+          <button
+            className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
+            onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
+            title={inPlan ? "Allerede i madplan" : "Tilføj til madplan"}
+          >
+            {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+          </button>
+          <button
+            className={`card-save-btn${isSaved ? " saved" : ""}`}
+            onClick={e => { e.stopPropagation(); toggleSaveRecipe(r); }}
+            title={isSaved ? "Fjern fra gemte" : "Gem opskrift"}
+          >🔖</button>
+        </div>
       </div>
     );
   }
@@ -1447,6 +1469,12 @@ export default function App() {
           <div className="hero-topbar-right">
             <div className="week-badge">{weekBadge}</div>
             <div className="header-actions">
+              <button className="header-icon-btn header-icon-btn--bookmark" onClick={() => setShowSavedPanel(true)} title="Gemte opskrifter">
+                🔖
+                {savedRecipes.length > 0 && (
+                  <span className="header-badge">{savedRecipes.length}</span>
+                )}
+              </button>
               <button className="header-icon-btn" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
                 {darkMode ? "☀️" : "🌙"}
               </button>
@@ -1543,8 +1571,8 @@ export default function App() {
                 </button>
                 <button
                   className={`save-btn${isRecipeSaved ? " saved" : ""}`}
-                  onClick={() => !isRecipeSaved && saveRecipe(selectedRecipe)}
-                  title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
+                  onClick={() => toggleSaveRecipe(selectedRecipe)}
+                  title={isRecipeSaved ? "Fjern fra gemte" : "Gem opskrift"}
                 >
                   🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
                 </button>
@@ -1817,56 +1845,6 @@ export default function App() {
       )}
 
 
-      {/* Saved recipes */}
-      {savedRecipes.length > 0 && (
-        <div className="saved-recipes-card">
-          <div className="section-label" style={{ margin: "0 0 12px" }}>
-            🔖 Gemte opskrifter · {savedRecipes.length}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {savedRecipes.map(r => {
-              const open = expandedSaved.has(r.savedAt);
-              return (
-                <div key={r.savedAt} className="saved-recipe-row">
-                  <div className="saved-recipe-header" onClick={() => toggleExpanded(r.savedAt)}>
-                    <div>
-                      <div className="saved-recipe-title">{r.title}</div>
-                      <div className="saved-recipe-meta">⏱ {r.time} · 👥 {r.servings_count || 4} personer</div>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span className="saved-recipe-chevron">{open ? "▲" : "▼"}</span>
-                      <button className="saved-recipe-delete" onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}>×</button>
-                    </div>
-                  </div>
-                  {open && (
-                    <div className="saved-recipe-body">
-                      <div className="section-label" style={{ margin: "0 0 8px" }}>Ingredienser</div>
-                      <ul className="ingredient-grid" style={{ marginBottom: "1rem" }}>
-                        {r.ingredients.map((ing, i) => (
-                          <li key={i} className="ingredient-item" style={{ gap: 6 }}>
-                            <span style={{ width: 5, height: 5, background: ing.dealItem ? "#4a7050" : "#c0c0c0", borderRadius: "50%", flexShrink: 0, display: "inline-block" }} />
-                            {ing.text || ing}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="section-label" style={{ margin: "0 0 8px" }}>Fremgangsmåde</div>
-                      <ol style={{ listStyle: "none", padding: 0, margin: "0 0 1rem" }}>
-                        {r.steps.map((step, i) => (
-                          <li key={i} className="step-item">
-                            <span className="step-number">{i + 1}</span>{step}
-                          </li>
-                        ))}
-                      </ol>
-                      {r.tip && <div className="recipe-tip"><strong>Tips:</strong> {r.tip}</div>}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
     </div>
 
   {/* Mobile meal plan bottom sheet */}
@@ -2046,6 +2024,44 @@ export default function App() {
       </svg>
       <span className="cart-fab-badge">{shoppingList.length}</span>
     </button>
+  )}
+
+  {/* Saved recipes panel */}
+  {showSavedPanel && (
+    <div className="mp-sheet-overlay" onClick={() => setShowSavedPanel(false)}>
+      <div className="saved-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <div className="shopping-sheet-header">
+          <div className="shopping-sheet-title">🔖 Gemte opskrifter</div>
+          <button className="mp-sheet-close" onClick={() => setShowSavedPanel(false)}>×</button>
+        </div>
+        {savedRecipes.length === 0 ? (
+          <div className="saved-sheet-empty">
+            Du har ikke gemt nogen opskrifter endnu — tryk på 🔖 på en opskrift for at gemme den
+          </div>
+        ) : (
+          <div className="saved-sheet-list">
+            {savedRecipes.map(r => (
+              <div
+                key={r.savedAt}
+                className="saved-sheet-card"
+                onClick={() => { setShowSavedPanel(false); selectRecipe(r); }}
+              >
+                <div className="saved-sheet-card-info">
+                  <div className="saved-sheet-card-title">{r.emoji} {r.title}</div>
+                  <div className="saved-sheet-card-meta">⏱ {r.time} · 👥 {r.servings_count || 4} pers.</div>
+                </div>
+                <button
+                  className="saved-sheet-unsave"
+                  onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}
+                  title="Fjern fra gemte"
+                >×</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   )}
 
   {/* Shopping list bottom sheet */}

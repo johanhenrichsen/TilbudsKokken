@@ -494,7 +494,12 @@
   background: #eef5ee;
   border-color: #8ab88a;
   color: #3a6040;
-  cursor: default;
+  cursor: pointer;
+}
+.save-btn.saved:hover {
+  background: #fef2f2;
+  border-color: #e08a8a;
+  color: #8a3030;
 }
 
 /* ─── Saved recipes ──────────────────────────── */
@@ -3496,4 +3501,131 @@ html.dark .shopping-sheet-text { color: var(--cream); }
 html.dark .shopping-sheet-footer { border-top-color: rgba(255,255,255,0.07); }
 html.dark .shopping-check-btn { border-color: #3a5a3a; }
 html.dark .shopping-sheet-item.checked .shopping-sheet-text { color: #5a7a5a; }
+
+/* ─── Header bookmark badge ──────────────────── */
+.header-icon-btn--bookmark {
+  position: relative;
+}
+.header-badge {
+  position: absolute;
+  top: -2px; right: -2px;
+  background: #e07a30;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  padding: 0 3px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+
+/* ─── Card action row (plan + save buttons) ───── */
+.card-action-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+.card-action-row .add-to-plan-btn {
+  flex: 1;
+  margin-top: 0;
+}
+.card-save-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 1.5px dashed #c8d9c8;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1;
+}
+.card-save-btn:hover { background: #f0f7f0; border-color: #7ab87a; border-style: solid; }
+.card-save-btn.saved { background: #eef5ee; border-color: #8ab88a; border-style: solid; }
+.card-save-btn.saved:hover { background: #fef2f2; border-color: #e08a8a; }
+html.dark .card-save-btn { border-color: #2a3d2a; }
+html.dark .card-save-btn:hover { background: #1e341e; border-color: #4a7050; }
+html.dark .card-save-btn.saved { background: #1d301d; border-color: #3a5a3a; }
+
+/* ─── Saved recipes slide-up panel ──────────── */
+.saved-sheet {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  border-radius: 24px 24px 0 0;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+}
+.saved-sheet-empty {
+  padding: 48px 24px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.saved-sheet-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.saved-sheet-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.saved-sheet-card:hover { border-color: #c8d9c8; background: #f8fbf8; }
+.saved-sheet-card-info { flex: 1; min-width: 0; }
+.saved-sheet-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.saved-sheet-card-meta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+.saved-sheet-unsave {
+  background: none;
+  border: none;
+  color: #c8c8c8;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.saved-sheet-unsave:hover { color: #e05050; background: #fef2f2; }
+html.dark .saved-sheet { background: #1a2a1a; }
+html.dark .saved-sheet-empty { color: #5a7a5a; }
+html.dark .saved-sheet-card { border-color: var(--border-dark); }
+html.dark .saved-sheet-card:hover { border-color: #3a5a3a; background: #1e341e; }
+html.dark .saved-sheet-card-title { color: var(--cream); }
+html.dark .saved-sheet-card-meta { color: #5a7a5a; }
+html.dark .saved-sheet-unsave:hover { background: rgba(220,80,80,0.12); }
 
