@@ -566,6 +566,7 @@ export default function App() {
   const [dealsData, setDealsData] = useState(null);
   const [dealsLoading, setDealsLoading] = useState(false);
   const [aiMadspildRecipes, setAiMadspildRecipes] = useState(null);
+  const [madspildFallback, setMadspildFallback] = useState(null);
 
   // ── Pantry ──────────────────────────────────────────────────────
   const [pantryItems, setPantryItems] = useState(() => {
@@ -635,9 +636,10 @@ export default function App() {
       .finally(() => setDealsLoading(false));
   }, [localStoresKey, onboardingStep]);
 
-  // ── AI Madspild pipeline (two-agent: classify deals → match recipes) ──
+  // ── AI Madspild pipeline (classify deals → generate recipes from real deals) ──
   useEffect(() => {
     setAiMadspildRecipes(null);
+    setMadspildFallback(null);
     if (!dealsData || dealsData.length === 0) return;
 
     let cancelled = false;
@@ -676,8 +678,7 @@ export default function App() {
         if (body1._error) {
           console.error('[Madspild Agent 1] Server-side error:', body1._error);
           if (body1._error.includes('429')) {
-            console.warn('[Madspild Agent 1] Rate limited — skipping to Agent 2 with existing cache');
-            // Fall through: proceed to Agent 2 using whatever is already cached
+            console.warn('[Madspild Agent 1] Rate limited — proceeding with existing cache');
           }
         }
 
@@ -695,8 +696,7 @@ export default function App() {
 
       if (cancelled) return;
 
-      // Pass all isIngredient:true deals to Agent 2 — confidence filter removed so borderline
-      // ingredients ("low" confidence) still make it through
+      // Filter Agent 1 results to real food ingredients
       const ingredients = dealsData
         .filter(d => {
           const c = cache[d.id];
@@ -707,93 +707,102 @@ export default function App() {
       console.log(`[Madspild] Ingredients after Agent 1 filter: ${ingredients.length}`, ingredients);
 
       if (ingredients.length === 0) {
-        // Log full cache so we can see what Agent 1 classified everything as
         const trueCount = Object.values(cache).filter(v => v.isIngredient).length;
-        console.warn(`[Madspild] Zero ingredients. Cache has ${Object.keys(cache).length} entries, ${trueCount} marked isIngredient:true. Full cache:`, cache);
+        console.warn(`[Madspild] Zero ingredients. Cache has ${Object.keys(cache).length} entries, ${trueCount} marked isIngredient:true.`);
+        setMadspildFallback([]);
         setAiMadspildRecipes([]);
         return;
       }
 
-      // Agent 2: strict recipe matching
-      // Use short "n" indices for ingredients — Claude must not echo back long UUID deal IDs.
-      // If it did, any single character mismatch would cause dealMap.get() to return undefined
-      // and every recipe would be silently filtered out.
-      const indexedIngredients = ingredients.map((ing, i) => ({
-        n: i, ingredient: ing.ingredient, category: ing.category,
-      }));
-      const recipeList = recipeBank.map(r => ({
-        id: r.id,
-        title: r.title,
-        dealItems: r.dealItems.map(di => di.name),
-      }));
+      const dealMap = new Map(dealsData.map(d => [d.id, d]));
 
-      const r2 = await fetch('/api/match-recipes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ingredients: indexedIngredients, recipes: recipeList }),
-      });
-      if (!r2.ok) throw new Error('match-recipes HTTP ' + r2.status);
-      const body2 = await r2.json();
-      if (body2._error) console.error('[Madspild Agent 2] Server error:', body2._error);
-      const matches = body2.matches ?? [];
-      console.log(`[Madspild Agent 2] ${matches.length} recipe matches:`, matches);
+      // Set fallback immediately so the section shows deal info while recipes generate
+      const ingredientsWithDeals = ingredients
+        .map(ing => ({ name: ing.ingredient, deal: dealMap.get(ing.id) }))
+        .filter(x => x.deal);
+      if (!cancelled) setMadspildFallback(ingredientsWithDeals);
+
+      // Deduplicate by ingredient name, take top 6 for generation
+      const seenNames = new Set();
+      const uniqueIngredients = [];
+      for (const ing of ingredients) {
+        if (!seenNames.has(ing.ingredient)) {
+          seenNames.add(ing.ingredient);
+          uniqueIngredients.push(ing);
+        }
+      }
+      const topIngredients = uniqueIngredients.slice(0, 6);
+      const ingredientKey = [...seenNames].sort().join(",");
+
+      // Recipe generation cache — keyed by sorted ingredient names
+      const RECIPE_CACHE_KEY = "tilbudskokken_ai_recipes_v1";
+      let generatedRecipes = null;
+      try {
+        const raw = sessionStorage.getItem(RECIPE_CACHE_KEY);
+        if (raw) {
+          const cached = JSON.parse(raw);
+          if (cached.ingredientKey === ingredientKey) {
+            generatedRecipes = cached.recipes;
+            console.log(`[Madspild] Recipe cache hit — ${generatedRecipes.length} cached recipes`);
+          }
+        }
+      } catch {}
+
+      if (!generatedRecipes) {
+        console.log(`[Madspild] Calling generate-madspild-recipes for: ${ingredientKey}`);
+        const r2 = await fetch('/api/generate-madspild-recipes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ingredients: topIngredients }),
+        });
+        if (!r2.ok) throw new Error('generate-madspild-recipes HTTP ' + r2.status);
+        const body2 = await r2.json();
+        if (body2._error) console.error('[Madspild Generate] Server error:', body2._error);
+        generatedRecipes = body2.recipes ?? [];
+        console.log(`[Madspild Generate] ${generatedRecipes.length} recipes: ${generatedRecipes.map(r => r.title).join(', ')}`);
+        if (generatedRecipes.length > 0) {
+          try { sessionStorage.setItem(RECIPE_CACHE_KEY, JSON.stringify({ ingredientKey, recipes: generatedRecipes })); } catch {}
+        }
+      }
 
       if (cancelled) return;
 
-      const dealMap = new Map(dealsData.map(d => [d.id, d]));
-
-      // Diagnostic: show exactly what Claude returned vs what's in the recipe bank
-      console.log('[Madspild] recipeIds from Agent 2:', matches.map(m => m.recipeId));
-      console.log('[Madspild] recipeBank ids:', recipeBank.map(r => r.id));
-      console.log('[Madspild] recipeBank titles:', recipeBank.map(r => r.title));
-
-      const result = matches
-        .map(m => {
-          const { recipeId } = m;
-          // matchedNs is the new field; fall back to matchedDealIds if Claude used the old name
-          const ns = m.matchedNs ?? m.matchedDealIds ?? [];
-
-          // Robust recipe lookup: try numeric id, then title (exact), then title (case-insensitive)
-          const recipe =
-            recipeBank.find(r => r.id === Number(recipeId)) ||
-            recipeBank.find(r => r.title === recipeId) ||
-            recipeBank.find(r => r.title?.toLowerCase() === String(recipeId).toLowerCase().trim());
-
-          if (!recipe) {
-            console.warn(`[Madspild] recipeId "${recipeId}" (${typeof recipeId}) matched nothing`);
-            return null;
+      // Build full recipe objects: attach deal data to each generated recipe
+      const result = generatedRecipes.map((r, i) => {
+        const madspildDeals = [];
+        const usedNames = new Set();
+        for (const ing of (r.ingredients || [])) {
+          if (!ing.dealItem || usedNames.has(ing.dealItem)) continue;
+          const match = ingredients.find(x => x.ingredient === ing.dealItem);
+          if (match) {
+            const deal = dealMap.get(match.id);
+            if (deal) {
+              madspildDeals.push({ name: ing.dealItem, deal });
+              usedNames.add(ing.dealItem);
+            }
           }
+        }
+        return {
+          id: `ai-${Date.now()}-${i}`,
+          title: r.title || "Opskrift",
+          emoji: r.emoji || "🍽",
+          time: r.time || "30 min",
+          servings_count: r.servings_count || 4,
+          category: r.category || "Middag",
+          cuisine: r.cuisine || "🇩🇰 Dansk",
+          description: r.description || "",
+          ingredients: r.ingredients || [],
+          steps: r.steps || [],
+          tip: r.tip || null,
+          dealItems: madspildDeals.map(({ name, deal }) => ({ name: deal.description || name, store: deal.store })),
+          madspildDeals,
+          aiGenerated: true,
+        };
+      }).filter(r => r.madspildDeals.length > 0);
 
-          const madspildDeals = ns
-            .map(n => {
-              const ing = ingredients[Number(n)];
-              if (!ing) {
-                console.warn(`[Madspild] ingredient index ${n} out of range (length ${ingredients.length})`);
-                return null;
-              }
-              const deal = dealMap.get(ing.id);
-              if (!deal) {
-                console.warn(`[Madspild] deal ${ing.id} not in dealMap`);
-                return null;
-              }
-              return { name: ing.ingredient, deal };
-            })
-            .filter(Boolean);
-
-          if (madspildDeals.length === 0) {
-            console.warn(`[Madspild] recipe "${recipe.title}" matched but madspildDeals empty (ns=${JSON.stringify(ns)})`);
-            return null;
-          }
-          return { ...recipe, madspildDeals };
-        })
-        .filter(Boolean)
-        .sort((a, b) => b.madspildDeals.length - a.madspildDeals.length)
-        .slice(0, 8);
-
-      console.log(`[Madspild] Final recipes: ${result.length}`, result.map(r => r.title));
+      console.log(`[Madspild] Final AI recipes: ${result.length}`, result.map(r => r.title));
       if (!cancelled) {
         setAiMadspildRecipes(result);
-        // Auto-expand the section so recipes are visible the moment they arrive
         if (result.length > 0) {
           setCollapsedSections(prev => ({ ...prev, madspild: false }));
         }
@@ -1227,6 +1236,7 @@ export default function App() {
       <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
         <div className="card-badges">
           <span className="madspild-badge">🌱 Madspild</span>
+          {r.aiGenerated && <span className="ai-deal-badge">Baseret på dagens tilbud</span>}
         </div>
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
         {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
@@ -1972,6 +1982,24 @@ export default function App() {
                   ) : madspildRecipes.length > 0 ? (
                     <div className="recipe-browse-grid section-body-grid">
                       {madspildRecipes.map(r => <MadspildCard key={r.id} r={r} />)}
+                    </div>
+                  ) : madspildFallback && madspildFallback.length > 0 ? (
+                    <div className="madspild-fallback">
+                      <p className="madspild-fallback-title">Disse varer er på tilbud i dag</p>
+                      <div className="madspild-fallback-grid">
+                        {madspildFallback.slice(0, 8).map(({ name, deal }) => (
+                          <div key={deal.id} className="madspild-fallback-card">
+                            <div className="madspild-fallback-name">{deal.description || name}</div>
+                            <div className="madspild-deal-pricing">
+                              {deal.price != null && <span className="madspild-price">{Number(deal.price).toFixed(0)} kr.</span>}
+                              {deal.originalPrice != null && <span className="madspild-original">{Number(deal.originalPrice).toFixed(0)} kr.</span>}
+                              {deal.discount != null && <span className="madspild-pct">-{deal.discount}%</span>}
+                              {isExpiringSoon(deal.endTime) && <span className="madspild-expiry-pill">⚠ Snart</span>}
+                            </div>
+                            {deal.store && <div className="madspild-fallback-store">{deal.store}</div>}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ) : dealsData !== null ? (
                     <p className="madspild-empty">Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.</p>
