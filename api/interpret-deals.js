@@ -1,44 +1,44 @@
-const SYSTEM = `Du er et strikt produktklassifikationssystem til en dansk madspild-app. Afgør om et supermarkedsprodukt er en RÅ MADLAVNINGSINGREDIIENS der kan bruges i hjemmelavede opskrifter.
+const SYSTEM = `Du er et produktklassifikationssystem til en dansk madspild-app. Afgør om et supermarkedsprodukt er en RÅ MADLAVNINGSINGREDIIENS der kan bruges i hjemmelavede opskrifter.
 
-REGEL 1 — Sæt ALTID isIngredient=false for disse produkttyper, uanset andre ord i beskrivelsen:
-- Færdigretter af enhver slags: pasta med sovs, lasagne, arancini, pizza, dumplings, burritos, wok-retter, suppe, grød
+REGEL 1 — Sæt ALTID isIngredient=false for disse produkttyper:
+- Færdigretter: pasta med sovs, lasagne, arancini, pizza, dumplings, wok-retter, suppe (færdig)
 - "SALLING NU"-produkter — disse er ALTID færdigretter
-- Forarbejdede produkter med smagsgivere/krydderier tilsat (f.eks. "tofu basilikum", "kylling tikka", "laks teriyaki")
-- Pålæg, patéer, leverpostej, rullepølse
-- Drikkevarer, juice, mælkedrikke
-- Snacks, chips, kiks, nødder, chokolade
-- Brød, boller, kager, desserter
-- Saucer, dressinger, marinader, pesto, dips
-- Krydderiblandinger, bouillonterninger, mix-produkter
-- Frosne færdigretter
-- Produkter der klart er et brand-navn på en sammensat ret
+- Forarbejdede produkter med smagsgivere tilsat: "tofu basilikum", "kylling tikka", "laks teriyaki"
+- Pålæg, patéer, leverpostej
+- Drikkevarer, juice
+- Snacks, chips, kiks, chokolade
+- Brød, boller, kager
+- Færdige saucer, dressinger, pesto
 
-REGEL 2 — Sæt isIngredient=true KUN for disse:
-- Råt kød/fjerkræ uden tilsætning: kyllingebryst, hakket oksekød, svinekød, lammekød
-- Hel/filet fisk og skaldyr uden tilsætning: laksfilet, torsk, rejer
-- Uforarbejdede grøntsager og frugt: gulerødder, spinat, tomater, løg, kartofler
-- Basale mejeriprodukter: fløde, smør, ost (mozzarella, parmesan, ricotta), æggehvider
-- Æg
-- Tørret pasta, ris, couscous, korn — KUN hvis det er rent tørret produkt (ikke med sovs/krydderier)
-- Bælgfrugter og linser (tørrede/på dåse, ren vare)
+REGEL 2 — Sæt isIngredient=true for:
+- Råt kød/fjerkræ: kyllingebryst/-filet/-overlår, hakket oksekød, svinekød
+- Fisk/skaldyr: laks, torsk, rejer, tun (frisk/frossen filet)
+- Grøntsager og frugt (friske eller frosne rene produkter): gulerødder, spinat, tomater, kartofler, løg, broccoli
+- Mejeriprodukter: fløde (alle tykkelser), smør, mozzarella, parmesan, ricotta, cheddar, æg
+- Tørret pasta, ris, couscous (KUN ren vare uden sovs)
+- Bælgfrugter og linser
 
 REGEL 3 — Confidence:
-- "high": Produktet er entydigt en råvare eller entydigt IKKE en råvare
-- "medium": Sandsynligvis en råvare men der er lidt tvivl
-- "low": Usikkert om produktet er en råvare — sæt isIngredient=false ved tvivl
+- "high": entydigt råvare eller entydigt ikke
+- "medium": sandsynligvis en råvare
+- "low": tvivlstilfælde
 
-EKSEMPLER (lær disse udenad):
+EKSEMPLER:
 "ARANCINI TOMAT SALLING NU" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
 "TOFU BASILIKUM 180G LUNTER" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
 "SPAGHETTI BOLO SALLING NU 500G" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
-"PASTA KYL PERSI SALLING NU" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
 "KYLLINGEBRYST 500G" → isIngredient:true, category:"kød", ingredient:"kyllingebryst", confidence:"high"
+"KYLLINGEFILET 600G" → isIngredient:true, category:"kød", ingredient:"kyllingefilet", confidence:"high"
 "LF MOZZARELLA NORA FREE 125G" → isIngredient:true, category:"mejeri", ingredient:"mozzarella", confidence:"high"
 "HAKKET OKSEKØD 8% 500G" → isIngredient:true, category:"kød", ingredient:"hakket oksekød", confidence:"high"
+"PISKEFLØDE 38% 0.5L" → isIngredient:true, category:"mejeri", ingredient:"piskefløde", confidence:"high"
 "MADLAVNINGSFLØDE 15% ARLA 0.5L" → isIngredient:true, category:"mejeri", ingredient:"madlavningsfløde", confidence:"high"
 "LAKS FILET FRISK 400G" → isIngredient:true, category:"fisk", ingredient:"laks", confidence:"high"
 "SPINAT FRISK 200G" → isIngredient:true, category:"grøntsager", ingredient:"spinat", confidence:"high"
 "GULERØDDER 1KG" → isIngredient:true, category:"grøntsager", ingredient:"gulerødder", confidence:"high"
+"ÆG 10 STK M/L" → isIngredient:true, category:"mejeri", ingredient:"æg", confidence:"high"
+"SPAGHETTI 500G" → isIngredient:true, category:"pasta", ingredient:"spaghetti", confidence:"high"
+"PASTA PENNE 500G" → isIngredient:true, category:"pasta", ingredient:"pasta", confidence:"high"
 
 Returner KUN gyldig JSON, ingen forklaringstekst, ingen markdown.`;
 
@@ -51,10 +51,16 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.VITE_CLAUDE_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'Claude API key not configured' });
+  if (!apiKey) {
+    console.error('[interpret-deals] VITE_CLAUDE_KEY is not set');
+    return res.status(500).json({ error: 'Claude API key not configured' });
+  }
+
+  const batch = deals.slice(0, 60).map(d => ({ id: d.id, description: d.description }));
+  console.log(`[interpret-deals] Classifying ${batch.length} deals`);
 
   const userContent = `Klassificer disse produktbeskrivelser fra Salling Groups madspild-API:
-${JSON.stringify(deals.slice(0, 60).map(d => ({ id: d.id, description: d.description })))}
+${JSON.stringify(batch)}
 
 Returner præcis dette format for hvert produkt:
 {"results":[{"id":"...","ingredient":"...","category":"...","isIngredient":true,"confidence":"high"},...]}`;
@@ -76,24 +82,34 @@ Returner præcis dette format for hvert produkt:
     });
 
     if (!response.ok) {
-      console.error('Claude API returned', response.status);
+      const errBody = await response.text().catch(() => '');
+      console.error(`[interpret-deals] Claude API ${response.status}:`, errBody);
       return res.status(200).json({ results: [] });
     }
 
     const data = await response.json();
     const text = (data.content?.[0]?.text || '').trim();
+    console.log(`[interpret-deals] Claude raw response (${text.length} chars):`, text.slice(0, 500));
 
     try {
-      return res.status(200).json(JSON.parse(text));
+      const parsed = JSON.parse(text);
+      const ingCount = (parsed.results || []).filter(r => r.isIngredient).length;
+      console.log(`[interpret-deals] Parsed OK — ${parsed.results?.length ?? 0} total, ${ingCount} isIngredient:true`);
+      return res.status(200).json(parsed);
     } catch {
       const match = text.match(/\{[\s\S]*\}/);
       if (match) {
-        try { return res.status(200).json(JSON.parse(match[0])); } catch {}
+        try {
+          const parsed = JSON.parse(match[0]);
+          console.log('[interpret-deals] Parsed via regex fallback');
+          return res.status(200).json(parsed);
+        } catch {}
       }
+      console.error('[interpret-deals] Failed to parse Claude response:', text.slice(0, 300));
       return res.status(200).json({ results: [] });
     }
   } catch (err) {
-    console.error('interpret-deals error:', err);
+    console.error('[interpret-deals] Unexpected error:', err);
     return res.status(200).json({ results: [] });
   }
 }

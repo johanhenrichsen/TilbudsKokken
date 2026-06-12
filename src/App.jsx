@@ -432,10 +432,12 @@ export default function App() {
     if (!dealsData || dealsData.length === 0) return;
 
     let cancelled = false;
-    // sessionStorage: cleared each session, no stale classifications across visits
-    const CACHE_KEY = "tilbudskokken_deal_classify_v2";
+    // v3: bumped to clear stale classifications from previous sessions
+    const CACHE_KEY = "tilbudskokken_deal_classify_v3";
 
     async function runPipeline() {
+      console.log(`[Madspild] Pipeline starting — ${dealsData.length} deals`);
+
       // Load session cache
       let cache = {};
       try {
@@ -443,8 +445,13 @@ export default function App() {
         if (raw) cache = JSON.parse(raw);
       } catch {}
 
+      const cachedCount = Object.keys(cache).length;
+      console.log(`[Madspild] Cache: ${cachedCount} entries`);
+
       // Agent 1: classify uncached deals only
       const uncached = dealsData.filter(d => !cache[d.id]);
+      console.log(`[Madspild] Uncached deals to classify: ${uncached.length}`);
+
       if (uncached.length > 0) {
         const r1 = await fetch('/api/interpret-deals', {
           method: 'POST',
@@ -452,24 +459,41 @@ export default function App() {
           body: JSON.stringify({ deals: uncached.map(d => ({ id: d.id, description: d.description })) }),
         });
         if (!r1.ok) throw new Error('interpret-deals HTTP ' + r1.status);
-        const { results = [] } = await r1.json();
-        for (const r of results) {
-          cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
+        const body1 = await r1.json();
+        const results = body1.results ?? [];
+        console.log(`[Madspild Agent 1] Returned ${results.length} classifications:`, results);
+
+        if (results.length > 0) {
+          // Only persist cache when Agent 1 actually returned data — don't cache API failures
+          for (const r of results) {
+            cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
+          }
+          try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
+        } else {
+          console.warn('[Madspild Agent 1] No results returned — API key missing or Claude error. Raw body:', body1);
         }
-        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
       }
 
       if (cancelled) return;
 
-      // Only pass high/medium confidence raw ingredients to Agent 2 — discard uncertain ones
+      // Pass all isIngredient:true deals to Agent 2 — confidence filter removed so borderline
+      // ingredients ("low" confidence) still make it through
       const ingredients = dealsData
         .filter(d => {
           const c = cache[d.id];
-          return c?.isIngredient && c?.ingredient && c?.confidence !== 'low';
+          return c?.isIngredient === true && c?.ingredient;
         })
         .map(d => ({ id: d.id, ingredient: cache[d.id].ingredient, category: cache[d.id].category }));
 
-      if (ingredients.length === 0) { setAiMadspildRecipes([]); return; }
+      console.log(`[Madspild] Ingredients after Agent 1 filter: ${ingredients.length}`, ingredients);
+
+      if (ingredients.length === 0) {
+        // Log full cache so we can see what Agent 1 classified everything as
+        const trueCount = Object.values(cache).filter(v => v.isIngredient).length;
+        console.warn(`[Madspild] Zero ingredients. Cache has ${Object.keys(cache).length} entries, ${trueCount} marked isIngredient:true. Full cache:`, cache);
+        setAiMadspildRecipes([]);
+        return;
+      }
 
       // Agent 2: strict recipe matching
       const recipeList = recipeBank.map(r => ({
@@ -484,7 +508,9 @@ export default function App() {
         body: JSON.stringify({ ingredients, recipes: recipeList }),
       });
       if (!r2.ok) throw new Error('match-recipes HTTP ' + r2.status);
-      const { matches = [] } = await r2.json();
+      const body2 = await r2.json();
+      const matches = body2.matches ?? [];
+      console.log(`[Madspild Agent 2] Returned ${matches.length} recipe matches:`, matches);
 
       if (cancelled) return;
 
@@ -507,13 +533,13 @@ export default function App() {
         .sort((a, b) => b.madspildDeals.length - a.madspildDeals.length)
         .slice(0, 8);
 
+      console.log(`[Madspild] Final recipes: ${result.length}`, result.map(r => r.title));
       if (!cancelled) setAiMadspildRecipes(result);
     }
 
     runPipeline().catch(err => {
       if (!cancelled) {
-        // On failure: show empty rather than falling back to loose keyword matching
-        console.warn('[Madspild AI] Pipeline failed:', err.message);
+        console.error('[Madspild AI] Pipeline error:', err);
         setAiMadspildRecipes([]);
       }
     });

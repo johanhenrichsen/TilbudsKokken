@@ -4,12 +4,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      '/api': {
-        target: 'https://api.anthropic.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      }
-    }
+    // Run `vercel dev` instead of `vite` for local development so that
+    // the /api/* serverless functions are served alongside the frontend.
+    // If you run plain `vite dev`, API calls will fail (no serverless runtime).
   }
 })

@@ -31,7 +31,11 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.VITE_CLAUDE_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'Claude API key not configured' });
+  if (!apiKey) {
+    console.error('[match-recipes] VITE_CLAUDE_KEY is not set');
+    return res.status(500).json({ error: 'Claude API key not configured' });
+  }
+  console.log(`[match-recipes] Matching ${ingredients.length} ingredients against ${recipes.length} recipes`);
 
   const userContent = `Tilgængelige madspild-råvarer (allerede klassificeret som ægte råvarer):
 ${JSON.stringify(ingredients)}
@@ -60,24 +64,33 @@ Ingen matches: {"matches":[]}`;
     });
 
     if (!response.ok) {
-      console.error('Claude API returned', response.status);
+      const errBody = await response.text().catch(() => '');
+      console.error(`[match-recipes] Claude API ${response.status}:`, errBody);
       return res.status(200).json({ matches: [] });
     }
 
     const data = await response.json();
     const text = (data.content?.[0]?.text || '').trim();
+    console.log(`[match-recipes] Claude raw response (${text.length} chars):`, text.slice(0, 500));
 
     try {
-      return res.status(200).json(JSON.parse(text));
+      const parsed = JSON.parse(text);
+      console.log(`[match-recipes] Parsed OK — ${parsed.matches?.length ?? 0} matches`);
+      return res.status(200).json(parsed);
     } catch {
       const match = text.match(/\{[\s\S]*\}/);
       if (match) {
-        try { return res.status(200).json(JSON.parse(match[0])); } catch {}
+        try {
+          const parsed = JSON.parse(match[0]);
+          console.log('[match-recipes] Parsed via regex fallback');
+          return res.status(200).json(parsed);
+        } catch {}
       }
+      console.error('[match-recipes] Failed to parse Claude response:', text.slice(0, 300));
       return res.status(200).json({ matches: [] });
     }
   } catch (err) {
-    console.error('match-recipes error:', err);
+    console.error('[match-recipes] Unexpected error:', err);
     return res.status(200).json({ matches: [] });
   }
 }
