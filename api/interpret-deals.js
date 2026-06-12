@@ -23,24 +23,10 @@ REGEL 3 — Confidence:
 - "medium": sandsynligvis en råvare
 - "low": tvivlstilfælde
 
-EKSEMPLER:
-"ARANCINI TOMAT SALLING NU" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
-"TOFU BASILIKUM 180G LUNTER" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
-"SPAGHETTI BOLO SALLING NU 500G" → isIngredient:false, category:"færdigret", ingredient:null, confidence:"high"
-"KYLLINGEBRYST 500G" → isIngredient:true, category:"kød", ingredient:"kyllingebryst", confidence:"high"
-"KYLLINGEFILET 600G" → isIngredient:true, category:"kød", ingredient:"kyllingefilet", confidence:"high"
-"LF MOZZARELLA NORA FREE 125G" → isIngredient:true, category:"mejeri", ingredient:"mozzarella", confidence:"high"
-"HAKKET OKSEKØD 8% 500G" → isIngredient:true, category:"kød", ingredient:"hakket oksekød", confidence:"high"
-"PISKEFLØDE 38% 0.5L" → isIngredient:true, category:"mejeri", ingredient:"piskefløde", confidence:"high"
-"MADLAVNINGSFLØDE 15% ARLA 0.5L" → isIngredient:true, category:"mejeri", ingredient:"madlavningsfløde", confidence:"high"
-"LAKS FILET FRISK 400G" → isIngredient:true, category:"fisk", ingredient:"laks", confidence:"high"
-"SPINAT FRISK 200G" → isIngredient:true, category:"grøntsager", ingredient:"spinat", confidence:"high"
-"GULERØDDER 1KG" → isIngredient:true, category:"grøntsager", ingredient:"gulerødder", confidence:"high"
-"ÆG 10 STK M/L" → isIngredient:true, category:"mejeri", ingredient:"æg", confidence:"high"
-"SPAGHETTI 500G" → isIngredient:true, category:"pasta", ingredient:"spaghetti", confidence:"high"
-"PASTA PENNE 500G" → isIngredient:true, category:"pasta", ingredient:"pasta", confidence:"high"
-
-Returner KUN gyldig JSON, ingen forklaringstekst, ingen markdown.`;
+OUTPUT-FORMAT — MEGET VIGTIGT:
+- Brug KUN tallet "n" som nøgle (fra input-feltet "n") — IKKE produkt-id eller beskrivelse
+- Returner præcis dette JSON, ingen markdown, ingen forklaring:
+{"results":[{"n":0,"ingredient":null,"category":"pålæg","isIngredient":false,"confidence":"high"},{"n":1,"ingredient":"laks","category":"fisk","isIngredient":true,"confidence":"high"},...]}`;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -56,18 +42,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Claude API key not configured' });
   }
 
-  // Use short numeric indices instead of full composite IDs in the Claude round-trip.
-  // Full IDs (UUID + EAN, up to 60 chars each) would exhaust max_tokens before 60 results
-  // are classified — Claude's output gets truncated, JSON is invalid, results: [] is returned.
-  const batch = deals.slice(0, 60).map(d => ({ id: d.id, description: d.description }));
-  const indexed = batch.map((d, i) => ({ idx: i, description: d.description }));
+  // Batch of 25: at ~60 chars/result, 25 results ≈ 500 tokens output — safe within 4096
+  const batch = deals.slice(0, 25).map(d => ({ id: d.id, description: d.description }));
+  // Send only "n" (short number) + description to Claude — long UUID IDs never appear in output
+  const indexed = batch.map((d, i) => ({ n: i, description: d.description }));
   console.log(`[interpret-deals] Classifying ${batch.length} deals`);
 
-  const userContent = `Klassificer disse produktbeskrivelser fra Salling Groups madspild-API:
-${JSON.stringify(indexed)}
-
-Returner præcis dette format for hvert produkt (brug "idx" fra input, ikke produktbeskrivelsen):
-{"results":[{"idx":0,"ingredient":"...","category":"...","isIngredient":true,"confidence":"high"},...]}`;
+  const userContent = `Klassificer disse ${indexed.length} produkter. Brug "n"-værdien fra input som nøgle i output:
+${JSON.stringify(indexed)}`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -92,44 +74,60 @@ Returner præcis dette format for hvert produkt (brug "idx" fra input, ikke prod
     }
 
     const data = await response.json();
-    const text = (data.content?.[0]?.text || '').trim();
     const stopReason = data.stop_reason;
-    console.log(`[interpret-deals] Claude stop_reason=${stopReason}, response ${text.length} chars:`, text.slice(0, 500));
+    const rawText = (data.content?.[0]?.text || '').trim();
 
-    // Warn if Claude hit the token limit — response will be truncated JSON
     if (stopReason === 'max_tokens') {
-      console.error('[interpret-deals] Claude hit max_tokens — response is truncated. Increase max_tokens or reduce batch size.');
+      console.error('[interpret-deals] Claude hit max_tokens — increase batch size or max_tokens');
       return res.status(200).json({ results: [], _error: 'Claude response truncated (max_tokens)' });
     }
 
+    console.log(`[interpret-deals] stop_reason=${stopReason}, ${rawText.length} chars:`, rawText.slice(0, 400));
+
+    // Strip markdown code fences if Claude added them despite instruction
+    const text = rawText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+
+    // Map results back: accept both "n" (new format) and "id" (Claude ignoring instruction)
     const mapResults = (raw) =>
       (raw.results || [])
         .map(r => {
-          const original = batch[r.idx];
+          // Try "n" (short index) first, then fall back to matching by full "id"
+          let original = batch[r.n];
+          if (!original && r.id) original = batch.find(d => d.id === r.id);
           if (!original) return null;
-          return { id: original.id, ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
+          return {
+            id: original.id,
+            ingredient: r.ingredient ?? null,
+            category: r.category ?? null,
+            isIngredient: r.isIngredient === true,
+            confidence: r.confidence ?? 'medium',
+          };
         })
         .filter(Boolean);
 
+    // Try direct parse first
     try {
       const parsed = JSON.parse(text);
       const mapped = mapResults(parsed);
       const ingCount = mapped.filter(r => r.isIngredient).length;
-      console.log(`[interpret-deals] Parsed OK — ${mapped.length} total, ${ingCount} isIngredient:true`);
+      console.log(`[interpret-deals] OK — ${mapped.length} classified, ${ingCount} ingredients`);
       return res.status(200).json({ results: mapped });
-    } catch {
-      const match = text.match(/\{[\s\S]*\}/);
-      if (match) {
-        try {
-          const parsed = JSON.parse(match[0]);
-          const mapped = mapResults(parsed);
-          console.log(`[interpret-deals] Parsed via regex fallback — ${mapped.length} results`);
-          return res.status(200).json({ results: mapped });
-        } catch {}
-      }
-      console.error('[interpret-deals] Failed to parse Claude response:', text.slice(0, 300));
-      return res.status(200).json({ results: [], _error: `JSON parse failed. Raw: ${text.slice(0, 200)}` });
+    } catch { /* fall through to regex */ }
+
+    // Regex extraction: find outermost {...}
+    const match = text.match(/\{[\s\S]*\}/);
+    if (match) {
+      try {
+        const parsed = JSON.parse(match[0]);
+        const mapped = mapResults(parsed);
+        console.log(`[interpret-deals] OK (regex) — ${mapped.length} classified`);
+        return res.status(200).json({ results: mapped });
+      } catch { /* fall through */ }
     }
+
+    console.error('[interpret-deals] Failed to parse. Raw:', rawText.slice(0, 400));
+    return res.status(200).json({ results: [], _error: `JSON parse failed. Raw: ${rawText.slice(0, 200)}` });
+
   } catch (err) {
     console.error('[interpret-deals] Unexpected error:', err);
     return res.status(200).json({ results: [], _error: String(err) });
