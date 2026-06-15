@@ -43,34 +43,6 @@ const CHAIN_ORDER = [
   "Fakta", "Irma",
 ];
 const SALLING_BRANDS = new Set(["Netto", "Føtex", "Bilka"]);
-const REMA_BRANDS = new Set(["Rema 1000"]);
-const REMA_SESSION_KEY = "tilbudskokken_rema_deals_v1";
-
-// Maps keywords in Salling food-waste product descriptions → our recipe dealItem names
-const FOODWASTE_KEYWORDS = {
-  "kyllingebryst": "Kyllingefilet 600g",
-  "kyllingefilet": "Kyllingefilet 600g",
-  "kylling":       "Kyllingefilet 600g",
-  "laks":          "Laks filet 400g",
-  "hakket oksekød":"Hakket oksekød 500g",
-  "oksekød":       "Hakket oksekød 500g",
-  "mozzarella":    "Mozzarella 125g",
-  "spinat":        "Spinat frisk 200g",
-  "parmesan":      "Parmesan revet 80g",
-  "gulerødder":    "Gulerødder 1kg",
-  "gulerod":       "Gulerødder 1kg",
-  "kartofler":     "Kartofler 2kg",
-  "kartoffel":     "Kartofler 2kg",
-  "fløde":         "Fløde 38% 0.5L",
-  "spaghetti":     "Spaghetti 500g",
-  "pasta":         "Pasta penne 500g",
-  "penne":         "Pasta penne 500g",
-  "ris":           "Ris 1kg",
-  "æg":            "Æg 10 stk.",
-  "basilikum":     "Basilikum",
-  "dåsetomat":     "Dåsetomater 400g",
-  "tomat":         "Dåsetomater 400g",
-};
 
 const STORE_BRANCHES = [
   // ── Netto (Salling Group) ────────────────────────────────────────
@@ -551,7 +523,7 @@ export default function App() {
       const saved = localStorage.getItem("collapsedSections");
       if (saved) return { ...JSON.parse(saved), recommended: false };
     } catch {}
-    return { recommended: false, others: true, madspild: false };
+    return { recommended: false, others: true };
   });
 
   // ── Popularity tracking ─────────────────────────────────────────
@@ -563,12 +535,6 @@ export default function App() {
     } catch {}
     return {};
   });
-
-  // ── Live deals (Salling food-waste API) ─────────────────────────
-  const [dealsData, setDealsData] = useState(null);
-  const [dealsLoading, setDealsLoading] = useState(false);
-  const [aiMadspildRecipes, setAiMadspildRecipes] = useState(null);
-  const [madspildFallback, setMadspildFallback] = useState(null);
 
   // ── Pantry ──────────────────────────────────────────────────────
   const [pantryItems, setPantryItems] = useState(() => {
@@ -620,247 +586,6 @@ export default function App() {
     }
     return () => document.body.classList.remove("recipe-open");
   }, [selectedRecipe]);
-
-  // ── Fetch live deals (Salling food-waste + Rema 1000 campaigns) ──
-  const localStoresKey = (localStores || []).map(s => s.name).join(",");
-  useEffect(() => {
-    const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
-    const remaStores    = (localStores || []).filter(s => REMA_BRANDS.has(s.chain));
-
-    if ((sallingStores.length === 0 && remaStores.length === 0) || onboardingStep !== null) {
-      setDealsData(null);
-      return;
-    }
-
-    setDealsLoading(true);
-    const fetches = [];
-
-    if (sallingStores.length > 0) {
-      const zips = [...new Set(sallingStores.map(s => s.zip))].slice(0, 3);
-      fetches.push(
-        fetch(`/api/deals?zip=${zips.join(",")}`)
-          .then(r => r.ok ? r.json() : [])
-          .catch(() => [])
-      );
-    }
-
-    if (remaStores.length > 0) {
-      let remaPromise;
-      try {
-        const cached = sessionStorage.getItem(REMA_SESSION_KEY);
-        if (cached) {
-          remaPromise = Promise.resolve(JSON.parse(cached));
-          console.log("[Rema] Using sessionStorage cache");
-        }
-      } catch {}
-
-      if (!remaPromise) {
-        remaPromise = fetch("/api/rema")
-          .then(r => r.ok ? r.json() : { deals: [] })
-          .then(data => {
-            const deals = data.deals || [];
-            if (deals.length > 0) {
-              try { sessionStorage.setItem(REMA_SESSION_KEY, JSON.stringify(deals)); } catch {}
-            }
-            console.log(`[Rema] Fetched ${deals.length} deals from API`);
-            return deals;
-          })
-          .catch(() => []);
-      }
-
-      fetches.push(remaPromise);
-    }
-
-    Promise.all(fetches)
-      .then(results => {
-        const allDeals = results.flat().filter(Boolean);
-        setDealsData(allDeals.length > 0 ? allDeals : []);
-      })
-      .finally(() => setDealsLoading(false));
-  }, [localStoresKey, onboardingStep]);
-
-  // ── AI Madspild pipeline (classify deals → generate recipes from real deals) ──
-  useEffect(() => {
-    setAiMadspildRecipes(null);
-    setMadspildFallback(null);
-    if (!dealsData || dealsData.length === 0) return;
-
-    let cancelled = false;
-    // v3: bumped to clear stale classifications from previous sessions
-    const CACHE_KEY = "tilbudskokken_deal_classify_v3";
-
-    async function runPipeline() {
-      console.log(`[Madspild] Pipeline starting — ${dealsData.length} deals`);
-
-      // Load session cache
-      let cache = {};
-      try {
-        const raw = sessionStorage.getItem(CACHE_KEY);
-        if (raw) cache = JSON.parse(raw);
-      } catch {}
-
-      const cachedCount = Object.keys(cache).length;
-      console.log(`[Madspild] Cache: ${cachedCount} entries`);
-
-      // Agent 1: classify uncached deals only, capped at 40
-      // Sending 1500+ deals per request just to have the server slice to a small batch
-      // is wasteful and causes the cache to grow only 40 entries per load.
-      // Cap on the client so the request body stays small and the cache fills efficiently.
-      const uncached = dealsData.filter(d => !cache[d.id]).slice(0, 40);
-      console.log(`[Madspild] Uncached (capped at 40): ${uncached.length} of ${dealsData.filter(d => !cache[d.id]).length} total uncached`);
-
-      if (uncached.length > 0) {
-        const r1 = await fetch('/api/interpret-deals', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ deals: uncached.map(d => ({ id: d.id, description: d.description })) }),
-        });
-        if (!r1.ok) throw new Error('interpret-deals HTTP ' + r1.status);
-        const body1 = await r1.json();
-
-        if (body1._error) {
-          console.error('[Madspild Agent 1] Server-side error:', body1._error);
-          if (body1._error.includes('429')) {
-            console.warn('[Madspild Agent 1] Rate limited — proceeding with existing cache');
-          }
-        }
-
-        const results = body1.results ?? [];
-        console.log(`[Madspild Agent 1] Returned ${results.length} classifications`);
-
-        if (results.length > 0) {
-          for (const r of results) {
-            cache[r.id] = { ingredient: r.ingredient, category: r.category, isIngredient: r.isIngredient, confidence: r.confidence };
-          }
-          try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache)); } catch {}
-          console.log(`[Madspild] Cache now has ${Object.keys(cache).length} entries`);
-        }
-      }
-
-      if (cancelled) return;
-
-      // Filter Agent 1 results to real food ingredients
-      const ingredients = dealsData
-        .filter(d => {
-          const c = cache[d.id];
-          return c?.isIngredient === true && c?.ingredient;
-        })
-        .map(d => ({ id: d.id, ingredient: cache[d.id].ingredient, category: cache[d.id].category }));
-
-      console.log(`[Madspild] Ingredients after Agent 1 filter: ${ingredients.length}`, ingredients);
-
-      if (ingredients.length === 0) {
-        const trueCount = Object.values(cache).filter(v => v.isIngredient).length;
-        console.warn(`[Madspild] Zero ingredients. Cache has ${Object.keys(cache).length} entries, ${trueCount} marked isIngredient:true.`);
-        setMadspildFallback([]);
-        setAiMadspildRecipes([]);
-        return;
-      }
-
-      const dealMap = new Map(dealsData.map(d => [d.id, d]));
-
-      // Set fallback immediately so the section shows deal info while recipes generate
-      const ingredientsWithDeals = ingredients
-        .map(ing => ({ name: ing.ingredient, deal: dealMap.get(ing.id) }))
-        .filter(x => x.deal);
-      if (!cancelled) setMadspildFallback(ingredientsWithDeals);
-
-      // Deduplicate by ingredient name, take top 6 for generation
-      const seenNames = new Set();
-      const uniqueIngredients = [];
-      for (const ing of ingredients) {
-        if (!seenNames.has(ing.ingredient)) {
-          seenNames.add(ing.ingredient);
-          uniqueIngredients.push(ing);
-        }
-      }
-      const topIngredients = uniqueIngredients.slice(0, 6);
-      const ingredientKey = [...seenNames].sort().join(",");
-
-      // Recipe generation cache — keyed by sorted ingredient names
-      const RECIPE_CACHE_KEY = "tilbudskokken_ai_recipes_v1";
-      let generatedRecipes = null;
-      try {
-        const raw = sessionStorage.getItem(RECIPE_CACHE_KEY);
-        if (raw) {
-          const cached = JSON.parse(raw);
-          if (cached.ingredientKey === ingredientKey) {
-            generatedRecipes = cached.recipes;
-            console.log(`[Madspild] Recipe cache hit — ${generatedRecipes.length} cached recipes`);
-          }
-        }
-      } catch {}
-
-      if (!generatedRecipes) {
-        console.log(`[Madspild] Calling generate-madspild-recipes for: ${ingredientKey}`);
-        const r2 = await fetch('/api/generate-madspild-recipes', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ingredients: topIngredients }),
-        });
-        if (!r2.ok) throw new Error('generate-madspild-recipes HTTP ' + r2.status);
-        const body2 = await r2.json();
-        if (body2._error) console.error('[Madspild Generate] Server error:', body2._error);
-        generatedRecipes = body2.recipes ?? [];
-        console.log(`[Madspild Generate] ${generatedRecipes.length} recipes: ${generatedRecipes.map(r => r.title).join(', ')}`);
-        if (generatedRecipes.length > 0) {
-          try { sessionStorage.setItem(RECIPE_CACHE_KEY, JSON.stringify({ ingredientKey, recipes: generatedRecipes })); } catch {}
-        }
-      }
-
-      if (cancelled) return;
-
-      // Build full recipe objects: attach deal data to each generated recipe
-      const result = generatedRecipes.map((r, i) => {
-        const madspildDeals = [];
-        const usedNames = new Set();
-        for (const ing of (r.ingredients || [])) {
-          if (!ing.dealItem || usedNames.has(ing.dealItem)) continue;
-          const match = ingredients.find(x => x.ingredient === ing.dealItem);
-          if (match) {
-            const deal = dealMap.get(match.id);
-            if (deal) {
-              madspildDeals.push({ name: ing.dealItem, deal });
-              usedNames.add(ing.dealItem);
-            }
-          }
-        }
-        return {
-          id: `ai-${Date.now()}-${i}`,
-          title: r.title || "Opskrift",
-          emoji: r.emoji || "🍽",
-          time: r.time || "30 min",
-          servings_count: r.servings_count || 4,
-          category: r.category || "Middag",
-          cuisine: r.cuisine || "🇩🇰 Dansk",
-          description: r.description || "",
-          ingredients: r.ingredients || [],
-          steps: r.steps || [],
-          tip: r.tip || null,
-          dealItems: madspildDeals.map(({ name, deal }) => ({ name: deal.description || name, store: deal.store })),
-          madspildDeals,
-          aiGenerated: true,
-        };
-      }).filter(r => r.madspildDeals.length > 0);
-
-      console.log(`[Madspild] Final AI recipes: ${result.length}`, result.map(r => r.title));
-      if (!cancelled) {
-        setAiMadspildRecipes(result);
-        if (result.length > 0) {
-          setCollapsedSections(prev => ({ ...prev, madspild: false }));
-        }
-      }
-    }
-
-    runPipeline().catch(err => {
-      if (!cancelled) {
-        console.error('[Madspild AI] Pipeline error:', err);
-        setAiMadspildRecipes([]);
-      }
-    });
-
-    return () => { cancelled = true; };
-  }, [dealsData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Matching ────────────────────────────────────────────────────
   function getAvailableItemNames() {
@@ -924,29 +649,6 @@ export default function App() {
   const filteredRecommended = sortByPantry(recommended.filter(matchRecipe));
   const filteredOthers = sortByPantry(others.filter(matchRecipe));
   const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || onlyMakeable) && filteredRecommended.length === 0 && filteredOthers.length === 0;
-
-  // ── Madspild helpers ────────────────────────────────────────────
-  function matchDealToIngredient(deal) {
-    const desc = (deal.description || "").toLowerCase();
-    // Check multi-word keys first (longer → more specific)
-    for (const [kw, ing] of Object.entries(FOODWASTE_KEYWORDS).sort((a, b) => b[0].length - a[0].length)) {
-      if (desc.includes(kw)) return ing;
-    }
-    return null;
-  }
-
-  function isExpiringSoon(endTime) {
-    if (!endTime) return false;
-    const hours = (new Date(endTime) - Date.now()) / 3_600_000;
-    return hours > 0 && hours <= 24;
-  }
-
-  const sallingStores = (localStores || []).filter(s => SALLING_BRANDS.has(s.chain));
-  const hasSallingStores = sallingStores.length > 0;
-  const hasLiveDealStores = hasSallingStores || (localStores || []).some(s => REMA_BRANDS.has(s.chain));
-
-  // AI results only — null means pipeline hasn't finished yet, [] means done (empty or failed)
-  const madspildRecipes = useMemo(() => aiMadspildRecipes ?? [], [aiMadspildRecipes]);
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
@@ -1271,70 +973,6 @@ export default function App() {
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
-
-  // ── Madspild card ────────────────────────────────────────────────
-  function MadspildCard({ r }) {
-    const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
-    const isSaved = savedRecipes.some(s => s.title === r.title);
-    return (
-      <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
-        <div className="card-badges">
-          <span className="madspild-badge">🌱 Madspild</span>
-          {r.aiGenerated && <span className="ai-deal-badge">Baseret på dagens tilbud</span>}
-        </div>
-        <div className="recipe-category-tag">{r.emoji} {r.category}</div>
-        {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
-        <div className="recipe-browse-title">{r.title}</div>
-        <div className="recipe-browse-meta">
-          <span>⏱ {r.time}</span>
-          <span>🥘 {r.ingredients.length} ing.</span>
-        </div>
-        <div className="madspild-deals-list">
-          {r.madspildDeals.map(({ name, deal }) => (
-            <div key={name} className="madspild-deal-row">
-              <span className="madspild-deal-desc">{deal.description || name.replace(/ \d+.*$/, "")}</span>
-              <span className="madspild-deal-pricing">
-                {deal.price != null && (
-                  <span className="madspild-price">{Number(deal.price).toFixed(0)} kr.</span>
-                )}
-                {deal.originalPrice != null && (
-                  <span className="madspild-original">{Number(deal.originalPrice).toFixed(0)} kr.</span>
-                )}
-                {deal.discount != null && (
-                  <span className="madspild-pct">-{deal.discount}%</span>
-                )}
-                {isExpiringSoon(deal.endTime) && (
-                  <span className="madspild-expiry-pill">⚠ Snart</span>
-                )}
-              </span>
-            </div>
-          ))}
-        </div>
-        {(() => {
-          const total = r.madspildDeals.reduce((sum, { deal }) => sum + (deal.price ?? 0), 0);
-          if (total === 0) return null;
-          return (
-            <div className="madspild-card-total">
-              ca. {Math.round(total)} kr. for {r.servings_count || 4} personer
-            </div>
-          );
-        })()}
-        <div className="card-action-row">
-          <button
-            className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
-            onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
-          >
-            {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
-          </button>
-          <button
-            className={`card-save-btn${isSaved ? " saved" : ""}`}
-            onClick={e => { e.stopPropagation(); toggleSaveRecipe(r); }}
-            title={isSaved ? "Fjern fra gemte" : "Gem opskrift"}
-          >🔖</button>
-        </div>
-      </div>
-    );
-  }
 
   // ── Recipe card (browse) ────────────────────────────────────────
   function RecipeCard({ r }) {
@@ -1862,27 +1500,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* Live madspild pricing banner */}
-            {selectedRecipe.madspildDeals && selectedRecipe.madspildDeals.length > 0 && (
-              <div className="madspild-detail-banner">
-                <div className="madspild-detail-banner-title">🌱 Madspild — aktuelle priser</div>
-                {selectedRecipe.madspildDeals.map(({ name, deal }) => (
-                  <div key={name} className="madspild-detail-row">
-                    <span className="madspild-detail-desc">{deal.description || name}</span>
-                    <span className="madspild-detail-pricing">
-                      {deal.originalPrice != null && <s className="madspild-detail-original">{deal.originalPrice.toFixed(2)} kr</s>}
-                      {deal.price != null && <strong className="madspild-detail-price">{deal.price.toFixed(2)} kr</strong>}
-                      {deal.discount != null && <span className="madspild-detail-pct">-{deal.discount}%</span>}
-                    </span>
-                    {isExpiringSoon(deal.endTime) && (
-                      <span className="madspild-expiry-pill">⚠ Udløber snart</span>
-                    )}
-                    {deal.store && <span className="madspild-detail-store">{deal.store}</span>}
-                  </div>
-                ))}
-              </div>
-            )}
-
             <div className="recipe-meta-bar">
               <span>⏱ {selectedRecipe.time}</span>
               {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{selectedRecipe.cuisine}</span>}
@@ -1994,73 +1611,6 @@ export default function App() {
       ) : (
         /* Browse view */
         <>
-          {/* ── Madspild section ──────────────────────────────── */}
-          {hasLiveDealStores ? (
-            <div className="recipe-browse-section">
-              <button
-                className="section-toggle-btn"
-                onClick={() => toggleSection("madspild")}
-                aria-expanded={!collapsedSections.madspild}
-              >
-                <span className="section-toggle-label">🌱 Madspild</span>
-                {madspildRecipes.length > 0
-                  ? <span className="section-count-badge">{madspildRecipes.length} tilbud</span>
-                  : !dealsLoading && <span className="section-count-badge">Spar op til 50%</span>
-                }
-                <svg
-                  className={`section-chevron${collapsedSections.madspild ? "" : " open"}`}
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  aria-hidden="true"
-                >
-                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-
-              <div className={`section-body-wrap${collapsedSections.madspild ? " collapsed" : ""}`}>
-                <div className="section-body-inner">
-                  {dealsLoading ? (
-                    <div className="madspild-loading">
-                      <div className="madspild-dots"><span /><span /><span /></div>
-                      <p>Henter aktuelle madspildstilbud…</p>
-                    </div>
-                  ) : madspildRecipes.length > 0 ? (
-                    <div className="recipe-browse-grid section-body-grid">
-                      {madspildRecipes.map(r => <MadspildCard key={r.id} r={r} />)}
-                    </div>
-                  ) : madspildFallback && madspildFallback.length > 0 ? (
-                    <div className="madspild-fallback">
-                      <p className="madspild-fallback-title">Disse varer er på tilbud i dag</p>
-                      <div className="madspild-fallback-grid">
-                        {madspildFallback.slice(0, 8).map(({ name, deal }) => (
-                          <div key={deal.id} className="madspild-fallback-card">
-                            <div className="madspild-fallback-name">{deal.description || name}</div>
-                            <div className="madspild-deal-pricing">
-                              {deal.price != null && <span className="madspild-price">{Number(deal.price).toFixed(0)} kr.</span>}
-                              {deal.originalPrice != null && <span className="madspild-original">{Number(deal.originalPrice).toFixed(0)} kr.</span>}
-                              {deal.discount != null && <span className="madspild-pct">-{deal.discount}%</span>}
-                              {isExpiringSoon(deal.endTime) && <span className="madspild-expiry-pill">⚠ Snart</span>}
-                            </div>
-                            {deal.store && <div className="madspild-fallback-store">{deal.store}</div>}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : dealsData !== null ? (
-                    <p className="madspild-empty">Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.</p>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="madspild-cta">
-              <span className="madspild-cta-icon">🌱</span>
-              <span className="madspild-cta-text">Tilføj Netto, Føtex eller Rema 1000 for at se live tilbud</span>
-              <button className="madspild-cta-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>
-                Tilføj butik
-              </button>
-            </div>
-          )}
-
           {filteredRecommended.length > 0 && (
             <div className="recipe-browse-section">
               <button
