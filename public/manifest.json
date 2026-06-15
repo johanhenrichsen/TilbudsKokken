@@ -1,6 +1,6 @@
 {
-  "name": "TilbudsKokken",
-  "short_name": "TilbudsKokken",
+  "name": "Spotkøkken",
+  "short_name": "Spotkøkken",
   "description": "Generér opskrifter fra ugens tilbudsvarer",
   "start_url": "/",
   "display": "standalone",

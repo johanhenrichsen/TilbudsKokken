@@ -1364,7 +1364,7 @@ export default function App() {
         <div className="hero-topbar">
           <div className="hero-brand">
             <LogoIcon size={30} />
-            <span className="hero-brand-name">TilbudsKokken</span>
+            <span className="hero-brand-name">Spotkøkken</span>
           </div>
           <div className="hero-topbar-right">
             <div className="week-badge">{weekBadge}</div>
