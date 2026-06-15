@@ -42,165 +42,6 @@ const CHAIN_ORDER = [
   // Other
   "Fakta", "Irma",
 ];
-const SALLING_BRANDS = new Set(["Netto", "Føtex", "Bilka"]);
-
-const STORE_BRANCHES = [
-  // ── Netto (Salling Group) ────────────────────────────────────────
-  { name: "Netto Østerbro",           chain: "Netto",       city: "Østerbro",      zip: "2100" },
-  { name: "Netto Frederiksberg",      chain: "Netto",       city: "Frederiksberg", zip: "2000" },
-  { name: "Netto Nørrebro",           chain: "Netto",       city: "Nørrebro",      zip: "2200" },
-  { name: "Netto Vesterbro",          chain: "Netto",       city: "Vesterbro",     zip: "1620" },
-  { name: "Netto Amager",             chain: "Netto",       city: "Amager",        zip: "2300" },
-  { name: "Netto Hellerup",           chain: "Netto",       city: "Hellerup",      zip: "2900" },
-  { name: "Netto Aarhus C",           chain: "Netto",       city: "Aarhus",        zip: "8000" },
-  { name: "Netto Odense C",           chain: "Netto",       city: "Odense",        zip: "5000" },
-  { name: "Netto Aalborg",            chain: "Netto",       city: "Aalborg",       zip: "9000" },
-  { name: "Netto Esbjerg",            chain: "Netto",       city: "Esbjerg",       zip: "6700" },
-  { name: "Netto Horsens",            chain: "Netto",       city: "Horsens",       zip: "8700" },
-  { name: "Netto Randers",            chain: "Netto",       city: "Randers",       zip: "8900" },
-  // ── Føtex (Salling Group) ────────────────────────────────────────
-  { name: "Føtex Lyngby",             chain: "Føtex",       city: "Lyngby",        zip: "2800" },
-  { name: "Føtex Glostrup",           chain: "Føtex",       city: "Glostrup",      zip: "2600" },
-  { name: "Føtex Valby",              chain: "Føtex",       city: "Valby",         zip: "2500" },
-  { name: "Føtex Rødovre",            chain: "Føtex",       city: "Rødovre",       zip: "2610" },
-  { name: "Føtex Hvidovre",           chain: "Føtex",       city: "Hvidovre",      zip: "2650" },
-  { name: "Føtex Ballerup",           chain: "Føtex",       city: "Ballerup",      zip: "2750" },
-  { name: "Føtex Aarhus",             chain: "Føtex",       city: "Aarhus",        zip: "8000" },
-  { name: "Føtex Odense",             chain: "Føtex",       city: "Odense",        zip: "5000" },
-  { name: "Føtex Aalborg",            chain: "Føtex",       city: "Aalborg",       zip: "9000" },
-  { name: "Føtex Vejle",              chain: "Føtex",       city: "Vejle",         zip: "7100" },
-  // ── Bilka (Salling Group) ────────────────────────────────────────
-  { name: "Bilka Hundige",            chain: "Bilka",       city: "Hundige",       zip: "2670" },
-  { name: "Bilka Ishøj",              chain: "Bilka",       city: "Ishøj",         zip: "2635" },
-  { name: "Bilka Roskildevej",        chain: "Bilka",       city: "Brøndby",       zip: "2620" },
-  { name: "Bilka Aarhus",             chain: "Bilka",       city: "Aarhus",        zip: "8210" },
-  { name: "Bilka Odense",             chain: "Bilka",       city: "Odense",        zip: "5220" },
-  { name: "Bilka Aalborg",            chain: "Bilka",       city: "Aalborg",       zip: "9200" },
-  { name: "Bilka Esbjerg",            chain: "Bilka",       city: "Esbjerg",       zip: "6710" },
-  { name: "Bilka Vejle",              chain: "Bilka",       city: "Vejle",         zip: "7100" },
-  { name: "Bilka Fredericia",         chain: "Bilka",       city: "Fredericia",    zip: "7000" },
-  { name: "Bilka Næstved",            chain: "Bilka",       city: "Næstved",       zip: "4700" },
-  // ── Rema 1000 ───────────────────────────────────────────────────
-  { name: "Rema 1000 Nørrebro",       chain: "Rema 1000",   city: "Nørrebro",      zip: "2200" },
-  { name: "Rema 1000 Østerbro",       chain: "Rema 1000",   city: "Østerbro",      zip: "2100" },
-  { name: "Rema 1000 Frederiksberg",  chain: "Rema 1000",   city: "Frederiksberg", zip: "2000" },
-  { name: "Rema 1000 Vesterbro",      chain: "Rema 1000",   city: "Vesterbro",     zip: "1620" },
-  { name: "Rema 1000 Vanløse",        chain: "Rema 1000",   city: "Vanløse",       zip: "2720" },
-  { name: "Rema 1000 Aarhus C",       chain: "Rema 1000",   city: "Aarhus",        zip: "8000" },
-  { name: "Rema 1000 Odense C",       chain: "Rema 1000",   city: "Odense",        zip: "5000" },
-  { name: "Rema 1000 Aalborg",        chain: "Rema 1000",   city: "Aalborg",       zip: "9000" },
-  { name: "Rema 1000 Esbjerg",        chain: "Rema 1000",   city: "Esbjerg",       zip: "6700" },
-  { name: "Rema 1000 Horsens",        chain: "Rema 1000",   city: "Horsens",       zip: "8700" },
-  { name: "Rema 1000 Randers",        chain: "Rema 1000",   city: "Randers",       zip: "8900" },
-  { name: "Rema 1000 Kolding",        chain: "Rema 1000",   city: "Kolding",       zip: "6000" },
-  // ── Coop 365 ────────────────────────────────────────────────────
-  { name: "Coop 365 Lyngby",          chain: "Coop 365",    city: "Lyngby",        zip: "2800" },
-  { name: "Coop 365 Gentofte",        chain: "Coop 365",    city: "Gentofte",      zip: "2820" },
-  { name: "Coop 365 Gladsaxe",        chain: "Coop 365",    city: "Gladsaxe",      zip: "2860" },
-  { name: "Coop 365 Herlev",          chain: "Coop 365",    city: "Herlev",        zip: "2730" },
-  { name: "Coop 365 Taastrup",        chain: "Coop 365",    city: "Taastrup",      zip: "2630" },
-  { name: "Coop 365 Aarhus",          chain: "Coop 365",    city: "Aarhus",        zip: "8000" },
-  { name: "Coop 365 Odense",          chain: "Coop 365",    city: "Odense",        zip: "5000" },
-  { name: "Coop 365 Aalborg",         chain: "Coop 365",    city: "Aalborg",       zip: "9000" },
-  { name: "Coop 365 Randers",         chain: "Coop 365",    city: "Randers",       zip: "8900" },
-  { name: "Coop 365 Silkeborg",       chain: "Coop 365",    city: "Silkeborg",     zip: "8600" },
-  // ── SuperBrugsen (Coop) ─────────────────────────────────────────
-  { name: "SuperBrugsen Nørrebro",    chain: "SuperBrugsen",city: "Nørrebro",      zip: "2200" },
-  { name: "SuperBrugsen Frederiksberg",chain:"SuperBrugsen",city: "Frederiksberg", zip: "2000" },
-  { name: "SuperBrugsen Lyngby",      chain: "SuperBrugsen",city: "Lyngby",        zip: "2800" },
-  { name: "SuperBrugsen Roskilde",    chain: "SuperBrugsen",city: "Roskilde",      zip: "4000" },
-  { name: "SuperBrugsen Aarhus",      chain: "SuperBrugsen",city: "Aarhus",        zip: "8000" },
-  { name: "SuperBrugsen Odense",      chain: "SuperBrugsen",city: "Odense",        zip: "5000" },
-  { name: "SuperBrugsen Aalborg",     chain: "SuperBrugsen",city: "Aalborg",       zip: "9000" },
-  { name: "SuperBrugsen Vejle",       chain: "SuperBrugsen",city: "Vejle",         zip: "7100" },
-  { name: "SuperBrugsen Herning",     chain: "SuperBrugsen",city: "Herning",       zip: "7400" },
-  // ── Kvickly (Coop) ──────────────────────────────────────────────
-  { name: "Kvickly Valby",            chain: "Kvickly",     city: "Valby",         zip: "2500" },
-  { name: "Kvickly Gladsaxe",         chain: "Kvickly",     city: "Gladsaxe",      zip: "2860" },
-  { name: "Kvickly Rødovre",          chain: "Kvickly",     city: "Rødovre",       zip: "2610" },
-  { name: "Kvickly Aarhus",           chain: "Kvickly",     city: "Aarhus",        zip: "8000" },
-  { name: "Kvickly Odense",           chain: "Kvickly",     city: "Odense",        zip: "5000" },
-  { name: "Kvickly Aalborg",          chain: "Kvickly",     city: "Aalborg",       zip: "9000" },
-  { name: "Kvickly Esbjerg",          chain: "Kvickly",     city: "Esbjerg",       zip: "6700" },
-  { name: "Kvickly Randers",          chain: "Kvickly",     city: "Randers",       zip: "8900" },
-  { name: "Kvickly Næstved",          chain: "Kvickly",     city: "Næstved",       zip: "4700" },
-  // ── Dagli'Brugsen (Coop) ────────────────────────────────────────
-  { name: "Dagli'Brugsen Vanløse",    chain: "Dagli'Brugsen",city:"Vanløse",       zip: "2720" },
-  { name: "Dagli'Brugsen Valby",      chain: "Dagli'Brugsen",city:"Valby",         zip: "2500" },
-  { name: "Dagli'Brugsen Hillerød",   chain: "Dagli'Brugsen",city:"Hillerød",      zip: "3400" },
-  { name: "Dagli'Brugsen Aarhus",     chain: "Dagli'Brugsen",city:"Aarhus",        zip: "8000" },
-  { name: "Dagli'Brugsen Odense",     chain: "Dagli'Brugsen",city:"Odense",        zip: "5000" },
-  { name: "Dagli'Brugsen Silkeborg",  chain: "Dagli'Brugsen",city:"Silkeborg",     zip: "8600" },
-  { name: "Dagli'Brugsen Herning",    chain: "Dagli'Brugsen",city:"Herning",       zip: "7400" },
-  // ── Meny ────────────────────────────────────────────────────────
-  { name: "Meny Østerbro",            chain: "Meny",        city: "Østerbro",      zip: "2100" },
-  { name: "Meny Lyngby",              chain: "Meny",        city: "Lyngby",        zip: "2800" },
-  { name: "Meny Hellerup",            chain: "Meny",        city: "Hellerup",      zip: "2900" },
-  { name: "Meny Glostrup",            chain: "Meny",        city: "Glostrup",      zip: "2600" },
-  { name: "Meny Roskilde",            chain: "Meny",        city: "Roskilde",      zip: "4000" },
-  { name: "Meny Aarhus",              chain: "Meny",        city: "Aarhus",        zip: "8000" },
-  { name: "Meny Odense",              chain: "Meny",        city: "Odense",        zip: "5000" },
-  { name: "Meny Aalborg",             chain: "Meny",        city: "Aalborg",       zip: "9000" },
-  { name: "Meny Vejle",               chain: "Meny",        city: "Vejle",         zip: "7100" },
-  // ── Spar ────────────────────────────────────────────────────────
-  { name: "Spar Nørrebro",            chain: "Spar",        city: "Nørrebro",      zip: "2200" },
-  { name: "Spar Vesterbro",           chain: "Spar",        city: "Vesterbro",     zip: "1620" },
-  { name: "Spar Frederiksberg",       chain: "Spar",        city: "Frederiksberg", zip: "2000" },
-  { name: "Spar Roskilde",            chain: "Spar",        city: "Roskilde",      zip: "4000" },
-  { name: "Spar Aarhus",              chain: "Spar",        city: "Aarhus",        zip: "8000" },
-  { name: "Spar Odense",              chain: "Spar",        city: "Odense",        zip: "5000" },
-  { name: "Spar Aalborg",             chain: "Spar",        city: "Aalborg",       zip: "9000" },
-  { name: "Spar Horsens",             chain: "Spar",        city: "Horsens",       zip: "8700" },
-  // ── Eurospar ────────────────────────────────────────────────────
-  { name: "Eurospar Hillerød",        chain: "Eurospar",    city: "Hillerød",      zip: "3400" },
-  { name: "Eurospar Roskilde",        chain: "Eurospar",    city: "Roskilde",      zip: "4000" },
-  { name: "Eurospar Køge",            chain: "Eurospar",    city: "Køge",          zip: "4600" },
-  { name: "Eurospar Næstved",         chain: "Eurospar",    city: "Næstved",       zip: "4700" },
-  { name: "Eurospar Kolding",         chain: "Eurospar",    city: "Kolding",       zip: "6000" },
-  { name: "Eurospar Herning",         chain: "Eurospar",    city: "Herning",       zip: "7400" },
-  { name: "Eurospar Viborg",          chain: "Eurospar",    city: "Viborg",        zip: "8800" },
-  // ── Lidl ────────────────────────────────────────────────────────
-  { name: "Lidl Nørrebro",            chain: "Lidl",        city: "Nørrebro",      zip: "2200" },
-  { name: "Lidl Vesterbro",           chain: "Lidl",        city: "Vesterbro",     zip: "1620" },
-  { name: "Lidl Frederiksberg",       chain: "Lidl",        city: "Frederiksberg", zip: "2000" },
-  { name: "Lidl Gladsaxe",            chain: "Lidl",        city: "Gladsaxe",      zip: "2860" },
-  { name: "Lidl Rødovre",             chain: "Lidl",        city: "Rødovre",       zip: "2610" },
-  { name: "Lidl Hvidovre",            chain: "Lidl",        city: "Hvidovre",      zip: "2650" },
-  { name: "Lidl Aarhus",              chain: "Lidl",        city: "Aarhus",        zip: "8000" },
-  { name: "Lidl Odense",              chain: "Lidl",        city: "Odense",        zip: "5000" },
-  { name: "Lidl Aalborg",             chain: "Lidl",        city: "Aalborg",       zip: "9000" },
-  { name: "Lidl Esbjerg",             chain: "Lidl",        city: "Esbjerg",       zip: "6700" },
-  { name: "Lidl Kolding",             chain: "Lidl",        city: "Kolding",       zip: "6000" },
-  { name: "Lidl Vejle",               chain: "Lidl",        city: "Vejle",         zip: "7100" },
-  // ── Aldi ────────────────────────────────────────────────────────
-  { name: "Aldi Nørrebro",            chain: "Aldi",        city: "Nørrebro",      zip: "2200" },
-  { name: "Aldi Østerbro",            chain: "Aldi",        city: "Østerbro",      zip: "2100" },
-  { name: "Aldi Frederiksberg",       chain: "Aldi",        city: "Frederiksberg", zip: "2000" },
-  { name: "Aldi Hvidovre",            chain: "Aldi",        city: "Hvidovre",      zip: "2650" },
-  { name: "Aldi Ballerup",            chain: "Aldi",        city: "Ballerup",      zip: "2750" },
-  { name: "Aldi Aarhus",              chain: "Aldi",        city: "Aarhus",        zip: "8000" },
-  { name: "Aldi Odense",              chain: "Aldi",        city: "Odense",        zip: "5000" },
-  { name: "Aldi Aalborg",             chain: "Aldi",        city: "Aalborg",       zip: "9000" },
-  { name: "Aldi Esbjerg",             chain: "Aldi",        city: "Esbjerg",       zip: "6700" },
-  { name: "Aldi Horsens",             chain: "Aldi",        city: "Horsens",       zip: "8700" },
-  { name: "Aldi Kolding",             chain: "Aldi",        city: "Kolding",       zip: "6000" },
-  // ── Fakta ────────────────────────────────────────────────────────
-  { name: "Fakta Nørrebro",           chain: "Fakta",       city: "Nørrebro",      zip: "2200" },
-  { name: "Fakta Vesterbro",          chain: "Fakta",       city: "Vesterbro",     zip: "1620" },
-  { name: "Fakta Frederiksberg",      chain: "Fakta",       city: "Frederiksberg", zip: "2000" },
-  { name: "Fakta Gladsaxe",           chain: "Fakta",       city: "Gladsaxe",      zip: "2860" },
-  { name: "Fakta Aarhus",             chain: "Fakta",       city: "Aarhus",        zip: "8000" },
-  { name: "Fakta Odense",             chain: "Fakta",       city: "Odense",        zip: "5000" },
-  { name: "Fakta Aalborg",            chain: "Fakta",       city: "Aalborg",       zip: "9000" },
-  { name: "Fakta Esbjerg",            chain: "Fakta",       city: "Esbjerg",       zip: "6700" },
-  // ── Irma ─────────────────────────────────────────────────────────
-  { name: "Irma Østerbro",            chain: "Irma",        city: "Østerbro",      zip: "2100" },
-  { name: "Irma Frederiksberg",       chain: "Irma",        city: "Frederiksberg", zip: "2000" },
-  { name: "Irma Hellerup",            chain: "Irma",        city: "Hellerup",      zip: "2900" },
-  { name: "Irma Lyngby",              chain: "Irma",        city: "Lyngby",        zip: "2800" },
-  { name: "Irma Gentofte",            chain: "Irma",        city: "Gentofte",      zip: "2820" },
-  { name: "Irma Aarhus",              chain: "Irma",        city: "Aarhus",        zip: "8000" },
-];
 
 const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
 const CUISINE_SEARCH_MAP = {
@@ -250,141 +91,6 @@ function getISOWeek(date) {
   return { week: Math.ceil(((d - yearStart) / 86400000 + 1) / 7), year: d.getUTCFullYear() };
 }
 
-// Module-level cache so re-opening the picker doesn't re-fetch
-let _sallingStoresCache = null;
-
-function StorePickerContent({ search, onSearch, selected, onToggle }) {
-  // null = still loading, {} or { Netto: [...] } = settled
-  const [liveStores, setLiveStores] = useState(_sallingStoresCache);
-  const [collapsedChains, setCollapsedChains] = useState(() => new Set(CHAIN_ORDER));
-
-  useEffect(() => {
-    if (_sallingStoresCache !== null) return;
-    let cancelled = false;
-    fetch("/api/salling-stores")
-      .then(r => r.ok ? r.json() : null)
-      .catch(() => null)
-      .then(data => {
-        if (cancelled) return;
-        const result = (data && typeof data === "object" && !data.error) ? data : {};
-        _sallingStoresCache = result;
-        setLiveStores(result);
-      });
-    return () => { cancelled = true; };
-  }, []);
-
-  function toggleCollapse(chain) {
-    setCollapsedChains(prev => {
-      const next = new Set(prev);
-      next.has(chain) ? next.delete(chain) : next.add(chain);
-      return next;
-    });
-  }
-
-  const q = search.toLowerCase().trim();
-
-  const groups = CHAIN_ORDER.map(chain => {
-    const isLiveBrand = SALLING_BRANDS.has(chain);
-    const isLoading = isLiveBrand && liveStores === null;
-
-    let branches;
-    if (isLiveBrand && liveStores !== null) {
-      const live = liveStores[chain];
-      branches = (live && live.length > 0)
-        ? live
-        : STORE_BRANCHES.filter(s => s.chain === chain);
-    } else {
-      branches = STORE_BRANCHES.filter(s => s.chain === chain);
-    }
-
-    const filtered = q
-      ? branches.filter(s =>
-          s.name.toLowerCase().includes(q) ||
-          (s.city  || "").toLowerCase().includes(q) ||
-          (s.zip   || "").includes(q) ||
-          (s.street || "").toLowerCase().includes(q)
-        )
-      : branches;
-
-    return { chain, branches, filtered, isLoading };
-  }).filter(g => q ? g.filtered.length > 0 : true);
-
-  return (
-    <>
-      <div className="store-search-wrap">
-        <input
-          className="store-search-input"
-          type="text"
-          placeholder="Søg by, gade eller postnummer…"
-          value={search}
-          onChange={e => onSearch(e.target.value)}
-          autoFocus
-        />
-      </div>
-      <div className="store-branch-list">
-        {groups.map(({ chain, branches, filtered, isLoading }) => {
-          const isCollapsed = !q && collapsedChains.has(chain);
-          const countLabel = isLoading ? "…" : (q ? filtered.length : branches.length);
-          const displayList = q ? filtered : branches;
-
-          return (
-            <div key={chain} className="chain-group">
-              <button
-                className={`chain-group-header${isCollapsed ? "" : " open"}`}
-                onClick={() => toggleCollapse(chain)}
-              >
-                <span className="chain-dot" style={{ background: CHAIN_COLORS[chain] }} />
-                <span className="chain-group-name">{chain}</span>
-                <span className="chain-group-count">{countLabel}</span>
-                <span className={`chain-group-chevron${isCollapsed ? "" : " open"}`}>▾</span>
-              </button>
-
-              {!isCollapsed && (
-                <div className="chain-group-body">
-                  {isLoading ? (
-                    <>
-                      <div className="chain-skeleton-item" />
-                      <div className="chain-skeleton-item" style={{ opacity: 0.7 }} />
-                      <div className="chain-skeleton-item" style={{ opacity: 0.4 }} />
-                    </>
-                  ) : displayList.length === 0 ? (
-                    <p className="store-picker-empty" style={{ padding: "0.5rem 0 0.5rem 8px", textAlign: "left" }}>
-                      Ingen resultater
-                    </p>
-                  ) : (
-                    displayList.map(s => {
-                      const checked = selected.has(s.name);
-                      const subtitle = [s.street, s.city].filter(Boolean).join(", ");
-                      return (
-                        <button
-                          key={s.name}
-                          className={`store-branch-item${checked ? " selected" : ""}`}
-                          onClick={() => onToggle(s)}
-                        >
-                          <div>
-                            <span className="store-branch-name">{s.name}</span>
-                            {subtitle && <span className="store-branch-city">{subtitle}</span>}
-                          </div>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <span className="store-branch-zip">{s.zip}</span>
-                            <span className={`store-check${checked ? " checked" : ""}`}>✓</span>
-                          </div>
-                        </button>
-                      );
-                    })
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-        {groups.length === 0 && q && (
-          <p className="store-picker-empty">Ingen butikker fundet for "{search}"</p>
-        )}
-      </div>
-    </>
-  );
-}
 
 const stores = [
   {
@@ -473,15 +179,25 @@ export default function App() {
   const [localStores, setLocalStores] = useState(() => {
     try {
       const v = localStorage.getItem("localStores");
-      if (v) return JSON.parse(v);
+      if (v) {
+        const parsed = JSON.parse(v);
+        if (!Array.isArray(parsed)) return null;
+        // migrate from old branch-level format to chain-level format
+        if (parsed.length > 0 && parsed[0].chain) {
+          const seen = new Set();
+          return parsed
+            .filter(s => s.chain && !seen.has(s.chain) && seen.add(s.chain))
+            .map(s => ({ chain: s.chain }));
+        }
+        return parsed;
+      }
       // migrate from old single-store key
       const old = localStorage.getItem("localStore");
-      if (old) { const s = JSON.parse(old); return s ? [s] : null; }
+      if (old) { const s = JSON.parse(old); return s && s.chain ? [{ chain: s.chain }] : null; }
       return null;
     } catch { return null; }
   });
   const [showStorePicker, setShowStorePicker] = useState(false);
-  const [storeSearch, setStoreSearch] = useState("");
 
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
@@ -559,8 +275,6 @@ export default function App() {
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
-  const [pendingLocation, setPendingLocation] = useState("");
-  const [pendingSelectedBranches, setPendingSelectedBranches] = useState(new Set());
 
   // ── Splash screen ────────────────────────────────────────────────
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
@@ -908,26 +622,13 @@ export default function App() {
     });
   }
 
-  const pendingLocationQ = pendingLocation.trim().toLowerCase();
-  const pendingLocationBranches = pendingLocationQ
-    ? STORE_BRANCHES.filter(s =>
-        pendingChains.has(s.chain) &&
-        (s.city.toLowerCase().includes(pendingLocationQ) ||
-         s.zip.includes(pendingLocationQ) ||
-         s.name.toLowerCase().includes(pendingLocationQ))
-      )
-    : [];
-
   function handleOnboardingContinue() {
-    if (onboardingStep < 4) {
+    if (onboardingStep < 3) {
       setOnboardingStep(s => s + 1);
     } else {
-      const storesArray = pendingSelectedBranches.size > 0
-        ? STORE_BRANCHES.filter(s => pendingSelectedBranches.has(s.name))
-        : CHAIN_ORDER
-            .filter(ch => pendingChains.has(ch))
-            .map(ch => STORE_BRANCHES.find(b => b.chain === ch))
-            .filter(Boolean);
+      const storesArray = CHAIN_ORDER
+        .filter(ch => pendingChains.has(ch))
+        .map(ch => ({ chain: ch }));
       setLocalStores(storesArray);
       localStorage.setItem("localStores", JSON.stringify(storesArray));
       localStorage.setItem("defaultDiet", pendingDiet);
@@ -942,33 +643,36 @@ export default function App() {
     setPendingChains(new Set((localStores || []).map(s => s.chain)));
     setPendingDiet(diet);
     setPendingServings(parseInt(localStorage.getItem("defaultServings")) || 4);
-    setPendingLocation("");
-    setPendingSelectedBranches(new Set());
     setOnboardingStep(1);
   }
 
-  // toggle in the modal — saves immediately
-  function toggleStore(store) {
+  // toggle a chain in the store picker modal — saves immediately
+  function toggleLocalChain(chain) {
     setLocalStores(prev => {
-      const names = new Set((prev || []).map(s => s.name));
-      names.has(store.name) ? names.delete(store.name) : names.add(store.name);
-      const next = STORE_BRANCHES.filter(s => names.has(s.name));
+      const chains = new Set((prev || []).map(s => s.chain));
+      chains.has(chain) ? chains.delete(chain) : chains.add(chain);
+      const next = CHAIN_ORDER.filter(ch => chains.has(ch)).map(ch => ({ chain: ch }));
       localStorage.setItem("localStores", JSON.stringify(next));
       return next;
     });
+  }
+  function selectAllStores() {
+    const next = CHAIN_ORDER.map(ch => ({ chain: ch }));
+    setLocalStores(next);
+    localStorage.setItem("localStores", JSON.stringify(next));
   }
   function clearStores() {
     setLocalStores([]);
     localStorage.setItem("localStores", JSON.stringify([]));
   }
 
-  const selectedNames = new Set((localStores || []).map(s => s.name));
+  const selectedChains = new Set((localStores || []).map(s => s.chain));
 
   function storeHeaderLabel(list) {
     if (!list || list.length === 0) return "Ingen butik valgt";
-    if (list.length === 1) return list[0].name;
-    if (list.length === 2) return `${list[0].name} og ${list[1].name}`;
-    return `${list[0].name} og ${list.length - 1} andre`;
+    if (list.length === 1) return list[0].chain;
+    if (list.length === 2) return `${list[0].chain} og ${list[1].chain}`;
+    return `${list[0].chain} og ${list.length - 1} andre`;
   }
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
@@ -1083,11 +787,11 @@ export default function App() {
                   ← Tilbage
                 </button>
                 <div className="ob-progress">
-                  {[1, 2, 3, 4].map(n => (
+                  {[1, 2, 3].map(n => (
                     <div key={n} className={`ob-progress-dot${onboardingStep >= n ? " active" : ""}${onboardingStep > n ? " done" : ""}`} />
                   ))}
                 </div>
-                <span className="ob-step-counter">{onboardingStep}/4</span>
+                <span className="ob-step-counter">{onboardingStep}/3</span>
               </div>
 
               {/* Step 1 — Store selection */}
@@ -1123,75 +827,8 @@ export default function App() {
                 </div>
               )}
 
-              {/* Step 2 — Location */}
+              {/* Step 2 — Dietary preference */}
               {onboardingStep === 2 && (
-                <div className="ob-content" key="s2loc">
-                  <h2 className="ob-title">Hvor bor du?</h2>
-                  <p className="ob-desc">Skriv din by eller postnummer — vi finder butikker tæt på dig.</p>
-                  <input
-                    className="ob-location-input"
-                    type="text"
-                    inputMode="search"
-                    placeholder="F.eks. Nørrebro eller 2200"
-                    value={pendingLocation}
-                    onChange={e => setPendingLocation(e.target.value)}
-                    autoFocus
-                  />
-                  {pendingLocationBranches.length > 0 && (
-                    <div className="ob-location-results">
-                      {CHAIN_ORDER
-                        .filter(chain => pendingLocationBranches.some(s => s.chain === chain))
-                        .map(chain => (
-                          <div key={chain} className="ob-location-chain-group">
-                            <div className="ob-location-chain-label">
-                              <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
-                              {chain}
-                            </div>
-                            <div className="ob-location-chips">
-                              {pendingLocationBranches
-                                .filter(s => s.chain === chain)
-                                .map(s => {
-                                  const sel = pendingSelectedBranches.has(s.name);
-                                  return (
-                                    <button
-                                      key={s.name}
-                                      className={`ob-location-chip${sel ? " selected" : ""}`}
-                                      onClick={() => setPendingSelectedBranches(prev => {
-                                        const next = new Set(prev);
-                                        sel ? next.delete(s.name) : next.add(s.name);
-                                        return next;
-                                      })}
-                                    >
-                                      {sel && <span className="ob-location-chip-check">✓</span>}
-                                      {s.city} · {s.zip}
-                                    </button>
-                                  );
-                                })}
-                            </div>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  )}
-                  {pendingLocationQ && pendingLocationBranches.length === 0 && (
-                    <p className="ob-location-empty">Ingen butikker fundet — prøv et andet søgeord.</p>
-                  )}
-                  {pendingLocationBranches.length > 0 && pendingSelectedBranches.size === 0 && (
-                    <p className="ob-location-hint">Tryk på en butik for at vælge den.</p>
-                  )}
-                  {pendingSelectedBranches.size > 0 && (
-                    <p className="ob-location-hint ob-location-hint--selected">
-                      ✓ {pendingSelectedBranches.size} {pendingSelectedBranches.size === 1 ? "butik" : "butikker"} valgt
-                    </p>
-                  )}
-                  {!pendingLocationQ && (
-                    <p className="ob-location-hint">Du kan springe over og vælge butikker manuelt senere.</p>
-                  )}
-                </div>
-              )}
-
-              {/* Step 3 — Dietary preference */}
-              {onboardingStep === 3 && (
                 <div className="ob-content" key="s3">
                   <h2 className="ob-title">Kostpræferencer</h2>
                   <p className="ob-desc">Vælg din kostpræference — vi tilpasser opskrifterne.</p>
@@ -1220,8 +857,8 @@ export default function App() {
                 </div>
               )}
 
-              {/* Step 4 — Serving size */}
-              {onboardingStep === 4 && (
+              {/* Step 3 — Serving size */}
+              {onboardingStep === 3 && (
                 <div className="ob-content" key="s4">
                   <h2 className="ob-title">Hvor mange personer?</h2>
                   <p className="ob-desc">Vi tilpasser portionsstørrelserne til dit husstand.</p>
@@ -1241,7 +878,7 @@ export default function App() {
                 disabled={onboardingStep === 1 && pendingChains.size === 0}
                 onClick={handleOnboardingContinue}
               >
-                {onboardingStep === 4 ? "Gå til opskrifter →" : "Fortsæt →"}
+                {onboardingStep === 3 ? "Gå til opskrifter →" : "Fortsæt →"}
               </button>
             </div>
           )}
@@ -1255,19 +892,34 @@ export default function App() {
             <div className="sp-modal-header">
               <h2 className="sp-title">Dine butikker</h2>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {selectedNames.size > 0 && (
-                  <button className="sp-clear-btn" onClick={clearStores}>Ryd butikker</button>
+                {selectedChains.size < CHAIN_ORDER.length && (
+                  <button className="sp-clear-btn" onClick={selectAllStores}>Vælg alle</button>
                 )}
-                <button className="sp-close-btn" onClick={() => { setShowStorePicker(false); setStoreSearch(""); }}>×</button>
+                {selectedChains.size > 0 && (
+                  <button className="sp-clear-btn" onClick={clearStores}>Ryd</button>
+                )}
+                <button className="sp-close-btn" onClick={() => setShowStorePicker(false)}>×</button>
               </div>
             </div>
-            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Klik for at tilføje eller fjerne butikker.</p>
-            <StorePickerContent
-              search={storeSearch}
-              onSearch={setStoreSearch}
-              selected={selectedNames}
-              onToggle={toggleStore}
-            />
+            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Vælg de kæder du handler i.</p>
+            <div style={{ flex: 1, overflowY: "auto" }}>
+              <div className="ob-chain-grid">
+                {CHAIN_ORDER.map(chain => {
+                  const sel = selectedChains.has(chain);
+                  return (
+                    <button
+                      key={chain}
+                      className={`ob-chain-card${sel ? " selected" : ""}`}
+                      onClick={() => toggleLocalChain(chain)}
+                    >
+                      <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                      <span className="ob-chain-name">{chain}</span>
+                      <span className={`ob-chain-check${sel ? " checked" : ""}`}>✓</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -1390,7 +1042,7 @@ export default function App() {
             ))}
           </span>
           <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
-          <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>skift</button>
+          <button className="skift-btn" onClick={() => setShowStorePicker(true)}>skift</button>
         </div>
       </div>
 
