@@ -6,26 +6,20 @@ import LogoFull from "./LogoFull";
 
 const CHAIN_COLORS = {
   // Salling Group
-  "Netto":           "#FFD700",
-  "Føtex":           "#0052A5",
-  "Bilka":           "#E30613",
+  "Netto":                    "#FFD700",
+  "Føtex":                    "#0052A5",
+  "Bilka":                    "#E30613",
   // Rema
-  "Rema 1000":       "#CC0000",
+  "Rema 1000":                "#CC0000",
   // Coop
-  "Coop 365":        "#00853F",
-  "SuperBrugsen":    "#E30613",
-  "Kvickly":         "#E30613",
-  "Dagli'Brugsen":   "#E30613",
+  "Coop 365":                 "#00853F",
+  "SuperBrugsen / Kvickly":   "#00853F",
+  "Dagli'Brugsen / Brugsen":  "#00853F",
   // Independent / wholesale
-  "Meny":            "#00853F",
-  "Spar":            "#00853F",
-  "Eurospar":        "#00853F",
+  "Meny":                     "#00853F",
+  "Spar":                     "#00853F",
   // International discounters
-  "Lidl":            "#0050AA",
-  "Aldi":            "#00529B",
-  // Other
-  "Fakta":           "#E30613",
-  "Irma":            "#E30613",
+  "Lidl":                     "#0050AA",
 };
 
 const CHAIN_ORDER = [
@@ -34,13 +28,11 @@ const CHAIN_ORDER = [
   // Rema
   "Rema 1000",
   // Coop
-  "Coop 365", "SuperBrugsen", "Kvickly", "Dagli'Brugsen",
+  "Coop 365", "SuperBrugsen / Kvickly", "Dagli'Brugsen / Brugsen",
   // Independent / wholesale
-  "Meny", "Spar", "Eurospar",
+  "Meny", "Spar",
   // International discounters
-  "Lidl", "Aldi",
-  // Other
-  "Fakta", "Irma",
+  "Lidl",
 ];
 
 const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
