@@ -23,3 +23,13 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Screenshots and local test artefacts
+screenshot_*.png
+ss_*.png
+logo_reference.png
+test_*.mjs
+tmprema*.json
+
+# Script output
+scripts/output/
