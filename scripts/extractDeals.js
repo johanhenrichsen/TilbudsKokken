@@ -5,19 +5,14 @@
  * Usage:   node scripts/extractDeals.js <path-to-pdf>
  * Env:     ANTHROPIC_API_KEY — Claude API key
  *
- * External prerequisites for pdf2pic (Windows):
- *   - GraphicsMagick: https://www.graphicsmagick.org/
- *   - Ghostscript:    https://www.ghostscript.com/
- *   Both must be on your PATH.
+ * No external tools required — uses pdf-to-img (pdfjs-dist + prebuilt canvas).
  */
 
-import { fromPath } from "pdf2pic";
+import { pdf } from "pdf-to-img";
 import Anthropic from "@anthropic-ai/sdk";
 import * as XLSX from "xlsx";
 import fs from "fs";
-import fsp from "fs/promises";
 import path from "path";
-import os from "os";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -176,53 +171,23 @@ function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
 
-// ── Step 2 — PDF → page images ───────────────────────────────────────────────
+// ── Step 2 — PDF → page image buffers (pure JS, no external tools) ───────────
 
-async function convertPDFToImages(pdfPath, tmpDir) {
+async function convertPDFToImages(pdfPath) {
   console.log("📄 Rasterising PDF pages…");
-
-  const convert = fromPath(pdfPath, {
-    density: 200,           // DPI — high enough for reliable OCR-quality text
-    saveFilename: "page",
-    savePath: tmpDir,
-    format: "png",
-    width: 2000,            // px — fits within Claude's image limits comfortably
-  });
-
-  let pages;
-  try {
-    pages = await convert.bulk(-1, { responseType: "image" });
-  } catch (err) {
-    const msg = err.message || "";
-    if (
-      msg.includes("gm") ||
-      msg.includes("GraphicsMagick") ||
-      msg.includes("convert") ||
-      msg.includes("gs") ||
-      msg.includes("Ghostscript")
-    ) {
-      console.error(
-        "\n❌  pdf2pic requires GraphicsMagick + Ghostscript.\n" +
-        "    Windows downloads:\n" +
-        "      GraphicsMagick → https://www.graphicsmagick.org/\n" +
-        "      Ghostscript    → https://www.ghostscript.com/\n" +
-        "    Install both and make sure they are on your PATH, then retry.\n"
-      );
-    }
-    throw err;
+  const doc = await pdf(pdfPath, { scale: 2.8 }); // ~200 DPI equivalent
+  const pages = [];
+  for await (const pageBuffer of doc) {
+    pages.push(pageBuffer); // each is a PNG Buffer
   }
-
-  // Filter out any pages that produced no file
-  const valid = pages.filter(p => p.path && fs.existsSync(p.path));
-  console.log(`   ✓ ${valid.length} page${valid.length !== 1 ? "s" : ""} extracted`);
-  return valid;
+  console.log(`   ✓ ${pages.length} page${pages.length !== 1 ? "s" : ""} extracted`);
+  return pages;
 }
 
 // ── Step 3 — Analyse each page with Claude ───────────────────────────────────
 
-async function analysePage(client, imagePath, pageNum, total) {
-  const imageData = await fsp.readFile(imagePath);
-  const base64    = imageData.toString("base64");
+async function analysePage(client, pageBuffer, pageNum, total) {
+  const base64 = pageBuffer.toString("base64");
 
   const label = `   Page ${String(pageNum).padStart(2)}/${total}`;
   process.stdout.write(`${label}  →  `);
@@ -403,7 +368,6 @@ async function main() {
   const { week, year } = getWeekInfo();
   const weekStr    = String(week).padStart(2, "0");
   const outputPath = path.join(__dirname, "output", `deals_uge_${weekStr}_${year}.xlsx`);
-  const tmpDir     = await fsp.mkdtemp(path.join(os.tmpdir(), "spotkoekken-pdf-"));
 
   console.log(`\n🛒  Spotkøkken — Deal Extractor`);
   console.log(`    PDF:    ${path.resolve(pdfPath)}`);
@@ -411,50 +375,39 @@ async function main() {
 
   const client = new Anthropic({ apiKey });
 
-  try {
-    // ── Step 2: PDF → images ───────────────────────────────────────────────
-    const pages = await convertPDFToImages(pdfPath, tmpDir);
-    const total = pages.length;
+  // ── Step 2: PDF → image buffers ─────────────────────────────────────────
+  const pages = await convertPDFToImages(pdfPath);
+  const total = pages.length;
 
-    // ── Step 3: Analyse pages ──────────────────────────────────────────────
-    console.log(`\n🔍  Analysing ${total} page${total !== 1 ? "s" : ""} with Claude…\n`);
+  // ── Step 3: Analyse each page ────────────────────────────────────────────
+  console.log(`\n🔍  Analysing ${total} page${total !== 1 ? "s" : ""} with Claude…\n`);
 
-    const rawProducts = [];
-    for (let i = 0; i < pages.length; i++) {
-      const products = await analysePage(client, pages[i].path, i + 1, total);
-      rawProducts.push(...products);
-      // Brief pause between pages to respect API rate limits
-      if (i < pages.length - 1) await sleep(300);
-    }
-
-    // ── Step 4: Deduplicate ────────────────────────────────────────────────
-    const seen   = new Set();
-    const unique = [];
-    for (const p of rawProducts) {
-      const key = dedupeKey(p);
-      if (!seen.has(key)) {
-        seen.add(key);
-        unique.push(p);
-      }
-    }
-    const dupes = rawProducts.length - unique.length;
-
-    // ── Step 5: Export to Excel ────────────────────────────────────────────
-    console.log(`\n📊  Writing Excel…`);
-    buildExcel(unique, outputPath);
-
-    // ── Summary ────────────────────────────────────────────────────────────
-    console.log(`\n✅  Done!\n`);
-    console.log(`    Pages processed:    ${total}`);
-    console.log(`    Variants extracted: ${rawProducts.length}`);
-    console.log(`    Duplicates removed: ${dupes}`);
-    console.log(`    Unique products:    ${unique.length}`);
-    console.log(`    Saved to:           ${outputPath}\n`);
-
-  } finally {
-    // Clean up temp images
-    try { await fsp.rm(tmpDir, { recursive: true, force: true }); } catch {}
+  const rawProducts = [];
+  for (let i = 0; i < pages.length; i++) {
+    const products = await analysePage(client, pages[i], i + 1, total);
+    rawProducts.push(...products);
+    if (i < pages.length - 1) await sleep(300);
   }
+
+  // ── Step 4: Deduplicate ──────────────────────────────────────────────────
+  const seen   = new Set();
+  const unique = [];
+  for (const p of rawProducts) {
+    const key = dedupeKey(p);
+    if (!seen.has(key)) { seen.add(key); unique.push(p); }
+  }
+  const dupes = rawProducts.length - unique.length;
+
+  // ── Step 5: Export to Excel ──────────────────────────────────────────────
+  console.log(`\n📊  Writing Excel…`);
+  buildExcel(unique, outputPath);
+
+  console.log(`\n✅  Done!\n`);
+  console.log(`    Pages processed:    ${total}`);
+  console.log(`    Variants extracted: ${rawProducts.length}`);
+  console.log(`    Duplicates removed: ${dupes}`);
+  console.log(`    Unique products:    ${unique.length}`);
+  console.log(`    Saved to:           ${outputPath}\n`);
 }
 
 main().catch(err => {
