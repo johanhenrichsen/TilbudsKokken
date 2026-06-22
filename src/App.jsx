@@ -1158,11 +1158,14 @@ export default function App() {
           <div className="pantry-body-inline">
             {(() => {
               const query = pantryInput.trim();
-              const dropdownItems = query.length >= 2
-                ? INGREDIENT_AUTOCOMPLETE
-                    .filter(s => !pantryItems.has(s) && s.toLowerCase().includes(query.toLowerCase()))
-                    .slice(0, 6)
-                : [];
+              const dropdownItems = (() => {
+                if (query.length < 2) return [];
+                const q = query.toLowerCase();
+                const available = INGREDIENT_AUTOCOMPLETE.filter(s => !pantryItems.has(s));
+                const starts = available.filter(s => s.toLowerCase().startsWith(q));
+                const partials = available.filter(s => !s.toLowerCase().startsWith(q) && s.toLowerCase().includes(q));
+                return [...starts, ...partials].slice(0, 5);
+              })();
               const showDropdown = query.length >= 2;
               return (
                 <div className="pantry-input-wrap">
