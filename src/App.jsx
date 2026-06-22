@@ -13,13 +13,18 @@ const CHAIN_COLORS = {
   "Rema 1000":                "#CC0000",
   // Coop
   "Coop 365":                 "#00853F",
-  "SuperBrugsen / Kvickly":   "#00853F",
-  "Dagli'Brugsen / Brugsen":  "#00853F",
-  // Independent / wholesale
-  "Meny":                     "#00853F",
-  "Spar":                     "#00853F",
+  "SuperBrugsen / Kvickly":   "#FF6B00",
+  "Dagli'Brugsen / Brugsen":  "#8B1A1A",
+  // Independent
+  "Meny":                     "#1A1A2E",
+  "Spar":                     "#E8A000",
+  "Eurospar":                 "#006400",
   // International discounters
   "Lidl":                     "#0050AA",
+  "Aldi":                     "#004B9B",
+  // Legacy / closed (kept for data compatibility)
+  "Fakta":                    "#D40000",
+  "Irma":                     "#9B1B30",
 };
 
 const CHAIN_ORDER = [
@@ -29,10 +34,12 @@ const CHAIN_ORDER = [
   "Rema 1000",
   // Coop
   "Coop 365", "SuperBrugsen / Kvickly", "Dagli'Brugsen / Brugsen",
-  // Independent / wholesale
-  "Meny", "Spar",
+  // Independent
+  "Meny", "Spar", "Eurospar",
   // International discounters
-  "Lidl",
+  "Lidl", "Aldi",
+  // Legacy
+  "Fakta", "Irma",
 ];
 
 const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
