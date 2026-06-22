@@ -78,6 +78,38 @@ const ALWAYS_AVAILABLE = new Set(["salt", "peber", "sort peber", "olie", "vand",
 
 const PANTRY_SUGGESTIONS = ["Æg", "Pasta", "Ris", "Løg", "Kartofler", "Smør", "Hvidløg", "Tomat", "Ost", "Kylling"];
 
+// Deduplicated ingredient name list built from the actual recipe bank.
+// Used for autocomplete — every entry is guaranteed to match ≥1 recipe.
+const INGREDIENT_AUTOCOMPLETE = (() => {
+  const seen = new Set();
+  const out = [];
+  const add = name => {
+    const key = name.toLowerCase().trim();
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    out.push(name.trim());
+  };
+  // Clean dealItem names (strip trailing size/unit: "Hakket oksekød 500g" → "Hakket oksekød")
+  for (const r of recipeBank) {
+    for (const ing of r.ingredients) {
+      if (ing.dealItem) {
+        const clean = ing.dealItem.replace(/\s+[\d.,]+\s*(%|g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*$/i, "").trim();
+        add(clean);
+      }
+    }
+  }
+  // Pantry category items (already clean, covers pantry staples)
+  for (const cat of PANTRY_CATEGORIES) for (const item of cat.items) add(item);
+  return out.sort((a, b) => a.localeCompare(b, "da"));
+})();
+
+// Splits `text` into before/match/after parts for rendering the amber highlight.
+function highlightSuggestion(text, query) {
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return [text, "", ""];
+  return [text.slice(0, idx), text.slice(idx, idx + query.length), text.slice(idx + query.length)];
+}
+
 // Synonym expansions for terms where contains-check alone fails.
 // Keyed by lowercase search term → array of extra strings to check in ingredient text.
 const INGREDIENT_SYNONYMS = {
@@ -284,6 +316,7 @@ export default function App() {
   });
   const [showPantry, setShowPantry] = useState(false);
   const [pantryInput, setPantryInput] = useState("");
+  const [pantryDropdownIdx, setPantryDropdownIdx] = useState(-1);
 
   // ── Onboarding ──────────────────────────────────────────────────
   const [onboardingStep, setOnboardingStep] = useState(() => {
@@ -607,11 +640,12 @@ export default function App() {
     try { localStorage.removeItem("pantryItems"); } catch {}
   }
 
-  function addPantryFromInput() {
-    const val = pantryInput.trim();
+  function addPantryFromInput(explicitItem) {
+    const val = (explicitItem ?? pantryInput).trim();
     if (!val) return;
     togglePantryItem(val);
     setPantryInput("");
+    setPantryDropdownIdx(-1);
   }
 
   async function shareMealPlan() {
@@ -1122,19 +1156,70 @@ export default function App() {
 
         {showPantry && (
           <div className="pantry-body-inline">
-            <div className="pantry-input-row">
-              <input
-                className="pantry-text-input"
-                type="text"
-                placeholder={pantryItems.size === 0 ? "Hvad har du i køleskabet i dag?" : "Tilføj flere ingredienser..."}
-                value={pantryInput}
-                onChange={e => setPantryInput(e.target.value)}
-                onKeyDown={e => { if (e.key === "Enter") addPantryFromInput(); }}
-              />
-              {pantryInput.trim() && (
-                <button className="pantry-add-btn" onClick={addPantryFromInput}>Tilføj</button>
-              )}
-            </div>
+            {(() => {
+              const query = pantryInput.trim();
+              const dropdownItems = query.length >= 2
+                ? INGREDIENT_AUTOCOMPLETE
+                    .filter(s => !pantryItems.has(s) && s.toLowerCase().includes(query.toLowerCase()))
+                    .slice(0, 6)
+                : [];
+              const showDropdown = query.length >= 2;
+              return (
+                <div className="pantry-input-wrap">
+                  <div className="pantry-input-row">
+                    <input
+                      className="pantry-text-input"
+                      type="text"
+                      placeholder={pantryItems.size === 0 ? "Hvad har du i køleskabet i dag?" : "Tilføj flere ingredienser..."}
+                      value={pantryInput}
+                      autoComplete="off"
+                      onChange={e => { setPantryInput(e.target.value); setPantryDropdownIdx(-1); }}
+                      onKeyDown={e => {
+                        if (e.key === "ArrowDown") {
+                          e.preventDefault();
+                          setPantryDropdownIdx(i => Math.min(i + 1, dropdownItems.length - 1));
+                        } else if (e.key === "ArrowUp") {
+                          e.preventDefault();
+                          setPantryDropdownIdx(i => Math.max(i - 1, -1));
+                        } else if (e.key === "Enter") {
+                          e.preventDefault();
+                          const sel = dropdownItems[pantryDropdownIdx];
+                          addPantryFromInput(sel ?? undefined);
+                        } else if (e.key === "Escape") {
+                          setPantryInput("");
+                          setPantryDropdownIdx(-1);
+                        }
+                      }}
+                      onBlur={() => setTimeout(() => setPantryDropdownIdx(-1), 150)}
+                    />
+                    {query && (
+                      <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>Tilføj</button>
+                    )}
+                  </div>
+
+                  {showDropdown && (
+                    <div className="pantry-dropdown">
+                      {dropdownItems.length > 0 ? dropdownItems.map((s, i) => {
+                        const [before, match, after] = highlightSuggestion(s, query);
+                        return (
+                          <button
+                            key={s}
+                            className={`pantry-dropdown-item${i === pantryDropdownIdx ? " active" : ""}`}
+                            onMouseDown={e => { e.preventDefault(); addPantryFromInput(s); }}
+                          >
+                            {before}<span className="suggestion-highlight">{match}</span>{after}
+                          </button>
+                        );
+                      }) : (
+                        <div className="pantry-dropdown-empty">
+                          Ingen forslag — tryk Enter for at tilføje alligevel
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             <div className="pantry-suggestions">
               {PANTRY_SUGGESTIONS.filter(s => !pantryItems.has(s)).map(s => (

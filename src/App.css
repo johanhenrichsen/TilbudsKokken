@@ -3161,6 +3161,59 @@ html.dark .pantry-trigger-btn:hover { background: #1a2e1a; }
 }
 .pantry-chevron.open { transform: rotate(180deg); }
 
+/* ─── Pantry autocomplete dropdown ──────────── */
+.pantry-input-wrap {
+  position: relative;
+}
+.pantry-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1.5px solid #d1d5db;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 200;
+  overflow: hidden;
+}
+html.dark .pantry-dropdown {
+  background: #0f190f;
+  border-color: #2a3d2a;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.pantry-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.pantry-dropdown-item:last-child { border-bottom: none; }
+.pantry-dropdown-item:hover,
+.pantry-dropdown-item.active { background: #f0f7f0; }
+html.dark .pantry-dropdown-item { color: var(--cream); border-color: #1a2e1a; }
+html.dark .pantry-dropdown-item:hover,
+html.dark .pantry-dropdown-item.active { background: #1a2e1a; }
+.pantry-dropdown-empty {
+  padding: 11px 14px;
+  font-size: 13px;
+  color: #9ca3af;
+  font-style: italic;
+}
+.suggestion-highlight {
+  color: #e8934a;
+  background: none;
+  font-weight: 700;
+}
+
 /* ─── Pantry inline body ─────────────────────── */
 .pantry-body-inline {
   padding: 12px 14px 14px;
