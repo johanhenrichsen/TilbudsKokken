@@ -78,6 +78,33 @@ const ALWAYS_AVAILABLE = new Set(["salt", "peber", "sort peber", "olie", "vand",
 
 const PANTRY_SUGGESTIONS = ["Æg", "Pasta", "Ris", "Løg", "Kartofler", "Smør", "Hvidløg", "Tomat", "Ost", "Kylling"];
 
+// Synonym expansions for terms where contains-check alone fails.
+// Keyed by lowercase search term → array of extra strings to check in ingredient text.
+const INGREDIENT_SYNONYMS = {
+  "pasta":        ["spaghetti", "penne", "fettuccine", "tagliatelle", "rigatoni", "linguine", "lasagne", "nudler"],
+  "nudler":       ["spaghetti", "penne", "pasta", "tagliatelle"],
+  "fisk":         ["laks", "torsk", "kuller", "tun", "sild", "makrel", "tilapia", "rødspætte", "hellefisk"],
+  "skaldyr":      ["rejer", "muslinger", "krabber", "kammuslinger", "østers"],
+  "ost":          ["mozzarella", "parmesan", "cheddar", "gouda", "feta", "ricotta", "brie", "gruyère", "emmental"],
+  "svinekød":     ["flæsk", "kotelet", "nakkefilet", "bacon", "skinke", "ribbensteg", "svinefilet"],
+  "svine":        ["svinekød", "flæsk", "kotelet", "nakkefilet", "bacon", "skinke"],
+  "flæsk":        ["bacon", "svinekød", "kotelet"],
+  "lam":          ["lammekød", "lammekølle", "lammesteg", "lammeribs"],
+  "fløde":        ["piskefløde", "madlavningsfløde", "creme fraiche", "cremefraiche"],
+  "urter":        ["timian", "rosmarin", "basilikum", "oregano", "persille", "koriander", "dild", "estragon", "salvie"],
+  "krydderurter": ["timian", "rosmarin", "basilikum", "oregano", "persille", "koriander", "dild"],
+  "kød":          ["kylling", "laks", "rejer", "hakket", "bøf", "kotelet"],
+};
+
+function pantryMatchIngredient(ingText, searchTerm) {
+  const ing = ingText.toLowerCase();
+  const term = searchTerm.toLowerCase().trim();
+  if (term.length < 2) return true; // too short — don't filter
+  if (ing.includes(term)) return true;
+  const extras = INGREDIENT_SYNONYMS[term];
+  return extras ? extras.some(s => ing.includes(s)) : false;
+}
+
 function getISOWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -339,7 +366,7 @@ export default function App() {
   function matchRecipe(r) {
     if (pantryItems.size > 0) {
       const allCovered = [...pantryItems].every(p =>
-        r.ingredients.some(ing => (ing.text || ing).toLowerCase().includes(p.toLowerCase()))
+        r.ingredients.some(ing => pantryMatchIngredient(ing.text || ing, p))
       );
       if (!allCovered) return false;
     }
