@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import "./App.css";
-import { recipeBank } from "./recipes";
+import { recipeBank as staticRecipes } from "./recipes";
+import weeklyRecipesJson from "./data/weeklyRecipes.json";
+const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticRecipes;
 import LogoIcon from "./LogoIcon";
 import LogoFull from "./LogoFull";
 
