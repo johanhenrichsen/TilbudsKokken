@@ -225,6 +225,8 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [timeFilter, setTimeFilter] = useState("Alle tider");
   const [cuisineFilter, setCuisineFilter] = useState("Alle");
+  const [priceMin, setPriceMin] = useState(0);
+  const [priceMax, setPriceMax] = useState(null); // null = no upper limit
   const [planCopied, setPlanCopied] = useState(false);
   const [showMealPlanPanel, setShowMealPlanPanel] = useState(false);
   const [confirmClearPlan, setConfirmClearPlan] = useState(false);
@@ -320,6 +322,14 @@ export default function App() {
   const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => b.dealItems.length - a.dealItems.length);
   const others = scoredRecipes.filter(r => !r.fullyMatched);
 
+  const maxRecipePrice = (() => {
+    const prices = scoredRecipes
+      .map(r => calcRecipePrice(r, r.servings_count || 4))
+      .filter(p => p !== null && p > 0);
+    if (prices.length === 0) return 300;
+    return Math.ceil(Math.max(...prices) / 50) * 50;
+  })();
+
   function parseMinutes(timeStr) {
     const h = timeStr.match(/(\d+)\s*t/);
     const m = timeStr.match(/(\d+)\s*min/);
@@ -350,12 +360,20 @@ export default function App() {
     if (timeFilter === "Under 20 min" && mins >= 20) return false;
     if (timeFilter === "Under 45 min" && mins >= 45) return false;
     if (timeFilter === "Over 45 min" && mins < 45) return false;
+    if (priceMin > 0 || priceMax !== null) {
+      const price = calcRecipePrice(r, r.servings_count || 4);
+      if (price !== null) {
+        if (price < priceMin) return false;
+        if (priceMax !== null && price > priceMax) return false;
+      }
+    }
     return true;
   }
 
   const filteredRecommended = recommended.filter(matchRecipe);
   const filteredOthers = others.filter(matchRecipe);
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || pantryItems.size > 0) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const priceFiltered = priceMin > 0 || priceMax !== null;
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || pantryItems.size > 0 || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
@@ -654,17 +672,15 @@ export default function App() {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
     const isSaved = savedRecipes.some(s => s.title === r.title);
     const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
-    const makeable = canMakeNow(r);
     const cardPrice = calcRecipePrice(r, r.servings_count || 4);
     return (
       <div
         className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
         onClick={() => selectRecipe(r)}
       >
-        {(isPopular || makeable) && (
+        {isPopular && (
           <div className="card-badges">
-            {isPopular && <span className="popular-badge-pill">🔥 Populær</span>}
-            {makeable && <span className="makeable-badge">✓ Kan laves nu</span>}
+            <span className="popular-badge-pill">🔥 Populær</span>
           </div>
         )}
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
@@ -1005,6 +1021,55 @@ export default function App() {
         </div>
       )}
 
+      {/* Price range slider */}
+      {maxRecipePrice > 0 && (
+        <div className="price-range-wrap">
+          <div className="price-range-header">
+            <span className="price-range-label">Pris pr. ret</span>
+            <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
+              {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
+              {priceFiltered && (
+                <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
+              )}
+            </span>
+          </div>
+          <div className="price-range-track-wrap">
+            <div className="price-range-track-bg" />
+            <div
+              className="price-range-fill"
+              style={{
+                left: `${(priceMin / maxRecipePrice) * 100}%`,
+                right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%`,
+              }}
+            />
+            <input
+              type="range"
+              className="price-range-input"
+              min={0}
+              max={maxRecipePrice}
+              step={10}
+              value={priceMin}
+              onChange={e => {
+                const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10);
+                setPriceMin(Math.max(0, val));
+              }}
+            />
+            <input
+              type="range"
+              className="price-range-input"
+              min={0}
+              max={maxRecipePrice}
+              step={10}
+              value={priceMax ?? maxRecipePrice}
+              onChange={e => {
+                const val = Math.max(Number(e.target.value), priceMin + 10);
+                setPriceMax(val >= maxRecipePrice ? null : val);
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Pantry inline section */}
       <div className={`pantry-inline${showPantry ? " open" : ""}${pantryItems.size > 0 ? " has-items" : ""}`}>
         <button
@@ -1286,8 +1351,10 @@ export default function App() {
 
           {noResults && (
             <div className="empty-state">
-              {pantryItems.size > 0 && !search
+              {pantryItems.size > 0 && !search && !priceFiltered
                 ? "Ingen opskrifter matcher — prøv at fjerne en ingrediens"
+                : priceFiltered && !search && pantryItems.size === 0
+                ? "Ingen opskrifter i dette prisinterval — prøv at justere prisen"
                 : "Ingen opskrifter fundet"}
             </div>
           )}
