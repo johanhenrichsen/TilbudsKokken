@@ -76,6 +76,8 @@ const PANTRY_CATEGORIES = [
 ];
 const ALWAYS_AVAILABLE = new Set(["salt", "peber", "sort peber", "olie", "vand", "sukker"]);
 
+const PANTRY_SUGGESTIONS = ["Æg", "Pasta", "Ris", "Løg", "Kartofler", "Smør", "Hvidløg", "Tomat", "Ost", "Kylling"];
+
 function getISOWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -252,9 +254,7 @@ export default function App() {
     } catch { return new Set(); }
   });
   const [showPantry, setShowPantry] = useState(false);
-  const [onlyMakeable, setOnlyMakeable] = useState(() => {
-    try { return localStorage.getItem("onlyMakeable") === "true"; } catch { return false; }
-  });
+  const [pantryInput, setPantryInput] = useState("");
 
   // ── Onboarding ──────────────────────────────────────────────────
   const [onboardingStep, setOnboardingStep] = useState(() => {
@@ -327,7 +327,12 @@ export default function App() {
   }
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
-    if (onlyMakeable && !canMakeNow(r)) return false;
+    if (pantryItems.size > 0) {
+      const allCovered = [...pantryItems].every(p =>
+        r.ingredients.some(ing => (ing.text || ing).toLowerCase().includes(p.toLowerCase()))
+      );
+      if (!allCovered) return false;
+    }
     if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
     if (search) {
       const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
@@ -348,13 +353,9 @@ export default function App() {
     return true;
   }
 
-  function sortByPantry(recipes) {
-    if (pantryItems.size === 0) return recipes;
-    return [...recipes].sort((a, b) => pantryScore(b) - pantryScore(a));
-  }
-  const filteredRecommended = sortByPantry(recommended.filter(matchRecipe));
-  const filteredOthers = sortByPantry(others.filter(matchRecipe));
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || onlyMakeable) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const filteredRecommended = recommended.filter(matchRecipe);
+  const filteredOthers = others.filter(matchRecipe);
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || pantryItems.size > 0) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]
@@ -561,33 +562,11 @@ export default function App() {
     try { localStorage.removeItem("pantryItems"); } catch {}
   }
 
-  function toggleOnlyMakeable() {
-    setOnlyMakeable(v => {
-      const next = !v;
-      try { localStorage.setItem("onlyMakeable", String(next)); } catch {}
-      return next;
-    });
-  }
-
-  function isIngCovered(ingText) {
-    const lower = ingText.toLowerCase();
-    if ([...ALWAYS_AVAILABLE].some(s => lower.includes(s))) return true;
-    return [...pantryItems].some(p => lower.includes(p.toLowerCase()));
-  }
-
-  function canMakeNow(r) {
-    if (pantryItems.size === 0) return false;
-    return r.ingredients
-      .filter(ing => !ing.dealItem)
-      .every(ing => isIngCovered(ing.text || ing));
-  }
-
-  function pantryScore(r) {
-    if (pantryItems.size === 0) return 0;
-    return r.ingredients
-      .filter(ing => !ing.dealItem)
-      .filter(ing => isIngCovered(ing.text || ing))
-      .length;
+  function addPantryFromInput() {
+    const val = pantryInput.trim();
+    if (!val) return;
+    togglePantryItem(val);
+    setPantryInput("");
   }
 
   async function shareMealPlan() {
@@ -948,60 +927,7 @@ export default function App() {
         </div>
       )}
 
-      {/* Pantry modal */}
-      {showPantry && (
-        <div className="pantry-overlay" onClick={e => e.target === e.currentTarget && setShowPantry(false)}>
-          <div className="pantry-sheet">
-            <div className="pantry-sheet-header">
-              <h2 className="pantry-sheet-title">🧺 Hvad har jeg derhjemme?</h2>
-              <button className="sp-close-btn" onClick={() => setShowPantry(false)}>×</button>
-            </div>
-
-            <div className="pantry-controls">
-              <div className="pantry-makeable-row">
-                <span className="pantry-makeable-label">Vis kun opskrifter jeg kan lave nu</span>
-                <div
-                  className={`pantry-toggle-switch${onlyMakeable ? " on" : ""}`}
-                  onClick={toggleOnlyMakeable}
-                  role="switch"
-                  aria-checked={onlyMakeable}
-                >
-                  <div className="pantry-toggle-track" />
-                  <div className="pantry-toggle-thumb" />
-                </div>
-              </div>
-              {pantryItems.size > 0 && (
-                <button className="pantry-clear-btn" onClick={clearPantry}>
-                  Ryd ({pantryItems.size})
-                </button>
-              )}
-            </div>
-
-            <div className="pantry-body">
-              {PANTRY_CATEGORIES.map(cat => (
-                <div key={cat.id} className="pantry-category">
-                  <div className="pantry-cat-label">{cat.label}</div>
-                  <div className="pantry-chips">
-                    {cat.items.map(item => {
-                      const selected = pantryItems.has(item);
-                      return (
-                        <button
-                          key={item}
-                          className={`pantry-chip${selected ? " selected" : ""}`}
-                          onClick={() => togglePantryItem(item)}
-                        >
-                          {selected && <span className="pantry-chip-check">✓</span>}
-                          {item}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* intentionally empty — pantry is now inline below filters */}
 
       {/* Slim app header */}
       <div className="app-hero">
@@ -1079,18 +1005,67 @@ export default function App() {
         </div>
       )}
 
-      {/* Pantry trigger */}
-      <button
-        className={`pantry-trigger-btn${pantryItems.size > 0 ? " has-items" : ""}`}
-        onClick={() => setShowPantry(true)}
-      >
-        <span>🧺 Hvad har jeg derhjemme?</span>
-        {pantryItems.size > 0 ? (
-          <span className="pantry-count-badge">{pantryItems.size} varer</span>
-        ) : (
-          <span className="pantry-trigger-meta">Tilpas opskrifter til dit køleskab</span>
+      {/* Pantry inline section */}
+      <div className={`pantry-inline${showPantry ? " open" : ""}${pantryItems.size > 0 ? " has-items" : ""}`}>
+        <button
+          className="pantry-trigger-btn"
+          onClick={() => setShowPantry(v => !v)}
+        >
+          <span className="pantry-trigger-icon">🧺</span>
+          <span className="pantry-trigger-text">
+            <span className="pantry-trigger-title">Hvad har du i køleskabet?</span>
+            <span className="pantry-trigger-sub">
+              {pantryItems.size > 0
+                ? `${filteredRecommended.length + filteredOthers.length} af ${scoredRecipes.length} opskrifter matcher`
+                : "Tilføj ingredienser og find matchende opskrifter"}
+            </span>
+          </span>
+          {pantryItems.size > 0 && (
+            <span className="pantry-count-badge">{pantryItems.size}</span>
+          )}
+          <svg className={`pantry-chevron${showPantry ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+
+        {showPantry && (
+          <div className="pantry-body-inline">
+            <div className="pantry-input-row">
+              <input
+                className="pantry-text-input"
+                type="text"
+                placeholder={pantryItems.size === 0 ? "Hvad har du i køleskabet i dag?" : "Tilføj flere ingredienser..."}
+                value={pantryInput}
+                onChange={e => setPantryInput(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") addPantryFromInput(); }}
+              />
+              {pantryInput.trim() && (
+                <button className="pantry-add-btn" onClick={addPantryFromInput}>Tilføj</button>
+              )}
+            </div>
+
+            <div className="pantry-suggestions">
+              {PANTRY_SUGGESTIONS.filter(s => !pantryItems.has(s)).map(s => (
+                <button key={s} className="pantry-suggest-chip" onClick={() => togglePantryItem(s)}>
+                  + {s}
+                </button>
+              ))}
+            </div>
+
+            {pantryItems.size > 0 && (
+              <div className="pantry-tags">
+                {[...pantryItems].map(item => (
+                  <span key={item} className="pantry-tag">
+                    {item}
+                    <button className="pantry-tag-remove" onClick={() => togglePantryItem(item)} aria-label={`Fjern ${item}`}>×</button>
+                  </span>
+                ))}
+                <button className="pantry-clear-all" onClick={clearPantry}>Ryd alle</button>
+              </div>
+            )}
+          </div>
         )}
-      </button>
+      </div>
 
       {/* Detail view */}
       {selectedRecipe ? (
@@ -1310,7 +1285,11 @@ export default function App() {
           )}
 
           {noResults && (
-            <div className="empty-state">Ingen opskrifter fundet</div>
+            <div className="empty-state">
+              {pantryItems.size > 0 && !search
+                ? "Ingen opskrifter matcher — prøv at fjerne en ingrediens"
+                : "Ingen opskrifter fundet"}
+            </div>
           )}
           {!noResults && scoredRecipes.length === 0 && (
             <div className="empty-state">Ingen opskrifter matcher det valgte filter</div>
