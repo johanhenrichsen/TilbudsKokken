@@ -1,6 +1,6 @@
 {
-  "name": "Spotkøkken",
-  "short_name": "Spotkøkken",
+  "name": "Spotkokken",
+  "short_name": "Spotkokken",
   "description": "Generér opskrifter fra ugens tilbudsvarer",
   "start_url": "/",
   "display": "standalone",
