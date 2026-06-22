@@ -3166,15 +3166,11 @@ html.dark .pantry-trigger-btn:hover { background: #1a2e1a; }
   position: relative;
 }
 .pantry-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
+  /* position/top/left/width/z-index set via inline style (position:fixed) */
   background: white;
   border: 1.5px solid #d1d5db;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  z-index: 200;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14);
   overflow: hidden;
 }
 html.dark .pantry-dropdown {

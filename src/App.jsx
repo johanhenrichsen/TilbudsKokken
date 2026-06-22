@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import "./App.css";
 import { recipeBank } from "./recipes";
 import LogoIcon from "./LogoIcon";
@@ -317,6 +317,8 @@ export default function App() {
   const [showPantry, setShowPantry] = useState(false);
   const [pantryInput, setPantryInput] = useState("");
   const [pantryDropdownIdx, setPantryDropdownIdx] = useState(-1);
+  const [pantryDropdownPos, setPantryDropdownPos] = useState({ top: 0, left: 0, width: 0 });
+  const pantryInputWrapRef = useRef(null);
 
   // ── Onboarding ──────────────────────────────────────────────────
   const [onboardingStep, setOnboardingStep] = useState(() => {
@@ -639,6 +641,22 @@ export default function App() {
     setPantryItems(new Set());
     try { localStorage.removeItem("pantryItems"); } catch {}
   }
+
+  useEffect(() => {
+    if (pantryInput.trim().length < 2 || !pantryInputWrapRef.current) return;
+    const update = () => {
+      if (!pantryInputWrapRef.current) return;
+      const r = pantryInputWrapRef.current.getBoundingClientRect();
+      setPantryDropdownPos({ top: r.bottom + 4, left: r.left, width: r.width });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [pantryInput, showPantry]);
 
   function addPantryFromInput(explicitItem) {
     const val = (explicitItem ?? pantryInput).trim();
@@ -1168,7 +1186,7 @@ export default function App() {
               })();
               const showDropdown = query.length >= 2;
               return (
-                <div className="pantry-input-wrap">
+                <div className="pantry-input-wrap" ref={pantryInputWrapRef}>
                   <div className="pantry-input-row">
                     <input
                       className="pantry-text-input"
@@ -1201,7 +1219,16 @@ export default function App() {
                   </div>
 
                   {showDropdown && (
-                    <div className="pantry-dropdown">
+                    <div
+                      className="pantry-dropdown"
+                      style={{
+                        position: "fixed",
+                        top: pantryDropdownPos.top,
+                        left: pantryDropdownPos.left,
+                        width: pantryDropdownPos.width,
+                        zIndex: 1000,
+                      }}
+                    >
                       {dropdownItems.length > 0 ? dropdownItems.map((s, i) => {
                         const [before, match, after] = highlightSuggestion(s, query);
                         return (
