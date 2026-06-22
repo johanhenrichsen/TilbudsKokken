@@ -1240,9 +1240,29 @@ export default function App() {
                 <button className="pantry-clear-all" onClick={clearPantry}>Ryd alle</button>
               </div>
             )}
+
+            {pantryItems.size > 0 && (
+              <button
+                className="pantry-find-btn"
+                onClick={() => setShowPantry(false)}
+              >
+                Find opskrifter
+                <span className="pantry-find-count">{filteredRecommended.length + filteredOthers.length}</span>
+              </button>
+            )}
           </div>
         )}
       </div>
+
+      {/* Active pantry filter banner */}
+      {pantryItems.size > 0 && !showPantry && (
+        <div className="pantry-filter-banner">
+          <span className="pantry-filter-banner-text">
+            Filtreret efter dine ingredienser — <strong>{filteredRecommended.length + filteredOthers.length} opskrifter</strong> fundet
+          </span>
+          <button className="pantry-filter-banner-clear" onClick={clearPantry}>Ryd filter</button>
+        </div>
+      )}
 
       {/* Detail view */}
       {selectedRecipe ? (
@@ -1414,7 +1434,7 @@ export default function App() {
                 onClick={() => toggleSection("recommended")}
                 aria-expanded={!collapsedSections.recommended}
               >
-                <span className="section-toggle-label">⭐ Denne uges anbefalinger</span>
+                <span className="section-toggle-label">⭐ Ugens opskrifter</span>
                 <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
                 <svg
                   className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
