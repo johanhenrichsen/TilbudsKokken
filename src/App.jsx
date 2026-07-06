@@ -428,6 +428,7 @@ export default function App() {
     const m = timeStr.match(/(\d+)\s*min/);
     return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
   }
+  const selectedChains = new Set((localStores || []).map(s => s.chain));
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
     // Chain filter: when one or more chains are selected, every dealItem
@@ -769,8 +770,6 @@ export default function App() {
     setLocalStores([]);
     localStorage.setItem("localStores", JSON.stringify([]));
   }
-
-  const selectedChains = new Set((localStores || []).map(s => s.chain));
 
   function storeHeaderLabel(list) {
     if (!list || list.length === 0) return "Ingen butik valgt";
