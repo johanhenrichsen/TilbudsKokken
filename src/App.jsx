@@ -219,10 +219,15 @@ const itemPriceMap = Object.fromEntries(
   stores.flatMap(s => s.items.map(it => [it.name, it.price]))
 );
 
-function calcRecipePrice(recipe, forServings) {
-  const base = (recipe.dealItems || []).reduce((sum, di) => sum + (itemPriceMap[di.name] ?? 0), 0);
-  if (base === 0) return null;
-  return base * (forServings / (recipe.servings_count || 4));
+function calcPricePerPerson(recipe) {
+  const servings = recipe.servings_count || 4;
+  let total = 0;
+  let hasPrice = false;
+  for (const di of (recipe.dealItems || [])) {
+    const m = String(di.price || '').match(/(\d+(?:[.,]\d+)?)/);
+    if (m) { total += parseFloat(m[1].replace(',', '.')); hasPrice = true; }
+  }
+  return hasPrice ? Math.round(total / servings) : null;
 }
 
 const dietExcludeItems = {
@@ -421,10 +426,10 @@ export default function App() {
 
   const maxRecipePrice = (() => {
     const prices = scoredRecipes
-      .map(r => calcRecipePrice(r, r.servings_count || 4))
+      .map(r => calcPricePerPerson(r))
       .filter(p => p !== null && p > 0);
-    if (prices.length === 0) return 300;
-    return Math.ceil(Math.max(...prices) / 50) * 50;
+    if (prices.length === 0) return 100;
+    return Math.ceil(Math.max(...prices) / 10) * 10;
   })();
 
   function parseMinutes(timeStr) {
@@ -460,11 +465,12 @@ export default function App() {
     if (timeFilter === "Under 45 min" && mins >= 45) return false;
     if (timeFilter === "Over 45 min" && mins < 45) return false;
     if (priceMin > 0 || priceMax !== null) {
-      const price = calcRecipePrice(r, r.servings_count || 4);
-      if (price !== null) {
-        if (price < priceMin) return false;
-        if (priceMax !== null && price > priceMax) return false;
+      const pp = calcPricePerPerson(r);
+      if (pp !== null) {
+        if (pp < priceMin) return false;
+        if (priceMax !== null && pp > priceMax) return false;
       }
+      // unpriced recipes always pass the slider filter
     }
     return true;
   }
@@ -785,7 +791,7 @@ export default function App() {
     const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
     const isSaved = savedRecipes.some(s => s.title === r.title);
     const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
-    const cardPrice = calcRecipePrice(r, r.servings_count || 4);
+    const pricePerPerson = calcPricePerPerson(r);
     return (
       <div
         className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
@@ -803,10 +809,9 @@ export default function App() {
           <span>⏱ {r.time}</span>
           <span>🥘 {(r.ingredients || []).length} ing.</span>
         </div>
-        {cardPrice != null && (
+        {pricePerPerson != null && (
           <div className="recipe-card-price">
-            ca. {Math.round(cardPrice)} kr.
-            <span className="recipe-card-price-pp"> · {Math.round(cardPrice / (r.servings_count || 4))} kr. pr. person</span>
+            ca. {pricePerPerson} kr. pr. person
           </div>
         )}
         <div className="recipe-deal-tags">
@@ -1138,7 +1143,7 @@ export default function App() {
       {maxRecipePrice > 0 && (
         <div className="price-range-wrap">
           <div className="price-range-header">
-            <span className="price-range-label">Pris pr. ret</span>
+            <span className="price-range-label">Pris pr. person</span>
             <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
               {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
               {priceFiltered && (
@@ -1160,7 +1165,7 @@ export default function App() {
               className="price-range-input"
               min={0}
               max={maxRecipePrice}
-              step={10}
+              step={5}
               value={priceMin}
               onChange={e => {
                 const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10);
@@ -1172,7 +1177,7 @@ export default function App() {
               className="price-range-input"
               min={0}
               max={maxRecipePrice}
-              step={10}
+              step={5}
               value={priceMax ?? maxRecipePrice}
               onChange={e => {
                 const val = Math.max(Number(e.target.value), priceMin + 10);
@@ -1397,12 +1402,12 @@ export default function App() {
               </span>
             </div>
             {(() => {
-              const price = calcRecipePrice(selectedRecipe, servings);
-              if (price == null) return null;
+              const pp = calcPricePerPerson(selectedRecipe);
+              if (pp == null) return null;
               return (
                 <div className="recipe-detail-price">
-                  ca. {Math.round(price)} kr.
-                  <span className="recipe-detail-price-pp"> · {Math.round(price / servings)} kr. pr. person</span>
+                  ca. {pp * servings} kr. i alt
+                  <span className="recipe-detail-price-pp"> · {pp} kr. pr. person</span>
                 </div>
               );
             })()}
