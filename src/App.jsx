@@ -388,18 +388,14 @@ export default function App() {
   }
 
   function getScoredRecipes(dietFilter) {
-    const available = getAvailableItemNames();
     const excluded = dietExcludeItems[dietFilter];
     return recipeBank
       .filter(r => !r.dealItems.some(di => excluded.has(di.name)))
-      .map(r => {
-        const matched = r.dealItems.filter(di => available.has(di.name));
-        return {
-          ...r,
-          matchCount: matched.length,
-          fullyMatched: matched.length === r.dealItems.length,
-        };
-      });
+      .map(r => ({
+        ...r,
+        matchCount: r.dealItems.length,
+        fullyMatched: true,
+      }));
   }
 
   const scoredRecipes = getScoredRecipes(diet);
