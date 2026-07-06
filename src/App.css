@@ -618,6 +618,12 @@
   color: #9ca3af;
   font-weight: 500;
 }
+.section-empty-state {
+  padding: 1.25rem 1rem;
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+}
 
 /* ─── Recipe browse ──────────────────────────── */
 .recipe-browse-section { margin-bottom: 1rem; }

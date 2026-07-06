@@ -393,8 +393,9 @@ export default function App() {
   }, [selectedRecipe]);
 
   // ── Matching ────────────────────────────────────────────────────
+  const selectedChains = new Set((localStores || []).map(s => s.chain));
+
   function getAvailableItemNames() {
-    const selectedChains = new Set((localStores || []).map(s => s.chain));
     return new Set(
       stores.filter(s => selectedChains.has(s.name)).flatMap(s => s.items.map(it => it.name))
     );
@@ -407,7 +408,10 @@ export default function App() {
       .map(r => ({
         ...r,
         matchCount: (r.dealItems || []).length,
-        fullyMatched: true,
+        // fullyMatched = fits in "Ugens opskrifter": no chain filter active,
+        // or every deal ingredient comes from a selected chain.
+        fullyMatched: selectedChains.size === 0
+          || (r.dealItems || []).every(di => selectedChains.has(di.store)),
       }));
   }
 
@@ -428,15 +432,10 @@ export default function App() {
     const m = timeStr.match(/(\d+)\s*min/);
     return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
   }
-  const selectedChains = new Set((localStores || []).map(s => s.chain));
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
-    // Chain filter: when one or more chains are selected, every dealItem
-    // must come from a selected chain (exact match — store names are
-    // canonical in the data). No chains selected = show all.
-    if (selectedChains.size > 0) {
-      if (!(r.dealItems || []).every(di => selectedChains.has(di.store))) return false;
-    }
+    // Chain split is handled by fullyMatched in getScoredRecipes;
+    // matchRecipe only applies search / time / cuisine / pantry / price.
     if (pantryItems.size > 0) {
       const allCovered = [...pantryItems].every(p =>
         (r.ingredients || []).some(ing => pantryMatchIngredient(ing.text || ing, p))
@@ -1503,72 +1502,75 @@ export default function App() {
       ) : (
         /* Browse view */
         <>
-          {filteredRecommended.length > 0 && (
-            <div className="recipe-browse-section">
-              <button
-                className="section-toggle-btn"
-                onClick={() => toggleSection("recommended")}
-                aria-expanded={!collapsedSections.recommended}
+          <div className="recipe-browse-section">
+            <button
+              className="section-toggle-btn"
+              onClick={() => toggleSection("recommended")}
+              aria-expanded={!collapsedSections.recommended}
+            >
+              <span className="section-toggle-label">⭐ Ugens opskrifter</span>
+              <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
+              <svg
+                className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
+                width="16" height="16" viewBox="0 0 16 16" fill="none"
+                aria-hidden="true"
               >
-                <span className="section-toggle-label">⭐ Ugens opskrifter</span>
-                <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
-                <svg
-                  className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  aria-hidden="true"
-                >
-                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
-                <div className="section-body-inner">
+                <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
+              <div className="section-body-inner">
+                {filteredRecommended.length > 0 ? (
                   <div className="recipe-browse-grid section-body-grid">
                     {filteredRecommended.map(r => <RecipeCard key={r.id} r={r} />)}
                   </div>
-                </div>
+                ) : (
+                  <div className="section-empty-state">
+                    {pantryItems.size > 0 && !search
+                      ? "Ingen opskrifter matcher dine ingredienser — prøv at fjerne en"
+                      : search
+                      ? "Ingen opskrifter matcher søgningen"
+                      : selectedChains.size > 0
+                      ? "Ingen opskrifter fra dine valgte butikker"
+                      : "Ingen opskrifter matcher filteret"}
+                  </div>
+                )}
               </div>
             </div>
-          )}
+          </div>
 
-          {filteredOthers.length > 0 && (
-            <div className="recipe-browse-section">
-              <button
-                className="section-toggle-btn"
-                onClick={() => toggleSection("others")}
-                aria-expanded={!collapsedSections.others}
+          <div className="recipe-browse-section">
+            <button
+              className="section-toggle-btn"
+              onClick={() => toggleSection("others")}
+              aria-expanded={!collapsedSections.others}
+            >
+              <span className="section-toggle-label">Kræver andre butikker</span>
+              <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
+              <svg
+                className={`section-chevron${collapsedSections.others ? "" : " open"}`}
+                width="16" height="16" viewBox="0 0 16 16" fill="none"
+                aria-hidden="true"
               >
-                <span className="section-toggle-label">Kræver andre butikker</span>
-                <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
-                <svg
-                  className={`section-chevron${collapsedSections.others ? "" : " open"}`}
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  aria-hidden="true"
-                >
-                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
-                <div className="section-body-inner">
+                <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
+              <div className="section-body-inner">
+                {filteredOthers.length > 0 ? (
                   <div className="recipe-browse-grid section-body-grid">
                     {filteredOthers.map(r => <RecipeCard key={r.id} r={r} />)}
                   </div>
-                </div>
+                ) : (
+                  <div className="section-empty-state">
+                    {selectedChains.size === 0
+                      ? "Alle opskrifter vises ovenfor"
+                      : "Ingen opskrifter kræver andre butikker"}
+                  </div>
+                )}
               </div>
             </div>
-          )}
-
-          {noResults && (
-            <div className="empty-state">
-              {pantryItems.size > 0 && !search && !priceFiltered
-                ? "Ingen opskrifter matcher — prøv at fjerne en ingrediens"
-                : priceFiltered && !search && pantryItems.size === 0
-                ? "Ingen opskrifter i dette prisinterval — prøv at justere prisen"
-                : "Ingen opskrifter fundet"}
-            </div>
-          )}
-          {!noResults && scoredRecipes.length === 0 && (
-            <div className="empty-state">Ingen opskrifter matcher det valgte filter</div>
-          )}
+          </div>
         </>
       )}
 
