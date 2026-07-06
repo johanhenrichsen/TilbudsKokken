@@ -111,11 +111,11 @@ const INGREDIENT_AUTOCOMPLETE = (() => {
     seen.add(key);
     out.push(name.trim());
   };
-  // Clean dealItem names (strip trailing size/unit: "Hakket oksekød 500g" → "Hakket oksekød")
+  // Strip leading quantity from deal ingredient text for autocomplete
   for (const r of recipeBank) {
     for (const ing of r.ingredients) {
-      if (ing.dealItem) {
-        const clean = ing.dealItem.replace(/\s+[\d.,]+\s*(%|g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*$/i, "").trim();
+      if (!ing.isPantry && ing.store) {
+        const clean = (ing.text || "").replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, "").trim();
         add(clean);
       }
     }
@@ -431,14 +431,10 @@ export default function App() {
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
     // Chain filter: when one or more chains are selected, every dealItem
-    // must come from a selected chain. Uses normalised comparison so
-    // "Coop 365" matches "Coop 365discount", "Dagli'Brugsen / Brugsen"
-    // matches "Dagli'Brugsen", etc. No chains selected = show all.
+    // must come from a selected chain (exact match — store names are
+    // canonical in the data). No chains selected = show all.
     if (selectedChains.size > 0) {
-      const allMatch = r.dealItems.every(di =>
-        [...selectedChains].some(ch => chainNamesMatch(di.store, ch))
-      );
-      if (!allMatch) return false;
+      if (!r.dealItems.every(di => selectedChains.has(di.store))) return false;
     }
     if (pantryItems.size > 0) {
       const allCovered = [...pantryItems].every(p =>
@@ -625,21 +621,19 @@ export default function App() {
       if (!entry) continue;
       const { recipe, servings: sv } = entry;
       for (const ing of recipe.ingredients) {
-        if (!ing.dealItem) continue;
-        const di = recipe.dealItems.find(d => d.name === ing.dealItem);
-        if (!di) continue;
-        const store = di.store;
+        if (ing.isPantry || !ing.store) continue;
+        const store  = ing.store;
         const scaled = scaleIngredient(ing.text, recipe.servings_count || 4, sv);
         if (!byStore[store]) byStore[store] = {};
-        if (!byStore[store][ing.dealItem]) byStore[store][ing.dealItem] = [];
-        byStore[store][ing.dealItem].push(scaled);
+        if (!byStore[store][ing.text]) byStore[store][ing.text] = [];
+        byStore[store][ing.text].push(scaled);
       }
     }
     return Object.entries(byStore).map(([store, items]) => ({
       store,
-      color: storeColorMap[store] || "#888",
-      items: Object.entries(items).map(([dealItem, texts]) => ({
-        dealItem,
+      color: getChainColor(store),
+      items: Object.entries(items).map(([key, texts]) => ({
+        dealItem: key,
         merged: mergeIngredientTexts(texts),
       })),
     }));
@@ -1422,8 +1416,7 @@ export default function App() {
             <ul className="ingredient-grid">
               {selectedRecipe.ingredients.map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
-                const isDeal = !!(ing.dealItem);
-                const hasStore = !!(ing.store);
+                const isDeal = !ing.isPantry && !!(ing.store);
                 const inList = shoppingList.includes(scaled);
                 return (
                   <li key={i} className={`ingredient-item${isDeal ? " ingredient-deal" : " ingredient-pantry"}`}>
@@ -1442,7 +1435,7 @@ export default function App() {
                     <span className={isDeal ? "ingredient-deal-text" : "ingredient-pantry-text"}>
                       {scaled}{ing.price ? ` · ${ing.price}` : ""}
                     </span>
-                    {hasStore && (
+                    {isDeal && (
                       <span
                         className="store-badge-pill"
                         style={{
