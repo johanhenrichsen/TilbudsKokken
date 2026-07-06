@@ -822,7 +822,7 @@ export default function App() {
                 key={di.name}
                 className={`deal-item-tag${available ? " available" : " unavailable"}`}
               >
-                <span className="deal-store-dot" style={{ background: storeColorMap[di.store] }} />
+                <span className="deal-store-dot" style={{ background: getChainColor(di.store) }} />
                 {di.name.replace(/ \d+.*$/, "")}
               </span>
             );
@@ -1379,7 +1379,7 @@ export default function App() {
             <div className="recipe-deal-tags" style={{ marginBottom: 12 }}>
               {(selectedRecipe.dealItems || []).map(di => (
                 <span key={di.name} className="deal-item-tag available">
-                  <span className="deal-store-dot" style={{ background: storeColorMap[di.store] }} />
+                  <span className="deal-store-dot" style={{ background: getChainColor(di.store) }} />
                   {di.name} · {di.store}
                 </span>
               ))}
