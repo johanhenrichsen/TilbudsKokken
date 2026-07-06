@@ -832,9 +832,9 @@ export default function App() {
           <button
             className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
             onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
-            title={inPlan ? "Allerede i madplan" : "Tilføj til madplan"}
+            title={inPlan ? "Allerede i madplan" : "Tilføj til ugen"}
           >
-            {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+            {inPlan ? "📅 I madplan" : "📅 Tilføj til ugen"}
           </button>
           <button
             className={`card-save-btn${isSaved ? " saved" : ""}`}
@@ -1359,7 +1359,7 @@ export default function App() {
                   onClick={() => toggleSaveRecipe(selectedRecipe)}
                   title={isRecipeSaved ? "Fjern fra gemte" : "Gem opskrift"}
                 >
-                  🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
+                  🔖 <span>{isRecipeSaved ? "Gemt" : "Gem opskrift"}</span>
                 </button>
                 {(() => {
                   const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
@@ -1368,7 +1368,7 @@ export default function App() {
                       className={`add-to-plan-btn detail${inPlan ? " in-plan" : ""}`}
                       onClick={() => !inPlan && setAddingToPlan(selectedRecipe)}
                     >
-                      📅 <span>{inPlan ? "I madplan" : "Madplan"}</span>
+                      📅 <span>{inPlan ? "I madplan" : "Tilføj til ugen"}</span>
                     </button>
                   );
                 })()}
@@ -1488,7 +1488,7 @@ export default function App() {
                 <div className="section-label" style={{ margin: 0 }}>
                   Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
                 </div>
-                <button className="btn-outline" onClick={clearShoppingList}>Ryd liste</button>
+                <button className="btn-outline" onClick={clearShoppingList}>Start forfra</button>
               </div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {shoppingList.map((item, i) => (
@@ -1513,7 +1513,7 @@ export default function App() {
               onClick={() => toggleSection("recommended")}
               aria-expanded={!collapsedSections.recommended}
             >
-              <span className="section-toggle-label">⭐ Ugens opskrifter</span>
+              <span className="section-toggle-label">🍽️ Ugens opskrifter</span>
               <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
               <svg
                 className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
@@ -1534,10 +1534,10 @@ export default function App() {
                     {pantryItems.size > 0 && !search
                       ? "Ingen opskrifter matcher dine ingredienser — prøv at fjerne en"
                       : search
-                      ? "Ingen opskrifter matcher søgningen"
+                      ? "Ingen opskrifter matcher — prøv et andet søgeord"
                       : selectedChains.size > 0
-                      ? "Ingen opskrifter fra dine valgte butikker"
-                      : "Ingen opskrifter matcher filteret"}
+                      ? "Ingen opskrifter fra dine valgte butikker denne uge"
+                      : "Ingen opskrifter matcher — prøv at ændre dine filtre"}
                   </div>
                 )}
               </div>
@@ -1550,7 +1550,7 @@ export default function App() {
               onClick={() => toggleSection("others")}
               aria-expanded={!collapsedSections.others}
             >
-              <span className="section-toggle-label">Kræver andre butikker</span>
+              <span className="section-toggle-label">🛒 Kræver andre butikker</span>
               <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
               <svg
                 className={`section-chevron${collapsedSections.others ? "" : " open"}`}
@@ -1569,8 +1569,8 @@ export default function App() {
                 ) : (
                   <div className="section-empty-state">
                     {selectedChains.size === 0
-                      ? "Alle opskrifter vises ovenfor"
-                      : "Ingen opskrifter kræver andre butikker"}
+                      ? "Alle denne uges opskrifter er vist ovenfor"
+                      : "Alle opskrifter passer til dine butikker"}
                   </div>
                 )}
               </div>
@@ -1827,7 +1827,7 @@ export default function App() {
           })}
         </ul>
         <div className="shopping-sheet-footer">
-          <button className="mp-clear-btn" onClick={clearShoppingList}>Ryd liste</button>
+          <button className="mp-clear-btn" onClick={clearShoppingList}>Start forfra</button>
         </div>
       </div>
     </div>
