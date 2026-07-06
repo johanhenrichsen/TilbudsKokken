@@ -15,6 +15,7 @@ const CHAIN_COLORS = {
   "Rema 1000":                "#CC0000",
   // Coop
   "Coop 365":                 "#00853F",
+  "Coop 365discount":         "#00853F",
   "SuperBrugsen / Kvickly":   "#FF6B00",
   "Dagli'Brugsen / Brugsen":  "#8B1A1A",
   // Independent
@@ -28,6 +29,18 @@ const CHAIN_COLORS = {
   "Fakta":                    "#D40000",
   "Irma":                     "#9B1B30",
 };
+
+// Normalized lookup so "Coop 365discount" and "coop 365discount" both resolve.
+const _CHAIN_COLORS_NORM = new Map(
+  Object.entries(CHAIN_COLORS).map(([k, v]) => [k.toLowerCase().trim(), v])
+);
+const _LIGHT_CHAINS = new Set(["netto", "spar"]);
+function getChainColor(store) {
+  return store ? (_CHAIN_COLORS_NORM.get(store.toLowerCase().trim()) ?? "#888") : "#888";
+}
+function chainIsLight(store) {
+  return store ? _LIGHT_CHAINS.has(store.toLowerCase().trim()) : false;
+}
 
 const CHAIN_ORDER = [
   // Salling Group
@@ -1414,8 +1427,8 @@ export default function App() {
                       <span
                         className="store-badge-pill"
                         style={{
-                          background: CHAIN_COLORS[ing.store] || "#888",
-                          color: ["Netto", "Spar"].includes(ing.store) ? "#1a1a1a" : "#fff",
+                          background: getChainColor(ing.store),
+                          color: chainIsLight(ing.store) ? "#1a1a1a" : "#fff",
                         }}
                       >
                         {ing.store}
