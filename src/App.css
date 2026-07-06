@@ -3659,3 +3659,17 @@ html.dark .saved-sheet-card-title { color: var(--cream); }
 html.dark .saved-sheet-card-meta { color: #5a7a5a; }
 html.dark .saved-sheet-unsave:hover { background: rgba(220,80,80,0.12); }
 
+
+/* Store badge pill on ingredients */
+.store-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-left: 6px;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
+}

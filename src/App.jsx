@@ -1391,6 +1391,7 @@ export default function App() {
               {selectedRecipe.ingredients.map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
                 const isDeal = !!(ing.dealItem);
+                const hasStore = !!(ing.store);
                 const inList = shoppingList.includes(scaled);
                 return (
                   <li key={i} className={`ingredient-item${isDeal ? " ingredient-deal" : " ingredient-pantry"}`}>
@@ -1407,8 +1408,19 @@ export default function App() {
                       <span className="ingredient-pantry-dot" />
                     )}
                     <span className={isDeal ? "ingredient-deal-text" : "ingredient-pantry-text"}>
-                      {scaled}
+                      {scaled}{ing.price ? ` · ${ing.price}` : ""}
                     </span>
+                    {hasStore && (
+                      <span
+                        className="store-badge-pill"
+                        style={{
+                          background: CHAIN_COLORS[ing.store] || "#888",
+                          color: ["Netto", "Spar"].includes(ing.store) ? "#1a1a1a" : "#fff",
+                        }}
+                      >
+                        {ing.store}
+                      </span>
+                    )}
                   </li>
                 );
               })}

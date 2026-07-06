@@ -7,40 +7,67 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
+// Load .env so VITE_CLAUDE_KEY is available without an external env setup
+try {
+  const envFile = path.join(ROOT, '.env');
+  if (fs.existsSync(envFile)) {
+    for (const line of fs.readFileSync(envFile, 'utf8').split('\n')) {
+      const m = line.match(/^\s*([^#=\s][^=]*?)\s*=\s*(.*)\s*$/);
+      if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
+    }
+  }
+} catch {}
+if (!process.env.ANTHROPIC_API_KEY && process.env.VITE_CLAUDE_KEY) {
+  process.env.ANTHROPIC_API_KEY = process.env.VITE_CLAUDE_KEY;
+}
+
 const XLSX_PATH = path.join(ROOT, 'src', 'data', 'tilbudsaviser.xlsx');
-const OUT_PATH = path.join(ROOT, 'src', 'data', 'weeklyRecipes.json');
+const OUT_PATH  = path.join(ROOT, 'src', 'data', 'weeklyRecipes.json');
 
 // ── 1. Read products from xlsx ────────────────────────────────────────────────
+// Returns { products: string[], productMap: Map<string, {name, price, store}> }
+// Each product string is formatted as "Produktnavn 120 g 10 kr. (Butik)"
+// so Claude can include it verbatim in tilbudsvarer and we can look it up.
 
 function readProductsFromXlsx() {
-  if (!fs.existsSync(XLSX_PATH)) return [];
+  if (!fs.existsSync(XLSX_PATH)) return { products: [], productMap: new Map() };
+
   const workbook = XLSX.readFile(XLSX_PATH);
   const products = [];
+  const productMap = new Map();
 
   for (const sheetName of workbook.SheetNames) {
+    if (sheetName === 'Oversigt') continue;
+    const store = sheetName;
+
     const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+    if (rows.length === 0) continue;
+
+    // Row 1 of each sheet is the store title (A1), so sheet_to_json uses it as
+    // the key for column A. Find that key (the only non-__EMPTY key).
+    const nameKey = Object.keys(rows[0]).find(k => !k.startsWith('__EMPTY'));
+    if (!nameKey) continue;
+
     for (const row of rows) {
-      const name = String(
-        row['Varenavn'] || row['varenavn'] || row['description'] || row['Description'] ||
-        row['name'] || row['Name'] || ''
-      ).trim();
-      if (!name) continue;
+      const name = String(row[nameKey] || '').trim();
+      // First data row is the column-header row ("Produktnavn", etc.) — skip it.
+      if (!name || name === 'Produktnavn') continue;
 
-      const brand = String(
-        row['Brand'] || row['brand'] || row['Kæde'] || row['kæde'] ||
-        row['store'] || sheetName
-      ).trim();
-      const variant = String(row['Variant/Type'] || row['variant'] || '').trim();
-      const weight  = String(row['Vægt/Mængde'] || row['vægt'] || '').trim();
-      const price   = String(row['Pris (kr.)'] || row['Pris'] || row['pris'] || row['price'] || '').trim();
+      const weight = String(row['__EMPTY_1'] || '').trim();
+      const price  = String(row['__EMPTY_2'] || '').trim();
 
-      const label = [name, variant, weight].filter(Boolean).join(' ');
-      const meta  = [brand, price ? price + ' kr' : ''].filter(Boolean).join(', ');
-      products.push(meta ? `${label} (${meta})` : label);
+      // Build the label that will appear in the prompt and that Claude should
+      // echo back verbatim in tilbudsvarer.
+      const parts = [name, weight, price].filter(Boolean);
+      const label = `${parts.join(' ')} (${store})`;
+
+      if (productMap.has(label)) continue; // deduplicate
+      products.push(label);
+      productMap.set(label, { name, price, store });
     }
   }
 
-  return [...new Set(products)];
+  return { products, productMap };
 }
 
 // ── 2. Fallback: fetch live deals from Rema 1000 public API ──────────────────
@@ -75,6 +102,8 @@ async function fetchProductsFromRema() {
   );
 
   const products = [];
+  const productMap = new Map();
+
   for (const items of productArrays) {
     for (const product of items) {
       const prices = product.prices || [];
@@ -95,13 +124,20 @@ async function fetchProductsFromRema() {
         continue;
       }
 
-      const desc = [product.name, product.underline].filter(Boolean).join(' – ');
-      if (!desc) continue;
-      products.push(`${desc} (Rema 1000, ${active.price} kr)`);
+      const name = [product.name, product.underline].filter(Boolean).join(' – ');
+      if (!name) continue;
+
+      const price = `${active.price} kr.`;
+      const store = 'Rema 1000';
+      const label = `${name} ${price} (${store})`;
+
+      if (productMap.has(label)) continue;
+      products.push(label);
+      productMap.set(label, { name, price, store });
     }
   }
 
-  return [...new Set(products)];
+  return { products, productMap };
 }
 
 // ── 3. Build Claude prompt ────────────────────────────────────────────────────
@@ -126,7 +162,7 @@ For hver opskrift returner følgende JSON-felter:
 - kostfiltre: array – inkluder kun de relevante af: "vegetar", "veganer", "glutenfri", "mælkefri"
 - sværhedsgrad: "let", "mellem" eller "svær"
 - kokkens_tip: ét nyttigt tip på dansk
-- tilbudsvarer: array af de produktnavne fra listen, der bruges i opskriften (præcis som de fremgår af listen)
+- tilbudsvarer: array af de varer fra listen, der bruges i opskriften — kopier dem præcis som de fremgår af listen ovenfor, f.eks. ["Hakket oksekød 400 g 37,95 kr. (Netto)", "Kartofler 1 kg 12 kr. (Bilka)"]
 
 Returner KUN et rent JSON-array med ${batchSize} opskrifter – ingen markdown, ingen forklaring.`;
 }
@@ -160,19 +196,30 @@ const CUISINE_EMOJI = {
   '🇺🇸 Amerikansk':   '🍔',
 };
 
-function normalizeRecipe(raw, index) {
-  const rawCuisine = raw.køkken || '';
-  const cuisine = CUISINE_MAP[rawCuisine] || '🌍 Verden';
-  const emoji   = CUISINE_EMOJI[cuisine] || '🍽️';
-  const category = cuisine.replace(/^\S+\s*/, ''); // strip flag emoji
+function parseDealItemFallback(label) {
+  // Fallback parser when Claude returns a string not in our productMap.
+  // Format: "Product name weight price (Store)"
+  const storeMatch = label.match(/\(([^)]+)\)\s*$/);
+  const store = storeMatch ? storeMatch[1].trim() : 'Tilbud';
+  const withoutStore = label.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  const priceMatch = withoutStore.match(/(\d[\d.,]*\s*kr\.?)\s*$/i);
+  const price = priceMatch ? priceMatch[1].trim() : '';
+  const name  = priceMatch
+    ? withoutStore.slice(0, withoutStore.lastIndexOf(priceMatch[1])).trim()
+    : withoutStore;
+  return { name, price, store };
+}
 
-  // Map tilbudsvarer strings → { name, store } objects
-  const dealItems = (raw.tilbudsvarer || []).map(v => {
-    // Extract store from parentheses: "Produkt (Rema 1000, 25 kr)" → store="Rema 1000"
-    const parenMatch = v.match(/\(([^,)]+)/);
-    const store = parenMatch ? parenMatch[1].trim() : 'Tilbud';
-    const name  = v.replace(/\s*\(.*\)\s*$/, '').trim();
-    return { name, store };
+function normalizeRecipe(raw, index, productMap) {
+  const rawCuisine = raw.køkken || '';
+  const cuisine  = CUISINE_MAP[rawCuisine] || '🌍 Verden';
+  const emoji    = CUISINE_EMOJI[cuisine] || '🍽️';
+  const category = cuisine.replace(/^\S+\s*/, '');
+
+  // Map tilbudsvarer labels → { name, price, store }
+  const dealItems = (raw.tilbudsvarer || []).map(label => {
+    const hit = productMap.get(label.trim());
+    return hit ?? parseDealItemFallback(label);
   });
 
   const ingredients = (raw.ingredienser || []).map(text => ({
@@ -181,24 +228,45 @@ function normalizeRecipe(raw, index) {
   }));
 
   return {
-    id:           1000 + index,
-    title:        raw.titel || `Opskrift ${index + 1}`,
+    id:             1000 + index,
+    title:          raw.titel || `Opskrift ${index + 1}`,
     emoji,
-    time:         raw.tilberedningstid || '30 min',
+    time:           raw.tilberedningstid || '30 min',
     servings_count: Number(raw.antal_personer) || 4,
     category,
     cuisine,
-    description:  raw.beskrivelse || '',
+    description:    raw.beskrivelse || '',
     ingredients,
-    steps:        Array.isArray(raw.fremgangsmåde) ? raw.fremgangsmåde : [],
-    tip:          raw.kokkens_tip || '',
+    steps:          Array.isArray(raw.fremgangsmåde) ? raw.fremgangsmåde : [],
+    tip:            raw.kokkens_tip || '',
     dealItems,
     dietaryFilters: Array.isArray(raw.kostfiltre) ? raw.kostfiltre : [],
-    difficulty:   raw.sværhedsgrad || 'mellem',
+    difficulty:     raw.sværhedsgrad || 'mellem',
   };
 }
 
-// ── 5. Call Claude and parse batch ───────────────────────────────────────────
+// ── 5. Fuzzy ingredient → store matcher ──────────────────────────────────────
+
+function stripLeadingAmount(text) {
+  return text
+    .replace(/^\s*\d+[\d.,/]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|bundt|fed|tsk\.?|spsk\.?|dåse|bakke|potte|karton|skiver?|nip|kvist|håndfuld)\.?\s*/i, '')
+    .replace(/^\s*\d+\s*(?:×|x)\s*/i, '')
+    .trim();
+}
+
+function matchIngredientToProduct(ingText, productList) {
+  const cleaned = stripLeadingAmount(ingText).toLowerCase();
+  if (cleaned.length < 3) return null;
+  for (const product of productList) {
+    const nameLower = product.name.toLowerCase();
+    if (nameLower.includes(cleaned) || cleaned.includes(nameLower)) {
+      return product;
+    }
+  }
+  return null;
+}
+
+// ── 6. Call Claude and parse batch ───────────────────────────────────────────
 
 async function generateBatch(client, batchNum, batchSize, productList) {
   const stream = client.messages.stream({
@@ -222,22 +290,23 @@ async function generateBatch(client, batchNum, batchSize, productList) {
   return recipes;
 }
 
-// ── 6. Main ──────────────────────────────────────────────────────────────────
+// ── 7. Main ──────────────────────────────────────────────────────────────────
 
 async function main() {
   const client = new Anthropic();
 
-  let products = readProductsFromXlsx();
+  let { products, productMap } = readProductsFromXlsx();
+
   if (products.length === 0) {
-    console.log(`Xlsx-filen er tom — henter live-tilbud fra Rema 1000.\n`);
-    products = await fetchProductsFromRema();
+    console.log('Xlsx-filen er tom — henter live-tilbud fra Rema 1000.\n');
+    ({ products, productMap } = await fetchProductsFromRema());
   }
 
   if (products.length === 0) {
     throw new Error('Ingen tilbudsvarer fundet. Udfyld xlsx-filen eller kontrollér API-forbindelsen.');
   }
 
-  console.log(`Fandt ${products.length} tilbudsvarer. Genererer opskrifter...\n`);
+  console.log(`Fandt ${products.length} tilbudsvarer fra ${new Set([...productMap.values()].map(p => p.store)).size} butikker. Genererer opskrifter...\n`);
 
   const BATCHES   = 5;
   const PER_BATCH = 10;
@@ -250,11 +319,30 @@ async function main() {
     console.log(` faerdig — ${recipes.length} opskrifter (total: ${rawRecipes.length})`);
   }
 
-  const normalized = rawRecipes.map((r, i) => normalizeRecipe(r, i));
+  const normalized = rawRecipes.map((r, i) => normalizeRecipe(r, i, productMap));
 
   fs.mkdirSync(path.dirname(OUT_PATH), { recursive: true });
   fs.writeFileSync(OUT_PATH, JSON.stringify(normalized, null, 2), 'utf8');
   console.log(`\nFaerdigt! ${normalized.length} opskrifter gemt til ${path.relative(ROOT, OUT_PATH)}`);
+
+  // ── Annotate ingredients with store and price ─────────────────────────────
+  console.log('\nMatcher ingredienser mod tilbudsvarer...');
+  const productList = [...productMap.values()];
+  let matchCount = 0;
+
+  for (const recipe of normalized) {
+    for (const ing of recipe.ingredients) {
+      const match = matchIngredientToProduct(ing.text, productList);
+      if (match) {
+        ing.store = match.store;
+        ing.price = match.price;
+        matchCount++;
+      }
+    }
+  }
+
+  fs.writeFileSync(OUT_PATH, JSON.stringify(normalized, null, 2), 'utf8');
+  console.log(`${matchCount} ingredienser matchet mod tilbudsvarer. Opdateret JSON gemt.`);
 }
 
 main().catch(err => {
