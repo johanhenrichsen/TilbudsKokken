@@ -150,6 +150,19 @@ const INGREDIENT_SYNONYMS = {
   "kød":          ["kylling", "laks", "rejer", "hakket", "bøf", "kotelet"],
 };
 
+// Normalise a chain name for fuzzy comparison: lowercase, strip ' and /,
+// collapse whitespace. Handles mismatches between CHAIN_ORDER labels and
+// xlsx sheet names, e.g. "SuperBrugsen / Kvickly" ↔ "SuperBrugsen  Kvickly",
+// "Dagli'Brugsen / Brugsen" ↔ "Dagli'Brugsen", "Coop 365" ↔ "Coop 365discount".
+function normalizeChain(s) {
+  return (s || '').toLowerCase().replace(/['/]/g, '').replace(/\s+/g, ' ').trim();
+}
+function chainNamesMatch(a, b) {
+  const na = normalizeChain(a);
+  const nb = normalizeChain(b);
+  return na === nb || na.startsWith(nb) || nb.startsWith(na);
+}
+
 function pantryMatchIngredient(ingText, searchTerm) {
   const ing = ingText.toLowerCase();
   const term = searchTerm.toLowerCase().trim();
@@ -417,6 +430,16 @@ export default function App() {
   }
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
+    // Chain filter: when one or more chains are selected, every dealItem
+    // must come from a selected chain. Uses normalised comparison so
+    // "Coop 365" matches "Coop 365discount", "Dagli'Brugsen / Brugsen"
+    // matches "Dagli'Brugsen", etc. No chains selected = show all.
+    if (selectedChains.size > 0) {
+      const allMatch = r.dealItems.every(di =>
+        [...selectedChains].some(ch => chainNamesMatch(di.store, ch))
+      );
+      if (!allMatch) return false;
+    }
     if (pantryItems.size > 0) {
       const allCovered = [...pantryItems].every(p =>
         r.ingredients.some(ing => pantryMatchIngredient(ing.text || ing, p))
