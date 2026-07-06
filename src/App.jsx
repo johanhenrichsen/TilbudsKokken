@@ -113,7 +113,7 @@ const INGREDIENT_AUTOCOMPLETE = (() => {
   };
   // Strip leading quantity from deal ingredient text for autocomplete
   for (const r of recipeBank) {
-    for (const ing of r.ingredients) {
+    for (const ing of (r.ingredients || [])) {
       if (!ing.isPantry && ing.store) {
         const clean = (ing.text || "").replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, "").trim();
         add(clean);
@@ -220,7 +220,7 @@ const itemPriceMap = Object.fromEntries(
 );
 
 function calcRecipePrice(recipe, forServings) {
-  const base = recipe.dealItems.reduce((sum, di) => sum + (itemPriceMap[di.name] ?? 0), 0);
+  const base = (recipe.dealItems || []).reduce((sum, di) => sum + (itemPriceMap[di.name] ?? 0), 0);
   if (base === 0) return null;
   return base * (forServings / (recipe.servings_count || 4));
 }
@@ -403,16 +403,16 @@ export default function App() {
   function getScoredRecipes(dietFilter) {
     const excluded = dietExcludeItems[dietFilter];
     return recipeBank
-      .filter(r => !r.dealItems.some(di => excluded.has(di.name)))
+      .filter(r => !(r.dealItems || []).some(di => excluded.has(di.name)))
       .map(r => ({
         ...r,
-        matchCount: r.dealItems.length,
+        matchCount: (r.dealItems || []).length,
         fullyMatched: true,
       }));
   }
 
   const scoredRecipes = getScoredRecipes(diet);
-  const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => b.dealItems.length - a.dealItems.length);
+  const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => (b.dealItems || []).length - (a.dealItems || []).length);
   const others = scoredRecipes.filter(r => !r.fullyMatched);
 
   const maxRecipePrice = (() => {
@@ -434,11 +434,11 @@ export default function App() {
     // must come from a selected chain (exact match — store names are
     // canonical in the data). No chains selected = show all.
     if (selectedChains.size > 0) {
-      if (!r.dealItems.every(di => selectedChains.has(di.store))) return false;
+      if (!(r.dealItems || []).every(di => selectedChains.has(di.store))) return false;
     }
     if (pantryItems.size > 0) {
       const allCovered = [...pantryItems].every(p =>
-        r.ingredients.some(ing => pantryMatchIngredient(ing.text || ing, p))
+        (r.ingredients || []).some(ing => pantryMatchIngredient(ing.text || ing, p))
       );
       if (!allCovered) return false;
     }
@@ -450,7 +450,7 @@ export default function App() {
       } else if (
         !r.title.toLowerCase().includes(searchQ) &&
         !(r.cuisine || "").toLowerCase().includes(searchQ) &&
-        !r.ingredients.some(ing => (ing.text || ing).toLowerCase().includes(searchQ))
+        !(r.ingredients || []).some(ing => (ing.text || ing).toLowerCase().includes(searchQ))
       ) {
         return false;
       }
@@ -548,7 +548,7 @@ export default function App() {
 
   // ── Share ───────────────────────────────────────────────────────
   async function shareRecipe(r) {
-    const ingredientLines = r.ingredients.map(ing => ing.text || ing).join("\n");
+    const ingredientLines = (r.ingredients || []).map(ing => ing.text || ing).join("\n");
     const text = `${r.title}\n\nIngredienser:\n${ingredientLines}\n\nFremgangsmåde:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}${r.tip ? `\n\nTip: ${r.tip}` : ""}`;
     if (navigator.share) {
       await navigator.share({ title: r.title, text });
@@ -561,6 +561,7 @@ export default function App() {
 
   // ── Scale ───────────────────────────────────────────────────────
   function scaleIngredient(text, baseServings, currentServings) {
+    if (typeof text !== 'string') return String(text ?? '');
     const ratio = currentServings / baseServings;
     return text.replace(/(\d+([.,]\d+)?)/g, match => {
       const scaled = parseFloat(match.replace(",", ".")) * ratio;
@@ -620,7 +621,7 @@ export default function App() {
     for (const entry of mealPlan) {
       if (!entry) continue;
       const { recipe, servings: sv } = entry;
-      for (const ing of recipe.ingredients) {
+      for (const ing of (recipe.ingredients || [])) {
         if (ing.isPantry || !ing.store) continue;
         const store  = ing.store;
         const scaled = scaleIngredient(ing.text, recipe.servings_count || 4, sv);
@@ -802,7 +803,7 @@ export default function App() {
         <div className="recipe-browse-title">{r.title}</div>
         <div className="recipe-browse-meta">
           <span>⏱ {r.time}</span>
-          <span>🥘 {r.ingredients.length} ing.</span>
+          <span>🥘 {(r.ingredients || []).length} ing.</span>
         </div>
         {cardPrice != null && (
           <div className="recipe-card-price">
@@ -811,7 +812,7 @@ export default function App() {
           </div>
         )}
         <div className="recipe-deal-tags">
-          {r.dealItems.map(di => {
+          {(r.dealItems || []).map(di => {
             const available = getAvailableItemNames().has(di.name);
             return (
               <span
@@ -1373,7 +1374,7 @@ export default function App() {
 
             {/* Deal items used */}
             <div className="recipe-deal-tags" style={{ marginBottom: 12 }}>
-              {selectedRecipe.dealItems.map(di => (
+              {(selectedRecipe.dealItems || []).map(di => (
                 <span key={di.name} className="deal-item-tag available">
                   <span className="deal-store-dot" style={{ background: storeColorMap[di.store] }} />
                   {di.name} · {di.store}
@@ -1414,7 +1415,7 @@ export default function App() {
 
             <div className="section-label">Ingredienser</div>
             <ul className="ingredient-grid">
-              {selectedRecipe.ingredients.map((ing, i) => {
+              {(selectedRecipe.ingredients || []).map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
                 const isDeal = !ing.isPantry && !!(ing.store);
                 const inList = shoppingList.includes(scaled);
