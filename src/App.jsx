@@ -309,7 +309,7 @@ function useRecipePhoto(title) {
     const observer = new IntersectionObserver(entries => {
       if (!entries[0].isIntersecting) return;
       observer.disconnect();
-      fetch(`/api/unsplash?query=${encodeURIComponent(title + ' mad')}`)
+      fetch(`/api/pexels?query=${encodeURIComponent(title + ' mad')}`)
         .then(r => r.json())
         .then(data => {
           if (cancelled) return;
