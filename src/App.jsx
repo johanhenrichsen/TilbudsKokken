@@ -227,7 +227,9 @@ function calcPricePerPerson(recipe) {
     const m = String(di.price || '').match(/(\d+(?:[.,]\d+)?)/);
     if (m) { total += parseFloat(m[1].replace(',', '.')); hasPrice = true; }
   }
-  return hasPrice ? Math.round(total / servings) : null;
+  if (!hasPrice) return null;
+  const pp = Math.round(total / servings);
+  return (pp < 1 || pp > 200) ? null : pp;
 }
 
 const dietExcludeItems = {
@@ -297,7 +299,12 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState(() => {
     try { return JSON.parse(localStorage.getItem("shoppingList") || "[]"); } catch { return []; }
   });
-  const [checkedItems, setCheckedItems] = useState(new Set());
+  const [checkedItems, setCheckedItems] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("checkedItems") || "[]");
+      return new Set(Array.isArray(saved) ? saved : []);
+    } catch { return new Set(); }
+  });
   const [showShoppingSheet, setShowShoppingSheet] = useState(false);
   const [diet, setDiet] = useState(() => {
     try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
@@ -508,7 +515,12 @@ export default function App() {
     setShoppingList(prev => {
       const removed = prev[i];
       const next = prev.filter((_, idx) => idx !== i);
-      setCheckedItems(c => { const s = new Set(c); s.delete(removed); return s; });
+      setCheckedItems(c => {
+        const s = new Set(c);
+        s.delete(removed);
+        try { localStorage.setItem("checkedItems", JSON.stringify([...s])); } catch {}
+        return s;
+      });
       try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
       return next;
     });
@@ -517,13 +529,24 @@ export default function App() {
     setShoppingList([]);
     setCheckedItems(new Set());
     try { localStorage.removeItem("shoppingList"); } catch {}
+    try { localStorage.removeItem("checkedItems"); } catch {}
   }
   function toggleCheckedItem(item) {
     setCheckedItems(prev => {
       const next = new Set(prev);
       if (next.has(item)) next.delete(item); else next.add(item);
+      try { localStorage.setItem("checkedItems", JSON.stringify([...next])); } catch {}
       return next;
     });
+  }
+  function clearCheckedItems() {
+    setShoppingList(prev => {
+      const next = prev.filter(item => !checkedItems.has(item));
+      try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
+      return next;
+    });
+    setCheckedItems(new Set());
+    try { localStorage.removeItem("checkedItems"); } catch {}
   }
 
   // ── Save / delete ───────────────────────────────────────────────
@@ -1487,18 +1510,30 @@ export default function App() {
                 <div className="section-label" style={{ margin: 0 }}>
                   Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
                 </div>
-                <button className="btn-outline" onClick={clearShoppingList}>Start forfra</button>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {checkedItems.size > 0 && (
+                    <button className="btn-outline btn-outline--safe" onClick={clearCheckedItems}>Ryd afkrydsede</button>
+                  )}
+                  <button className="btn-outline" onClick={clearShoppingList}>Start forfra</button>
+                </div>
               </div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {shoppingList.map((item, i) => (
-                  <li key={i} className="shopping-item">
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span className="shopping-item-dot" />
-                      {item}
-                    </div>
-                    <button className="shopping-item-remove" onClick={() => removeFromShoppingList(i)}>×</button>
-                  </li>
-                ))}
+                {shoppingList.map((item, i) => {
+                  const checked = checkedItems.has(item);
+                  return (
+                    <li key={i} className={`shopping-item${checked ? " checked" : ""}`}>
+                      <button className="shopping-check-btn" onClick={() => toggleCheckedItem(item)} aria-label={checked ? "Fjern hak" : "Sæt hak"}>
+                        {checked ? (
+                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="2,7 6,11 12,3"/>
+                          </svg>
+                        ) : null}
+                      </button>
+                      <span className="shopping-item-label">{item}</span>
+                      <button className="shopping-item-remove" onClick={() => removeFromShoppingList(i)}>×</button>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -1826,6 +1861,9 @@ export default function App() {
           })}
         </ul>
         <div className="shopping-sheet-footer">
+          {checkedItems.size > 0 && (
+            <button className="mp-clear-btn mp-clear-btn--safe" onClick={clearCheckedItems}>Ryd afkrydsede</button>
+          )}
           <button className="mp-clear-btn" onClick={clearShoppingList}>Start forfra</button>
         </div>
       </div>

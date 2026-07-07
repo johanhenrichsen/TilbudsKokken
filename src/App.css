@@ -255,6 +255,8 @@ html.dark::before {
   font-family: inherit;
 }
 .btn-outline:hover { border-color: #b8a080; background: #faf7f0; }
+.btn-outline--safe { color: #3d7050; border-color: #b0d0b8; }
+.btn-outline--safe:hover { border-color: #4a7050; background: #f0f7f2; }
 
 /* ─── Error ──────────────────────────────────── */
 .error-box {
@@ -444,18 +446,25 @@ html.dark::before {
 .shopping-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   padding: 8px 0;
   font-size: 13px;
   color: #333;
+  transition: opacity 0.15s;
 }
 .shopping-item:not(:last-child) { border-bottom: 1px solid #f5f5f5; }
-.shopping-item-dot {
-  width: 5px; height: 5px;
-  background: #7a9e7a;
-  border-radius: 50%;
+.shopping-item.checked { opacity: 0.5; }
+.shopping-item .shopping-check-btn {
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-  display: inline-block;
+}
+.shopping-item-label {
+  flex: 1;
+}
+.shopping-item.checked .shopping-item-label {
+  text-decoration: line-through;
+  color: #9ca3af;
 }
 .shopping-item-remove {
   background: none;
@@ -1848,6 +1857,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   transition: opacity 0.12s;
 }
 .mp-clear-btn:hover { opacity: 1; }
+.mp-clear-btn--safe { color: #3d7050; }
 
 .mp-clear-confirm {
   display: flex;
@@ -3557,6 +3567,9 @@ html.dark .pantry-filter-banner-text { color: #9ca3af; }
   padding: 12px 20px 16px;
   border-top: 1px solid #f0f0f0;
   flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
 html.dark .shopping-sheet {
   background: #1a2a1a;
