@@ -293,37 +293,23 @@ function attachSwipeDismiss(el, onDismiss) {
   };
 }
 
-function useRecipePhoto(title) {
+function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, onAddToPlan, onToggleSave }) {
   const [photoUrl, setPhotoUrl] = useState(() => {
-    try {
-      const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
-      return title in cache ? cache[title] : undefined;
-    } catch { return undefined; }
+    return localStorage.getItem(`photo_${r.title}`) || null;
   });
   useEffect(() => {
-    if (photoUrl !== undefined) return;
-    let cancelled = false;
-    console.log('fetching photo for:', title);
-    fetch(`/api/pexels?query=${encodeURIComponent(title + ' mad')}`)
-      .then(r => r.json())
+    if (photoUrl) return;
+    console.log('fetching photo for:', r.title);
+    fetch(`/api/pexels?query=${encodeURIComponent(r.title + ' food')}`)
+      .then(res => res.json())
       .then(data => {
-        if (cancelled) return;
-        const url = data?.url || '';
-        setPhotoUrl(url);
-        try {
-          const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
-          cache[title] = url;
-          localStorage.setItem('unsplashCache', JSON.stringify(cache));
-        } catch {}
+        if (data.url) {
+          localStorage.setItem(`photo_${r.title}`, data.url);
+          setPhotoUrl(data.url);
+        }
       })
-      .catch(() => { if (!cancelled) setPhotoUrl(''); });
-    return () => { cancelled = true; };
-  }, [title, photoUrl]);
-  return photoUrl;
-}
-
-function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, onAddToPlan, onToggleSave }) {
-  const photoUrl = useRecipePhoto(r.title);
+      .catch(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const pricePerPerson = calcPricePerPerson(r);
   return (
     <div
