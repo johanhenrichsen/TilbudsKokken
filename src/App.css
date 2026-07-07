@@ -45,6 +45,10 @@ html.dark::before {
 }
 
 /* ─── App shell ──────────────────────────────── */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
 .app {
   font-family: var(--font-sans);
   padding: 1.25rem;
@@ -1487,57 +1491,30 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   border-bottom: 1px solid #f8f8f8;
 }
 
-/* ─── Responsive ─────────────────────────────── */
+/* ─── Responsive — mobile (≤ 600px) ─────────── */
 @media (max-width: 600px) {
   .app { padding: 0.75rem; }
-  .app-hero { padding: 0.6rem 0.75rem; }
+  .app-hero {
+    padding: 0.55rem 0.75rem;
+    border-radius: 14px;
+  }
   .app-title { font-size: 24px; }
+
+  /* ── One card per row ── */
   .recipe-browse-grid { grid-template-columns: 1fr; }
 
+  /* ── Onboarding ── */
   .ob-welcome-logo { height: auto !important; }
   .ob-welcome-content { max-width: calc(100vw - 2rem); }
 
-  /* ── Filter chips — compact and no-wrap ── */
+  /* ── Filter chips — 40px touch targets, no wrap, horizontal scroll ── */
   .diet-btn {
-    min-height: 36px;
-    padding: 7px 13px;
-    font-size: 12px;
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 13px;
     white-space: nowrap;
   }
-  .skift-btn {
-    min-height: 44px;
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-  .header-icon-btn { width: 44px; height: 44px; font-size: 18px; }
-  .add-to-plan-btn { min-height: 48px; padding: 12px 16px; font-size: 13px; }
-  .add-to-plan-btn.detail { padding: 10px 16px; font-size: 13px; width: auto; }
-  .save-btn, .share-btn, .retry-btn {
-    min-height: 44px;
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-  .back-btn { min-height: 44px; display: flex; align-items: center; }
-  .day-picker-btn { min-height: 60px; }
-  .plan-sv-btn { width: 30px; height: 30px; font-size: 14px; }
-  .ingredient-add-btn { width: 32px; height: 32px; font-size: 14px; }
-  .shopping-item-remove {
-    min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .saved-recipe-header { padding: 14px; min-height: 52px; }
-  .saved-recipe-delete {
-    width: 36px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .mp-sheet-remove {
-    min-width: 44px; min-height: 44px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .mp-sheet-close { width: 40px; height: 40px; }
-  .store-branch-item { padding: 14px; }
 
-  /* ── Filter chips — horizontal scroll, no wrapping ── */
   .diet-filters,
   .time-filters,
   .cuisine-filters {
@@ -1545,35 +1522,88 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
     gap: 6px;
+    /* bleed both edges so chips reach the screen edge */
+    margin-left: -0.75rem;
     margin-right: -0.75rem;
+    padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
   .diet-filters::-webkit-scrollbar,
   .time-filters::-webkit-scrollbar,
   .cuisine-filters::-webkit-scrollbar { display: none; }
 
+  /* ── Price range — bigger thumbs for thumb interaction ── */
+  .price-range-wrap {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .price-range-input::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  .price-range-input::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* ── Header ── */
+  .hero-brand-name { font-size: 13px; }
+  .hero-topbar-right { gap: 4px; }
+  .header-actions { gap: 2px; }
+  .header-icon-btn { width: 40px; height: 40px; font-size: 17px; }
+  .week-badge { font-size: 10px; padding: 3px 7px; }
+
+  /* ── Store badge ── */
+  .local-store-badge { flex-wrap: wrap; gap: 4px; font-size: 12px; }
+  .skift-btn { min-height: 40px; padding: 8px 14px; font-size: 12px; }
+
   /* ── Search ── */
   .search-input { padding: 12px 44px 12px 16px; font-size: 15px; }
 
   /* ── Recipe cards ── */
+  .recipe-browse-card { padding: 16px; }
+  .recipe-browse-title { font-size: 16px; font-weight: 800; }
+  .recipe-browse-meta { font-size: 12px; }
+  .recipe-deal-tags { gap: 6px; flex-wrap: wrap; }
+
+  /* ── Recipe detail ── */
   .recipe-card { padding: 1.25rem; }
   .recipe-title { font-size: 22px; }
-  .recipe-browse-card { padding: 16px; }
-  .recipe-browse-title { font-size: 15px; }
-  .recipe-meta-bar { gap: 12px; font-size: 12px; }
+  .recipe-meta-bar { gap: 12px; font-size: 13px; }
+  .ingredient-item { font-size: 14px; }
+  .step-item { font-size: 14px; padding: 10px 0 10px 36px; }
 
-  /* ── Hero topbar — prevent overflow on very narrow screens ── */
-  .hero-brand-name { font-size: 14px; }
-  .hero-topbar-right { gap: 6px; }
-  .week-badge { font-size: 10px; padding: 3px 8px; }
-
-  /* ── Local store badge ── */
-  .local-store-badge { flex-wrap: wrap; gap: 4px; font-size: 12px; }
+  /* ── Tap targets — 44px minimum ── */
+  .add-to-plan-btn { min-height: 44px; padding: 11px 16px; font-size: 13px; }
+  .add-to-plan-btn.detail { padding: 11px 16px; font-size: 13px; width: auto; }
+  .save-btn, .share-btn, .retry-btn { min-height: 44px; padding: 11px 16px; font-size: 13px; }
+  .back-btn { min-height: 44px; display: flex; align-items: center; }
+  .day-picker-btn { min-height: 60px; }
+  .plan-sv-btn { width: 32px; height: 32px; font-size: 14px; }
+  .ingredient-add-btn { width: 34px; height: 34px; font-size: 14px; }
+  .pantry-trigger-btn { min-height: 52px; }
+  .shopping-check-btn { width: 28px; height: 28px; }
+  .shopping-item .shopping-check-btn { width: 24px; height: 24px; }
+  .shopping-item-remove {
+    min-width: 44px; min-height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .saved-recipe-header { padding: 14px; min-height: 52px; }
+  .saved-recipe-delete {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mp-sheet-remove {
+    min-width: 44px; min-height: 44px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mp-sheet-close { width: 40px; height: 40px; }
+  .section-toggle-btn { padding: 10px 16px; min-height: 48px; }
+  .store-branch-item { padding: 14px; }
 
   /* ── Section headings ── */
-  .section-toggle-btn { padding: 10px 16px; }
   .section-toggle-label { font-size: 15px; }
 
   /* ── Meal plan grid — scroll snap ── */
@@ -1581,15 +1611,11 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .meal-plan-day { scroll-snap-align: start; }
 
   /* ── Onboarding store cards — 2 column grid ── */
-  .ob-chain-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
+  .ob-chain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .ob-chain-card { padding: 14px 12px; gap: 8px; }
   .ob-chain-name { font-size: 14px; }
 
-  /* ── Recipe detail — full-screen overlay ── */
+  /* ── Recipe detail — full-screen overlay, light + dark mode ── */
   body.recipe-open { overflow: hidden; }
   .recipe-detail-sheet {
     position: fixed;
@@ -1597,35 +1623,74 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     z-index: 100;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    background: var(--bg-light, #f4f2ed);
   }
   html.dark .recipe-detail-sheet { background: #0d1f0d; }
+
   .recipe-detail-sheet .back-btn {
     position: sticky;
     top: 0; left: 0; right: 0;
     width: 100%;
     padding: 14px 16px;
     margin: 0;
-    background: rgba(13,31,13,0.95);
+    background: rgba(244,242,237,0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-dark);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
     z-index: 10;
     border-radius: 0;
     box-sizing: border-box;
     display: flex;
+    color: #2a5030;
+    font-size: 14px;
+  }
+  html.dark .recipe-detail-sheet .back-btn {
+    background: rgba(13,31,13,0.95);
+    border-bottom-color: var(--border-dark);
+    color: #a0c8a0;
   }
   .recipe-detail-sheet .recipe-card {
     border-radius: 0;
     box-shadow: none;
     margin: 0;
-    padding: 1.25rem;
+    padding: 1.25rem 1rem;
   }
   .recipe-detail-sheet .shopping-list-card {
     border-radius: 0;
     box-shadow: none;
     margin: 0;
-    padding: 1.25rem;
+    padding: 1.25rem 1rem;
   }
+  /* Action buttons wrap nicely on narrow screens */
+  .recipe-detail-sheet .recipe-card > div:first-child > div:last-child {
+    width: 100%;
+  }
+}
+
+/* ─── Remove hover visual effects on touch screens ─── */
+@media (hover: none) {
+  .btn-primary:hover:not(:disabled) {
+    transform: none;
+    box-shadow: 0 4px 18px var(--accent-glow);
+  }
+  .recipe-browse-card:hover {
+    transform: none;
+    box-shadow: 0 2px 14px rgba(100,70,20,0.08), 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .recipe-browse-card.featured:hover {
+    box-shadow: 0 4px 20px rgba(100,70,20,0.10), 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .shopping-cart-fab:hover {
+    transform: none;
+    box-shadow: 0 4px 16px rgba(232,147,74,0.45);
+  }
+  .diet-btn:hover {
+    border-color: #c8d9c8;
+    background: white;
+    color: #222222;
+  }
+  .add-to-plan-btn:hover:not(.in-plan) { background: #4a7050; }
+  .store-toggle:hover { border-color: #e0e0e0; color: #5a5a5a; }
 }
 
 /* (dark-mode-btn merged into .header-icon-btn) */
@@ -1961,7 +2026,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   width: 100%;
   max-height: 88vh;
   overflow-y: auto;
-  padding: 0.75rem 1.25rem 2.5rem;
+  padding: 0.75rem 1.25rem max(2.5rem, calc(1.25rem + env(safe-area-inset-bottom, 0px)));
   animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes mpSlideUp {
@@ -3448,8 +3513,8 @@ html.dark .pantry-filter-banner-text { color: #9ca3af; }
 /* ─── Shopping cart FAB ──────────────────────── */
 .shopping-cart-fab {
   position: fixed;
-  bottom: 24px;
-  right: 20px;
+  bottom: max(24px, calc(20px + env(safe-area-inset-bottom, 0px)));
+  right: max(20px, calc(16px + env(safe-area-inset-right, 0px)));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3492,7 +3557,9 @@ html.dark .pantry-filter-banner-text { color: #9ca3af; }
 
 /* On mobile, meal plan FAB sits above the cart FAB */
 @media (max-width: 1099px) {
-  .meal-plan-fab { bottom: 90px; }
+  .meal-plan-fab {
+    bottom: max(90px, calc(84px + env(safe-area-inset-bottom, 0px)));
+  }
 }
 
 /* ─── Shopping list bottom sheet ─────────────── */
@@ -3500,8 +3567,8 @@ html.dark .pantry-filter-banner-text { color: #9ca3af; }
   background: white;
   border-radius: 24px 24px 0 0;
   animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 0 0 env(safe-area-inset-bottom, 0);
-  max-height: 75vh;
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -3640,11 +3707,13 @@ html.dark .card-save-btn.saved { background: #1d301d; border-color: #3a5a3a; }
   bottom: 0; left: 0; right: 0;
   background: white;
   border-radius: 24px 24px 0 0;
-  max-height: 80vh;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .saved-sheet-empty {
   padding: 48px 24px;

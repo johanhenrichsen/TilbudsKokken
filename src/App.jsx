@@ -257,6 +257,42 @@ function mergeIngredientTexts(texts) {
 }
 
 
+// Attaches touch-swipe-down-to-dismiss listeners to a DOM element.
+// Returns a cleanup function. Call with a setState ref setter as the ref prop.
+function attachSwipeDismiss(el, onDismiss) {
+  let startY = null;
+  let curDy = 0;
+  function onTouchStart(e) {
+    startY = e.touches[0].clientY;
+    curDy = 0;
+    el.style.transition = 'none';
+  }
+  function onTouchMove(e) {
+    if (startY === null) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 0) {
+      curDy = dy;
+      el.style.transform = `translateY(${Math.min(dy, 300)}px)`;
+    }
+  }
+  function onTouchEnd() {
+    el.style.transform = '';
+    el.style.transition = '';
+    const dy = curDy;
+    startY = null;
+    curDy = 0;
+    if (dy > 80) onDismiss();
+  }
+  el.addEventListener('touchstart', onTouchStart, { passive: true });
+  el.addEventListener('touchmove', onTouchMove, { passive: true });
+  el.addEventListener('touchend', onTouchEnd, { passive: true });
+  return () => {
+    el.removeEventListener('touchstart', onTouchStart);
+    el.removeEventListener('touchmove', onTouchMove);
+    el.removeEventListener('touchend', onTouchEnd);
+  };
+}
+
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     try {
@@ -403,6 +439,18 @@ export default function App() {
     }
     return () => document.body.classList.remove("recipe-open");
   }, [selectedRecipe]);
+
+  // ── Swipe-to-dismiss bottom sheets ──────────────────────────────
+  const [shoppingSheetEl, setShoppingSheetEl] = useState(null);
+  const [savedPanelEl, setSavedPanelEl] = useState(null);
+  useEffect(() => {
+    if (!shoppingSheetEl) return;
+    return attachSwipeDismiss(shoppingSheetEl, () => setShowShoppingSheet(false));
+  }, [shoppingSheetEl]);
+  useEffect(() => {
+    if (!savedPanelEl) return;
+    return attachSwipeDismiss(savedPanelEl, () => setShowSavedPanel(false));
+  }, [savedPanelEl]);
 
   // ── Matching ────────────────────────────────────────────────────
   const selectedChains = new Set((localStores || []).map(s => s.chain));
@@ -1798,7 +1846,7 @@ export default function App() {
   {/* Saved recipes panel */}
   {showSavedPanel && (
     <div className="mp-sheet-overlay" onClick={() => setShowSavedPanel(false)}>
-      <div className="saved-sheet" onClick={e => e.stopPropagation()}>
+      <div className="saved-sheet" ref={setSavedPanelEl} onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="shopping-sheet-header">
           <div className="shopping-sheet-title">🔖 Gemte opskrifter</div>
@@ -1836,7 +1884,7 @@ export default function App() {
   {/* Shopping list bottom sheet */}
   {showShoppingSheet && (
     <div className="mp-sheet-overlay" onClick={() => setShowShoppingSheet(false)}>
-      <div className="shopping-sheet" onClick={e => e.stopPropagation()}>
+      <div className="shopping-sheet" ref={setShoppingSheetEl} onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="shopping-sheet-header">
           <div className="shopping-sheet-title">🛒 Indkøbsliste</div>
