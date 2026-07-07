@@ -6,12 +6,42 @@
   --sage: #7a9e7e;
   --cream: #f0ead6;
   --cream-dim: #b0bfaa;
-  --muted: #5a7a5a;
+  /* light-mode defaults */
+  --muted: #555555;
+  --surface: #f0eeea;
+  --surface-2: #e8e5de;
+  --border-dark: #d5d0c8;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg-light: #f4f2ed;
+  --card-a: #fffef9;
+  --card-b: #f9f8f3;
+}
+
+/* ─── Warm parchment background + grain ─────── */
+html {
+  background-color: var(--bg-light);
+}
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 250px 250px;
+  background-repeat: repeat;
+}
+html.dark {
+  background-color: #0a180a;
   --surface: #122212;
   --surface-2: #172917;
   --border-dark: #1e3820;
-  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --muted: #5a7a5a;
+}
+html.dark::before {
+  opacity: 0.06;
 }
 
 /* ─── App shell ──────────────────────────────── */
@@ -71,7 +101,7 @@
 }
 .diet-btn {
   background: white;
-  color: #4a6a4a;
+  color: #222222;
   border: 1.5px solid #c8d9c8;
   border-radius: 50px;
   padding: 6px 16px;
@@ -84,7 +114,7 @@
 .diet-btn:hover {
   border-color: #7a9e7a;
   background: #f5faf5;
-  color: #3a5a3a;
+  color: #0a0a0a;
 }
 .diet-btn.active {
   background: #4a7050;
@@ -128,7 +158,7 @@
 .store-item.selected { background: #eef5ee; }
 .item-name { font-size: 12px; color: #2d2d2d; }
 .item-price { font-size: 12px; font-weight: 600; color: #3d7040; text-align: right; }
-.item-unit { font-size: 10px; color: #b0b8b0; text-align: right; }
+.item-unit { font-size: 10px; color: #888888; text-align: right; }
 
 /* ─── Bottom bar ─────────────────────────────── */
 .bottom-bar {
@@ -257,7 +287,7 @@
   display: flex;
   gap: 20px;
   align-items: center;
-  color: #6b7280;
+  color: #333333;
   font-size: 13px;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid #f3f3f3;
@@ -278,7 +308,7 @@
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #6a9a6a;
+  color: #4a4a4a;
   margin: 1.25rem 0 10px;
 }
 .ingredient-add-btn {
@@ -330,14 +360,14 @@
 }
 .recipe-subtitle {
   font-size: 14px;
-  color: #5a7a5a;
+  color: #444444;
   margin: 4px 0 0 0;
   font-style: italic;
   line-height: 1.4;
 }
 .recipe-description {
   font-size: 15px;
-  color: #4a6040;
+  color: #333333;
   line-height: 1.6;
   margin: 0 0 1.25rem 0;
   font-style: italic;
@@ -385,7 +415,7 @@
 .difficulty-avanceret { background: #fde8e8; color: #8a2020; }
 .calories-meta {
   font-size: 12px;
-  color: #7a8a7a;
+  color: #555555;
 }
 .recipe-tip {
   background: linear-gradient(135deg, #e8f0e0 0%, #f0ebe0 100%);
@@ -534,16 +564,16 @@
 }
 .saved-recipe-meta {
   font-size: 11px;
-  color: #9ca3af;
+  color: #666666;
 }
 .saved-recipe-chevron {
   font-size: 9px;
-  color: #aaa;
+  color: #777777;
 }
 .saved-recipe-delete {
   background: none;
   border: none;
-  color: #c8c8c8;
+  color: #aaaaaa;
   cursor: pointer;
   font-size: 18px;
   line-height: 1;
@@ -608,20 +638,20 @@
   0%, 80%, 100% { transform: scale(0.6); opacity: 0.35; }
   40% { transform: scale(1); opacity: 1; }
 }
-.loading-text { font-size: 14px; color: #6a7a6a; font-weight: 500; margin: 0; }
+.loading-text { font-size: 14px; color: #444444; font-weight: 500; margin: 0; }
 
 /* ─── Empty state ────────────────────────────── */
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
   font-size: 14px;
-  color: #9ca3af;
+  color: #666666;
   font-weight: 500;
 }
 .section-empty-state {
   padding: 1.25rem 1rem;
   font-size: 13px;
-  color: #9ca3af;
+  color: #666666;
   text-align: center;
 }
 
@@ -660,7 +690,7 @@
 .section-count-badge {
   font-size: 11px;
   font-weight: 600;
-  color: #5a7a5a;
+  color: #444444;
   background: rgba(90, 120, 90, 0.1);
   padding: 2px 8px;
   border-radius: 20px;
@@ -668,7 +698,7 @@
   flex-shrink: 0;
 }
 .section-chevron {
-  color: #7a9a7a;
+  color: #555555;
   flex-shrink: 0;
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   transform: rotate(180deg);
@@ -736,7 +766,7 @@
   display: flex;
   gap: 10px;
   font-size: 11px;
-  color: #6b7280;
+  color: #555555;
   margin-bottom: 8px;
 }
 .recipe-card-price {
@@ -753,7 +783,7 @@
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: #7a8a7a;
+  color: #555555;
   font-weight: 500;
 }
 
@@ -839,7 +869,7 @@
 }
 .deal-item-tag.unavailable {
   background: #f5f5f5;
-  color: #9ca3af;
+  color: #888888;
   border: 1px solid #e5e5e5;
   opacity: 0.7;
 }
@@ -861,7 +891,7 @@
 }
 .ingredient-item.ingredient-pantry {
   padding: 4px 6px;
-  color: #6b7280;
+  color: #666666;
 }
 .ingredient-deal-text {
   font-size: 13px;
@@ -870,7 +900,7 @@
 }
 .ingredient-pantry-text {
   font-size: 13px;
-  color: #6b7280;
+  color: #666666;
 }
 .ingredient-pantry-dot {
   width: 5px;
@@ -955,7 +985,7 @@
   transition: border-color 0.15s;
 }
 .store-search-input:focus { border-color: #4a7050; background: white; color: #1a1a1a; }
-.store-search-input::placeholder { color: #9ca3af; }
+.store-search-input::placeholder { color: #888888; }
 .store-branch-list { overflow-y: auto; }
 .chain-group { margin-bottom: 2px; }
 .chain-group-label {
@@ -964,7 +994,7 @@
   gap: 6px;
   font-size: 11px;
   font-weight: 700;
-  color: #9ca3af;
+  color: #666666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 6px 2px 4px;
@@ -991,13 +1021,13 @@
   flex: 1;
   font-size: 11px;
   font-weight: 700;
-  color: #9ca3af;
+  color: #666666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 .chain-group-count {
   font-size: 11px;
-  color: #c8c8c8;
+  color: #888888;
   font-weight: 500;
   min-width: 18px;
   text-align: right;
@@ -1052,8 +1082,8 @@
   color: #1a1a1a;
   display: block;
 }
-.store-branch-city { font-size: 11px; color: #9ca3af; }
-.store-branch-zip { font-size: 12px; color: #9ca3af; font-weight: 500; flex-shrink: 0; }
+.store-branch-city { font-size: 11px; color: #666666; }
+.store-branch-zip { font-size: 12px; color: #666666; font-weight: 500; flex-shrink: 0; }
 .store-check {
   width: 20px;
   height: 20px;
@@ -1077,7 +1107,7 @@
   text-align: center;
   padding: 2rem 1rem;
   font-size: 14px;
-  color: #9ca3af;
+  color: #666666;
   margin: 0;
 }
 
@@ -1139,7 +1169,7 @@
 }
 .sp-desc {
   font-size: 13px;
-  color: #6b7280;
+  color: #444444;
   margin: 0 0 1.25rem;
   line-height: 1.5;
 }
@@ -1348,7 +1378,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .meal-plan-day-name {
   font-size: 10px;
   font-weight: 700;
-  color: #9ca3af;
+  color: #777777;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 6px;
@@ -1368,7 +1398,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   word-break: break-word;
   width: 100%;
 }
-.meal-plan-recipe-meta { font-size: 9px; color: #6b7280; margin-top: 3px; }
+.meal-plan-recipe-meta { font-size: 9px; color: #555555; margin-top: 3px; }
 .meal-plan-servings {
   display: flex;
   align-items: center;
@@ -1393,7 +1423,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   transition: background 0.12s;
 }
 .plan-sv-btn:hover { background: #eef5ee; }
-.meal-plan-empty-label { font-size: 10px; color: #d1d5db; margin-top: auto; }
+.meal-plan-empty-label { font-size: 10px; color: #aaaaaa; margin-top: auto; }
 .meal-plan-remove {
   position: absolute;
   top: 5px; right: 5px;
@@ -1425,7 +1455,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   gap: 6px;
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: #444444;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 6px;
@@ -1610,7 +1640,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   transition: border-color 0.15s, background 0.15s;
 }
 .search-input:focus { border-color: #4a7050; }
-.search-input::placeholder { color: #9ca3af; }
+.search-input::placeholder { color: #888888; }
 .search-clear {
   position: absolute;
   right: 12px; top: 50%;
@@ -1618,7 +1648,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   background: none;
   border: none;
   font-size: 18px;
-  color: #9ca3af;
+  color: #777777;
   cursor: pointer;
   line-height: 1;
   padding: 4px;
@@ -1758,12 +1788,12 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   gap: 4px;
   margin-top: 2px;
   font-size: 11px;
-  color: #5a7a5a;
+  color: #444444;
 }
 .mp-sidebar-remove {
   background: none;
   border: none;
-  color: #bbb;
+  color: #999999;
   font-size: 16px;
   cursor: pointer;
   padding: 2px 4px;
@@ -1779,7 +1809,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   align-items: center;
   gap: 8px;
   flex: 1;
-  color: #aaa;
+  color: #777777;
   font-size: 12px;
 }
 .mp-sidebar-plus {
@@ -2001,11 +2031,11 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mp-sheet-recipe-meta { font-size: 12px; color: #7a9e7e; margin-top: 2px; }
+.mp-sheet-recipe-meta { font-size: 12px; color: #444444; margin-top: 2px; }
 .mp-sheet-remove {
   background: none;
   border: none;
-  color: #bbb;
+  color: #999999;
   font-size: 20px;
   cursor: pointer;
   padding: 4px 6px;
@@ -2018,7 +2048,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .mp-sheet-empty {
   flex: 1;
   font-size: 13px;
-  color: #bbb;
+  color: #777777;
   font-style: italic;
 }
 .mp-sheet-actions {
@@ -2444,7 +2474,7 @@ html.dark .ob-progress-dot.done { background: #5a8a5a; }
 .ob-step-counter {
   font-size: 12px;
   font-weight: 600;
-  color: #9ca3af;
+  color: #666666;
   min-width: 28px;
   text-align: right;
 }
@@ -2476,7 +2506,7 @@ html.dark .ob-step-counter { color: #4a6a4a; }
 html.dark .ob-title { color: var(--cream); font-family: var(--font-serif); }
 .ob-desc {
   font-size: 14px;
-  color: #6a8a6a;
+  color: #444444;
   margin: 0 0 1.75rem;
   line-height: 1.55;
 }
@@ -3004,13 +3034,13 @@ html.dark .price-range-wrap { background: var(--surface); }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #6b7280;
+  color: #444444;
 }
 html.dark .price-range-label { color: var(--muted); }
 .price-range-display {
   font-size: 13px;
   font-weight: 600;
-  color: #9ca3af;
+  color: #555555;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -3136,7 +3166,7 @@ html.dark .pantry-trigger-btn:hover { background: #1a2e1a; }
 .pantry-trigger-title {
   font-size: 14px;
   font-weight: 600;
-  color: var(--sage, #4a6a4a);
+  color: #2a4a2a;
   line-height: 1.2;
 }
 .pantry-inline.has-items .pantry-trigger-title { color: var(--accent); }
@@ -3207,7 +3237,7 @@ html.dark .pantry-dropdown-item.active { background: #1a2e1a; }
 .pantry-dropdown-empty {
   padding: 11px 14px;
   font-size: 13px;
-  color: #9ca3af;
+  color: #777777;
   font-style: italic;
 }
 .suggestion-highlight {
@@ -3245,7 +3275,7 @@ html.dark .pantry-body-inline { background: var(--surface); border-color: var(--
   min-width: 0;
 }
 .pantry-text-input:focus { border-color: #4a7050; background: white; }
-.pantry-text-input::placeholder { color: #9ca3af; }
+.pantry-text-input::placeholder { color: #888888; }
 html.dark .pantry-text-input { background: #0f190f; border-color: #2a3d2a; color: var(--cream); }
 html.dark .pantry-text-input:focus { border-color: #4a7050; background: #1a2e1a; }
 .pantry-add-btn {
@@ -3277,7 +3307,7 @@ html.dark .pantry-text-input:focus { border-color: #4a7050; background: #1a2e1a;
   padding: 5px 11px;
   font-size: 12px;
   font-weight: 500;
-  color: #5a7a5a;
+  color: #333333;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s;
@@ -3324,7 +3354,7 @@ html.dark .pantry-suggest-chip:hover { background: #1a2e1a; border-color: #4a705
   border: none;
   font-size: 11px;
   font-weight: 500;
-  color: #9ca3af;
+  color: #777777;
   cursor: pointer;
   font-family: inherit;
   padding: 4px 6px;
@@ -3606,7 +3636,7 @@ html.dark .card-save-btn.saved { background: #1d301d; border-color: #3a5a3a; }
 .saved-sheet-empty {
   padding: 48px 24px;
   text-align: center;
-  color: #9ca3af;
+  color: #666666;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -3641,12 +3671,12 @@ html.dark .card-save-btn.saved { background: #1d301d; border-color: #3a5a3a; }
 }
 .saved-sheet-card-meta {
   font-size: 11px;
-  color: #9ca3af;
+  color: #666666;
 }
 .saved-sheet-unsave {
   background: none;
   border: none;
-  color: #c8c8c8;
+  color: #aaaaaa;
   cursor: pointer;
   font-size: 20px;
   line-height: 1;

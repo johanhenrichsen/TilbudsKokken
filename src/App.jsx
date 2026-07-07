@@ -803,7 +803,6 @@ export default function App() {
           </div>
         )}
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
-        {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
         <div className="recipe-browse-title">{r.title}</div>
         <div className="recipe-browse-meta">
           <span>⏱ {r.time}</span>
