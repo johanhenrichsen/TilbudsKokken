@@ -294,6 +294,7 @@ function attachSwipeDismiss(el, onDismiss) {
 }
 
 function useRecipePhoto(title) {
+  console.log('useRecipePhoto called with:', title, 'key:', import.meta.env.VITE_UNSPLASH_ACCESS_KEY ? 'present' : 'MISSING');
   const [photoUrl, setPhotoUrl] = useState(() => {
     try {
       const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
@@ -302,11 +303,10 @@ function useRecipePhoto(title) {
   });
   useEffect(() => {
     const key = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
-    console.log('[Unsplash] key present:', key ? key.slice(0, 8) + '…' : 'MISSING — add VITE_UNSPLASH_ACCESS_KEY to .env');
-    console.log('[Unsplash] searching for:', title, '| cached:', photoUrl !== undefined);
     if (photoUrl !== undefined) return;
     if (!key) { setPhotoUrl(''); return; }
     let cancelled = false;
+    console.log('Fetching Unsplash for:', title);
     fetch(
       `https://api.unsplash.com/search/photos?query=${encodeURIComponent(title + ' mad')}&per_page=1&client_id=${key}`
     )
