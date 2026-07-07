@@ -294,7 +294,7 @@ function attachSwipeDismiss(el, onDismiss) {
 }
 
 function useRecipePhoto(title) {
-  console.log('useRecipePhoto called with:', title);
+  const cardRef = useRef(null);
   const [photoUrl, setPhotoUrl] = useState(() => {
     try {
       const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
@@ -302,35 +302,39 @@ function useRecipePhoto(title) {
     } catch { return undefined; }
   });
   useEffect(() => {
-    if (photoUrl !== undefined) return;
+    if (photoUrl !== undefined) return; // already cached, nothing to do
+    const el = cardRef.current;
+    if (!el) return;
     let cancelled = false;
-    console.log('Fetching Unsplash for:', title);
-    fetch(`/api/unsplash?query=${encodeURIComponent(title + ' mad')}`)
-      .then(r => r.json())
-      .then(data => {
-        if (cancelled) return;
-        const url = data?.url || '';
-        setPhotoUrl(url);
-        try {
-          const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
-          cache[title] = url;
-          localStorage.setItem('unsplashCache', JSON.stringify(cache));
-        } catch {}
-      })
-      .catch(err => {
-        console.error('[Unsplash] error for:', title, err);
-        if (!cancelled) setPhotoUrl('');
-      });
-    return () => { cancelled = true; };
-  }, [title]);
-  return photoUrl;
+    const observer = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      fetch(`/api/unsplash?query=${encodeURIComponent(title + ' mad')}`)
+        .then(r => r.json())
+        .then(data => {
+          if (cancelled) return;
+          const url = data?.url || '';
+          setPhotoUrl(url);
+          try {
+            const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
+            cache[title] = url;
+            localStorage.setItem('unsplashCache', JSON.stringify(cache));
+          } catch {}
+        })
+        .catch(() => { if (!cancelled) setPhotoUrl(''); });
+    }, { rootMargin: '150px' });
+    observer.observe(el);
+    return () => { cancelled = true; observer.disconnect(); };
+  }, [title, photoUrl]);
+  return { photoUrl, cardRef };
 }
 
 function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, onAddToPlan, onToggleSave }) {
-  const photoUrl = useRecipePhoto(r.title);
+  const { photoUrl, cardRef } = useRecipePhoto(r.title);
   const pricePerPerson = calcPricePerPerson(r);
   return (
     <div
+      ref={cardRef}
       className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
       onClick={() => onSelect(r)}
     >
