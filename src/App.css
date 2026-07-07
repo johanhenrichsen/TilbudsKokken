@@ -1554,6 +1554,9 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   }
   .app-title { font-size: 24px; }
 
+  /* ── Clearance for the fixed FAB at the bottom ── */
+  .app { padding-bottom: max(100px, calc(90px + env(safe-area-inset-bottom, 0px))); }
+
   /* ── One card per row ── */
   .recipe-browse-grid { grid-template-columns: 1fr; }
 
@@ -1718,10 +1721,21 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .recipe-detail-sheet .recipe-card > div:first-child > div:last-child {
     width: 100%;
   }
+
+  /* ── Card photo — less tall on small screens ── */
+  .card-photo-wrap { height: 150px; }
+
+  /* ── Card corners — slightly tighter radius on phone ── */
+  .recipe-browse-card { border-radius: 18px; }
+
+  /* ── Shopping sheet rows — full-width tap target ── */
+  .shopping-sheet-item { cursor: pointer; padding: 14px 20px; }
+  .shopping-check-btn { width: 34px; height: 34px; }
 }
 
 /* ─── Remove hover visual effects on touch screens ─── */
 @media (hover: none) {
+  /* ── Strip desktop hover effects ── */
   .btn-primary:hover:not(:disabled) {
     transform: none;
     box-shadow: 0 4px 18px var(--accent-glow);
@@ -1745,6 +1759,19 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   }
   .add-to-plan-btn:hover:not(.in-plan) { background: #4a7050; }
   .store-toggle:hover { border-color: #e0e0e0; color: #5a5a5a; }
+
+  /* ── Touch active feedback ── */
+  .recipe-browse-card:active {
+    transform: scale(0.98);
+    transition: transform 0.08s ease;
+    opacity: 0.93;
+  }
+  .diet-btn:active { opacity: 0.65; transform: scale(0.96); }
+  .header-icon-btn:active { opacity: 0.55; }
+  .shopping-cart-fab:active { transform: scale(0.93); }
+  .shopping-sheet-item:active { background: rgba(0,0,0,0.05); }
+  html.dark .shopping-sheet-item:active { background: rgba(255,255,255,0.06); }
+  .section-toggle-btn:active { background: rgba(0,0,0,0.08); }
 }
 
 /* (dark-mode-btn merged into .header-icon-btn) */

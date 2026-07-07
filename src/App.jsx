@@ -1934,8 +1934,8 @@ export default function App() {
           {shoppingList.map((item, i) => {
             const checked = checkedItems.has(item);
             return (
-              <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`}>
-                <button className="shopping-check-btn" onClick={() => toggleCheckedItem(item)} aria-label={checked ? "Fjern hak" : "Sæt hak"}>
+              <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`} onClick={() => toggleCheckedItem(item)}>
+                <button className="shopping-check-btn" onClick={e => e.stopPropagation()} aria-label={checked ? "Fjern hak" : "Sæt hak"} tabIndex={-1}>
                   {checked ? (
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="2,7 6,11 12,3"/>
@@ -1943,7 +1943,7 @@ export default function App() {
                   ) : null}
                 </button>
                 <span className="shopping-sheet-text">{item}</span>
-                <button className="shopping-item-remove" onClick={() => removeFromShoppingList(i)}>×</button>
+                <button className="shopping-item-remove" onClick={e => { e.stopPropagation(); removeFromShoppingList(i); }}>×</button>
               </li>
             );
           })}
