@@ -293,6 +293,112 @@ function attachSwipeDismiss(el, onDismiss) {
   };
 }
 
+function useRecipePhoto(title) {
+  const [photoUrl, setPhotoUrl] = useState(() => {
+    try {
+      const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
+      return title in cache ? cache[title] : undefined;
+    } catch { return undefined; }
+  });
+  useEffect(() => {
+    const key = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
+    console.log('[Unsplash] key present:', key ? key.slice(0, 8) + '…' : 'MISSING — add VITE_UNSPLASH_ACCESS_KEY to .env');
+    console.log('[Unsplash] searching for:', title, '| cached:', photoUrl !== undefined);
+    if (photoUrl !== undefined) return;
+    if (!key) { setPhotoUrl(''); return; }
+    let cancelled = false;
+    fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(title + ' mad')}&per_page=1&client_id=${key}`
+    )
+      .then(r => {
+        if (!r.ok) console.error('[Unsplash] HTTP', r.status, 'for:', title);
+        return r.json();
+      })
+      .then(data => {
+        if (cancelled) return;
+        const url = data?.results?.[0]?.urls?.small || '';
+        console.log('[Unsplash] result for:', title, '->', url ? url.slice(0, 60) + '…' : '(no image)');
+        setPhotoUrl(url);
+        try {
+          const cache = JSON.parse(localStorage.getItem('unsplashCache') || '{}');
+          cache[title] = url;
+          localStorage.setItem('unsplashCache', JSON.stringify(cache));
+        } catch {}
+      })
+      .catch(err => {
+        console.error('[Unsplash] fetch error for:', title, err);
+        if (!cancelled) setPhotoUrl('');
+      });
+    return () => { cancelled = true; };
+  }, [title]);
+  return photoUrl;
+}
+
+function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, onAddToPlan, onToggleSave }) {
+  const photoUrl = useRecipePhoto(r.title);
+  const pricePerPerson = calcPricePerPerson(r);
+  return (
+    <div
+      className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
+      onClick={() => onSelect(r)}
+    >
+      <div className="card-photo-wrap">
+        {photoUrl
+          ? <img className="card-photo" src={photoUrl} alt="" loading="lazy" />
+          : <div className="card-photo-placeholder"><span>{r.emoji}</span></div>
+        }
+        <div className="card-photo-gradient" />
+        <div className="recipe-category-tag card-photo-tag">{r.emoji} {r.category}</div>
+        {isPopular && (
+          <div className="card-photo-badge">
+            <span className="popular-badge-pill">🔥 Populær</span>
+          </div>
+        )}
+      </div>
+      <div className="card-body">
+        <div className="recipe-browse-title">{r.title}</div>
+        <div className="recipe-browse-meta">
+          <span>⏱ {r.time}</span>
+          <span>🥘 {(r.ingredients || []).length} ing.</span>
+        </div>
+        {pricePerPerson != null && (
+          <div className="recipe-card-price">
+            ca. {pricePerPerson} kr. pr. person
+          </div>
+        )}
+        <div className="recipe-deal-tags">
+          {(r.dealItems || []).map(di => {
+            const available = availableNames.has(di.name);
+            return (
+              <span
+                key={di.name}
+                className={`deal-item-tag${available ? " available" : " unavailable"}`}
+              >
+                <span className="deal-store-dot" style={{ background: getChainColor(di.store) }} />
+                {di.name.replace(/ \d+.*$/, "")}
+              </span>
+            );
+          })}
+        </div>
+        <div className="card-action-row">
+          <button
+            className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
+            onClick={e => { e.stopPropagation(); if (!inPlan) onAddToPlan(r); }}
+            title={inPlan ? "Allerede i madplan" : "Tilføj til ugen"}
+          >
+            {inPlan ? "📅 I madplan" : "📅 Tilføj til ugen"}
+          </button>
+          <button
+            className={`card-save-btn${isSaved ? " saved" : ""}`}
+            onClick={e => { e.stopPropagation(); onToggleSave(r); }}
+            title={isSaved ? "Fjern fra gemte" : "Gem opskrift"}
+          >🔖</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     try {
@@ -857,63 +963,23 @@ export default function App() {
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
   const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
 
-  // ── Recipe card (browse) ────────────────────────────────────────
-  function RecipeCard({ r }) {
-    const inPlan = mealPlan.some(e => e?.recipe?.id === r.id);
-    const isSaved = savedRecipes.some(s => s.title === r.title);
-    const isPopular = popularRecipes.slice(0, 3).some(p => p.id === r.id);
-    const pricePerPerson = calcPricePerPerson(r);
-    return (
-      <div
-        className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
-        onClick={() => selectRecipe(r)}
-      >
-        {isPopular && (
-          <div className="card-badges">
-            <span className="popular-badge-pill">🔥 Populær</span>
-          </div>
-        )}
-        <div className="recipe-category-tag">{r.emoji} {r.category}</div>
-        <div className="recipe-browse-title">{r.title}</div>
-        <div className="recipe-browse-meta">
-          <span>⏱ {r.time}</span>
-          <span>🥘 {(r.ingredients || []).length} ing.</span>
-        </div>
-        {pricePerPerson != null && (
-          <div className="recipe-card-price">
-            ca. {pricePerPerson} kr. pr. person
-          </div>
-        )}
-        <div className="recipe-deal-tags">
-          {(r.dealItems || []).map(di => {
-            const available = getAvailableItemNames().has(di.name);
-            return (
-              <span
-                key={di.name}
-                className={`deal-item-tag${available ? " available" : " unavailable"}`}
-              >
-                <span className="deal-store-dot" style={{ background: getChainColor(di.store) }} />
-                {di.name.replace(/ \d+.*$/, "")}
-              </span>
-            );
-          })}
-        </div>
-        <div className="card-action-row">
-          <button
-            className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
-            onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
-            title={inPlan ? "Allerede i madplan" : "Tilføj til ugen"}
-          >
-            {inPlan ? "📅 I madplan" : "📅 Tilføj til ugen"}
-          </button>
-          <button
-            className={`card-save-btn${isSaved ? " saved" : ""}`}
-            onClick={e => { e.stopPropagation(); toggleSaveRecipe(r); }}
-            title={isSaved ? "Fjern fra gemte" : "Gem opskrift"}
-          >🔖</button>
-        </div>
-      </div>
-    );
+  // ── Render a grid of recipe cards ──────────────────────────────
+  function renderRecipeGrid(recipes) {
+    const availableNames = getAvailableItemNames();
+    const top3Ids = new Set(popularRecipes.slice(0, 3).map(p => p.id));
+    return recipes.map(r => (
+      <RecipeCard
+        key={r.id}
+        r={r}
+        inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
+        isSaved={savedRecipes.some(s => s.title === r.title)}
+        isPopular={top3Ids.has(r.id)}
+        availableNames={availableNames}
+        onSelect={selectRecipe}
+        onAddToPlan={setAddingToPlan}
+        onToggleSave={toggleSaveRecipe}
+      />
+    ));
   }
 
   return (
@@ -1609,7 +1675,7 @@ export default function App() {
               <div className="section-body-inner">
                 {filteredRecommended.length > 0 ? (
                   <div className="recipe-browse-grid section-body-grid">
-                    {filteredRecommended.map(r => <RecipeCard key={r.id} r={r} />)}
+                    {renderRecipeGrid(filteredRecommended)}
                   </div>
                 ) : (
                   <div className="section-empty-state">
@@ -1646,7 +1712,7 @@ export default function App() {
               <div className="section-body-inner">
                 {filteredOthers.length > 0 ? (
                   <div className="recipe-browse-grid section-body-grid">
-                    {filteredOthers.map(r => <RecipeCard key={r.id} r={r} />)}
+                    {renderRecipeGrid(filteredOthers)}
                   </div>
                 ) : (
                   <div className="section-empty-state">
