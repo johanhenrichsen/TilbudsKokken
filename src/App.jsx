@@ -229,7 +229,7 @@ function calcPricePerPerson(recipe) {
   }
   if (!hasPrice) return null;
   const pp = Math.round(total / servings);
-  return (pp < 1 || pp > 200) ? null : pp;
+  return (pp < 2 || pp > 150) ? null : pp;
 }
 
 // Keyword regexes matched against actual ingredient texts (case-insensitive).
