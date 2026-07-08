@@ -345,7 +345,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
           </div>
         )}
         <div className="recipe-deal-tags">
-          {(r.dealItems || []).map(di => {
+          {(r.dealItems || []).slice(0, 3).map(di => {
             const available = availableNames.has(di.name);
             return (
               <span
@@ -357,6 +357,9 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
               </span>
             );
           })}
+          {(r.dealItems || []).length > 3 && (
+            <span className="deal-item-overflow">og {(r.dealItems || []).length - 3} mere</span>
+          )}
         </div>
         <div className="card-action-row">
           <button

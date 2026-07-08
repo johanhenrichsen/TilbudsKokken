@@ -953,6 +953,14 @@ html, body {
   border: 1px solid #e5e5e5;
   opacity: 0.7;
 }
+.deal-item-overflow {
+  font-size: 10px;
+  color: #888888;
+  font-weight: 500;
+  white-space: nowrap;
+  align-self: center;
+  padding: 3px 0;
+}
 .deal-store-dot {
   width: 7px;
   height: 7px;
@@ -1577,73 +1585,83 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .ob-welcome-logo { height: auto !important; }
   .ob-welcome-content { max-width: calc(100vw - 2rem); }
 
-  /* ── Filter chips — 40px touch targets, no wrap, horizontal scroll ── */
+  /* ── Filter chips — compact but tappable, no wrap, horizontal scroll with fade ── */
   .diet-btn {
-    min-height: 40px;
-    padding: 8px 14px;
-    font-size: 13px;
+    min-height: 38px;
+    padding: 6px 12px;
+    font-size: 12px;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .diet-filters,
   .time-filters,
-  .cuisine-filters {
+  .cuisine-filters,
+  .quick-filters {
     flex-wrap: nowrap;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     padding-bottom: 2px;
     gap: 6px;
-    /* bleed both edges so chips reach the screen edge */
+    /* bleed left so chips start at screen edge */
     margin-left: -0.75rem;
     margin-right: -0.75rem;
     padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-right: 2rem; /* room for content before fade */
+    /* subtle right-edge fade to hint scrollability */
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
   }
   .diet-filters::-webkit-scrollbar,
   .time-filters::-webkit-scrollbar,
-  .cuisine-filters::-webkit-scrollbar { display: none; }
+  .cuisine-filters::-webkit-scrollbar,
+  .quick-filters::-webkit-scrollbar { display: none; }
 
-  /* ── Price range — bigger thumbs for thumb interaction ── */
+  /* ── Price range — generous padding + large thumbs for one-thumb use ── */
   .price-range-wrap {
-    padding-left: 18px;
-    padding-right: 18px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
   .price-range-input::-webkit-slider-thumb {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
   }
   .price-range-input::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
   }
 
-  /* ── Header ── */
-  .hero-brand-name { font-size: 17px; }
-  .hero-brand-slogan { font-size: 10px; }
+  /* ── Header — single compact row, max ~56px ── */
+  .app-hero { padding: 0.4rem 0.75rem; }
+  .hero-brand svg { width: 30px !important; height: 30px !important; }
+  .hero-brand-slogan { display: none; }
+  .hero-brand-name { font-size: 16px; }
   .hero-topbar-right { gap: 4px; }
   .header-actions { gap: 2px; }
-  .header-icon-btn { width: 40px; height: 40px; font-size: 17px; }
+  .header-icon-btn { width: 38px; height: 38px; font-size: 16px; }
   .week-badge { font-size: 10px; padding: 3px 7px; }
 
-  /* ── Store badge ── */
-  .local-store-badge { flex-wrap: wrap; gap: 4px; font-size: 12px; }
-  .skift-btn { min-height: 40px; padding: 8px 14px; font-size: 12px; }
+  /* ── Store badge — hidden on mobile (accessible via ⚙) ── */
+  .local-store-badge { display: none; }
+  .skift-btn { min-height: 44px; padding: 10px 16px; font-size: 12px; }
 
   /* ── Search ── */
   .search-input { padding: 12px 44px 12px 16px; font-size: 15px; }
 
-  /* ── Recipe cards ── */
-  .recipe-browse-title { font-size: 16px; font-weight: 800; }
-  .recipe-browse-meta { font-size: 12px; }
-  .recipe-deal-tags { gap: 6px; flex-wrap: wrap; }
+  /* ── Recipe cards — full-width, dominant title ── */
+  .recipe-browse-title { font-size: 18px; font-weight: 800; letter-spacing: -0.2px; }
+  .recipe-browse-meta { font-size: 11px; }
+  .recipe-deal-tags { gap: 5px; flex-wrap: wrap; max-height: 52px; overflow: hidden; }
+  .card-body { padding: 12px 14px 16px; }
+  .card-photo-wrap { height: 175px; }
 
-  /* ── Recipe detail ── */
-  .recipe-card { padding: 1.25rem; }
-  .recipe-title { font-size: 22px; }
-  .recipe-meta-bar { gap: 12px; font-size: 13px; }
-  .ingredient-item { font-size: 14px; }
-  .step-item { font-size: 14px; padding: 10px 0 10px 36px; }
+  /* ── Recipe detail — readable line height, generous spacing ── */
+  .recipe-card { padding: 1rem; }
+  .recipe-title { font-size: 23px; letter-spacing: -0.4px; line-height: 1.18; }
+  .recipe-meta-bar { gap: 10px; font-size: 12px; flex-wrap: wrap; }
+  .ingredient-item { font-size: 14px; line-height: 1.6; }
+  .step-item { font-size: 14px; line-height: 1.65; padding: 10px 0 10px 36px; }
 
   /* ── Tap targets — 44px minimum ── */
   .add-to-plan-btn { min-height: 44px; padding: 11px 16px; font-size: 13px; }
@@ -1674,7 +1692,11 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .store-branch-item { padding: 14px; }
 
   /* ── Section headings ── */
-  .section-toggle-label { font-size: 15px; }
+  .section-toggle-label { font-size: 15px; letter-spacing: -0.4px; }
+  .section-intro { font-size: 11px; padding: 0 12px 6px; margin-top: -2px; }
+  .recipe-browse-section { margin-bottom: 1.25rem; }
+  .section-header-row { padding-right: 8px; }
+  .sort-select { font-size: 11px; min-width: 88px; padding: 4px 18px 4px 8px; }
 
   /* ── Meal plan grid — scroll snap ── */
   .meal-plan-grid { scroll-snap-type: x mandatory; }
@@ -1736,15 +1758,34 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     width: 100%;
   }
 
-  /* ── Card photo — less tall on small screens ── */
-  .card-photo-wrap { height: 150px; }
-
   /* ── Card corners — slightly tighter radius on phone ── */
   .recipe-browse-card { border-radius: 18px; }
 
   /* ── Shopping sheet rows — full-width tap target ── */
   .shopping-sheet-item { cursor: pointer; padding: 14px 20px; }
   .shopping-check-btn { width: 34px; height: 34px; }
+
+  /* ── Prefs section — compact on mobile ── */
+  .prefs-body { padding: 0 12px 12px; }
+  .prefs-group-label { margin: 10px 0 5px; font-size: 10px; }
+
+  /* ── Setup invite card — breathing room ── */
+  .setup-invite-card { padding: 16px 14px 12px; }
+  .setup-invite-title { font-size: 18px; }
+  .setup-invite-sub { font-size: 13px; }
+
+  /* ── No horizontal overflow ── */
+  .prefs-section { max-width: 100%; }
+  .recipe-card { box-sizing: border-box; max-width: 100%; }
+  .section-header-row { overflow: hidden; }
+
+  /* ── FAB — ensure comfortable thumb position ── */
+  .shopping-cart-fab {
+    width: 52px;
+    height: 52px;
+    bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px)));
+    right: max(16px, calc(12px + env(safe-area-inset-right, 0px)));
+  }
 }
 
 /* ─── Remove hover visual effects on touch screens ─── */
