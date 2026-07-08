@@ -4138,3 +4138,32 @@ html.dark .sort-select {
   border-color: var(--border-dark);
   color: #d4e8d4;
 }
+
+/* ─── Live recipe counter ────────────────────── */
+.chain-recipe-counter {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  padding: 12px 16px 4px;
+  line-height: 1.4;
+}
+.chain-recipe-counter--zero {
+  color: var(--muted);
+  font-style: italic;
+}
+.chain-recipe-counter--all {
+  font-weight: 600;
+}
+.chain-recipe-count {
+  display: inline-block;
+  color: #e8934a;
+  font-weight: 700;
+  font-size: 15px;
+  animation: count-pop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes count-pop {
+  0%   { transform: scale(1.5); opacity: 0.6; }
+  60%  { transform: scale(0.92); }
+  100% { transform: scale(1);   opacity: 1; }
+}

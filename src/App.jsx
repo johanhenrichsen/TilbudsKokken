@@ -377,6 +377,42 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
   );
 }
 
+function countRecipesForChains(chains) {
+  if (chains.size === 0) return 0;
+  return recipeBank.filter(r =>
+    (r.dealItems || []).length > 0 &&
+    (r.dealItems || []).every(di => chains.has(di.store))
+  ).length;
+}
+
+function RecipeCounter({ chains }) {
+  const count = countRecipesForChains(chains);
+  const total = recipeBank.length;
+  const allSelected = chains.size >= CHAIN_ORDER.length;
+
+  if (chains.size === 0) {
+    return (
+      <div className="chain-recipe-counter chain-recipe-counter--zero">
+        Vælg butikker for at se opskrifter
+      </div>
+    );
+  }
+  if (allSelected) {
+    return (
+      <div className="chain-recipe-counter chain-recipe-counter--all">
+        Du har adgang til alle <span className="chain-recipe-count" key={total}>{total}</span> opskrifter 🎉
+      </div>
+    );
+  }
+  return (
+    <div className="chain-recipe-counter">
+      Med disse butikker kan du lave{" "}
+      <span className="chain-recipe-count" key={count}>{count}</span>{" "}
+      opskrift{count !== 1 ? "er" : ""} denne uge
+    </div>
+  );
+}
+
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     try {
@@ -1104,6 +1140,7 @@ export default function App() {
                       );
                     })}
                   </div>
+                  <RecipeCounter chains={pendingChains} />
                 </div>
               )}
 
@@ -1200,6 +1237,7 @@ export default function App() {
                 })}
               </div>
             </div>
+            <RecipeCounter chains={selectedChains} />
           </div>
         </div>
       )}
@@ -1316,11 +1354,7 @@ export default function App() {
                 );
               })}
             </div>
-            {selectedChains.size > 0 && (
-              <div className="setup-invite-footer">
-                <span className="setup-invite-count">{selectedChains.size} butik{selectedChains.size !== 1 ? "ker" : ""} valgt — rul ned for at se opskrifter</span>
-              </div>
-            )}
+            <RecipeCounter chains={selectedChains} />
           </div>
         </>
       )}
