@@ -232,12 +232,15 @@ function calcPricePerPerson(recipe) {
   return (pp < 1 || pp > 200) ? null : pp;
 }
 
-const dietExcludeItems = {
-  Alle: new Set(),
-  Vegetar: new Set(["Hakket oksekød 500g", "Kyllingefilet 600g", "Laks filet 400g"]),
-  Veganer: new Set(["Hakket oksekød 500g", "Kyllingefilet 600g", "Laks filet 400g", "Fløde 38% 0.5L", "Mozzarella 125g", "Parmesan revet 80g", "Æg 10 stk."]),
-  Glutenfri: new Set(["Spaghetti 500g", "Pasta penne 500g"]),
-  Mælkefri: new Set(["Fløde 38% 0.5L", "Mozzarella 125g", "Parmesan revet 80g"]),
+// Keyword regexes matched against actual ingredient texts (case-insensitive).
+// Checked against both dealItems[].name and ingredients[].text so nothing slips through.
+// Keyword regexes matched against actual ingredient texts (case-insensitive).
+// Checked against both dealItems[].name and ingredients[].text so nothing slips through.
+const dietKeywords = {
+  Vegetar:  /kylling|chicken|okse|grise|svine|pork|laks|salmon|tun|fisk|bacon|pølse|rejer|shrimp|torsk|\band|lam|bøf|spareribs|dorade|gyros|steak|pepperoni|krebinetter|fjerkræ/i,
+  Veganer:  /kylling|chicken|okse|grise|svine|pork|laks|salmon|tun|fisk|bacon|pølse|rejer|shrimp|torsk|\band|lam|bøf|spareribs|dorade|gyros|steak|pepperoni|krebinetter|fjerkræ|mælk|fløde|smør|ost|mozzarella|parmesan|skyr|yoghurt|cremefine|æg/i,
+  Glutenfri:/spaghetti|pasta|fusilli|udon|rugbrød|hvedemel|tortilla|couscous|bulgur|penne|lasagne|makaroni|knækbrød|pitabrød|hotdogbrød|pølsebrød|baguette|pizzabund|pizzadej|gyoza|tempura|petit beurre|boller/i,
+  Mælkefri: /mælk|fløde|smør|ost|mozzarella|parmesan|skyr|yoghurt|cremefine|havarti|cheddar/i,
 };
 
 const DAY_SHORT = ["Man", "Tirs", "Ons", "Tors", "Fre", "Lør", "Søn"];
@@ -542,14 +545,19 @@ export default function App() {
   }
 
   function getScoredRecipes(dietFilter) {
-    const excluded = dietExcludeItems[dietFilter];
+    const pattern = dietKeywords[dietFilter] || null;
     return recipeBank
-      .filter(r => !(r.dealItems || []).some(di => excluded.has(di.name)))
+      .filter(r => {
+        if (!pattern) return true;
+        const texts = [
+          ...(r.dealItems || []).map(di => di.name),
+          ...(r.ingredients || []).map(i => i.text),
+        ];
+        return !texts.some(t => pattern.test(t));
+      })
       .map(r => ({
         ...r,
         matchCount: (r.dealItems || []).length,
-        // fullyMatched = fits in "Ugens opskrifter": no chain filter active,
-        // or every deal ingredient comes from a selected chain.
         fullyMatched: selectedChains.size === 0
           || (r.dealItems || []).every(di => selectedChains.has(di.store)),
       }));
