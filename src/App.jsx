@@ -362,14 +362,14 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
           <button
             className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
             onClick={e => { e.stopPropagation(); if (!inPlan) onAddToPlan(r); }}
-            title={inPlan ? "Allerede i madplan" : "Tilføj til ugen"}
+            title={inPlan ? "Allerede på ugeplanen" : "Sæt på ugeplanen"}
           >
-            {inPlan ? "📅 I madplan" : "📅 Tilføj til ugen"}
+            {inPlan ? "📅 På ugeplanen" : "📅 Sæt på ugeplanen"}
           </button>
           <button
             className={`card-save-btn${isSaved ? " saved" : ""}`}
             onClick={e => { e.stopPropagation(); onToggleSave(r); }}
-            title={isSaved ? "Fjern fra gemte" : "Gem opskrift"}
+            title={isSaved ? "Fjern fra gemte" : "Gem til senere"}
           >🔖</button>
         </div>
       </div>
@@ -1218,7 +1218,7 @@ export default function App() {
                 <button className="sp-close-btn" onClick={() => setShowStorePicker(false)}>×</button>
               </div>
             </div>
-            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Vælg de kæder du handler i.</p>
+            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Vælg de kæder du handler i — vi finder opskrifterne til dig.</p>
             <div style={{ flex: 1, overflowY: "auto" }}>
               <div className="ob-chain-grid">
                 {CHAIN_ORDER.map(chain => {
@@ -1337,7 +1337,7 @@ export default function App() {
           {/* Step 1: inline store picker */}
           <div className="setup-invite-card">
             <h2 className="setup-invite-title">Hvilke butikker handler du i?</h2>
-            <p className="setup-invite-sub">Vælg dine kæder — vi finder opskrifter baseret på ugens tilbud</p>
+            <p className="setup-invite-sub">Vælg dine kæder — vi finder de bedste opskrifter baseret på netop dine tilbud denne uge</p>
             <div className="ob-chain-grid setup-chain-grid">
               {CHAIN_ORDER.map(chain => {
                 const sel = selectedChains.has(chain);
@@ -1383,8 +1383,8 @@ export default function App() {
                 <span className="prefs-trigger-title">Tilpas dine opskrifter</span>
                 <span className="prefs-trigger-sub">
                   {activeFilterCount > 0
-                    ? `${activeFilterCount} filter${activeFilterCount !== 1 ? "re" : ""} aktivt`
-                    : "Fortæl os hvad du foretrækker"}
+                    ? `${activeFilterCount} filter${activeFilterCount !== 1 ? "re" : ""} aktivt — tryk for at justere`
+                    : "Tilpas kostpræferencer, tid og budget"}
                 </span>
               </span>
               {activeFilterCount > 0 && (
@@ -1489,11 +1489,11 @@ export default function App() {
                   <button className="pantry-trigger-btn" onClick={() => setShowPantry(v => !v)}>
                     <span className="pantry-trigger-icon">🧺</span>
                     <span className="pantry-trigger-text">
-                      <span className="pantry-trigger-title">Hvad har du i køleskabet?</span>
+                      <span className="pantry-trigger-title">Hvad har du derhjemme?</span>
                       <span className="pantry-trigger-sub">
                         {pantryItems.size > 0
-                          ? `${filteredRecommended.length + filteredOthers.length} af ${scoredRecipes.length} opskrifter matcher`
-                          : "Tilføj ingredienser og find matchende opskrifter"}
+                          ? `${filteredRecommended.length + filteredOthers.length} af ${scoredRecipes.length} opskrifter passer til dit køleskab`
+                          : "Tilføj ingredienser — vi finder opskrifter du allerede kan lave"}
                       </span>
                     </span>
                     {pantryItems.size > 0 && (
@@ -1805,6 +1805,9 @@ export default function App() {
                   <option value="nyeste">Nyeste</option>
                 </select>
               </div>
+              {!collapsedSections.recommended && (
+                <p className="section-intro">Bygget på denne uges bedste tilbud fra dine butikker</p>
+              )}
               <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredRecommended.length > 0 ? (
@@ -1814,10 +1817,10 @@ export default function App() {
                   ) : (
                     <div className="section-empty-state">
                       {pantryItems.size > 0 && !search
-                        ? "Ingen opskrifter matcher dine ingredienser — prøv at fjerne en"
+                        ? "Vi fandt ingen match til dine ingredienser — prøv at fjerne én"
                         : search
-                        ? "Ingen opskrifter matcher — prøv et andet søgeord"
-                        : "Ingen opskrifter fra dine valgte butikker denne uge"}
+                        ? "Ingen opskrifter matchede — prøv et andet ord eller juster filtrene lidt"
+                        : "Ingen opskrifter fra disse butikker denne uge — prøv at tilføje en ekstra butik"}
                     </div>
                   )}
                 </div>
@@ -1850,6 +1853,9 @@ export default function App() {
                   <option value="nyeste">Nyeste</option>
                 </select>
               </div>
+              {!collapsedSections.others && (
+                <p className="section-intro">Udforsk mere — bare hent et ekstra tilbud fra en ny butik</p>
+              )}
               <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredOthers.length > 0 ? (
@@ -1858,7 +1864,7 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="section-empty-state">
-                      Alle opskrifter passer til dine butikker
+                      Super! Alle ugens opskrifter matcher allerede dine butikker 🎉
                     </div>
                   )}
                 </div>

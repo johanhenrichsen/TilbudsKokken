@@ -34,10 +34,10 @@ html::before {
   background-repeat: repeat;
 }
 html.dark {
-  background-color: #0a180a;
-  --surface: #122212;
-  --surface-2: #172917;
-  --border-dark: #1e3820;
+  background-color: #0d1209;
+  --surface: #131d10;
+  --surface-2: #182415;
+  --border-dark: #1f3819;
   --muted: #5a7a5a;
 }
 html.dark::before {
@@ -112,7 +112,7 @@ html, body {
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-family: inherit;
 }
 .diet-btn:hover {
@@ -124,6 +124,7 @@ html, body {
   background: #4a7050;
   color: white;
   border-color: #4a7050;
+  transform: scale(1.05);
 }
 
 /* ─── Store cards ────────────────────────────── */
@@ -669,7 +670,7 @@ html, body {
 }
 
 /* ─── Recipe browse ──────────────────────────── */
-.recipe-browse-section { margin-bottom: 1rem; }
+.recipe-browse-section { margin-bottom: 1.75rem; }
 
 /* Collapsible section toggle button */
 .section-toggle-btn {
@@ -694,11 +695,18 @@ html, body {
   background: rgba(0, 0, 0, 0.07);
 }
 .section-toggle-label {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: #1a1a1a;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.6px;
   flex: 1;
+}
+.section-intro {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 16px 10px;
+  line-height: 1.5;
+  margin-top: -4px;
 }
 .section-count-badge {
   font-size: 11px;
@@ -724,7 +732,7 @@ html, body {
 .section-body-wrap {
   display: grid;
   grid-template-rows: 1fr;
-  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .section-body-wrap.collapsed {
   grid-template-rows: 0fr;
@@ -740,17 +748,17 @@ html, body {
 .recipe-browse-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 .recipe-browse-card {
-  background: white;
+  background: #fffefb;
   border-radius: 22px;
   box-shadow: 0 2px 14px rgba(100,70,20,0.08), 0 1px 3px rgba(0,0,0,0.04);
   padding: 0;
   overflow: hidden;
   cursor: pointer;
   position: relative;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.22s ease;
 }
 
 /* ─── Card photo ─────────────────────────────── */
@@ -801,11 +809,15 @@ html, body {
   z-index: 2;
 }
 .card-body {
-  padding: 14px 16px 16px;
+  padding: 14px 16px 18px;
 }
 .recipe-browse-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(100,70,20,0.12), 0 2px 6px rgba(0,0,0,0.05);
+  transform: translateY(-4px) rotate(0.35deg);
+  box-shadow: 0 12px 32px rgba(100,70,20,0.14), 0 3px 8px rgba(0,0,0,0.06);
+}
+.recipe-browse-card:active {
+  transform: scale(0.965);
+  transition: transform 0.1s ease;
 }
 .recipe-category-tag {
   display: inline-flex;
@@ -821,17 +833,18 @@ html, body {
 }
 .recipe-browse-title {
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   color: #1a1a1a;
-  line-height: 1.25;
+  line-height: 1.22;
+  letter-spacing: 0.1px;
   margin-bottom: 8px;
 }
 .recipe-browse-meta {
   display: flex;
   gap: 10px;
-  font-size: 11px;
-  color: #555555;
+  font-size: 10.5px;
+  color: #666666;
   margin-bottom: 8px;
 }
 .recipe-card-price {
@@ -4137,6 +4150,35 @@ html.dark .sort-select {
   background-color: #1e2a1e;
   border-color: var(--border-dark);
   color: #d4e8d4;
+}
+
+/* ─── Staggered card entrance ────────────────── */
+@keyframes card-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.section-body-grid .recipe-browse-card {
+  animation: card-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.section-body-grid .recipe-browse-card:nth-child(1)  { animation-delay: 0.03s; }
+.section-body-grid .recipe-browse-card:nth-child(2)  { animation-delay: 0.08s; }
+.section-body-grid .recipe-browse-card:nth-child(3)  { animation-delay: 0.13s; }
+.section-body-grid .recipe-browse-card:nth-child(4)  { animation-delay: 0.18s; }
+.section-body-grid .recipe-browse-card:nth-child(5)  { animation-delay: 0.22s; }
+.section-body-grid .recipe-browse-card:nth-child(6)  { animation-delay: 0.26s; }
+.section-body-grid .recipe-browse-card:nth-child(7)  { animation-delay: 0.29s; }
+.section-body-grid .recipe-browse-card:nth-child(8)  { animation-delay: 0.32s; }
+.section-body-grid .recipe-browse-card:nth-child(n+9) { animation-delay: 0.35s; }
+
+/* ─── Recipe detail sheet: slide up ──────────── */
+@keyframes sheet-rise {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 639px) {
+  .recipe-detail-sheet {
+    animation: sheet-rise 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
 }
 
 /* ─── Live recipe counter ────────────────────── */
