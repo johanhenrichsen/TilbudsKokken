@@ -1606,7 +1606,8 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   }
 
   /* ── Header ── */
-  .hero-brand-name { font-size: 13px; }
+  .hero-brand-name { font-size: 17px; }
+  .hero-brand-slogan { font-size: 10px; }
   .hero-topbar-right { gap: 4px; }
   .header-actions { gap: 2px; }
   .header-icon-btn { width: 40px; height: 40px; font-size: 17px; }
@@ -3878,4 +3879,222 @@ html.dark .saved-sheet-unsave:hover { background: rgba(220,80,80,0.12); }
   margin-left: 6px;
   flex-shrink: 0;
   letter-spacing: 0.01em;
+}
+
+/* ─── Hero brand: larger logo + slogan ───────── */
+.hero-brand {
+  gap: 10px;
+  align-items: center;
+}
+.hero-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.hero-brand-name {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+.hero-brand-slogan {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+html.dark .hero-brand-slogan { color: #5a7a5a; }
+@media (min-width: 600px) {
+  .hero-brand-name { font-size: 22px; }
+  .hero-brand-slogan { font-size: 12px; }
+}
+
+/* ─── Setup flow progress bar ────────────────── */
+.setup-flow-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  margin: 0 0 2px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.setup-flow-progress::-webkit-scrollbar { display: none; }
+.sfp-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9ca3af;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 50px;
+  transition: all 0.2s;
+}
+.sfp-step--active {
+  color: var(--accent);
+  background: rgba(232,147,74,0.1);
+  font-weight: 600;
+}
+.sfp-step--done {
+  color: #4a7050;
+  background: rgba(74,112,80,0.1);
+  font-weight: 600;
+}
+html.dark .sfp-step--active { background: rgba(232,147,74,0.12); }
+html.dark .sfp-step--done { background: rgba(74,112,80,0.12); color: #7aaa7a; }
+.sfp-sep {
+  font-size: 11px;
+  color: #d1d5db;
+  flex-shrink: 0;
+}
+html.dark .sfp-sep { color: #374151; }
+
+/* ─── Setup invite card ──────────────────────── */
+.setup-invite-card {
+  margin: 0 16px 12px;
+  padding: 20px;
+  background: var(--surface);
+  border-radius: 18px;
+  border: 1.5px solid var(--border);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+}
+html.dark .setup-invite-card {
+  background: var(--surface);
+  border-color: var(--border-dark);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+}
+.setup-invite-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+html.dark .setup-invite-title { color: var(--cream); }
+.setup-invite-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 14px;
+  line-height: 1.4;
+}
+html.dark .setup-invite-sub { color: #6b8b6b; }
+.setup-chain-grid {
+  margin-top: 4px;
+}
+.setup-invite-footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+html.dark .setup-invite-footer { border-color: var(--border-dark); }
+.setup-invite-count {
+  font-size: 12px;
+  color: #4a7050;
+  font-weight: 500;
+}
+html.dark .setup-invite-count { color: #7aaa7a; }
+
+/* ─── Collapsible preferences section ────────── */
+.prefs-section {
+  margin: 0 0 4px;
+  border-bottom: 1px solid var(--border);
+}
+html.dark .prefs-section { border-color: var(--border-dark); }
+.prefs-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.15s;
+}
+.prefs-trigger:hover { background: rgba(0,0,0,0.03); }
+html.dark .prefs-trigger:hover { background: rgba(255,255,255,0.04); }
+.prefs-trigger-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.prefs-trigger-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.prefs-trigger-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+html.dark .prefs-trigger-title { color: var(--cream); }
+.prefs-trigger-sub {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1;
+}
+html.dark .prefs-trigger-sub { color: #6b8b6b; }
+.prefs-active-badge {
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  flex-shrink: 0;
+}
+.prefs-body {
+  padding: 0 16px 14px;
+}
+.prefs-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin: 12px 0 6px;
+}
+html.dark .prefs-group-label { color: #4a6a4a; }
+.prefs-filter-row {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.prefs-price-wrap {
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  background: none !important;
+}
+html.dark .prefs-price-wrap { background: none !important; }
+.prefs-price-wrap .price-range-header { padding: 0; margin-bottom: 8px; }
+.prefs-price-wrap .price-range-label { display: none; }
+.prefs-pantry { margin: 0; border: none; background: none; box-shadow: none; }
+html.dark .prefs-pantry { border: none; }
+
+/* ─── Recipes section: fade-in on mount ─────── */
+@keyframes recipes-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.recipes-section {
+  animation: recipes-in 0.4s ease both;
 }

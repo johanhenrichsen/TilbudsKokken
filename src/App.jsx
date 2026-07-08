@@ -497,6 +497,7 @@ export default function App() {
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   // ── Splash screen ────────────────────────────────────────────────
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
@@ -537,6 +538,7 @@ export default function App() {
 
   // ── Matching ────────────────────────────────────────────────────
   const selectedChains = new Set((localStores || []).map(s => s.chain));
+  const setupComplete = selectedChains.size > 0;
 
   function getAvailableItemNames() {
     return new Set(
@@ -566,6 +568,13 @@ export default function App() {
   const scoredRecipes = getScoredRecipes(diet);
   const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => (b.dealItems || []).length - (a.dealItems || []).length);
   const others = scoredRecipes.filter(r => !r.fullyMatched);
+  const activeFilterCount = [
+    diet !== "Alle",
+    timeFilter !== "Alle tider",
+    cuisineFilter !== "Alle",
+    pantryItems.size > 0,
+    priceMin > 0 || priceMax !== null,
+  ].filter(Boolean).length;
 
   const maxRecipePrice = (() => {
     const prices = scoredRecipes
@@ -1185,8 +1194,11 @@ export default function App() {
       <div className="app-hero">
         <div className="hero-topbar">
           <div className="hero-brand">
-            <LogoIcon size={30} />
-            <span className="hero-brand-name">Spotkokken</span>
+            <LogoIcon size={42} />
+            <div className="hero-brand-text">
+              <span className="hero-brand-name">Spotkokken</span>
+              <span className="hero-brand-slogan">Bedre tilbud. Bedre mad.</span>
+            </div>
           </div>
           <div className="hero-topbar-right">
             <div className="week-badge">{weekBadge}</div>
@@ -1205,250 +1217,278 @@ export default function App() {
           </div>
         </div>
 
-        <div className="local-store-badge">
-          <span className="local-store-dots">
-            {[...new Set((localStores || []).map(s => s.chain))].map(ch => (
-              <span key={ch} className="chain-dot" style={{ background: CHAIN_COLORS[ch] }} />
-            ))}
-          </span>
-          <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
-          <button className="skift-btn" onClick={() => setShowStorePicker(true)}>skift</button>
-        </div>
-      </div>
-
-      {/* Search */}
-      <div className="search-wrap">
-        <input
-          className="search-input"
-          type="text"
-          placeholder="Søg opskrifter, ingredienser..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        {search && <button className="search-clear" onClick={() => setSearch("")}>×</button>}
-      </div>
-
-      {/* Diet filters */}
-      <div className="diet-filters">
-        {dietFilters.map(f => (
-          <button key={f} onClick={() => setDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
-        ))}
-      </div>
-
-      {/* Time filters */}
-      <div className="diet-filters time-filters">
-        {timeFilters.map(f => (
-          <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{f}</button>
-        ))}
-      </div>
-
-      {/* Cuisine filters */}
-      {CUISINE_ORDER.length > 2 && (
-        <div className="cuisine-filters">
-          {CUISINE_ORDER.map(c => (
-            <button
-              key={c}
-              onClick={() => setCuisineFilter(c)}
-              className={`diet-btn${cuisineFilter === c ? " active" : ""}`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Price range slider */}
-      {maxRecipePrice > 0 && (
-        <div className="price-range-wrap">
-          <div className="price-range-header">
-            <span className="price-range-label">Pris pr. person</span>
-            <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
-              {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
-              {priceFiltered && (
-                <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
-              )}
-            </span>
-          </div>
-          <div className="price-range-track-wrap">
-            <div className="price-range-track-bg" />
-            <div
-              className="price-range-fill"
-              style={{
-                left: `${(priceMin / maxRecipePrice) * 100}%`,
-                right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%`,
-              }}
-            />
-            <input
-              type="range"
-              className="price-range-input"
-              min={0}
-              max={maxRecipePrice}
-              step={5}
-              value={priceMin}
-              onChange={e => {
-                const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10);
-                setPriceMin(Math.max(0, val));
-              }}
-            />
-            <input
-              type="range"
-              className="price-range-input"
-              min={0}
-              max={maxRecipePrice}
-              step={5}
-              value={priceMax ?? maxRecipePrice}
-              onChange={e => {
-                const val = Math.max(Number(e.target.value), priceMin + 10);
-                setPriceMax(val >= maxRecipePrice ? null : val);
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Pantry inline section */}
-      <div className={`pantry-inline${showPantry ? " open" : ""}${pantryItems.size > 0 ? " has-items" : ""}`}>
-        <button
-          className="pantry-trigger-btn"
-          onClick={() => setShowPantry(v => !v)}
-        >
-          <span className="pantry-trigger-icon">🧺</span>
-          <span className="pantry-trigger-text">
-            <span className="pantry-trigger-title">Hvad har du i køleskabet?</span>
-            <span className="pantry-trigger-sub">
-              {pantryItems.size > 0
-                ? `${filteredRecommended.length + filteredOthers.length} af ${scoredRecipes.length} opskrifter matcher`
-                : "Tilføj ingredienser og find matchende opskrifter"}
-            </span>
-          </span>
-          {pantryItems.size > 0 && (
-            <span className="pantry-count-badge">{pantryItems.size}</span>
-          )}
-          <svg className={`pantry-chevron${showPantry ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        {showPantry && (
-          <div className="pantry-body-inline">
-            {(() => {
-              const query = pantryInput.trim();
-              const dropdownItems = (() => {
-                if (query.length < 2) return [];
-                const q = query.toLowerCase();
-                const available = INGREDIENT_AUTOCOMPLETE.filter(s => !pantryItems.has(s));
-                const starts = available.filter(s => s.toLowerCase().startsWith(q));
-                const partials = available.filter(s => !s.toLowerCase().startsWith(q) && s.toLowerCase().includes(q));
-                return [...starts, ...partials].slice(0, 5);
-              })();
-              const showDropdown = query.length >= 2;
-              return (
-                <div className="pantry-input-wrap" ref={pantryInputWrapRef}>
-                  <div className="pantry-input-row">
-                    <input
-                      className="pantry-text-input"
-                      type="text"
-                      placeholder={pantryItems.size === 0 ? "Hvad har du i køleskabet i dag?" : "Tilføj flere ingredienser..."}
-                      value={pantryInput}
-                      autoComplete="off"
-                      onChange={e => { setPantryInput(e.target.value); setPantryDropdownIdx(-1); }}
-                      onKeyDown={e => {
-                        if (e.key === "ArrowDown") {
-                          e.preventDefault();
-                          setPantryDropdownIdx(i => Math.min(i + 1, dropdownItems.length - 1));
-                        } else if (e.key === "ArrowUp") {
-                          e.preventDefault();
-                          setPantryDropdownIdx(i => Math.max(i - 1, -1));
-                        } else if (e.key === "Enter") {
-                          e.preventDefault();
-                          const sel = dropdownItems[pantryDropdownIdx];
-                          addPantryFromInput(sel ?? undefined);
-                        } else if (e.key === "Escape") {
-                          setPantryInput("");
-                          setPantryDropdownIdx(-1);
-                        }
-                      }}
-                      onBlur={() => setTimeout(() => setPantryDropdownIdx(-1), 150)}
-                    />
-                    {query && (
-                      <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>Tilføj</button>
-                    )}
-                  </div>
-
-                  {showDropdown && (
-                    <div
-                      className="pantry-dropdown"
-                      style={{
-                        position: "fixed",
-                        top: pantryDropdownPos.top,
-                        left: pantryDropdownPos.left,
-                        width: pantryDropdownPos.width,
-                        zIndex: 1000,
-                      }}
-                    >
-                      {dropdownItems.length > 0 ? dropdownItems.map((s, i) => {
-                        const [before, match, after] = highlightSuggestion(s, query);
-                        return (
-                          <button
-                            key={s}
-                            className={`pantry-dropdown-item${i === pantryDropdownIdx ? " active" : ""}`}
-                            onMouseDown={e => { e.preventDefault(); addPantryFromInput(s); }}
-                          >
-                            {before}<span className="suggestion-highlight">{match}</span>{after}
-                          </button>
-                        );
-                      }) : (
-                        <div className="pantry-dropdown-empty">
-                          Ingen forslag — tryk Enter for at tilføje alligevel
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-
-            <div className="pantry-suggestions">
-              {PANTRY_SUGGESTIONS.filter(s => !pantryItems.has(s)).map(s => (
-                <button key={s} className="pantry-suggest-chip" onClick={() => togglePantryItem(s)}>
-                  + {s}
-                </button>
+        {setupComplete && (
+          <div className="local-store-badge">
+            <span className="local-store-dots">
+              {[...new Set((localStores || []).map(s => s.chain))].map(ch => (
+                <span key={ch} className="chain-dot" style={{ background: CHAIN_COLORS[ch] }} />
               ))}
-            </div>
-
-            {pantryItems.size > 0 && (
-              <div className="pantry-tags">
-                {[...pantryItems].map(item => (
-                  <span key={item} className="pantry-tag">
-                    {item}
-                    <button className="pantry-tag-remove" onClick={() => togglePantryItem(item)} aria-label={`Fjern ${item}`}>×</button>
-                  </span>
-                ))}
-                <button className="pantry-clear-all" onClick={clearPantry}>Ryd alle</button>
-              </div>
-            )}
-
-            {pantryItems.size > 0 && (
-              <button
-                className="pantry-find-btn"
-                onClick={() => setShowPantry(false)}
-              >
-                Find opskrifter
-                <span className="pantry-find-count">{filteredRecommended.length + filteredOthers.length}</span>
-              </button>
-            )}
+            </span>
+            <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
+            <button className="skift-btn" onClick={() => setShowStorePicker(true)}>Skift</button>
           </div>
         )}
       </div>
 
-      {/* Active pantry filter banner */}
-      {pantryItems.size > 0 && !showPantry && (
-        <div className="pantry-filter-banner">
-          <span className="pantry-filter-banner-text">
-            Filtreret efter dine ingredienser — <strong>{filteredRecommended.length + filteredOthers.length} opskrifter</strong> fundet
-          </span>
-          <button className="pantry-filter-banner-clear" onClick={clearPantry}>Ryd filter</button>
+      {/* ── Guided setup flow (new/no-store users) ──────────────── */}
+      {!selectedRecipe && !setupComplete && (
+        <>
+          {/* Step progress bar */}
+          <div className="setup-flow-progress">
+            <span className={`sfp-step${selectedChains.size > 0 ? " sfp-step--done" : " sfp-step--active"}`}>
+              {selectedChains.size > 0 ? "✓" : "1"} Vælg butikker
+            </span>
+            <span className="sfp-sep">→</span>
+            <span className={`sfp-step${selectedChains.size > 0 ? " sfp-step--active" : ""}`}>
+              2 Tilpas
+            </span>
+            <span className="sfp-sep">→</span>
+            <span className={`sfp-step${selectedChains.size > 0 ? " sfp-step--active" : ""}`}>
+              3 Find opskrifter
+            </span>
+          </div>
+
+          {/* Step 1: inline store picker */}
+          <div className="setup-invite-card">
+            <h2 className="setup-invite-title">Hvilke butikker handler du i?</h2>
+            <p className="setup-invite-sub">Vælg dine kæder — vi finder opskrifter baseret på ugens tilbud</p>
+            <div className="ob-chain-grid setup-chain-grid">
+              {CHAIN_ORDER.map(chain => {
+                const sel = selectedChains.has(chain);
+                return (
+                  <button
+                    key={chain}
+                    className={`ob-chain-card${sel ? " selected" : ""}`}
+                    onClick={() => toggleLocalChain(chain)}
+                  >
+                    <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                    <span className="ob-chain-name">{chain}</span>
+                    <span className={`ob-chain-check${sel ? " checked" : ""}`}>✓</span>
+                  </button>
+                );
+              })}
+            </div>
+            {selectedChains.size > 0 && (
+              <div className="setup-invite-footer">
+                <span className="setup-invite-count">{selectedChains.size} butik{selectedChains.size !== 1 ? "ker" : ""} valgt — rul ned for at se opskrifter</span>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* ── Search (always visible in browse mode) ──────────────── */}
+      {!selectedRecipe && (
+        <div className="search-wrap">
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Søg opskrifter, ingredienser..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && <button className="search-clear" onClick={() => setSearch("")}>×</button>}
         </div>
+      )}
+
+      {/* ── Step 2: Collapsible preferences ─────────────────────── */}
+      {!selectedRecipe && (
+        <>
+          <div className={`prefs-section${prefsOpen ? " open" : ""}${activeFilterCount > 0 ? " has-active" : ""}`}>
+            <button className="prefs-trigger" onClick={() => setPrefsOpen(v => !v)}>
+              <span className="prefs-trigger-icon">⚙</span>
+              <span className="prefs-trigger-text">
+                <span className="prefs-trigger-title">Tilpas dine opskrifter</span>
+                <span className="prefs-trigger-sub">
+                  {activeFilterCount > 0
+                    ? `${activeFilterCount} filter${activeFilterCount !== 1 ? "re" : ""} aktivt`
+                    : "Fortæl os hvad du foretrækker"}
+                </span>
+              </span>
+              {activeFilterCount > 0 && (
+                <span className="prefs-active-badge">{activeFilterCount}</span>
+              )}
+              <svg className={`pantry-chevron${prefsOpen ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            {prefsOpen && (
+              <div className="prefs-body">
+                {/* Diet */}
+                <div className="prefs-group-label">Kost</div>
+                <div className="diet-filters prefs-filter-row">
+                  {dietFilters.map(f => (
+                    <button key={f} onClick={() => setDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
+                  ))}
+                </div>
+
+                {/* Time */}
+                <div className="prefs-group-label">Tid</div>
+                <div className="diet-filters time-filters prefs-filter-row">
+                  {timeFilters.map(f => (
+                    <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{f}</button>
+                  ))}
+                </div>
+
+                {/* Cuisine */}
+                {CUISINE_ORDER.length > 2 && (
+                  <>
+                    <div className="prefs-group-label">Køkken</div>
+                    <div className="cuisine-filters prefs-filter-row">
+                      {CUISINE_ORDER.map(c => (
+                        <button
+                          key={c}
+                          onClick={() => setCuisineFilter(c)}
+                          className={`diet-btn${cuisineFilter === c ? " active" : ""}`}
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {/* Price */}
+                {maxRecipePrice > 0 && (
+                  <>
+                    <div className="prefs-group-label">Pris pr. person</div>
+                    <div className="price-range-wrap prefs-price-wrap">
+                      <div className="price-range-header">
+                        <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
+                          {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
+                          {priceFiltered && (
+                            <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
+                          )}
+                        </span>
+                      </div>
+                      <div className="price-range-track-wrap">
+                        <div className="price-range-track-bg" />
+                        <div
+                          className="price-range-fill"
+                          style={{
+                            left: `${(priceMin / maxRecipePrice) * 100}%`,
+                            right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%`,
+                          }}
+                        />
+                        <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
+                          onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }}
+                        />
+                        <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
+                          onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Pantry */}
+                <div className="prefs-group-label">Køleskab</div>
+                <div className={`pantry-inline${showPantry ? " open" : ""}${pantryItems.size > 0 ? " has-items" : ""} prefs-pantry`}>
+                  <button className="pantry-trigger-btn" onClick={() => setShowPantry(v => !v)}>
+                    <span className="pantry-trigger-icon">🧺</span>
+                    <span className="pantry-trigger-text">
+                      <span className="pantry-trigger-title">Hvad har du i køleskabet?</span>
+                      <span className="pantry-trigger-sub">
+                        {pantryItems.size > 0
+                          ? `${filteredRecommended.length + filteredOthers.length} af ${scoredRecipes.length} opskrifter matcher`
+                          : "Tilføj ingredienser og find matchende opskrifter"}
+                      </span>
+                    </span>
+                    {pantryItems.size > 0 && (
+                      <span className="pantry-count-badge">{pantryItems.size}</span>
+                    )}
+                    <svg className={`pantry-chevron${showPantry ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  {showPantry && (
+                    <div className="pantry-body-inline">
+                      {(() => {
+                        const query = pantryInput.trim();
+                        const dropdownItems = (() => {
+                          if (query.length < 2) return [];
+                          const q = query.toLowerCase();
+                          const available = INGREDIENT_AUTOCOMPLETE.filter(s => !pantryItems.has(s));
+                          const starts = available.filter(s => s.toLowerCase().startsWith(q));
+                          const partials = available.filter(s => !s.toLowerCase().startsWith(q) && s.toLowerCase().includes(q));
+                          return [...starts, ...partials].slice(0, 5);
+                        })();
+                        const showDropdown = query.length >= 2;
+                        return (
+                          <div className="pantry-input-wrap" ref={pantryInputWrapRef}>
+                            <div className="pantry-input-row">
+                              <input
+                                className="pantry-text-input"
+                                type="text"
+                                placeholder={pantryItems.size === 0 ? "Hvad har du i køleskabet i dag?" : "Tilføj flere ingredienser..."}
+                                value={pantryInput}
+                                autoComplete="off"
+                                onChange={e => { setPantryInput(e.target.value); setPantryDropdownIdx(-1); }}
+                                onKeyDown={e => {
+                                  if (e.key === "ArrowDown") { e.preventDefault(); setPantryDropdownIdx(i => Math.min(i + 1, dropdownItems.length - 1)); }
+                                  else if (e.key === "ArrowUp") { e.preventDefault(); setPantryDropdownIdx(i => Math.max(i - 1, -1)); }
+                                  else if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(dropdownItems[pantryDropdownIdx] ?? undefined); }
+                                  else if (e.key === "Escape") { setPantryInput(""); setPantryDropdownIdx(-1); }
+                                }}
+                                onBlur={() => setTimeout(() => setPantryDropdownIdx(-1), 150)}
+                              />
+                              {query && <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>Tilføj</button>}
+                            </div>
+                            {showDropdown && (
+                              <div className="pantry-dropdown" style={{ position: "fixed", top: pantryDropdownPos.top, left: pantryDropdownPos.left, width: pantryDropdownPos.width, zIndex: 1000 }}>
+                                {dropdownItems.length > 0 ? dropdownItems.map((s, i) => {
+                                  const [before, match, after] = highlightSuggestion(s, query);
+                                  return (
+                                    <button key={s} className={`pantry-dropdown-item${i === pantryDropdownIdx ? " active" : ""}`} onMouseDown={e => { e.preventDefault(); addPantryFromInput(s); }}>
+                                      {before}<span className="suggestion-highlight">{match}</span>{after}
+                                    </button>
+                                  );
+                                }) : <div className="pantry-dropdown-empty">Ingen forslag — tryk Enter for at tilføje alligevel</div>}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
+                      <div className="pantry-suggestions">
+                        {PANTRY_SUGGESTIONS.filter(s => !pantryItems.has(s)).map(s => (
+                          <button key={s} className="pantry-suggest-chip" onClick={() => togglePantryItem(s)}>+ {s}</button>
+                        ))}
+                      </div>
+                      {pantryItems.size > 0 && (
+                        <div className="pantry-tags">
+                          {[...pantryItems].map(item => (
+                            <span key={item} className="pantry-tag">
+                              {item}
+                              <button className="pantry-tag-remove" onClick={() => togglePantryItem(item)} aria-label={`Fjern ${item}`}>×</button>
+                            </span>
+                          ))}
+                          <button className="pantry-clear-all" onClick={clearPantry}>Ryd alle</button>
+                        </div>
+                      )}
+                      {pantryItems.size > 0 && (
+                        <button className="pantry-find-btn" onClick={() => { setShowPantry(false); setPrefsOpen(false); }}>
+                          Find opskrifter
+                          <span className="pantry-find-count">{filteredRecommended.length + filteredOthers.length}</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Active filter banners */}
+          {pantryItems.size > 0 && !showPantry && (
+            <div className="pantry-filter-banner">
+              <span className="pantry-filter-banner-text">
+                Filtreret efter dine ingredienser — <strong>{filteredRecommended.length + filteredOthers.length} opskrifter</strong> fundet
+              </span>
+              <button className="pantry-filter-banner-clear" onClick={clearPantry}>Ryd filter</button>
+            </div>
+          )}
+        </>
       )}
 
       {/* Detail view */}
@@ -1635,78 +1675,76 @@ export default function App() {
           )}
         </div>
       ) : (
-        /* Browse view */
-        <>
-          <div className="recipe-browse-section">
-            <button
-              className="section-toggle-btn"
-              onClick={() => toggleSection("recommended")}
-              aria-expanded={!collapsedSections.recommended}
-            >
-              <span className="section-toggle-label">🍽️ Ugens opskrifter</span>
-              <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
-              <svg
-                className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
-                width="16" height="16" viewBox="0 0 16 16" fill="none"
-                aria-hidden="true"
+        /* Browse view — only shown after at least one store is selected */
+        setupComplete ? (
+          <div className="recipes-section">
+            <div className="recipe-browse-section">
+              <button
+                className="section-toggle-btn"
+                onClick={() => toggleSection("recommended")}
+                aria-expanded={!collapsedSections.recommended}
               >
-                <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
-              <div className="section-body-inner">
-                {filteredRecommended.length > 0 ? (
-                  <div className="recipe-browse-grid section-body-grid">
-                    {renderRecipeGrid(filteredRecommended)}
-                  </div>
-                ) : (
-                  <div className="section-empty-state">
-                    {pantryItems.size > 0 && !search
-                      ? "Ingen opskrifter matcher dine ingredienser — prøv at fjerne en"
-                      : search
-                      ? "Ingen opskrifter matcher — prøv et andet søgeord"
-                      : selectedChains.size > 0
-                      ? "Ingen opskrifter fra dine valgte butikker denne uge"
-                      : "Ingen opskrifter matcher — prøv at ændre dine filtre"}
-                  </div>
-                )}
+                <span className="section-toggle-label">🍽️ Ugens opskrifter</span>
+                <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
+                <svg
+                  className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
+                <div className="section-body-inner">
+                  {filteredRecommended.length > 0 ? (
+                    <div className="recipe-browse-grid section-body-grid">
+                      {renderRecipeGrid(filteredRecommended)}
+                    </div>
+                  ) : (
+                    <div className="section-empty-state">
+                      {pantryItems.size > 0 && !search
+                        ? "Ingen opskrifter matcher dine ingredienser — prøv at fjerne en"
+                        : search
+                        ? "Ingen opskrifter matcher — prøv et andet søgeord"
+                        : "Ingen opskrifter fra dine valgte butikker denne uge"}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="recipe-browse-section">
-            <button
-              className="section-toggle-btn"
-              onClick={() => toggleSection("others")}
-              aria-expanded={!collapsedSections.others}
-            >
-              <span className="section-toggle-label">🛒 Kræver andre butikker</span>
-              <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
-              <svg
-                className={`section-chevron${collapsedSections.others ? "" : " open"}`}
-                width="16" height="16" viewBox="0 0 16 16" fill="none"
-                aria-hidden="true"
+            <div className="recipe-browse-section">
+              <button
+                className="section-toggle-btn"
+                onClick={() => toggleSection("others")}
+                aria-expanded={!collapsedSections.others}
               >
-                <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-            <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
-              <div className="section-body-inner">
-                {filteredOthers.length > 0 ? (
-                  <div className="recipe-browse-grid section-body-grid">
-                    {renderRecipeGrid(filteredOthers)}
-                  </div>
-                ) : (
-                  <div className="section-empty-state">
-                    {selectedChains.size === 0
-                      ? "Alle denne uges opskrifter er vist ovenfor"
-                      : "Alle opskrifter passer til dine butikker"}
-                  </div>
-                )}
+                <span className="section-toggle-label">🛒 Kræver andre butikker</span>
+                <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
+                <svg
+                  className={`section-chevron${collapsedSections.others ? "" : " open"}`}
+                  width="16" height="16" viewBox="0 0 16 16" fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
+                <div className="section-body-inner">
+                  {filteredOthers.length > 0 ? (
+                    <div className="recipe-browse-grid section-body-grid">
+                      {renderRecipeGrid(filteredOthers)}
+                    </div>
+                  ) : (
+                    <div className="section-empty-state">
+                      Alle opskrifter passer til dine butikker
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </>
+        ) : null
       )}
 
 
