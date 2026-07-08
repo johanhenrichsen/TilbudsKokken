@@ -3,6 +3,7 @@ import "./App.css";
 import { recipeBank as staticRecipes } from "./recipes";
 import weeklyRecipesJson from "./data/weeklyRecipes.json";
 const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticRecipes;
+const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 import LogoFull from "./LogoFull";
 
@@ -498,6 +499,8 @@ export default function App() {
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState("anbefalet");
+  const [quickFilters, setQuickFilters] = useState(new Set());
 
   // ── Splash screen ────────────────────────────────────────────────
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
@@ -574,6 +577,7 @@ export default function App() {
     cuisineFilter !== "Alle",
     pantryItems.size > 0,
     priceMin > 0 || priceMax !== null,
+    quickFilters.size > 0,
   ].filter(Boolean).length;
 
   const maxRecipePrice = (() => {
@@ -589,6 +593,11 @@ export default function App() {
     const m = timeStr.match(/(\d+)\s*min/);
     return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
   }
+  const popScores = Object.values(popularityMap).sort((a, b) => b - a);
+  const popThreshold = popScores.length > 0
+    ? (popScores[Math.max(0, Math.floor(popScores.length * 0.2) - 1)] ?? 1)
+    : Infinity;
+
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
     // Chain split is handled by fullyMatched in getScoredRecipes;
@@ -624,11 +633,42 @@ export default function App() {
       }
       // unpriced recipes always pass the slider filter
     }
+    if (quickFilters.has("under20kr")) {
+      const pp = calcPricePerPerson(r);
+      if (pp === null || pp > 20) return false;
+    }
+    if (quickFilters.has("under20min") && parseMinutes(r.time) >= 20) return false;
+    if (quickFilters.has("populaere") && (popularityMap[r.id] || 0) < popThreshold) return false;
+    if (quickFilters.has("enbutik")) {
+      const storeSet = new Set((r.dealItems || []).map(di => di.store));
+      if (storeSet.size > 1) return false;
+    }
     return true;
   }
 
-  const filteredRecommended = recommended.filter(matchRecipe);
-  const filteredOthers = others.filter(matchRecipe);
+  function applySort(recipes) {
+    if (sortOrder === "anbefalet") return recipes;
+    const arr = [...recipes];
+    if (sortOrder === "pris-asc") {
+      return arr.sort((a, b) => (calcPricePerPerson(a) ?? Infinity) - (calcPricePerPerson(b) ?? Infinity));
+    }
+    if (sortOrder === "pris-desc") {
+      return arr.sort((a, b) => (calcPricePerPerson(b) ?? -Infinity) - (calcPricePerPerson(a) ?? -Infinity));
+    }
+    if (sortOrder === "hurtigst") {
+      return arr.sort((a, b) => parseMinutes(a.time) - parseMinutes(b.time));
+    }
+    if (sortOrder === "populaer") {
+      return arr.sort((a, b) => (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0));
+    }
+    if (sortOrder === "nyeste") {
+      return arr.sort((a, b) => (recipeIndexMap.get(b.id) ?? 0) - (recipeIndexMap.get(a.id) ?? 0));
+    }
+    return recipes;
+  }
+
+  const filteredRecommended = applySort(recommended.filter(matchRecipe));
+  const filteredOthers = applySort(others.filter(matchRecipe));
   const priceFiltered = priceMin > 0 || priceMax !== null;
   const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || pantryItems.size > 0 || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
@@ -819,6 +859,14 @@ export default function App() {
   useEffect(() => {
     document.body.classList.toggle("has-mp-sidebar", planCount > 0);
   }, [planCount]);
+
+  function toggleQuickFilter(id) {
+    setQuickFilters(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
 
   function toggleSection(key) {
     setCollapsedSections(prev => {
@@ -1315,6 +1363,25 @@ export default function App() {
 
             {prefsOpen && (
               <div className="prefs-body">
+                {/* Quick filters */}
+                <div className="prefs-group-label">Hurtigfiltre</div>
+                <div className="quick-filters prefs-filter-row">
+                  {[
+                    { id: "under20kr",  label: "🔥 Under 20 kr." },
+                    { id: "under20min", label: "⚡ Under 20 min" },
+                    { id: "populaere",  label: "⭐ Populære" },
+                    { id: "enbutik",    label: "🛒 Én butik" },
+                  ].map(f => (
+                    <button
+                      key={f.id}
+                      className={`diet-btn${quickFilters.has(f.id) ? " active" : ""}`}
+                      onClick={() => toggleQuickFilter(f.id)}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+
                 {/* Diet */}
                 <div className="prefs-group-label">Kost</div>
                 <div className="diet-filters prefs-filter-row">
@@ -1679,21 +1746,31 @@ export default function App() {
         setupComplete ? (
           <div className="recipes-section">
             <div className="recipe-browse-section">
-              <button
-                className="section-toggle-btn"
-                onClick={() => toggleSection("recommended")}
-                aria-expanded={!collapsedSections.recommended}
-              >
-                <span className="section-toggle-label">🍽️ Ugens opskrifter</span>
-                <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
-                <svg
-                  className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  aria-hidden="true"
+              <div className="section-header-row">
+                <button
+                  className="section-toggle-btn"
+                  onClick={() => toggleSection("recommended")}
+                  aria-expanded={!collapsedSections.recommended}
                 >
-                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+                  <span className="section-toggle-label">🍽️ Ugens opskrifter</span>
+                  <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
+                  <svg
+                    className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
+                    width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <select className="sort-select" value={sortOrder} onChange={e => setSortOrder(e.target.value)} aria-label="Sortering">
+                  <option value="anbefalet">Anbefalet</option>
+                  <option value="pris-asc">Pris: Lavest</option>
+                  <option value="pris-desc">Pris: Højest</option>
+                  <option value="hurtigst">Hurtigst</option>
+                  <option value="populaer">Mest populær</option>
+                  <option value="nyeste">Nyeste</option>
+                </select>
+              </div>
               <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredRecommended.length > 0 ? (
@@ -1714,21 +1791,31 @@ export default function App() {
             </div>
 
             <div className="recipe-browse-section">
-              <button
-                className="section-toggle-btn"
-                onClick={() => toggleSection("others")}
-                aria-expanded={!collapsedSections.others}
-              >
-                <span className="section-toggle-label">🛒 Kræver andre butikker</span>
-                <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
-                <svg
-                  className={`section-chevron${collapsedSections.others ? "" : " open"}`}
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  aria-hidden="true"
+              <div className="section-header-row">
+                <button
+                  className="section-toggle-btn"
+                  onClick={() => toggleSection("others")}
+                  aria-expanded={!collapsedSections.others}
                 >
-                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+                  <span className="section-toggle-label">🛒 Kræver andre butikker</span>
+                  <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
+                  <svg
+                    className={`section-chevron${collapsedSections.others ? "" : " open"}`}
+                    width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <select className="sort-select" value={sortOrder} onChange={e => setSortOrder(e.target.value)} aria-label="Sortering">
+                  <option value="anbefalet">Anbefalet</option>
+                  <option value="pris-asc">Pris: Lavest</option>
+                  <option value="pris-desc">Pris: Højest</option>
+                  <option value="hurtigst">Hurtigst</option>
+                  <option value="populaer">Mest populær</option>
+                  <option value="nyeste">Nyeste</option>
+                </select>
+              </div>
               <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredOthers.length > 0 ? (
