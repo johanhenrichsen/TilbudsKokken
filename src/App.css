@@ -3081,13 +3081,13 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .splash-tagline {
-  font-size: 32px;
-  font-weight: 800;
-  color: #a8d8a8;
-  letter-spacing: -0.5px;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.2px;
   margin: 0;
   opacity: 0;
-  line-height: 1.15;
+  line-height: 1.2;
   text-align: center;
   animation: splashTextIn 0.65s 1.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
