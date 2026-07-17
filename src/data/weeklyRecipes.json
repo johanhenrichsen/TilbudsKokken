@@ -191,417 +191,6 @@
   },
   {
     "id": 1002,
-    "title": "Mexicansk Taco-aften med Hakket Kylling og Friske Grøntsager",
-    "emoji": "🌮",
-    "time": "30 minutter",
-    "servings_count": 4,
-    "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
-    "description": "En festlig og farverig taco-aften med krydret hakket kyllingekød, sprøde grøntsager og cremede avocadoer. Retten er nem at lave og perfekt til en uformel middag med familien eller vennerne. Alle kan sammensætte deres taco præcis som de ønsker.",
-    "ingredients": [
-      {
-        "text": "Coop Tex Mex Tortilla 370 g",
-        "store": "Coop 365",
-        "price": "9 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dansk hakket kyllingekød 7-10% fedt 330-700 g",
-        "store": "Føtex",
-        "price": "30 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
-        "store": "Coop 365",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Rød Peber",
-        "store": "Coop 365",
-        "price": "5 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Coop Tex Mex Chunky Salsa 125-370 g",
-        "store": "Dagli'Brugsen / Brugsen",
-        "price": "9 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Spidskommen, paprika og chilipulver",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Limesaft",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Skær rød peber i fine strimler og stil den til side.",
-      "Halver avocadoerne, fjern stenen og mos dem groft med en gaffel. Krydr med limesaft, salt og peber.",
-      "Varm olie op i en stor pande ved middel-høj varme.",
-      "Tilsæt det hakkede kyllingekød og brun det godt, ca. 5-6 minutter, mens du bryder det op med en spatel.",
-      "Krydr kyllingen med spidskommen, paprika, chilipulver, salt og peber efter smag og steg videre i 2 minutter.",
-      "Varm tortillaerne op i en tør pande i 30 sekunder på hver side, eller pak dem ind i folie og varm dem i ovnen ved 180°C i 5 minutter.",
-      "Anret alle ingredienser på bordet i separate skåle: kylling, avocado, peberstrimlerne og salsa.",
-      "Lad alle samle deres egne tacos og nyd måltidet."
-    ],
-    "tip": "Tilsæt en skefuld creme fraiche eller revet ost for en ekstra cremet og mættigende oplevelse.",
-    "dealItems": [
-      {
-        "name": "Coop Tex Mex Tortilla 370 g",
-        "store": "Coop 365",
-        "price": "9 kr."
-      },
-      {
-        "name": "Dansk hakket kyllingekød 7-10% fedt 330-700 g",
-        "store": "Føtex",
-        "price": "30 kr."
-      },
-      {
-        "name": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
-        "store": "Coop 365",
-        "price": "25 kr."
-      },
-      {
-        "name": "Rød Peber",
-        "store": "Coop 365",
-        "price": "5 kr."
-      },
-      {
-        "name": "Coop Tex Mex Chunky Salsa 125-370 g",
-        "store": "Dagli'Brugsen / Brugsen",
-        "price": "9 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1003,
-    "title": "Hurtig Spaghetti Bolognese med Mutti Tomater",
-    "emoji": "🍝",
-    "time": "45 minutter",
-    "servings_count": 4,
-    "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
-    "description": "En klassisk italiensk spaghetti bolognese lavet med saftigt hakket grisekød og rige hakkede tomater fra Mutti. Retten er enkel, velsmagt og perfekt til en travl hverdag. Serveret med nykogt spaghetti bliver det en ret, hele familien elsker.",
-    "ingredients": [
-      {
-        "text": "Rummo Spaghetti 500 g",
-        "store": "Netto",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Coop Hakket Grisekød 8-12% 500 g",
-        "store": "Dagli'Brugsen / Brugsen",
-        "price": "35 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Mutti Polpa Hakkede Tomater 400 g",
-        "store": "Netto",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dolmio Bolognese pastasauce 450 g",
-        "store": "Coop 365",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Løg",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Hvidløg",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Tørret oregano og timian",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hak løg og hvidløg fint.",
-      "Varm olivenolie op i en stor gryde ved middel varme og svits løg og hvidløg i 3-4 minutter til de er bløde og gyldne.",
-      "Skru op for varmen og tilsæt det hakkede kød. Brun det godt i 5-7 minutter, mens du rører rundt og bryder kødet op.",
-      "Krydr med tørret oregano, timian, salt og peber.",
-      "Tilsæt Mutti hakkede tomater og Dolmio bolognesesauce og rør godt sammen.",
-      "Lad saucen simre ved lav varme i mindst 20 minutter, rør af og til.",
-      "Kog spaghettien efter pakkens anvisning i rigeligt saltet vand til den er al dente.",
-      "Dræn pastaen og vend lidt af pastavandet i bolognesesaucen for en silkeblød konsistens.",
-      "Server spaghettien i dybe tallerkener med bolognese på toppen og evt. revet parmesanost."
-    ],
-    "tip": "Lad saucen simre i op til en time for en endnu dybere og rigere smag. Den smager endnu bedre dagen efter.",
-    "dealItems": [
-      {
-        "name": "Rummo Spaghetti 500 g",
-        "store": "Netto",
-        "price": "15 kr."
-      },
-      {
-        "name": "Coop Hakket Grisekød 8-12% 500 g",
-        "store": "Dagli'Brugsen / Brugsen",
-        "price": "35 kr."
-      },
-      {
-        "name": "Mutti Polpa Hakkede Tomater 400 g",
-        "store": "Netto",
-        "price": "12 kr."
-      },
-      {
-        "name": "Dolmio Bolognese pastasauce 450 g",
-        "store": "Coop 365",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1004,
-    "title": "Asiatisk Ramen med Gyoza og Misopaste",
-    "emoji": "🥢",
-    "time": "35 minutter",
-    "servings_count": 3,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "En varmende og dyb ramensuppe bygget op om en rig misopasta-bouillon med lækre dampede gyoza og friske grøntsager. Denne ret er inspireret af japanske ramenrestauranter og bringer autentiske smagsoplevelser hjem i dit køkken. Perfekt til kolde aftener.",
-    "ingredients": [
-      {
-        "text": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Nu Gyoza m. kylling 196 g",
-        "store": "Bilka",
-        "price": "22 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Soba-nudler 400 g",
-        "store": "Lidl",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Harvest Best Mukimame Bønner 400-750 g",
-        "store": "Netto",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sesamolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Sojasauce",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Ingefær",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hæld ramenbouillonen i en stor gryde og bring den i kog.",
-      "Tilsæt 2-3 spsk misopaste og rør godt rundt til den er opløst. Smag til og tilsæt evt. mere misopaste, sojasauce eller revet ingefær.",
-      "Lad suppen simre ved lav varme mens du forbereder resten.",
-      "Kog soba-nudlerne efter pakkens anvisning, skyl dem i koldt vand og lad dem dryppe af.",
-      "Varm mukimamebønnerne op i lidt kogende saltet vand i 3-4 minutter og dræn dem.",
-      "Steg eller damp gyozaerne efter pakkens anvisning. Til stegning: varm lidt olie i en pande, læg gyozaerne i og steg 2-3 minutter, tilsæt derefter lidt vand og dæk til i 3-4 minutter.",
-      "Fordel soba-nudlerne i dybe suppeskåle.",
-      "Hæld den varme misosuppe over nudlerne.",
-      "Placer gyozaerne og mukimamebønnerne ovenpå.",
-      "Dryp med lidt sesamolie og server straks."
-    ],
-    "tip": "Tilsæt et blødkogt æg (6 minutter i kogende vand, derefter i isvand) til suppen for en autentisk ramen-oplevelse.",
-    "dealItems": [
-      {
-        "name": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Salling Nu Gyoza m. kylling 196 g",
-        "store": "Bilka",
-        "price": "22 kr."
-      },
-      {
-        "name": "Soba-nudler 400 g",
-        "store": "Lidl",
-        "price": "25 kr."
-      },
-      {
-        "name": "Harvest Best Mukimame Bønner 400-750 g",
-        "store": "Netto",
-        "price": "12 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Mellem"
-  },
-  {
-    "id": 1005,
-    "title": "Hjemmelavet Burger med Bacon og Cheddar",
-    "emoji": "🍔",
-    "time": "30 minutter",
-    "servings_count": 4,
-    "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
-    "description": "En saftig hjemmelavet burger med amerikanskstyle bøffer, sprød bacon og smeltet cheddarost på en blød briochebolle. Serveret med klassisk burgerdressing og friske grøntsager er dette den ultimative weekendmiddag. En burger der slår enhver fastfood-kæde.",
-    "ingredients": [
-      {
-        "text": "Brioche-burgerboller 300 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Burgerbøffer maks. 20% fedt 400 g",
-        "store": "Lidl",
-        "price": "45 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Coop Bacon 140-275 g",
-        "store": "SuperBrugsen / Kvickly",
-        "price": "14 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Coop Revet Cheddar 150-200 g",
-        "store": "Coop 365",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Böhncke Burgerdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Smør til ristning af boller",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salatblade",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Tag burgerbøfferne ud af køleskabet 15 minutter før tilberedning og krydr dem generøst med salt og peber på begge sider.",
-      "Steg baconen sprød i en tør pande ved middel-høj varme. Læg den på køkkenrulle og hold varm.",
-      "Steg burgerbøfferne på den samme pande ved høj varme, 3-4 minutter på hver side, afhængig af ønsket tilberedning.",
-      "Når bøfferne er vendt, læg revet cheddar over og dæk panden med et låg i 1-2 minutter til osten er smeltet.",
-      "Rids briochebollerne og rist dem på skærefladen i lidt smør i en pande til de er gyldne.",
-      "Smør burgerdressing på begge halvdele af bollerne.",
-      "Læg salatblade på den nedre bolle, derefter bøffen med smeltet ost, bacon og yderligere dressing.",
-      "Læg den øverste bollehalf på og tryk let sammen.",
-      "Server straks med pommes frites eller en frisk salat."
-    ],
-    "tip": "Tryk en lille fordybning i midten af burgerbøffen inden stegning — det forhindrer den i at svulme op og sikrer en jævn stegning.",
-    "dealItems": [
-      {
-        "name": "Brioche-burgerboller 300 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Burgerbøffer maks. 20% fedt 400 g",
-        "store": "Lidl",
-        "price": "45 kr."
-      },
-      {
-        "name": "Coop Bacon 140-275 g",
-        "store": "SuperBrugsen / Kvickly",
-        "price": "14 kr."
-      },
-      {
-        "name": "Coop Revet Cheddar 150-200 g",
-        "store": "Coop 365",
-        "price": "10 kr."
-      },
-      {
-        "name": "Böhncke Burgerdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1006,
     "title": "Indisk Butter Chicken med Basmatiris",
     "emoji": "🍛",
     "time": "30 minutter",
@@ -691,7 +280,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1007,
+    "id": 1003,
     "title": "Dansk Stjerneskud med Rejer og Laks",
     "emoji": "🌿",
     "time": "25 minutter",
@@ -792,109 +381,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1008,
-    "title": "Sprøde Forårsruller med Edamame og Sambal Oelek",
-    "emoji": "🥢",
-    "time": "20 minutter",
-    "servings_count": 4,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "Crispy asiatiske forårsruller serveret med en pikant sambal oelek dip og friske edamamebønner. En let og lækker forret eller snack inspireret af det sydøstasiatiske køkken. Retten er hurtig at tilberede og klar på under 20 minutter.",
-    "ingredients": [
-      {
-        "text": "Daloon Forårsruller 600-800 g",
-        "store": "Coop 365",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sambal Oelek 200 g",
-        "store": "Lidl",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Edamame 150 g",
-        "store": "Lidl",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Noritang 5 stk",
-        "store": "Lidl",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Solsikkeolie 1 liter",
-        "store": "Bilka",
-        "price": "16 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sojasauce",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Riseddike",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Sukker",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hæld solsikkeolie i en dyb gryde til ca. 5 cm dybde og opvarm til 180°C.",
-      "Frituresteg forårsrullerne i portioner i 3-4 minutter til de er gyldne og sprøde. Vend dem halvvejs.",
-      "Læg de stegte forårsruller på køkkenrulle for at absorbere overskydende olie.",
-      "Kog edamamebønnerne i saltet vand i 3-4 minutter. Dræn og drys med lidt salt.",
-      "Bland en dip ved at røre sambal oelek med lidt sojasauce, riseddike og en teskefuld sukker. Smag til.",
-      "Klip noritangen i strimler med en saks til at bruge som garniture.",
-      "Anret forårsrullerne på et fad, placer edamamebønnerne ved siden af.",
-      "Pynt med noristrimmerne og server med dipsaucen."
-    ],
-    "tip": "Brug en termometer til olien for det bedste resultat — for kold olie giver fedtede forårsruller, for varm olie brænder de.",
-    "dealItems": [
-      {
-        "name": "Daloon Forårsruller 600-800 g",
-        "store": "Coop 365",
-        "price": "25 kr."
-      },
-      {
-        "name": "Sambal Oelek 200 g",
-        "store": "Lidl",
-        "price": "10 kr."
-      },
-      {
-        "name": "Edamame 150 g",
-        "store": "Lidl",
-        "price": "12 kr."
-      },
-      {
-        "name": "Noritang 5 stk",
-        "store": "Lidl",
-        "price": "12 kr."
-      },
-      {
-        "name": "Salling Solsikkeolie 1 liter",
-        "store": "Bilka",
-        "price": "16 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Vegetarisk"
-    ],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1009,
+    "id": 1004,
     "title": "Grillet Spareribs med BBQ-sauce og Majs",
     "emoji": "🍔",
     "time": "3 timer (inkl. ovntid)",
@@ -984,7 +471,7 @@
     "difficulty": "Mellem"
   },
   {
-    "id": 1010,
+    "id": 1005,
     "title": "Teriyaki Kyllingespyd med Japanske Nudler",
     "emoji": "🥢",
     "time": "25 minutter",
@@ -1077,7 +564,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1011,
+    "id": 1006,
     "title": "Hjemmelavet Smashburger med Syltede Rødløg",
     "emoji": "🍔",
     "time": "20 minutter",
@@ -1170,100 +657,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1012,
-    "title": "Mexicansk Kyllingetortilla Bowl",
-    "emoji": "🌮",
-    "time": "25 minutter",
-    "servings_count": 4,
-    "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
-    "description": "En farverig og mættende mexicansk bowl med krydret kylling, friske grøntsager og cremet avocado. Retten samler de bedste tex-mex smagsoplevelser i én nem middag. Perfekt til en hurtig hverdagsaften, hvor alle kan bygge deres egen bowl.",
-    "ingredients": [
-      {
-        "text": "Coop Tex Mex Tortilla 370 g",
-        "store": "Coop 365",
-        "price": "9 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Gestus Dansk Kyllingebrystfilet 1 kg",
-        "store": "Meny",
-        "price": "85 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Santa Maria Tex Mex Krydderi",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
-        "store": "Coop 365",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Cocktailtomater 500 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Coop Feta 150 g",
-        "store": "Coop 365",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Citronsaft, salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Skær kyllingebrystfileten i strimler og krydr dem grundigt med tex mex-krydderiblandingen samt salt og peber.",
-      "Varm en pande op med lidt olie og steg kyllingestrimler ved middel-høj varme i 6-8 minutter, til de er gennemstegte og gyldne.",
-      "Halvér avocadoerne, fjern kernen og skær frugtkødet i skiver. Drys med lidt citronsaft for at undgå brunfarvning.",
-      "Del cocktailtomaterne i halve. Smuldr fetaen.",
-      "Varm tortillaerne kort på en tør pande eller i mikroovn i 30 sekunder.",
-      "Anret bowls: Læg tortillaen i en skål, top med krydret kylling, avocadoskiver, tomater og smuldret feta.",
-      "Server med ekstra tex mex-sauce eller cremefraiche efter smag."
-    ],
-    "tip": "Tilsæt en dåse skyldne sorte bønner fra pantry for ekstra protein og fibre, og drys med friskhakkede forårsløg for farve og smag.",
-    "dealItems": [
-      {
-        "name": "Coop Tex Mex Tortilla 370 g",
-        "store": "Coop 365",
-        "price": "9 kr."
-      },
-      {
-        "name": "Gestus Dansk Kyllingebrystfilet 1 kg",
-        "store": "Meny",
-        "price": "85 kr."
-      },
-      {
-        "name": "Santa Maria Tex Mex Krydderi",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
-        "store": "Coop 365",
-        "price": "25 kr."
-      },
-      {
-        "name": "Salling Cocktailtomater 500 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1013,
+    "id": 1007,
     "title": "Miso Ramen med Gyoza",
     "emoji": "🥢",
     "time": "30 minutter",
@@ -1358,7 +752,7 @@
     "difficulty": "Mellem"
   },
   {
-    "id": 1014,
+    "id": 1008,
     "title": "Ovnbagt Dorade med Hvidløgsbaguette og Broccoli",
     "emoji": "🍽️",
     "time": "40 minutter",
@@ -1440,182 +834,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1015,
-    "title": "Græsk Gyros Pita med Tzatziki",
-    "emoji": "🍽️",
-    "time": "25 minutter",
-    "servings_count": 4,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En autentisk græsk gademadfavorit med krydret gyros, hjemmelavet tzatziki og sprøde grøntsager samlet i bløde pitabrød. Retten er nem at forberede og perfekt til en afslappet middag eller sammenkomst. Den fyldige gyros kombineret med den friske tzatziki er et klassisk match.",
-    "ingredients": [
-      {
-        "text": "Salling Gyros 300-400 g",
-        "store": "Bilka",
-        "price": "39 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Irma Pitabrød 4 stk / 440 g",
-        "store": "Coop 365",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Koliös Græsk Yoghurt 500 g",
-        "store": "Coop 365",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dansk Agurk",
-        "store": "Bilka",
-        "price": "8 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Peberfrugt",
-        "store": "Bilka",
-        "price": "6 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling ØKO Dansk Basilikum",
-        "store": "Bilka",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Hvidløg, salt, peber og tørret dild",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Start med tzatzikien: Riv halvdelen af agurken groft og pres al saft ud med hænderne eller et klæde. Det er vigtigt at fjerne overskydende væske.",
-      "Bland den pressede agurk med den græske yoghurt, 1-2 fed presset hvidløg, tørret dild, salt og peber. Stil tzatzikien i køleskabet mens du tilbereder resten.",
-      "Skær den resterende agurk og peberfrugten i strimler.",
-      "Varm en pande op med lidt olie og steg gyros-kødet ved høj varme i 5-7 minutter, til det er sprødt og gennemstegt. Rør jævnligt.",
-      "Varm pitabrødene i en tør pande i 1-2 minutter på hver side, eller indpakket i folie i ovnen ved 180°C i 5 minutter.",
-      "Åbn pitabrødene og smør generøst med tzatziki. Fyld med varm gyros, agurk- og peberfrugt-strimler.",
-      "Drys med frisk basilikum og server straks med ekstra tzatziki ved siden af."
-    ],
-    "tip": "For ekstra autentisk smag: krydr gyros-kødet med en blanding af spidskommen, oregano og paprika inden stegning, selvom kødet allerede er krydret.",
-    "dealItems": [
-      {
-        "name": "Salling Gyros 300-400 g",
-        "store": "Bilka",
-        "price": "39 kr."
-      },
-      {
-        "name": "Irma Pitabrød 4 stk / 440 g",
-        "store": "Coop 365",
-        "price": "18 kr."
-      },
-      {
-        "name": "Koliös Græsk Yoghurt 500 g",
-        "store": "Coop 365",
-        "price": "15 kr."
-      },
-      {
-        "name": "Dansk Agurk",
-        "store": "Bilka",
-        "price": "8 kr."
-      },
-      {
-        "name": "Peberfrugt",
-        "store": "Bilka",
-        "price": "6 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1016,
-    "title": "Spaghetti Bolognese med Mutti Tomater",
-    "emoji": "🍝",
-    "time": "50 minutter",
-    "servings_count": 4,
-    "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
-    "description": "En klassisk italiensk spaghetti bolognese lavet med frisk hakket kød, aromatisk tomatpuré og rige mutti tomater. Retten simrer langsomt for at udvikle en dyb, kompleks smag, der minder om den ægte italienske mormors opskrift. Server med en god spagetti og friskrevet parmesan.",
-    "ingredients": [
-      {
-        "text": "Rummo Spaghetti 500 g",
-        "store": "Netto",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Hakket Dansk Grise- og Oksekød 8-12% 600 g",
-        "store": "Meny",
-        "price": "59,95 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Mutti Polpa Hakkede Tomater 400 g",
-        "store": "Netto",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Mutti Tomatpuré 130-400 g",
-        "store": "Meny",
-        "price": "9,95 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling ØKO Dansk Basilikum",
-        "store": "Bilka",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Løg, hvidløg, olivenolie, rødvin, salt, peber, oregano og sukker",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hak et stort løg og 3 fed hvidløg fint. Varm olivenolie op i en stor gryde ved middel varme og svits løg og hvidløg i 5 minutter, til de er bløde og glasagtige.",
-      "Skru op for varmen og tilsæt det hakkede kød. Brun kødet grundigt i 8-10 minutter, bræk det op i små stykker undervejs. Krydr med salt og peber.",
-      "Rør tomatpuréen i og steg i 2 minutter for at karamellisere den. Tilsæt et glas rødvin og lad det koge ind i 3 minutter.",
-      "Tilsæt de hakkede tomater, oregano og en knivspids sukker. Rør godt og lad saucen simre ved lav varme i minimum 20-30 minutter under låg. Jo længere den simrer, desto bedre smag.",
-      "Kog spaghettien i rigeligt saltet vand efter anvisningen (al dente). Gem en kop pastakogvand inden du hælder vandet fra.",
-      "Rør lidt pastakogvand i saucen for at gøre den glattere og mere silkeagtig. Smag til med salt, peber og sukker.",
-      "Bland den varme pasta med saucen i gryden. Server i skåle og top med frisk basilikum og gerne revet parmesan."
-    ],
-    "tip": "Saucen bliver endnu bedre dagen efter, da smagen udvikler sig yderligere. Lav en stor portion og frys halvdelen til en nem hverdagsret en anden uge.",
-    "dealItems": [
-      {
-        "name": "Rummo Spaghetti 500 g",
-        "store": "Netto",
-        "price": "15 kr."
-      },
-      {
-        "name": "Hakket Dansk Grise- og Oksekød 8-12% 600 g",
-        "store": "Meny",
-        "price": "59,95 kr."
-      },
-      {
-        "name": "Mutti Polpa Hakkede Tomater 400 g",
-        "store": "Netto",
-        "price": "12 kr."
-      },
-      {
-        "name": "Mutti Tomatpuré 130-400 g",
-        "store": "Meny",
-        "price": "9,95 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1017,
+    "id": 1009,
     "title": "Hjemmelavede Hotdogs med Brioche og Karrydressing",
     "emoji": "🌿",
     "time": "20 minutter",
@@ -1702,100 +921,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1018,
-    "title": "Tempura Rejepoke Bowl med Jasminris",
-    "emoji": "🍽️",
-    "time": "30 minutter",
-    "servings_count": 2,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En lækker og farverig poke bowl inspireret af hawaiiansk og japansk køkken med sprøde tempurarejer, friske grøntsager og duftende jasminris. Retten er nem at sammensætte og ser imponerende ud på bordet. Den sprøde tempura kombineret med friske grøntsager og syrlig dressing er en fryd for sanserne.",
-    "ingredients": [
-      {
-        "text": "Salling Tempura Rejer 200-500 g",
-        "store": "Bilka",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Jasminris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Mukimame Bønner 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Formodnede Avocadoer 3 stk.",
-        "store": "Netto",
-        "price": "22 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sojasauce, riseddike, sesamolie, sukker og salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Kog jasminris efter pakningsanvisning (ca. 400 g ris til 2 portioner). Lad risene trække under låg i 10 minutter efter kogning.",
-      "Lav en enkel pokesauce ved at blande 3 spsk. sojasauce, 1 spsk. riseddike, 1 tsk. sesamolie og 1 tsk. sukker.",
-      "Tilbered tempurareje-erne efter anvisning på pakken, enten i ovnen eller i friture/olie på panden til de er gyldne og sprøde.",
-      "Optø mukimame-bønnerne i kogende vand i 3-4 minutter. Hæld vandet fra og krydr let med salt.",
-      "Skær avocadoerne i halve, fjern kernen og skær frugtkødet i skiver. Skær forårsløgene i tynde ringe.",
-      "Anret bowlsene: Del de varme ris i dybe skåle. Placer tempurarejer, avocadoskiver og mukimame-bønner i separate 'sektioner' ovenpå risene.",
-      "Dryp pokesaucen over det hele og drys med ristede sesamfrø og forårsløg. Server straks."
-    ],
-    "tip": "For ekstra farve og smag: tilsæt tyndt skivede radiser og en tråd sriracha eller sambal oelek for lidt hede. Poke bowls er nemme at customisere med hvad du har i køleskabet.",
-    "dealItems": [
-      {
-        "name": "Salling Tempura Rejer 200-500 g",
-        "store": "Bilka",
-        "price": "25 kr."
-      },
-      {
-        "name": "Salling Jasminris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Salling Mukimame Bønner 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "Formodnede Avocadoer 3 stk.",
-        "store": "Netto",
-        "price": "22 kr."
-      },
-      {
-        "name": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1019,
+    "id": 1010,
     "title": "Jordbærtærte med Vaniljekagecreme",
     "emoji": "🍽️",
     "time": "75 minutter (inkl. hviletid)",
@@ -1884,109 +1010,7 @@
     "difficulty": "Mellem"
   },
   {
-    "id": 1020,
-    "title": "Sprød Lakseburger med Avocadocreme",
-    "emoji": "🍽️",
-    "time": "25 minutter",
-    "servings_count": 4,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En saftig lakseburger med hjemmelavet avocadocreme og friske grøntsager. Perfekt til en hurtig hverdagsaftensmad eller en lækker weekendmiddag. De bløde burgerboller fra Bilka giver den perfekte ramme om den sprøde laks.",
-    "ingredients": [
-      {
-        "text": "Laksefilet",
-        "store": "Bilka",
-        "price": "16,95 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Bager 4 Burgerboller",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Formodnede Avocadoer 3 stk.",
-        "store": "Netto",
-        "price": "22 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dansk Agurk",
-        "store": "Bilka",
-        "price": "8 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Citronsaft",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Hvidløgspulver",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Skær laksefileten i 4 jævne stykker og krydr med salt, peber og hvidløgspulver.",
-      "Varm en pande op med lidt olivenolie ved middel-høj varme og steg laksen ca. 3-4 minutter på hver side.",
-      "Mos avocadoerne i en skål og tilsæt citronsaft, salt og peber. Rør til en cremet masse.",
-      "Skær agurken i tynde skiver.",
-      "Rist burgerbollerne let på en tør pande.",
-      "Smør avocadocreme på den nederste bolle, læg laksen ovenpå og top med agurkeskiver.",
-      "Læg toppen på og server straks."
-    ],
-    "tip": "Tilsæt lidt stærk sauce eller sriracha til avocadocremen for et ekstra kick.",
-    "dealItems": [
-      {
-        "name": "Laksefilet",
-        "store": "Bilka",
-        "price": "16,95 kr."
-      },
-      {
-        "name": "Bager 4 Burgerboller",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Formodnede Avocadoer 3 stk.",
-        "store": "Netto",
-        "price": "22 kr."
-      },
-      {
-        "name": "Dansk Agurk",
-        "store": "Bilka",
-        "price": "8 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri mulighed"
-    ],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1021,
+    "id": 1011,
     "title": "Kylling Tikka Masala med Basmatiris",
     "emoji": "🍛",
     "time": "40 minutter",
@@ -2100,7 +1124,7 @@
     "difficulty": "Middel"
   },
   {
-    "id": 1022,
+    "id": 1012,
     "title": "Mexicansk Tortilla Wrap med Gyros og Grøntsager",
     "emoji": "🍽️",
     "time": "20 minutter",
@@ -2200,7 +1224,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1023,
+    "id": 1013,
     "title": "Japansk Teriyaki Kyllingespyd med Soba-nudler",
     "emoji": "🥢",
     "time": "30 minutter",
@@ -2301,320 +1325,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1024,
-    "title": "Spaghetti Bolognese med Hakket Oksekød",
-    "emoji": "🍝",
-    "time": "45 minutter",
-    "servings_count": 6,
-    "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
-    "description": "En klassisk italiensk spaghetti bolognese med saftig kødsauce og al dente spaghetti. Mutti's hakkede tomater giver saucen en autentisk italiensk smag og dyb rødhed. Denne ret er en familieyndling der mætter alle.",
-    "ingredients": [
-      {
-        "text": "Hakket oksekød 2,4-2,8 kg",
-        "store": "Bilka",
-        "price": "120 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Spaghetti 500 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Mutti Polpa Hakkede Tomater 400 g",
-        "store": "Netto",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Knorr Bouillon 57-112 g",
-        "store": "SuperBrugsen / Kvickly",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Løg",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Hvidløg",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Tørret oregano",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Tørret basilikum",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hak løg og hvidløg fint. Varm olivenolie i en bred gryde og svits løg til de er bløde, ca. 5 minutter.",
-      "Tilsæt hvidløg og steg i 1 minut.",
-      "Brun det hakkede oksekød ved høj varme og bræk det op med en ske.",
-      "Opløs bouillonen i 200 ml varmt vand og hæld det over kødet.",
-      "Tilsæt hakkede tomater, oregano og basilikum. Rør godt og lad det simre ved lav varme i 20 minutter.",
-      "Kog spaghettien i rigeligt saltet vand efter anvisning på pakken.",
-      "Smag saucen til med salt og peber. Server over den kogte spaghetti."
-    ],
-    "tip": "Tilsæt et skvæt rødvin til saucen mens den simrer for en mere kompleks smag.",
-    "dealItems": [
-      {
-        "name": "Hakket oksekød 2,4-2,8 kg",
-        "store": "Bilka",
-        "price": "120 kr."
-      },
-      {
-        "name": "Salling Spaghetti 500 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "Mutti Polpa Hakkede Tomater 400 g",
-        "store": "Netto",
-        "price": "12 kr."
-      },
-      {
-        "name": "Knorr Bouillon 57-112 g",
-        "store": "SuperBrugsen / Kvickly",
-        "price": "10 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Mælkefri"
-    ],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1025,
-    "title": "Hjemmelavet Hotdog med Syltede Rødløg",
-    "emoji": "🌿",
-    "time": "20 minutter",
-    "servings_count": 6,
-    "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
-    "description": "En opgradering af den klassiske danske hotdog med sprøde pølsehorn, saftige grillpølser og syrlige syltede rødløg. Hotdogdressingen fra Böhncke binder det hele smukt sammen. Perfekt til grillfesten eller en hyggelig fredagsmiddag.",
-    "ingredients": [
-      {
-        "text": "Bager 6 Pølsebrød",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Langeländer Grillpølser 540-560 g",
-        "store": "Coop 365",
-        "price": "35 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Böhncke Hotdogdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Søde Majs 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Sennep",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Grill pølserne på en varm grillpande eller grill i 8-10 minutter, vend jævnligt til de er gennemvarme og har farve.",
-      "Optø majsen og varm dem i en pande med en smule smør og salt.",
-      "Varm pølsebrødene kort i ovn ved 180 grader i 3-4 minutter.",
-      "Læg en pølse i hvert brød.",
-      "Top med hotdogdressing, syltede rødløg og majs.",
-      "Tilsæt sennep efter smag og server straks."
-    ],
-    "tip": "Rist pølsebrødene på grillen de sidste 2 minutter for ekstra sprødhed og grillsmag.",
-    "dealItems": [
-      {
-        "name": "Bager 6 Pølsebrød",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Langeländer Grillpølser 540-560 g",
-        "store": "Coop 365",
-        "price": "35 kr."
-      },
-      {
-        "name": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr."
-      },
-      {
-        "name": "Böhncke Hotdogdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      },
-      {
-        "name": "Salling Søde Majs 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1026,
-    "title": "Ramen Suppe med Gyoza og Grøntsager",
-    "emoji": "🥢",
-    "time": "30 minutter",
-    "servings_count": 3,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "En varmende og smagfuld japansk ramensuppe med panerede gyoza og friske grøntsager. Misopastens umami-dybde og den aromatiske bouillon skaber en autentisk japansk smagsoplevelse. Retten er perfekt til kolde aftener og kan varieres i det uendelige.",
-    "ingredients": [
-      {
-        "text": "Salling Nu Gyoza m. grøntsager 196 g",
-        "store": "Bilka",
-        "price": "22 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Soba-nudler 300 g",
-        "store": "Lidl",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Harvest Best Wok Mix 400-750 g",
-        "store": "Netto",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Sesamolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Sojasauce",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hæld ramenbouillonen i en gryde og bring den i kog.",
-      "Rør misopaste ud i en lille mængde varm bouillon og tilsæt det derefter til gryden.",
-      "Kog soba-nudlerne separat efter anvisning på pakken og skyl i koldt vand.",
-      "Tilsæt wokmix til suppen og kog i 3-4 minutter til grøntsagerne er møre men stadig har bid.",
-      "Steg eller damp gyozaen efter anvisning på pakken.",
-      "Fordel nudler i dybe skåle og hæld den varme suppe med grøntsager over.",
-      "Top med gyoza, finthakkede forårsløg og et dryp sesamolie. Smag til med sojasauce."
-    ],
-    "tip": "Tilsæt et blødt kogt æg og noritang til suppen for ekstra autenticitet.",
-    "dealItems": [
-      {
-        "name": "Salling Nu Gyoza m. grøntsager 196 g",
-        "store": "Bilka",
-        "price": "22 kr."
-      },
-      {
-        "name": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Soba-nudler 300 g",
-        "store": "Lidl",
-        "price": "10 kr."
-      },
-      {
-        "name": "Harvest Best Wok Mix 400-750 g",
-        "store": "Netto",
-        "price": "12 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Vegansk mulighed"
-    ],
-    "difficulty": "Middel"
-  },
-  {
-    "id": 1027,
+    "id": 1014,
     "title": "Grillet Flanksteak med Chimichurri og Pommes Frites",
     "emoji": "🍽️",
     "time": "50 minutter",
@@ -2700,7 +1411,1034 @@
     "difficulty": "Middel"
   },
   {
-    "id": 1028,
+    "id": 1015,
+    "title": "Japansk Ramen med Kyllingespyd og Udonnudler",
+    "emoji": "🥢",
+    "time": "25 minutter",
+    "servings_count": 2,
+    "category": "Asiatisk",
+    "cuisine": "🇯🇵 Asiatisk",
+    "description": "En varmende og aromatisk japansk ramensuppe med møre kyllingespyd og bløde udonnudler. Misopaste og ramenbouillon giver en dyb umami-smag, der løfter hele retten. Perfekt til en hyggelig aften, hvor man vil forkæle sig selv med asiatisk madlavning.",
+    "ingredients": [
+      {
+        "text": "Yakitori Kyllingespyd 300-1250 g",
+        "store": "Bilka",
+        "price": "89 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Udonnudler 300 g",
+        "store": "Lidl",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ramenbouillon 1 liter",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Misopaste 200 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Sesamolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Varm ramenbouillonen op i en stor gryde ved middel varme.",
+      "Rør misopaste ud i bouillonen og smag til med salt og peber.",
+      "Tilsæt udonnudlerne og kog dem i 3-4 minutter, indtil de er møre.",
+      "Varm yakitori kyllingespyddene i ovnen eller på en pande ifølge pakningens anvisning.",
+      "Snit forårsløgene fint på skrå.",
+      "Anret nudler og bouillon i dybe skåle, placer kyllingespyddene ovenpå, og drys med forårsløg.",
+      "Dryp lidt sesamolie over og server straks."
+    ],
+    "tip": "Tilsæt et blødkogt æg (6 minutter i kogende vand) for ekstra fylde og autenticitet.",
+    "dealItems": [
+      {
+        "name": "Salling Yakitori Kyllingespyd 300-1250 g",
+        "store": "Bilka",
+        "price": "89 kr."
+      },
+      {
+        "name": "Udonnudler 300 g",
+        "store": "Lidl",
+        "price": "10 kr."
+      },
+      {
+        "name": "Ramenbouillon 1 liter",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Misopaste 200 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1016,
+    "title": "Mexicansk Tacobowl med Hakket Kylling og Mukimame",
+    "emoji": "🌮",
+    "time": "30 minutter",
+    "servings_count": 4,
+    "category": "Mexicansk",
+    "cuisine": "🇲🇽 Mexicansk",
+    "description": "En farverig og næringsrig mexicansk inspireret tacobowl med krydret hakket kylling og sprøde mukimamebønner. Santa Maria Tex Mex-krydderiet giver den autentiske mexicanske smag, mens jasminris danner en perfekt base. En hurtig hverdagsret, der kan tilpasses efter smag.",
+    "ingredients": [
+      {
+        "text": "Hakket dansk kyllingekød ca. 775 g",
+        "store": "Bilka",
+        "price": "45 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Santa Maria Tex Mex Krydderi",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Mukimame Bønner 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Jasminris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Cocktailtomater 500 g",
+        "store": "Bilka",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Olivenolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Vand",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Kog jasminris efter pakningens anvisning i letsaltet vand.",
+      "Varm lidt olie i en pande og steg det hakkede kyllingekød ved høj varme, til det er gennemstegt.",
+      "Tilsæt Tex Mex krydderi og rør godt rundt. Lad det simre 2 minutter.",
+      "Optø mukimamebønnerne i kogende vand i 3 minutter, og lad dem dryppe af.",
+      "Del cocktailtomaterne i halve.",
+      "Anret ris i bunden af skåle, top med krydret kylling, mukimame og friske tomater.",
+      "Server med ekstra limesaft eller en klat creme fraiche efter ønske."
+    ],
+    "tip": "Tilsæt avocado skåret i tern for en cremet kontrast til den krydrede kylling.",
+    "dealItems": [
+      {
+        "name": "Hakket dansk kyllingekød ca. 775 g",
+        "store": "Bilka",
+        "price": "45 kr."
+      },
+      {
+        "name": "Santa Maria Tex Mex Krydderi",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Salling Mukimame Bønner 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr."
+      },
+      {
+        "name": "Salling Jasminris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Salling Cocktailtomater 500 g",
+        "store": "Bilka",
+        "price": "18 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Glutenfri"
+    ],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1017,
+    "title": "Klassisk Dansk Hotdog med Syltede Rødløg",
+    "emoji": "🌿",
+    "time": "15 minutter",
+    "servings_count": 6,
+    "category": "Nordisk",
+    "cuisine": "🇩🇰 Nordisk",
+    "description": "Den ultimative version af den danske klassiker – hotdog med sprøde pølsehorn, saftfulde grillpølser og syrlige syltede rødløg. Böhncke hotdogdressing og sennep giver den ægte gadevognssmag, du kender og elsker. En nem og festlig middag, der passer til alle aldre.",
+    "ingredients": [
+      {
+        "text": "Bager 6 Pølsebrød",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Quickfood Grillpølse til fransk hotdog",
+        "store": "Bilka",
+        "price": "14 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Böhncke Hotdogdressing 255-425 g",
+        "store": "Bilka",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Zelected Syltede Rødløg 115-500 g",
+        "store": "Bilka",
+        "price": "26 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Sennep",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Ketchup",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Varm grillpølserne i en gryde med kogende vand i 5-7 minutter, eller grill dem på en pande.",
+      "Varm pølsebrødene let i ovnen ved 180°C i 3-4 minutter.",
+      "Placer en grillpølse i hvert brød.",
+      "Tilsæt et gavmildt lag Böhncke hotdogdressing.",
+      "Top med syltede rødløg, sennep og ketchup efter smag.",
+      "Server straks og nyd den klassiske danske gadevognsoplevelse derhjemme."
+    ],
+    "tip": "Steg pølserne på en grillpande for ekstra smag og fine grillmærker.",
+    "dealItems": [
+      {
+        "name": "Bager 6 Pølsebrød",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Quickfood Grillpølse til fransk hotdog",
+        "store": "Bilka",
+        "price": "14 kr."
+      },
+      {
+        "name": "Böhncke Hotdogdressing 255-425 g",
+        "store": "Bilka",
+        "price": "18 kr."
+      },
+      {
+        "name": "Zelected Syltede Rødløg 115-500 g",
+        "store": "Bilka",
+        "price": "26 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Meget nem"
+  },
+  {
+    "id": 1018,
+    "title": "Gyoza med Teriyakisauce og Wakamesalat",
+    "emoji": "🥢",
+    "time": "20 minutter",
+    "servings_count": 2,
+    "category": "Asiatisk",
+    "cuisine": "🇯🇵 Asiatisk",
+    "description": "Sprøde japanske gyoza serveret med en lækker teriyakisauce og frisk wakamesalat – en let og elegant ret med masser af umami. Gyozaerne steges først og dampes derefter for den perfekte tekstur med sprød bund og blød top. En fantastisk ret til forret eller en let middag.",
+    "ingredients": [
+      {
+        "text": "Gyoza med dyppelse 238 g",
+        "store": "Lidl",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Teriyakisauce 250 ml",
+        "store": "Lidl",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Wakamesalat 30 g",
+        "store": "Lidl",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Sesamolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Vand",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Varm en pande med lidt sesamolie ved middel-høj varme.",
+      "Placer gyozaerne med den flade side nedad og steg i 2-3 minutter, til bunden er gylden.",
+      "Tilsæt 3 spsk vand til panden og læg låg på. Damp gyozaerne i 3-4 minutter.",
+      "Tag låget af og lad det resterende vand fordampe.",
+      "Anret wakamesalaten på en tallerken.",
+      "Placer gyozaerne ovenpå wakamesalaten og hæld teriyakisauce over.",
+      "Drys med ristede sesamfrø og server straks."
+    ],
+    "tip": "Brug den medfølgende dyppesauce fra pakken som ekstra dip ved siden af.",
+    "dealItems": [
+      {
+        "name": "Gyoza med dyppelse 238 g",
+        "store": "Lidl",
+        "price": "25 kr."
+      },
+      {
+        "name": "Teriyakisauce 250 ml",
+        "store": "Lidl",
+        "price": "20 kr."
+      },
+      {
+        "name": "Wakamesalat 30 g",
+        "store": "Lidl",
+        "price": "18 kr."
+      },
+      {
+        "name": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1019,
+    "title": "Indisk Butter Chicken med Basmatiris og Basilikum",
+    "emoji": "🍛",
+    "time": "20 minutter",
+    "servings_count": 2,
+    "category": "Indisk",
+    "cuisine": "🇮🇳 Indisk",
+    "description": "En cremet og aromatisk indisk butter chicken ret, der er nemt sat sammen med Salling Nu Butter Chicken og frisk basilikum fra Bilka. Basmatiris absorberer den rige, krydrede sauce og giver en mættende og lækker middag på under 30 minutter. Retten er perfekt til en travl hverdag.",
+    "ingredients": [
+      {
+        "text": "Salling Nu Butter Chicken 400 g",
+        "store": "Bilka",
+        "price": "30 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Basmatiris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling ØKO Dansk Basilikum",
+        "store": "Bilka",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Cremefine Madlavning 250 ml",
+        "store": "Bilka",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Vand",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Kog basmatiris i letsaltet vand ifølge pakningens anvisning – ca. 12 minutter.",
+      "Varm Salling Nu Butter Chicken i en gryde ved middel varme.",
+      "Tilsæt Cremefine madlavning og rør godt rundt for en ekstra cremet konsistens.",
+      "Lad retten simre i 5 minutter.",
+      "Smag til med salt efter ønske.",
+      "Anret ris på tallerkener og hæld butter chicken sauce over.",
+      "Pynt med friske basilikumblade og server straks."
+    ],
+    "tip": "Tilsæt en skive smørbrød eller naan til at suge den cremede sauce op med.",
+    "dealItems": [
+      {
+        "name": "Salling Nu Butter Chicken 400 g",
+        "store": "Bilka",
+        "price": "30 kr."
+      },
+      {
+        "name": "Salling Basmatiris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Salling ØKO Dansk Basilikum",
+        "store": "Bilka",
+        "price": "25 kr."
+      },
+      {
+        "name": "Cremefine Madlavning 250 ml",
+        "store": "Bilka",
+        "price": "10 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Glutenfri"
+    ],
+    "difficulty": "Meget nem"
+  },
+  {
+    "id": 1020,
+    "title": "Stegt Dorade med Broccoli og Hvidløgsbaguette",
+    "emoji": "🍽️",
+    "time": "40 minutter",
+    "servings_count": 2,
+    "category": "Verden",
+    "cuisine": "🌍 Verden",
+    "description": "En elegant og enkel middelhavsinspireret ret med hel stegt dorade, dampet broccoli og sprød hvidløgsbaguette. Fisken steges hel med citron og krydderurter for den mest smagfulde og saftige resultat. En imponerende ret, der er overraskende nem at lave.",
+    "ingredients": [
+      {
+        "text": "Dorade",
+        "store": "Bilka",
+        "price": "45 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Baguette med Hvidløgssmør 350-750 g",
+        "store": "Bilka",
+        "price": "11 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Broccolibuketter 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Piccardo & Savore Ekstra Jomfru Olivenolie 750-1000 ml",
+        "store": "Bilka",
+        "price": "89 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Citron",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Hvidløg",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Salt, peber og friske krydderurter (timian/rosmarin)",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Forvarm ovnen til 200°C.",
+      "Rens doraden indvendig og skyl den i koldt vand. Dup tør med køkkenrulle.",
+      "Krydr fisken ind- og udvendig med salt, peber og friske krydderurter.",
+      "Læg citronskiver og hvidløgsfed inde i fisken.",
+      "Dryp generøst med olivenolie og læg fisken i et ovnfast fad.",
+      "Bag doraden i 20-25 minutter, til kødet løsner sig fra benet.",
+      "Damp broccolibuketterne i 5 minutter og krydr med salt og et drys olivenlie.",
+      "Varm hvidløgsbaguetten i ovnen de sidste 8 minutter ifølge pakningens anvisning.",
+      "Server doraden hel med broccoli og hvidløgsbaguette ved siden af."
+    ],
+    "tip": "Bed fiskehandleren om at rense fisken, så sparer du tid derhjemme.",
+    "dealItems": [
+      {
+        "name": "Dorade",
+        "store": "Bilka",
+        "price": "45 kr."
+      },
+      {
+        "name": "Salling Baguette med Hvidløgssmør 350-750 g",
+        "store": "Bilka",
+        "price": "11 kr."
+      },
+      {
+        "name": "Salling Broccolibuketter 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr."
+      },
+      {
+        "name": "Piccardo & Savore Ekstra Jomfru Olivenolie 750-1000 ml",
+        "store": "Bilka",
+        "price": "89 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Glutenfri (undtagen baguetten)"
+    ],
+    "difficulty": "Middel"
+  },
+  {
+    "id": 1021,
+    "title": "Sprød Teriyaki Kyllingebowl med Jasminris og Edamame",
+    "emoji": "🥢",
+    "time": "30 minutter",
+    "servings_count": 4,
+    "category": "Asiatisk",
+    "cuisine": "🇯🇵 Asiatisk",
+    "description": "En lækker japansk-inspireret bowl med saftige teriyaki-kyllingespyd, dampet jasminris og edamame bønner. Retten er hurtig at tilberede og fuld af umami-smag. Perfekt til en nem hverdagsaftensmad med eksotisk twist.",
+    "ingredients": [
+      {
+        "text": "Yakitori Kyllingespyd 300-1250 g",
+        "store": "Bilka",
+        "price": "89 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Jasminris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Edamame 150 g",
+        "store": "Lidl",
+        "price": "12 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Teriyakisauce 250 ml",
+        "store": "Lidl",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Sesamolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Kog jasminris efter pakkens anvisning i letsaltet vand – ca. 15 minutter.",
+      "Varm ovnen op til 200°C. Læg yakitori-kyllingespyddene på en bageplade med bagepapir og bag dem i 15-18 minutter, til de er gennemstegte og let karamelliserede.",
+      "Imens optøes/opvarmes edamame bønnerne i kogende saltet vand i 3-4 minutter. Dræn og sæt til side.",
+      "Snit forårsløgene fint på skrå.",
+      "Anret ris i en skål, læg kyllingespyd ovenpå og fordel edamame rundt om.",
+      "Dryp teriyakisauce over det hele, drys med ristede sesamfrø og forårsløg.",
+      "Afslut med et par dråber sesamolie for ekstra dybde."
+    ],
+    "tip": "Tilsæt et spejlæg ovenpå for at gøre bowlen endnu mere mættende og autentisk.",
+    "dealItems": [
+      {
+        "name": "Salling Yakitori Kyllingespyd 300-1250 g",
+        "store": "Bilka",
+        "price": "89 kr."
+      },
+      {
+        "name": "Salling Jasminris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Edamame 150 g",
+        "store": "Lidl",
+        "price": "12 kr."
+      },
+      {
+        "name": "Teriyakisauce 250 ml",
+        "store": "Lidl",
+        "price": "20 kr."
+      },
+      {
+        "name": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Glutenfri mulighed"
+    ],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1022,
+    "title": "Asiatisk Ramensuppe med Gyoza og Soba-Nudler",
+    "emoji": "🥢",
+    "time": "25 minutter",
+    "servings_count": 2,
+    "category": "Asiatisk",
+    "cuisine": "🇯🇵 Asiatisk",
+    "description": "En varmende og dybdefuld ramensuppe inspireret af japansk madkultur med gyoza, soba-nudler og miso-bouillon. Retten kombinerer umami-rige smage med friske grøntsager for en komplet og tilfredsstillende middag. Let at lave men imponerende i smagen.",
+    "ingredients": [
+      {
+        "text": "Salling Nu Gyoza m. grøntsager 196 g",
+        "store": "Bilka",
+        "price": "22 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Soba-nudler 300 g",
+        "store": "Lidl",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Misopaste 200 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ramenbouillon 1 liter",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt og sesamolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Hæld ramenbouillonen i en stor gryde og varm op til kogepunktet.",
+      "Tilsæt 2-3 spsk misopaste og rør godt til den er opløst. Smag til og juster med salt.",
+      "Kog soba-nudlerne i en separat gryde med kogende vand i 4-5 minutter. Dræn og skyl med koldt vand.",
+      "Steg eller damp gyoza'erne efter pakkens anvisning – ca. 6-8 minutter på en varm pande med lidt olie.",
+      "Snit forårsløgene i tynde ringe.",
+      "Fordel soba-nudlerne i dybe suppeskåle og hæld den varme misobouillon over.",
+      "Læg 3-4 gyoza ovenpå, drys med forårsløg og ristede sesamfrø.",
+      "Afslut med et par dråber sesamolie og server straks."
+    ],
+    "tip": "Tilsæt et blødkogt æg halveret på langs for ekstra fylde og autenticitet.",
+    "dealItems": [
+      {
+        "name": "Salling Nu Gyoza m. grøntsager 196 g",
+        "store": "Bilka",
+        "price": "22 kr."
+      },
+      {
+        "name": "Soba-nudler 300 g",
+        "store": "Lidl",
+        "price": "10 kr."
+      },
+      {
+        "name": "Misopaste 200 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Ramenbouillon 1 liter",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Vegetarisk mulighed"
+    ],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1023,
+    "title": "Hjemmelavet Burger med Cheddar og Syltede Rødløg",
+    "emoji": "🍔",
+    "time": "25 minutter",
+    "servings_count": 4,
+    "category": "Amerikansk",
+    "cuisine": "🇺🇸 Amerikansk",
+    "description": "En saftig og klassisk hjemmelavet burger med hakket oksekød, smeltet cheddarost og alle de gode toppings. De sprøde brioche-boller løfter burgeren til et nyt niveau. En opskrift der garanterer succes ved grillen eller på panden.",
+    "ingredients": [
+      {
+        "text": "Brioche-burgerboller 300 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Burgerbøffer maks. 20% fedt 400 g",
+        "store": "Lidl",
+        "price": "45 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Castello Cheddar hård ost 150-200 g",
+        "store": "Bilka",
+        "price": "30 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Zelected Syltede Rødløg 115-500 g",
+        "store": "Bilka",
+        "price": "26 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Böhncke Burgerdressing 255-425 g",
+        "store": "Bilka",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Cocktailtomater 500 g",
+        "store": "Bilka",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt, peber og olivenolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Tag burgerbøfferne ud af køleskabet 15 minutter før tilberedning. Krydr dem med salt og peber på begge sider.",
+      "Varm en grillpande eller stegepande op til høj varme med lidt olivenolie.",
+      "Steg burgerbøfferne 3-4 minutter på hver side for medium tilberedning.",
+      "Læg en skive cheddar på hver bøf det sidste minut af tilberedningen og læg låg på panden, så osten smelter.",
+      "Skær brioche-bollerne over og rist dem kort på den skårne side på panden.",
+      "Smør burgerdressingen på den nederste bolle.",
+      "Læg cheeseburgeren på, top med syltede rødløg og halverede cocktailtomater.",
+      "Læg toppen på og server straks med pommes frites eller salat."
+    ],
+    "tip": "Tryk ikke på bøffen med spatlen under stegningen – det presser saften ud og giver en tørrere burger.",
+    "dealItems": [
+      {
+        "name": "Brioche-burgerboller 300 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Burgerbøffer maks. 20% fedt 400 g",
+        "store": "Lidl",
+        "price": "45 kr."
+      },
+      {
+        "name": "Castello Cheddar hård ost 150-200 g",
+        "store": "Bilka",
+        "price": "30 kr."
+      },
+      {
+        "name": "Zelected Syltede Rødløg 115-500 g",
+        "store": "Bilka",
+        "price": "26 kr."
+      },
+      {
+        "name": "Böhncke Burgerdressing 255-425 g",
+        "store": "Bilka",
+        "price": "18 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1024,
+    "title": "Hjemmelavet Sushi Bowl med Laks og Wakamesalat",
+    "emoji": "🥢",
+    "time": "30 minutter",
+    "servings_count": 2,
+    "category": "Asiatisk",
+    "cuisine": "🇯🇵 Asiatisk",
+    "description": "En nem og sundere alternativ til sushi i form af en bowl med sushiris, frisk laks, wakamesalat og klassiske japanske toppings. Ideel til dem der elsker sushi men ønsker en hurtigere løsning. Server med wasabi og riseddike for den autentiske oplevelse.",
+    "ingredients": [
+      {
+        "text": "Sushiris 500 g",
+        "store": "Lidl",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Koldrøget laks 100 g",
+        "store": "Lidl",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Wakamesalat 30 g",
+        "store": "Lidl",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Riseddike 250 ml",
+        "store": "Lidl",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Wasabi Paste 43 g",
+        "store": "Lidl",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Sukker og salt",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Sojasauce",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Kog sushiris efter pakkens anvisning. Varm riseddike op med 1 tsk sukker og 1 tsk salt til det er opløst.",
+      "Hæld eddikeblandingen over de kogte ris og vend forsigtigt. Lad risene køle lidt af.",
+      "Rehydrer wakamesalaten i koldt vand i 5 minutter hvis den er tørret, eller brug den direkte hvis den er frisk.",
+      "Skær den koldrøgede laks i tynde skiver eller tern.",
+      "Fordel sushiris i dybe skåle.",
+      "Anret laks og wakamesalat oven på risene.",
+      "Drys med ristede sesamfrø og server med en klat wasabipaste og sojasauce ved siden af."
+    ],
+    "tip": "Tilsæt avocado og agurk i tern for ekstra friskhed og farve i skålen.",
+    "dealItems": [
+      {
+        "name": "Sushiris 500 g",
+        "store": "Lidl",
+        "price": "10 kr."
+      },
+      {
+        "name": "Koldrøget laks 100 g",
+        "store": "Lidl",
+        "price": "20 kr."
+      },
+      {
+        "name": "Wakamesalat 30 g",
+        "store": "Lidl",
+        "price": "18 kr."
+      },
+      {
+        "name": "Riseddike 250 ml",
+        "store": "Lidl",
+        "price": "10 kr."
+      },
+      {
+        "name": "Wasabi Paste 43 g",
+        "store": "Lidl",
+        "price": "10 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Glutenfri mulighed"
+    ],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1025,
+    "title": "Hurtig Spaghetti Bolognese med Mutti Tomater",
+    "emoji": "🍝",
+    "time": "45 minutter",
+    "servings_count": 4,
+    "category": "Italiensk",
+    "cuisine": "🇮🇹 Italiensk",
+    "description": "En klassisk italiensk spaghetti bolognese lavet med saftigt hakket grisekød og rige hakkede tomater fra Mutti. Retten er enkel, velsmagt og perfekt til en travl hverdag. Serveret med nykogt spaghetti bliver det en ret, hele familien elsker.",
+    "ingredients": [
+      {
+        "text": "Rummo Spaghetti 500 g",
+        "store": "Netto",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Coop Hakket Grisekød 8-12% 500 g",
+        "store": "Dagli'Brugsen / Brugsen",
+        "price": "35 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Mutti Polpa Hakkede Tomater 400 g",
+        "store": "Netto",
+        "price": "12 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Dolmio Bolognese pastasauce 450 g",
+        "store": "Coop 365",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Olivenolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Løg",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Hvidløg",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Tørret oregano og timian",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Hak løg og hvidløg fint.",
+      "Varm olivenolie op i en stor gryde ved middel varme og svits løg og hvidløg i 3-4 minutter til de er bløde og gyldne.",
+      "Skru op for varmen og tilsæt det hakkede kød. Brun det godt i 5-7 minutter, mens du rører rundt og bryder kødet op.",
+      "Krydr med tørret oregano, timian, salt og peber.",
+      "Tilsæt Mutti hakkede tomater og Dolmio bolognesesauce og rør godt sammen.",
+      "Lad saucen simre ved lav varme i mindst 20 minutter, rør af og til.",
+      "Kog spaghettien efter pakkens anvisning i rigeligt saltet vand til den er al dente.",
+      "Dræn pastaen og vend lidt af pastavandet i bolognesesaucen for en silkeblød konsistens.",
+      "Server spaghettien i dybe tallerkener med bolognese på toppen og evt. revet parmesanost."
+    ],
+    "tip": "Lad saucen simre i op til en time for en endnu dybere og rigere smag. Den smager endnu bedre dagen efter.",
+    "dealItems": [
+      {
+        "name": "Rummo Spaghetti 500 g",
+        "store": "Netto",
+        "price": "15 kr."
+      },
+      {
+        "name": "Coop Hakket Grisekød 8-12% 500 g",
+        "store": "Dagli'Brugsen / Brugsen",
+        "price": "35 kr."
+      },
+      {
+        "name": "Mutti Polpa Hakkede Tomater 400 g",
+        "store": "Netto",
+        "price": "12 kr."
+      },
+      {
+        "name": "Dolmio Bolognese pastasauce 450 g",
+        "store": "Coop 365",
+        "price": "15 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Let"
+  },
+  {
+    "id": 1026,
     "title": "Cremet Pasta al Forno med Sprød Bacon",
     "emoji": "🍝",
     "time": "45 minutter",
@@ -2805,454 +2543,7 @@
     "difficulty": "Let"
   },
   {
-    "id": 1029,
-    "title": "Jordbeærtærte med Vaniljecreme og Knuste Kiks",
-    "emoji": "🍽️",
-    "time": "20 minutter + 30 minutters køling",
-    "servings_count": 6,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En overdådig dessert med friske danske jordbær, luftig vaniljecreme og en knasende kiksebund. Kagecremens bløde vaniljesmag komplimenterer de søde sommerlige jordbær perfekt. Denne enkle tærte er et sikkert hit til enhver sammenkomst.",
-    "ingredients": [
-      {
-        "text": "Danske Jordbær 350 g",
-        "store": "Bilka",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dr. Oetker Kagecreme Vanilje 13-2000 g",
-        "store": "Bilka",
-        "price": "38 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Cremefine Piskefløde 250 ml",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "LU Petit Beurre 105-300 g",
-        "store": "Coop 365",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sukker",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Smør",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Vand",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Knus Petit Beurre-kiks fint i en pose med en kagerulle eller i en blender.",
-      "Smelt smørret og bland med de knuste kiks til en ensartet masse.",
-      "Pres kiksbunden jævnt ud i en tærteform og stil på køl i 30 minutter.",
-      "Tilbered vaniljecremen efter anvisning på pakken og lad den køle af.",
-      "Pisk fløden til blødt skum og fold forsigtigt i den afkølede vaniljecreme.",
-      "Fordel cremen over den kolde kiksebund.",
-      "Skyl jordbærrene, halver dem og anret dem smukt over cremen. Server straks eller opbevar på køl."
-    ],
-    "tip": "Lav et lille glaze af jordbærsyltetøj og vand og pensl over jordbærrene for et ekstra glansfuldt udseende.",
-    "dealItems": [
-      {
-        "name": "Danske Jordbær 350 g",
-        "store": "Bilka",
-        "price": "25 kr."
-      },
-      {
-        "name": "Dr. Oetker Kagecreme Vanilje 13-2000 g",
-        "store": "Bilka",
-        "price": "38 kr."
-      },
-      {
-        "name": "Cremefine Piskefløde 250 ml",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "LU Petit Beurre 105-300 g",
-        "store": "Coop 365",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Vegetarisk"
-    ],
-    "difficulty": "Let"
-  },
-  {
-    "id": 1030,
-    "title": "Japansk Ramen med Kyllingespyd og Udonnudler",
-    "emoji": "🥢",
-    "time": "25 minutter",
-    "servings_count": 2,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "En varmende og aromatisk japansk ramensuppe med møre kyllingespyd og bløde udonnudler. Misopaste og ramenbouillon giver en dyb umami-smag, der løfter hele retten. Perfekt til en hyggelig aften, hvor man vil forkæle sig selv med asiatisk madlavning.",
-    "ingredients": [
-      {
-        "text": "Yakitori Kyllingespyd 300-1250 g",
-        "store": "Bilka",
-        "price": "89 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Udonnudler 300 g",
-        "store": "Lidl",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sesamolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Varm ramenbouillonen op i en stor gryde ved middel varme.",
-      "Rør misopaste ud i bouillonen og smag til med salt og peber.",
-      "Tilsæt udonnudlerne og kog dem i 3-4 minutter, indtil de er møre.",
-      "Varm yakitori kyllingespyddene i ovnen eller på en pande ifølge pakningens anvisning.",
-      "Snit forårsløgene fint på skrå.",
-      "Anret nudler og bouillon i dybe skåle, placer kyllingespyddene ovenpå, og drys med forårsløg.",
-      "Dryp lidt sesamolie over og server straks."
-    ],
-    "tip": "Tilsæt et blødkogt æg (6 minutter i kogende vand) for ekstra fylde og autenticitet.",
-    "dealItems": [
-      {
-        "name": "Salling Yakitori Kyllingespyd 300-1250 g",
-        "store": "Bilka",
-        "price": "89 kr."
-      },
-      {
-        "name": "Udonnudler 300 g",
-        "store": "Lidl",
-        "price": "10 kr."
-      },
-      {
-        "name": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1031,
-    "title": "Mexicansk Tacobowl med Hakket Kylling og Mukimame",
-    "emoji": "🌮",
-    "time": "30 minutter",
-    "servings_count": 4,
-    "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
-    "description": "En farverig og næringsrig mexicansk inspireret tacobowl med krydret hakket kylling og sprøde mukimamebønner. Santa Maria Tex Mex-krydderiet giver den autentiske mexicanske smag, mens jasminris danner en perfekt base. En hurtig hverdagsret, der kan tilpasses efter smag.",
-    "ingredients": [
-      {
-        "text": "Hakket dansk kyllingekød ca. 775 g",
-        "store": "Bilka",
-        "price": "45 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Santa Maria Tex Mex Krydderi",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Mukimame Bønner 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Jasminris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Cocktailtomater 500 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Vand",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Kog jasminris efter pakningens anvisning i letsaltet vand.",
-      "Varm lidt olie i en pande og steg det hakkede kyllingekød ved høj varme, til det er gennemstegt.",
-      "Tilsæt Tex Mex krydderi og rør godt rundt. Lad det simre 2 minutter.",
-      "Optø mukimamebønnerne i kogende vand i 3 minutter, og lad dem dryppe af.",
-      "Del cocktailtomaterne i halve.",
-      "Anret ris i bunden af skåle, top med krydret kylling, mukimame og friske tomater.",
-      "Server med ekstra limesaft eller en klat creme fraiche efter ønske."
-    ],
-    "tip": "Tilsæt avocado skåret i tern for en cremet kontrast til den krydrede kylling.",
-    "dealItems": [
-      {
-        "name": "Hakket dansk kyllingekød ca. 775 g",
-        "store": "Bilka",
-        "price": "45 kr."
-      },
-      {
-        "name": "Santa Maria Tex Mex Krydderi",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Salling Mukimame Bønner 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "Salling Jasminris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Salling Cocktailtomater 500 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri"
-    ],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1032,
-    "title": "Klassisk Dansk Hotdog med Syltede Rødløg",
-    "emoji": "🌿",
-    "time": "15 minutter",
-    "servings_count": 6,
-    "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
-    "description": "Den ultimative version af den danske klassiker – hotdog med sprøde pølsehorn, saftfulde grillpølser og syrlige syltede rødløg. Böhncke hotdogdressing og sennep giver den ægte gadevognssmag, du kender og elsker. En nem og festlig middag, der passer til alle aldre.",
-    "ingredients": [
-      {
-        "text": "Bager 6 Pølsebrød",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Quickfood Grillpølse til fransk hotdog",
-        "store": "Bilka",
-        "price": "14 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Böhncke Hotdogdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sennep",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Ketchup",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Varm grillpølserne i en gryde med kogende vand i 5-7 minutter, eller grill dem på en pande.",
-      "Varm pølsebrødene let i ovnen ved 180°C i 3-4 minutter.",
-      "Placer en grillpølse i hvert brød.",
-      "Tilsæt et gavmildt lag Böhncke hotdogdressing.",
-      "Top med syltede rødløg, sennep og ketchup efter smag.",
-      "Server straks og nyd den klassiske danske gadevognsoplevelse derhjemme."
-    ],
-    "tip": "Steg pølserne på en grillpande for ekstra smag og fine grillmærker.",
-    "dealItems": [
-      {
-        "name": "Bager 6 Pølsebrød",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Quickfood Grillpølse til fransk hotdog",
-        "store": "Bilka",
-        "price": "14 kr."
-      },
-      {
-        "name": "Böhncke Hotdogdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      },
-      {
-        "name": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Meget nem"
-  },
-  {
-    "id": 1033,
-    "title": "Gyoza med Teriyakisauce og Wakamesalat",
-    "emoji": "🥢",
-    "time": "20 minutter",
-    "servings_count": 2,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "Sprøde japanske gyoza serveret med en lækker teriyakisauce og frisk wakamesalat – en let og elegant ret med masser af umami. Gyozaerne steges først og dampes derefter for den perfekte tekstur med sprød bund og blød top. En fantastisk ret til forret eller en let middag.",
-    "ingredients": [
-      {
-        "text": "Gyoza med dyppelse 238 g",
-        "store": "Lidl",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Teriyakisauce 250 ml",
-        "store": "Lidl",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Wakamesalat 30 g",
-        "store": "Lidl",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sesamolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Vand",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Varm en pande med lidt sesamolie ved middel-høj varme.",
-      "Placer gyozaerne med den flade side nedad og steg i 2-3 minutter, til bunden er gylden.",
-      "Tilsæt 3 spsk vand til panden og læg låg på. Damp gyozaerne i 3-4 minutter.",
-      "Tag låget af og lad det resterende vand fordampe.",
-      "Anret wakamesalaten på en tallerken.",
-      "Placer gyozaerne ovenpå wakamesalaten og hæld teriyakisauce over.",
-      "Drys med ristede sesamfrø og server straks."
-    ],
-    "tip": "Brug den medfølgende dyppesauce fra pakken som ekstra dip ved siden af.",
-    "dealItems": [
-      {
-        "name": "Gyoza med dyppelse 238 g",
-        "store": "Lidl",
-        "price": "25 kr."
-      },
-      {
-        "name": "Teriyakisauce 250 ml",
-        "store": "Lidl",
-        "price": "20 kr."
-      },
-      {
-        "name": "Wakamesalat 30 g",
-        "store": "Lidl",
-        "price": "18 kr."
-      },
-      {
-        "name": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1034,
+    "id": 1027,
     "title": "Hjemmelavet Spaghetti Bolognese med Mutti Tomater",
     "emoji": "🍝",
     "time": "45 minutter",
@@ -3347,363 +2638,7 @@
     "difficulty": "Nem"
   },
   {
-    "id": 1035,
-    "title": "Indisk Butter Chicken med Basmatiris og Basilikum",
-    "emoji": "🍛",
-    "time": "20 minutter",
-    "servings_count": 2,
-    "category": "Indisk",
-    "cuisine": "🇮🇳 Indisk",
-    "description": "En cremet og aromatisk indisk butter chicken ret, der er nemt sat sammen med Salling Nu Butter Chicken og frisk basilikum fra Bilka. Basmatiris absorberer den rige, krydrede sauce og giver en mættende og lækker middag på under 30 minutter. Retten er perfekt til en travl hverdag.",
-    "ingredients": [
-      {
-        "text": "Salling Nu Butter Chicken 400 g",
-        "store": "Bilka",
-        "price": "30 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Basmatiris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling ØKO Dansk Basilikum",
-        "store": "Bilka",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Cremefine Madlavning 250 ml",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Vand",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Kog basmatiris i letsaltet vand ifølge pakningens anvisning – ca. 12 minutter.",
-      "Varm Salling Nu Butter Chicken i en gryde ved middel varme.",
-      "Tilsæt Cremefine madlavning og rør godt rundt for en ekstra cremet konsistens.",
-      "Lad retten simre i 5 minutter.",
-      "Smag til med salt efter ønske.",
-      "Anret ris på tallerkener og hæld butter chicken sauce over.",
-      "Pynt med friske basilikumblade og server straks."
-    ],
-    "tip": "Tilsæt en skive smørbrød eller naan til at suge den cremede sauce op med.",
-    "dealItems": [
-      {
-        "name": "Salling Nu Butter Chicken 400 g",
-        "store": "Bilka",
-        "price": "30 kr."
-      },
-      {
-        "name": "Salling Basmatiris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Salling ØKO Dansk Basilikum",
-        "store": "Bilka",
-        "price": "25 kr."
-      },
-      {
-        "name": "Cremefine Madlavning 250 ml",
-        "store": "Bilka",
-        "price": "10 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri"
-    ],
-    "difficulty": "Meget nem"
-  },
-  {
-    "id": 1036,
-    "title": "Grillet Lammecuolotte med Nye Kartofler og Bearnaisesauce",
-    "emoji": "🍽️",
-    "time": "50 minutter",
-    "servings_count": 2,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En luksuriøs og imponerende ret med marineret lammecuolotte grillet til perfektion, serveret med nyopgravede danske kartofler og klassisk bearnaisesauce. Den møre lammekød kombinerer perfekt med den friske, urterige bearnaise. Perfekt til en festmiddag eller en særlig weekend.",
-    "ingredients": [
-      {
-        "text": "Premieur Marineret Lammeculotte 285-325 g",
-        "store": "Netto",
-        "price": "55 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Gestus Nye Danske Kartofler 1 kg",
-        "store": "Spar",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Jensens Bearnaise Sauce 250 ml",
-        "store": "Netto",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Haricot Verts 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Smør",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Friske urter (persille/timian)",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Tag lammecuolotten ud af køleskabet 30 minutter inden tilberedning.",
-      "Varm en grillpande eller ovn til 220°C.",
-      "Krydr lammet med salt og peber og grill det 4-5 minutter på hver side.",
-      "Sæt lammet i ovnen og steg videre til en kernetemperatur på 60-65°C (rosé).",
-      "Lad lammet hvile i 10 minutter under stanniol.",
-      "Kog kartoflerne i saltet vand i 15 minutter, dræn og vend dem med smør og urter.",
-      "Optø haricots verts og varm dem hurtigt i en pande med smør.",
-      "Varm bearnaisen forsigtigt og server alt sammen på tallerkener."
-    ],
-    "tip": "Brug et stegetermometer for præcis kernetemperatur – det giver det bedste resultat.",
-    "dealItems": [
-      {
-        "name": "Premieur Marineret Lammeculotte 285-325 g",
-        "store": "Netto",
-        "price": "55 kr."
-      },
-      {
-        "name": "Gestus Nye Danske Kartofler 1 kg",
-        "store": "Spar",
-        "price": "12 kr."
-      },
-      {
-        "name": "Jensens Bearnaise Sauce 250 ml",
-        "store": "Netto",
-        "price": "15 kr."
-      },
-      {
-        "name": "Salling Haricot Verts 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri"
-    ],
-    "difficulty": "Middel"
-  },
-  {
-    "id": 1037,
-    "title": "Hjemmelavet Pizza med Surdejsbund, Mozzarella og Pepperoni",
-    "emoji": "🍝",
-    "time": "25 minutter",
-    "servings_count": 2,
-    "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
-    "description": "En lækker hjemmelavet pizza med sprød surdejsbund, smeltet mozzarella og krydret pepperoni – næsten som fra en rigtig italiensk pizzeria. Mutti pizzasauce giver den perfekte tomatbase med frisk smag. En sjov ret at lave med familien, hvor alle kan vælge deres egne toppings.",
-    "ingredients": [
-      {
-        "text": "Coop Surdejspizzabund 240 g",
-        "store": "Coop 365",
-        "price": "12 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Coop Revet Mozzarella 150-200 g",
-        "store": "Coop 365",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Tulip Pizzatopping Pepperoni 100-160 g",
-        "store": "Coop 365",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Mutti Pizzasauce 400 g",
-        "store": "SuperBrugsen / Kvickly",
-        "price": "14 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Tørret oregano",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Forvarm ovnen til 230°C og placer en bageplade eller pizzasten derinde.",
-      "Læg surdejspizzabunden på et stykke bagepapir.",
-      "Smør et jævnt lag Mutti pizzasauce ud på bunden, lad 1 cm kant være fri.",
-      "Drys revet mozzarella over pizzasaucen.",
-      "Fordel pepperoniskiverne jævnt over osten.",
-      "Krydr med tørret oregano og et lille drys salt.",
-      "Træk pizzaen på bagepapiret over på den varme plade og bag 10-12 minutter.",
-      "Tag pizzaen ud, når osten er gylden og boblende, og server straks."
-    ],
-    "tip": "Tilsæt frisk rucola og et drys parmesan efter bagning for et restaurant-touch.",
-    "dealItems": [
-      {
-        "name": "Coop Surdejspizzabund 240 g",
-        "store": "Coop 365",
-        "price": "12 kr."
-      },
-      {
-        "name": "Coop Revet Mozzarella 150-200 g",
-        "store": "Coop 365",
-        "price": "10 kr."
-      },
-      {
-        "name": "Tulip Pizzatopping Pepperoni 100-160 g",
-        "store": "Coop 365",
-        "price": "18 kr."
-      },
-      {
-        "name": "Mutti Pizzasauce 400 g",
-        "store": "SuperBrugsen / Kvickly",
-        "price": "14 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1038,
-    "title": "Stegt Dorade med Broccoli og Hvidløgsbaguette",
-    "emoji": "🍽️",
-    "time": "40 minutter",
-    "servings_count": 2,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En elegant og enkel middelhavsinspireret ret med hel stegt dorade, dampet broccoli og sprød hvidløgsbaguette. Fisken steges hel med citron og krydderurter for den mest smagfulde og saftige resultat. En imponerende ret, der er overraskende nem at lave.",
-    "ingredients": [
-      {
-        "text": "Dorade",
-        "store": "Bilka",
-        "price": "45 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Baguette med Hvidløgssmør 350-750 g",
-        "store": "Bilka",
-        "price": "11 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Broccolibuketter 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Piccardo & Savore Ekstra Jomfru Olivenolie 750-1000 ml",
-        "store": "Bilka",
-        "price": "89 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Citron",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Hvidløg",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Salt, peber og friske krydderurter (timian/rosmarin)",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Forvarm ovnen til 200°C.",
-      "Rens doraden indvendig og skyl den i koldt vand. Dup tør med køkkenrulle.",
-      "Krydr fisken ind- og udvendig med salt, peber og friske krydderurter.",
-      "Læg citronskiver og hvidløgsfed inde i fisken.",
-      "Dryp generøst med olivenolie og læg fisken i et ovnfast fad.",
-      "Bag doraden i 20-25 minutter, til kødet løsner sig fra benet.",
-      "Damp broccolibuketterne i 5 minutter og krydr med salt og et drys olivenlie.",
-      "Varm hvidløgsbaguetten i ovnen de sidste 8 minutter ifølge pakningens anvisning.",
-      "Server doraden hel med broccoli og hvidløgsbaguette ved siden af."
-    ],
-    "tip": "Bed fiskehandleren om at rense fisken, så sparer du tid derhjemme.",
-    "dealItems": [
-      {
-        "name": "Dorade",
-        "store": "Bilka",
-        "price": "45 kr."
-      },
-      {
-        "name": "Salling Baguette med Hvidløgssmør 350-750 g",
-        "store": "Bilka",
-        "price": "11 kr."
-      },
-      {
-        "name": "Salling Broccolibuketter 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "Piccardo & Savore Ekstra Jomfru Olivenolie 750-1000 ml",
-        "store": "Bilka",
-        "price": "89 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri (undtagen baguetten)"
-    ],
-    "difficulty": "Middel"
-  },
-  {
-    "id": 1039,
+    "id": 1028,
     "title": "Koreansk Inspireret Kimchi-Burgerbrød med Krebinetter",
     "emoji": "🍽️",
     "time": "25 minutter",
@@ -3803,595 +2738,107 @@
     "difficulty": "Nem"
   },
   {
-    "id": 1040,
-    "title": "Sprød Teriyaki Kyllingebowl med Jasminris og Edamame",
-    "emoji": "🥢",
-    "time": "30 minutter",
+    "id": 1029,
+    "title": "Spaghetti Bolognese med Mutti Tomater",
+    "emoji": "🍝",
+    "time": "50 minutter",
     "servings_count": 4,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "En lækker japansk-inspireret bowl med saftige teriyaki-kyllingespyd, dampet jasminris og edamame bønner. Retten er hurtig at tilberede og fuld af umami-smag. Perfekt til en nem hverdagsaftensmad med eksotisk twist.",
+    "category": "Italiensk",
+    "cuisine": "🇮🇹 Italiensk",
+    "description": "En klassisk italiensk spaghetti bolognese lavet med frisk hakket kød, aromatisk tomatpuré og rige mutti tomater. Retten simrer langsomt for at udvikle en dyb, kompleks smag, der minder om den ægte italienske mormors opskrift. Server med en god spagetti og friskrevet parmesan.",
     "ingredients": [
       {
-        "text": "Yakitori Kyllingespyd 300-1250 g",
-        "store": "Bilka",
-        "price": "89 kr.",
+        "text": "Rummo Spaghetti 500 g",
+        "store": "Netto",
+        "price": "15 kr.",
         "isPantry": false
       },
       {
-        "text": "Salling Jasminris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr.",
+        "text": "Hakket Dansk Grise- og Oksekød 8-12% 600 g",
+        "store": "Meny",
+        "price": "59,95 kr.",
         "isPantry": false
       },
       {
-        "text": "Edamame 150 g",
-        "store": "Lidl",
+        "text": "Mutti Polpa Hakkede Tomater 400 g",
+        "store": "Netto",
         "price": "12 kr.",
         "isPantry": false
       },
       {
-        "text": "Teriyakisauce 250 ml",
-        "store": "Lidl",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Sesamolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Kog jasminris efter pakkens anvisning i letsaltet vand – ca. 15 minutter.",
-      "Varm ovnen op til 200°C. Læg yakitori-kyllingespyddene på en bageplade med bagepapir og bag dem i 15-18 minutter, til de er gennemstegte og let karamelliserede.",
-      "Imens optøes/opvarmes edamame bønnerne i kogende saltet vand i 3-4 minutter. Dræn og sæt til side.",
-      "Snit forårsløgene fint på skrå.",
-      "Anret ris i en skål, læg kyllingespyd ovenpå og fordel edamame rundt om.",
-      "Dryp teriyakisauce over det hele, drys med ristede sesamfrø og forårsløg.",
-      "Afslut med et par dråber sesamolie for ekstra dybde."
-    ],
-    "tip": "Tilsæt et spejlæg ovenpå for at gøre bowlen endnu mere mættende og autentisk.",
-    "dealItems": [
-      {
-        "name": "Salling Yakitori Kyllingespyd 300-1250 g",
-        "store": "Bilka",
-        "price": "89 kr."
-      },
-      {
-        "name": "Salling Jasminris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Edamame 150 g",
-        "store": "Lidl",
-        "price": "12 kr."
-      },
-      {
-        "name": "Teriyakisauce 250 ml",
-        "store": "Lidl",
-        "price": "20 kr."
-      },
-      {
-        "name": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri mulighed"
-    ],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1041,
-    "title": "Klassisk Dansk Hotdog med Syltede Rødløg og Sennep",
-    "emoji": "🌿",
-    "time": "20 minutter",
-    "servings_count": 6,
-    "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
-    "description": "En ultimativ dansk hotdog med sprøde pølsehorn, saftfulde grillpølser og alle de klassiske tilbehør. Syltede rødløg og sennep giver den perfekte balance mellem surt og stærkt. Ideel til en hurtig frokost eller aftensmad i det gode vejr.",
-    "ingredients": [
-      {
-        "text": "Bager 6 Pølsebrød",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Langeländer Grillpølser 540-560 g",
-        "store": "Coop 365",
-        "price": "35 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Böhncke Hotdogdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Beauvais Ketchup 265-500 g",
-        "store": "Coop 365",
-        "price": "19 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt og peber",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Varm en grillpande eller stegepande op til medium-høj varme.",
-      "Grill langeländer grillpølserne i 8-10 minutter, vend dem jævnligt til de er gyldne på alle sider.",
-      "Varm pølsebrødene i ovnen ved 180°C i 5 minutter, eller split dem og rist dem på panden.",
-      "Læg en grillpølse i hvert brød.",
-      "Topp med rigeligt med hotdogdressing, ketchup og syltede rødløg.",
-      "Server straks og nyd den klassiske danske sommer-hotdog!"
-    ],
-    "tip": "Tilsæt ristede løg og råsyltede agurker for den fulde gadehotdog-oplevelse.",
-    "dealItems": [
-      {
-        "name": "Bager 6 Pølsebrød",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Langeländer Grillpølser 540-560 g",
-        "store": "Coop 365",
-        "price": "35 kr."
-      },
-      {
-        "name": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr."
-      },
-      {
-        "name": "Böhncke Hotdogdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      },
-      {
-        "name": "Beauvais Ketchup 265-500 g",
-        "store": "Coop 365",
-        "price": "19 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1042,
-    "title": "Mexicansk Tortilla Wrap med Gyros og Frisk Peber",
-    "emoji": "🍽️",
-    "time": "25 minutter",
-    "servings_count": 4,
-    "category": "Verden",
-    "cuisine": "🌍 Verden",
-    "description": "En saftig og smagfuld wrap fyldt med krydret gyros, frisk peberfrugt og cremet dressing. Inspireret af Middelhavskökkenet men serveret i en nem mexicansk wrap. Perfekt til en hurtig og mættende frokost.",
-    "ingredients": [
-      {
-        "text": "Santa Maria Tortilla Original",
-        "store": "Bilka",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Gyros 300-400 g",
-        "store": "Bilka",
-        "price": "39 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Peberfrugt",
-        "store": "Bilka",
-        "price": "6 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dansk Agurk",
-        "store": "Bilka",
-        "price": "8 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Koliös Græsk Yoghurt 500 g",
-        "store": "Coop 365",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt, peber og tørret oregano",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      },
-      {
-        "text": "Olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Varm en pande op med lidt olivenolie og steg gyros-kødet ved høj varme i 8-10 minutter til det er brunet og gennemstegt.",
-      "Skær peberfrugt og agurk i tynde strimler.",
-      "Bland en tzatziki-agtig dressing ved at mixe græsk yoghurt med lidt salt, peber og en knivspids tørret oregano.",
-      "Varm tortilla-wrapsene kortvarigt på en tør pande, ca. 30 sekunder på hver side.",
-      "Smør en skefuld yoghurt-dressing midt på wrappen.",
-      "Læg gyros-kød, peberfrugtstrimler og agurk oven på.",
-      "Rul wrappen stramt og skær den over på midten.",
-      "Server straks med ekstra dressing ved siden af."
-    ],
-    "tip": "Tilsæt lidt frisk citron-saft i yoghurtdressingen for en friskere smag.",
-    "dealItems": [
-      {
-        "name": "Santa Maria Tortilla Original",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Salling Gyros 300-400 g",
-        "store": "Bilka",
-        "price": "39 kr."
-      },
-      {
-        "name": "Peberfrugt",
-        "store": "Bilka",
-        "price": "6 kr."
-      },
-      {
-        "name": "Dansk Agurk",
-        "store": "Bilka",
-        "price": "8 kr."
-      },
-      {
-        "name": "Koliös Græsk Yoghurt 500 g",
-        "store": "Coop 365",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1043,
-    "title": "Cremet Pasta Bolognese med Hakket Oksekød",
-    "emoji": "🍝",
-    "time": "35 minutter",
-    "servings_count": 4,
-    "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
-    "description": "En klassisk og trøstende italiensk bolognese lavet med saftigt hakket oksekød og en rig tomatsauce. Serveret over nykogt rummo fusilli for den perfekte middag. En opskrift der mætter familien og smager fantastisk.",
-    "ingredients": [
-      {
-        "text": "Coop Hakket Oksekød 8-12% 400 g",
-        "store": "Coop 365",
-        "price": "39,95 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Rummo Fusilli 500 g",
-        "store": "Coop 365",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dolmio Bolognese pastasauce 450 g",
-        "store": "Coop 365",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Mutti Hakkede Tomater 130-400 g",
+        "text": "Mutti Tomatpuré 130-400 g",
         "store": "Meny",
         "price": "9,95 kr.",
         "isPantry": false
       },
       {
-        "text": "Cremefine Madlavning 250 ml",
+        "text": "Salling ØKO Dansk Basilikum",
         "store": "Bilka",
-        "price": "10 kr.",
+        "price": "25 kr.",
         "isPantry": false
       },
       {
-        "text": "Salt, peber, olivenolie, tørret timian og hvidløg",
+        "text": "Løg, hvidløg, olivenolie, rødvin, salt, peber, oregano og sukker",
         "store": null,
         "price": null,
         "isPantry": true
       }
     ],
     "steps": [
-      "Varm olivenolie i en stor sauterpande ved medium-høj varme. Svits hakket oksekød i 5-6 minutter til det er brunet. Krydr med salt, peber og tørret timian.",
-      "Tilsæt finthakket hvidløg og steg 1 minut mere.",
-      "Hæld dolmio bolognese-sauce og mutti hakkede tomater i panden. Rør godt rundt og lad saucen simre ved lav varme i 15 minutter.",
-      "Tilsæt cremefine madlavning og rør det ind i saucen. Smag til med salt og peber.",
-      "Imens koges rummo fusilli i rigeligt saltet vand efter pakkens anvisning – ca. 10-12 minutter al dente.",
-      "Dræn pastaen og bland den med bolognese-saucen.",
-      "Anret i dybe tallerkener og server eventuelt med revet parmesan."
+      "Hak et stort løg og 3 fed hvidløg fint. Varm olivenolie op i en stor gryde ved middel varme og svits løg og hvidløg i 5 minutter, til de er bløde og glasagtige.",
+      "Skru op for varmen og tilsæt det hakkede kød. Brun kødet grundigt i 8-10 minutter, bræk det op i små stykker undervejs. Krydr med salt og peber.",
+      "Rør tomatpuréen i og steg i 2 minutter for at karamellisere den. Tilsæt et glas rødvin og lad det koge ind i 3 minutter.",
+      "Tilsæt de hakkede tomater, oregano og en knivspids sukker. Rør godt og lad saucen simre ved lav varme i minimum 20-30 minutter under låg. Jo længere den simrer, desto bedre smag.",
+      "Kog spaghettien i rigeligt saltet vand efter anvisningen (al dente). Gem en kop pastakogvand inden du hælder vandet fra.",
+      "Rør lidt pastakogvand i saucen for at gøre den glattere og mere silkeagtig. Smag til med salt, peber og sukker.",
+      "Bland den varme pasta med saucen i gryden. Server i skåle og top med frisk basilikum og gerne revet parmesan."
     ],
-    "tip": "Lad saucen simre længere tid for endnu mere dybde i smagen – gerne 30-45 minutter.",
+    "tip": "Saucen bliver endnu bedre dagen efter, da smagen udvikler sig yderligere. Lav en stor portion og frys halvdelen til en nem hverdagsret en anden uge.",
     "dealItems": [
       {
-        "name": "Coop Hakket Oksekød 8-12% 400 g",
-        "store": "Coop 365",
-        "price": "39,95 kr."
-      },
-      {
-        "name": "Rummo Fusilli 500 g",
-        "store": "Coop 365",
-        "price": "18 kr."
-      },
-      {
-        "name": "Dolmio Bolognese pastasauce 450 g",
-        "store": "Coop 365",
+        "name": "Rummo Spaghetti 500 g",
+        "store": "Netto",
         "price": "15 kr."
       },
       {
-        "name": "Mutti Hakkede Tomater 130-400 g",
+        "name": "Hakket Dansk Grise- og Oksekød 8-12% 600 g",
+        "store": "Meny",
+        "price": "59,95 kr."
+      },
+      {
+        "name": "Mutti Polpa Hakkede Tomater 400 g",
+        "store": "Netto",
+        "price": "12 kr."
+      },
+      {
+        "name": "Mutti Tomatpuré 130-400 g",
         "store": "Meny",
         "price": "9,95 kr."
-      },
-      {
-        "name": "Cremefine Madlavning 250 ml",
-        "store": "Bilka",
-        "price": "10 kr."
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Let"
   },
   {
-    "id": 1044,
-    "title": "Asiatisk Ramensuppe med Gyoza og Soba-Nudler",
-    "emoji": "🥢",
-    "time": "25 minutter",
-    "servings_count": 2,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "En varmende og dybdefuld ramensuppe inspireret af japansk madkultur med gyoza, soba-nudler og miso-bouillon. Retten kombinerer umami-rige smage med friske grøntsager for en komplet og tilfredsstillende middag. Let at lave men imponerende i smagen.",
-    "ingredients": [
-      {
-        "text": "Salling Nu Gyoza m. grøntsager 196 g",
-        "store": "Bilka",
-        "price": "22 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Soba-nudler 300 g",
-        "store": "Lidl",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt og sesamolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Hæld ramenbouillonen i en stor gryde og varm op til kogepunktet.",
-      "Tilsæt 2-3 spsk misopaste og rør godt til den er opløst. Smag til og juster med salt.",
-      "Kog soba-nudlerne i en separat gryde med kogende vand i 4-5 minutter. Dræn og skyl med koldt vand.",
-      "Steg eller damp gyoza'erne efter pakkens anvisning – ca. 6-8 minutter på en varm pande med lidt olie.",
-      "Snit forårsløgene i tynde ringe.",
-      "Fordel soba-nudlerne i dybe suppeskåle og hæld den varme misobouillon over.",
-      "Læg 3-4 gyoza ovenpå, drys med forårsløg og ristede sesamfrø.",
-      "Afslut med et par dråber sesamolie og server straks."
-    ],
-    "tip": "Tilsæt et blødkogt æg halveret på langs for ekstra fylde og autenticitet.",
-    "dealItems": [
-      {
-        "name": "Salling Nu Gyoza m. grøntsager 196 g",
-        "store": "Bilka",
-        "price": "22 kr."
-      },
-      {
-        "name": "Soba-nudler 300 g",
-        "store": "Lidl",
-        "price": "10 kr."
-      },
-      {
-        "name": "Misopaste 200 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Ramenbouillon 1 liter",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Forårsløg",
-        "store": "Bilka",
-        "price": "5 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Vegetarisk mulighed"
-    ],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1045,
-    "title": "Hjemmelavet Burger med Cheddar og Syltede Rødløg",
-    "emoji": "🍔",
-    "time": "25 minutter",
-    "servings_count": 4,
-    "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
-    "description": "En saftig og klassisk hjemmelavet burger med hakket oksekød, smeltet cheddarost og alle de gode toppings. De sprøde brioche-boller løfter burgeren til et nyt niveau. En opskrift der garanterer succes ved grillen eller på panden.",
-    "ingredients": [
-      {
-        "text": "Brioche-burgerboller 300 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Burgerbøffer maks. 20% fedt 400 g",
-        "store": "Lidl",
-        "price": "45 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Castello Cheddar hård ost 150-200 g",
-        "store": "Bilka",
-        "price": "30 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Böhncke Burgerdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Cocktailtomater 500 g",
-        "store": "Bilka",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salt, peber og olivenolie",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Tag burgerbøfferne ud af køleskabet 15 minutter før tilberedning. Krydr dem med salt og peber på begge sider.",
-      "Varm en grillpande eller stegepande op til høj varme med lidt olivenolie.",
-      "Steg burgerbøfferne 3-4 minutter på hver side for medium tilberedning.",
-      "Læg en skive cheddar på hver bøf det sidste minut af tilberedningen og læg låg på panden, så osten smelter.",
-      "Skær brioche-bollerne over og rist dem kort på den skårne side på panden.",
-      "Smør burgerdressingen på den nederste bolle.",
-      "Læg cheeseburgeren på, top med syltede rødløg og halverede cocktailtomater.",
-      "Læg toppen på og server straks med pommes frites eller salat."
-    ],
-    "tip": "Tryk ikke på bøffen med spatlen under stegningen – det presser saften ud og giver en tørrere burger.",
-    "dealItems": [
-      {
-        "name": "Brioche-burgerboller 300 g",
-        "store": "Lidl",
-        "price": "15 kr."
-      },
-      {
-        "name": "Burgerbøffer maks. 20% fedt 400 g",
-        "store": "Lidl",
-        "price": "45 kr."
-      },
-      {
-        "name": "Castello Cheddar hård ost 150-200 g",
-        "store": "Bilka",
-        "price": "30 kr."
-      },
-      {
-        "name": "Zelected Syltede Rødløg 115-500 g",
-        "store": "Bilka",
-        "price": "26 kr."
-      },
-      {
-        "name": "Böhncke Burgerdressing 255-425 g",
-        "store": "Bilka",
-        "price": "18 kr."
-      }
-    ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1046,
-    "title": "Bagt Laksefilet med Broccoli og Flødesauce",
+    "id": 1030,
+    "title": "Grillet Lammecuolotte med Nye Kartofler og Bearnaisesauce",
     "emoji": "🍽️",
-    "time": "30 minutter",
-    "servings_count": 4,
+    "time": "50 minutter",
+    "servings_count": 2,
     "category": "Verden",
     "cuisine": "🌍 Verden",
-    "description": "En lækker og sund hverdagsret med saftig bagt laksefilet, dampet broccoli og en cremet flødesauce. Retten er nem at tilberede og klar på under 30 minutter. Perfekt til dem der ønsker en næringsrig og velsmagende middag.",
+    "description": "En luksuriøs og imponerende ret med marineret lammecuolotte grillet til perfektion, serveret med nyopgravede danske kartofler og klassisk bearnaisesauce. Den møre lammekød kombinerer perfekt med den friske, urterige bearnaise. Perfekt til en festmiddag eller en særlig weekend.",
     "ingredients": [
       {
-        "text": "Laksefilet",
-        "store": "Bilka",
-        "price": "16,95 kr.",
+        "text": "Premieur Marineret Lammeculotte 285-325 g",
+        "store": "Netto",
+        "price": "55 kr.",
         "isPantry": false
       },
       {
-        "text": "Salling Broccolibuketter 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Cremefine Madlavning 250 ml",
-        "store": "Bilka",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Salling Basmatiris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr.",
+        "text": "Gestus Nye Danske Kartofler 1 kg",
+        "store": "Spar",
+        "price": "12 kr.",
         "isPantry": false
       },
       {
@@ -4401,244 +2848,70 @@
         "isPantry": false
       },
       {
-        "text": "Salt, peber, olivenolie og citronsaft",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Forvarm ovnen til 200°C. Læg laksefileterne på en beklædt bageplade, krydr med salt, peber og et skvæt citronsaft. Dryp lidt olivenolie over.",
-      "Bag laksen i ovnen i 15-18 minutter til den er akkurat gennemstegt og flager let.",
-      "Imens koges basmatiris i letsaltet vand efter pakkens anvisning – ca. 12 minutter.",
-      "Damp broccolibuketter i en gryde med lidt vand i 5-6 minutter til de er møre men stadig har bid.",
-      "Varm cremefine madlavning op i en lille gryde og bland med bearnaisesauce. Lad det simre 2-3 minutter og krydr til.",
-      "Anret ris i bunden af tallerkenen, læg broccolibuketter ved siden af og laksen ovenpå.",
-      "Hæld den cremede sauce over og server straks."
-    ],
-    "tip": "Tjek laksen ved at presse forsigtigt med fingeren – den skal give efter og flage let, men ikke være tør.",
-    "dealItems": [
-      {
-        "name": "Laksefilet",
+        "text": "Salling Haricot Verts 700-900 g",
         "store": "Bilka",
-        "price": "16,95 kr."
-      },
-      {
-        "name": "Salling Broccolibuketter 700-900 g",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "Cremefine Madlavning 250 ml",
-        "store": "Bilka",
-        "price": "10 kr."
-      },
-      {
-        "name": "Salling Basmatiris 1 kg",
-        "store": "Bilka",
-        "price": "20 kr."
-      },
-      {
-        "name": "Jensens Bearnaise Sauce 250 ml",
-        "store": "Netto",
-        "price": "15 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri"
-    ],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1047,
-    "title": "Hjemmelavet Sushi Bowl med Laks og Wakamesalat",
-    "emoji": "🥢",
-    "time": "30 minutter",
-    "servings_count": 2,
-    "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
-    "description": "En nem og sundere alternativ til sushi i form af en bowl med sushiris, frisk laks, wakamesalat og klassiske japanske toppings. Ideel til dem der elsker sushi men ønsker en hurtigere løsning. Server med wasabi og riseddike for den autentiske oplevelse.",
-    "ingredients": [
-      {
-        "text": "Sushiris 500 g",
-        "store": "Lidl",
         "price": "10 kr.",
         "isPantry": false
       },
       {
-        "text": "Koldrøget laks 100 g",
-        "store": "Lidl",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Wakamesalat 30 g",
-        "store": "Lidl",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Riseddike 250 ml",
-        "store": "Lidl",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Wasabi Paste 43 g",
-        "store": "Lidl",
-        "price": "10 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Ristede sesamfrø 100 g",
-        "store": "Lidl",
-        "price": "15 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Sukker og salt",
+        "text": "Smør",
         "store": null,
         "price": null,
         "isPantry": true
-      },
-      {
-        "text": "Sojasauce",
-        "store": null,
-        "price": null,
-        "isPantry": true
-      }
-    ],
-    "steps": [
-      "Kog sushiris efter pakkens anvisning. Varm riseddike op med 1 tsk sukker og 1 tsk salt til det er opløst.",
-      "Hæld eddikeblandingen over de kogte ris og vend forsigtigt. Lad risene køle lidt af.",
-      "Rehydrer wakamesalaten i koldt vand i 5 minutter hvis den er tørret, eller brug den direkte hvis den er frisk.",
-      "Skær den koldrøgede laks i tynde skiver eller tern.",
-      "Fordel sushiris i dybe skåle.",
-      "Anret laks og wakamesalat oven på risene.",
-      "Drys med ristede sesamfrø og server med en klat wasabipaste og sojasauce ved siden af."
-    ],
-    "tip": "Tilsæt avocado og agurk i tern for ekstra friskhed og farve i skålen.",
-    "dealItems": [
-      {
-        "name": "Sushiris 500 g",
-        "store": "Lidl",
-        "price": "10 kr."
-      },
-      {
-        "name": "Koldrøget laks 100 g",
-        "store": "Lidl",
-        "price": "20 kr."
-      },
-      {
-        "name": "Wakamesalat 30 g",
-        "store": "Lidl",
-        "price": "18 kr."
-      },
-      {
-        "name": "Riseddike 250 ml",
-        "store": "Lidl",
-        "price": "10 kr."
-      },
-      {
-        "name": "Wasabi Paste 43 g",
-        "store": "Lidl",
-        "price": "10 kr."
-      }
-    ],
-    "dietaryFilters": [
-      "Glutenfri mulighed"
-    ],
-    "difficulty": "Nem"
-  },
-  {
-    "id": 1048,
-    "title": "Sprød Pulled Pork Sandwich med Coleslaw",
-    "emoji": "🍔",
-    "time": "20 minutter",
-    "servings_count": 4,
-    "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
-    "description": "En saftig og smagsfuld pulled pork sandwich med hjemmelavet coleslaw på en blød brioche-bolle. Den langtidskogte pulled pork er mørt og fuld af røgede smage. En ret der imponerer ved enhver lejlighed uden at kræve meget arbejde.",
-    "ingredients": [
-      {
-        "text": "Tulip Pulled Pork 900 g",
-        "store": "Coop 365",
-        "price": "69 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Kohberg Smørbagt Burgerboller 330-360 g",
-        "store": "Dagli'Brugsen / Brugsen",
-        "price": "18 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Graasten Coleslaw Klassisk 400-1000 g",
-        "store": "Spar",
-        "price": "25 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Santa Maria BBQ Sauce 9-345 g",
-        "store": "Meny",
-        "price": "20 kr.",
-        "isPantry": false
-      },
-      {
-        "text": "Dansk Spidskål",
-        "store": "Coop 365",
-        "price": "12 kr.",
-        "isPantry": false
       },
       {
         "text": "Salt og peber",
         "store": null,
         "price": null,
         "isPantry": true
+      },
+      {
+        "text": "Friske urter (persille/timian)",
+        "store": null,
+        "price": null,
+        "isPantry": true
       }
     ],
     "steps": [
-      "Varm tulip pulled pork op i en gryde eller mikroovn efter pakkens anvisning. Tilsæt BBQ sauce og rør godt til det er blandet – lad det simre 5 minutter.",
-      "Snit spidskålen fint og bland med coleslaw. Krydr med salt og peber.",
-      "Halvér de smørbagte burgerboller og rist dem på den skårne side på en tør pande i 1-2 minutter.",
-      "Fordel en generøs mængde pulled pork på den underste bolle.",
-      "Læg coleslaw ovenpå pulled porken.",
-      "Dryp ekstra BBQ sauce over og læg toppen på.",
-      "Server straks med pommes frites eller friske majs fra grillen."
+      "Tag lammecuolotten ud af køleskabet 30 minutter inden tilberedning.",
+      "Varm en grillpande eller ovn til 220°C.",
+      "Krydr lammet med salt og peber og grill det 4-5 minutter på hver side.",
+      "Sæt lammet i ovnen og steg videre til en kernetemperatur på 60-65°C (rosé).",
+      "Lad lammet hvile i 10 minutter under stanniol.",
+      "Kog kartoflerne i saltet vand i 15 minutter, dræn og vend dem med smør og urter.",
+      "Optø haricots verts og varm dem hurtigt i en pande med smør.",
+      "Varm bearnaisen forsigtigt og server alt sammen på tallerkener."
     ],
-    "tip": "Tilsæt lidt æblecidereddike til den varme pulled pork for en ekstra syrlig og autentisk sydstatssmag.",
+    "tip": "Brug et stegetermometer for præcis kernetemperatur – det giver det bedste resultat.",
     "dealItems": [
       {
-        "name": "Tulip Pulled Pork 900 g",
-        "store": "Coop 365",
-        "price": "69 kr."
+        "name": "Premieur Marineret Lammeculotte 285-325 g",
+        "store": "Netto",
+        "price": "55 kr."
       },
       {
-        "name": "Kohberg Smørbagt Burgerboller 330-360 g",
-        "store": "Dagli'Brugsen / Brugsen",
-        "price": "18 kr."
-      },
-      {
-        "name": "Graasten Coleslaw Klassisk 400-1000 g",
+        "name": "Gestus Nye Danske Kartofler 1 kg",
         "store": "Spar",
-        "price": "25 kr."
-      },
-      {
-        "name": "Santa Maria BBQ Sauce 9-345 g",
-        "store": "Meny",
-        "price": "20 kr."
-      },
-      {
-        "name": "Dansk Spidskål",
-        "store": "Coop 365",
         "price": "12 kr."
+      },
+      {
+        "name": "Jensens Bearnaise Sauce 250 ml",
+        "store": "Netto",
+        "price": "15 kr."
+      },
+      {
+        "name": "Salling Haricot Verts 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr."
       }
     ],
-    "dietaryFilters": [],
-    "difficulty": "Nem"
+    "dietaryFilters": [
+      "Glutenfri"
+    ],
+    "difficulty": "Middel"
   },
   {
-    "id": 1049,
+    "id": 1031,
     "title": "Knækbrøds-Smørrebrød med Gravad Laks og Avocado",
     "emoji": "🍽️",
     "time": "15 minutter",
@@ -4730,6 +3003,857 @@
     "dietaryFilters": [
       "Glutenfri mulighed"
     ],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1032,
+    "title": "Asiatisk Ramen med Gyoza og Misopaste",
+    "emoji": "🥢",
+    "time": "35 minutter",
+    "servings_count": 3,
+    "category": "Asiatisk",
+    "cuisine": "🇯🇵 Asiatisk",
+    "description": "En varmende og dyb ramensuppe bygget op om en rig misopasta-bouillon med lækre dampede gyoza og friske grøntsager. Denne ret er inspireret af japanske ramenrestauranter og bringer autentiske smagsoplevelser hjem i dit køkken. Perfekt til kolde aftener.",
+    "ingredients": [
+      {
+        "text": "Ramenbouillon 1 liter",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Misopaste 200 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Nu Gyoza m. kylling 196 g",
+        "store": "Bilka",
+        "price": "22 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Soba-nudler 400 g",
+        "store": "Lidl",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Harvest Best Mukimame Bønner 400-750 g",
+        "store": "Netto",
+        "price": "12 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Sesamolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Sojasauce",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Ingefær",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Hæld ramenbouillonen i en stor gryde og bring den i kog.",
+      "Tilsæt 2-3 spsk misopaste og rør godt rundt til den er opløst. Smag til og tilsæt evt. mere misopaste, sojasauce eller revet ingefær.",
+      "Lad suppen simre ved lav varme mens du forbereder resten.",
+      "Kog soba-nudlerne efter pakkens anvisning, skyl dem i koldt vand og lad dem dryppe af.",
+      "Varm mukimamebønnerne op i lidt kogende saltet vand i 3-4 minutter og dræn dem.",
+      "Steg eller damp gyozaerne efter pakkens anvisning. Til stegning: varm lidt olie i en pande, læg gyozaerne i og steg 2-3 minutter, tilsæt derefter lidt vand og dæk til i 3-4 minutter.",
+      "Fordel soba-nudlerne i dybe suppeskåle.",
+      "Hæld den varme misosuppe over nudlerne.",
+      "Placer gyozaerne og mukimamebønnerne ovenpå.",
+      "Dryp med lidt sesamolie og server straks."
+    ],
+    "tip": "Tilsæt et blødkogt æg (6 minutter i kogende vand, derefter i isvand) til suppen for en autentisk ramen-oplevelse.",
+    "dealItems": [
+      {
+        "name": "Ramenbouillon 1 liter",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Misopaste 200 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      },
+      {
+        "name": "Salling Nu Gyoza m. kylling 196 g",
+        "store": "Bilka",
+        "price": "22 kr."
+      },
+      {
+        "name": "Soba-nudler 400 g",
+        "store": "Lidl",
+        "price": "25 kr."
+      },
+      {
+        "name": "Harvest Best Mukimame Bønner 400-750 g",
+        "store": "Netto",
+        "price": "12 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Mellem"
+  },
+  {
+    "id": 1033,
+    "title": "Tempura Rejepoke Bowl med Jasminris",
+    "emoji": "🍽️",
+    "time": "30 minutter",
+    "servings_count": 2,
+    "category": "Verden",
+    "cuisine": "🌍 Verden",
+    "description": "En lækker og farverig poke bowl inspireret af hawaiiansk og japansk køkken med sprøde tempurarejer, friske grøntsager og duftende jasminris. Retten er nem at sammensætte og ser imponerende ud på bordet. Den sprøde tempura kombineret med friske grøntsager og syrlig dressing er en fryd for sanserne.",
+    "ingredients": [
+      {
+        "text": "Salling Tempura Rejer 200-500 g",
+        "store": "Bilka",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Jasminris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Mukimame Bønner 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Formodnede Avocadoer 3 stk.",
+        "store": "Netto",
+        "price": "22 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Sojasauce, riseddike, sesamolie, sukker og salt",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Kog jasminris efter pakningsanvisning (ca. 400 g ris til 2 portioner). Lad risene trække under låg i 10 minutter efter kogning.",
+      "Lav en enkel pokesauce ved at blande 3 spsk. sojasauce, 1 spsk. riseddike, 1 tsk. sesamolie og 1 tsk. sukker.",
+      "Tilbered tempurareje-erne efter anvisning på pakken, enten i ovnen eller i friture/olie på panden til de er gyldne og sprøde.",
+      "Optø mukimame-bønnerne i kogende vand i 3-4 minutter. Hæld vandet fra og krydr let med salt.",
+      "Skær avocadoerne i halve, fjern kernen og skær frugtkødet i skiver. Skær forårsløgene i tynde ringe.",
+      "Anret bowlsene: Del de varme ris i dybe skåle. Placer tempurarejer, avocadoskiver og mukimame-bønner i separate 'sektioner' ovenpå risene.",
+      "Dryp pokesaucen over det hele og drys med ristede sesamfrø og forårsløg. Server straks."
+    ],
+    "tip": "For ekstra farve og smag: tilsæt tyndt skivede radiser og en tråd sriracha eller sambal oelek for lidt hede. Poke bowls er nemme at customisere med hvad du har i køleskabet.",
+    "dealItems": [
+      {
+        "name": "Salling Tempura Rejer 200-500 g",
+        "store": "Bilka",
+        "price": "25 kr."
+      },
+      {
+        "name": "Salling Jasminris 1 kg",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Salling Mukimame Bønner 700-900 g",
+        "store": "Bilka",
+        "price": "10 kr."
+      },
+      {
+        "name": "Formodnede Avocadoer 3 stk.",
+        "store": "Netto",
+        "price": "22 kr."
+      },
+      {
+        "name": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Let"
+  },
+  {
+    "id": 1034,
+    "title": "Sprød Lakseburger med Avocadocreme",
+    "emoji": "🍽️",
+    "time": "25 minutter",
+    "servings_count": 4,
+    "category": "Verden",
+    "cuisine": "🌍 Verden",
+    "description": "En saftig lakseburger med hjemmelavet avocadocreme og friske grøntsager. Perfekt til en hurtig hverdagsaftensmad eller en lækker weekendmiddag. De bløde burgerboller fra Bilka giver den perfekte ramme om den sprøde laks.",
+    "ingredients": [
+      {
+        "text": "Laksefilet",
+        "store": "Bilka",
+        "price": "16,95 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Bager 4 Burgerboller",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Formodnede Avocadoer 3 stk.",
+        "store": "Netto",
+        "price": "22 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Dansk Agurk",
+        "store": "Bilka",
+        "price": "8 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Olivenolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Citronsaft",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Hvidløgspulver",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Skær laksefileten i 4 jævne stykker og krydr med salt, peber og hvidløgspulver.",
+      "Varm en pande op med lidt olivenolie ved middel-høj varme og steg laksen ca. 3-4 minutter på hver side.",
+      "Mos avocadoerne i en skål og tilsæt citronsaft, salt og peber. Rør til en cremet masse.",
+      "Skær agurken i tynde skiver.",
+      "Rist burgerbollerne let på en tør pande.",
+      "Smør avocadocreme på den nederste bolle, læg laksen ovenpå og top med agurkeskiver.",
+      "Læg toppen på og server straks."
+    ],
+    "tip": "Tilsæt lidt stærk sauce eller sriracha til avocadocremen for et ekstra kick.",
+    "dealItems": [
+      {
+        "name": "Laksefilet",
+        "store": "Bilka",
+        "price": "16,95 kr."
+      },
+      {
+        "name": "Bager 4 Burgerboller",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Formodnede Avocadoer 3 stk.",
+        "store": "Netto",
+        "price": "22 kr."
+      },
+      {
+        "name": "Dansk Agurk",
+        "store": "Bilka",
+        "price": "8 kr."
+      }
+    ],
+    "dietaryFilters": [
+      "Glutenfri mulighed"
+    ],
+    "difficulty": "Let"
+  },
+  {
+    "id": 1035,
+    "title": "Mexicansk Taco-aften med Hakket Kylling og Friske Grøntsager",
+    "emoji": "🌮",
+    "time": "30 minutter",
+    "servings_count": 4,
+    "category": "Mexicansk",
+    "cuisine": "🇲🇽 Mexicansk",
+    "description": "En festlig og farverig taco-aften med krydret hakket kyllingekød, sprøde grøntsager og cremede avocadoer. Retten er nem at lave og perfekt til en uformel middag med familien eller vennerne. Alle kan sammensætte deres taco præcis som de ønsker.",
+    "ingredients": [
+      {
+        "text": "Coop Tex Mex Tortilla 370 g",
+        "store": "Coop 365",
+        "price": "9 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Dansk hakket kyllingekød 7-10% fedt 330-700 g",
+        "store": "Føtex",
+        "price": "30 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
+        "store": "Coop 365",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Rød Peber",
+        "store": "Coop 365",
+        "price": "5 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Coop Tex Mex Chunky Salsa 125-370 g",
+        "store": "Dagli'Brugsen / Brugsen",
+        "price": "9 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Spidskommen, paprika og chilipulver",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Olivenolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Limesaft",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Skær rød peber i fine strimler og stil den til side.",
+      "Halver avocadoerne, fjern stenen og mos dem groft med en gaffel. Krydr med limesaft, salt og peber.",
+      "Varm olie op i en stor pande ved middel-høj varme.",
+      "Tilsæt det hakkede kyllingekød og brun det godt, ca. 5-6 minutter, mens du bryder det op med en spatel.",
+      "Krydr kyllingen med spidskommen, paprika, chilipulver, salt og peber efter smag og steg videre i 2 minutter.",
+      "Varm tortillaerne op i en tør pande i 30 sekunder på hver side, eller pak dem ind i folie og varm dem i ovnen ved 180°C i 5 minutter.",
+      "Anret alle ingredienser på bordet i separate skåle: kylling, avocado, peberstrimlerne og salsa.",
+      "Lad alle samle deres egne tacos og nyd måltidet."
+    ],
+    "tip": "Tilsæt en skefuld creme fraiche eller revet ost for en ekstra cremet og mættigende oplevelse.",
+    "dealItems": [
+      {
+        "name": "Coop Tex Mex Tortilla 370 g",
+        "store": "Coop 365",
+        "price": "9 kr."
+      },
+      {
+        "name": "Dansk hakket kyllingekød 7-10% fedt 330-700 g",
+        "store": "Føtex",
+        "price": "30 kr."
+      },
+      {
+        "name": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
+        "store": "Coop 365",
+        "price": "25 kr."
+      },
+      {
+        "name": "Rød Peber",
+        "store": "Coop 365",
+        "price": "5 kr."
+      },
+      {
+        "name": "Coop Tex Mex Chunky Salsa 125-370 g",
+        "store": "Dagli'Brugsen / Brugsen",
+        "price": "9 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Let"
+  },
+  {
+    "id": 1036,
+    "title": "Hjemmelavet Pizza med Surdejsbund, Mozzarella og Pepperoni",
+    "emoji": "🍝",
+    "time": "25 minutter",
+    "servings_count": 2,
+    "category": "Italiensk",
+    "cuisine": "🇮🇹 Italiensk",
+    "description": "En lækker hjemmelavet pizza med sprød surdejsbund, smeltet mozzarella og krydret pepperoni – næsten som fra en rigtig italiensk pizzeria. Mutti pizzasauce giver den perfekte tomatbase med frisk smag. En sjov ret at lave med familien, hvor alle kan vælge deres egne toppings.",
+    "ingredients": [
+      {
+        "text": "Coop Surdejspizzabund 240 g",
+        "store": "Coop 365",
+        "price": "12 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Coop Revet Mozzarella 150-200 g",
+        "store": "Coop 365",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Tulip Pizzatopping Pepperoni 100-160 g",
+        "store": "Coop 365",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Mutti Pizzasauce 400 g",
+        "store": "SuperBrugsen / Kvickly",
+        "price": "14 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Olivenolie",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Tørret oregano",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      },
+      {
+        "text": "Salt",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Forvarm ovnen til 230°C og placer en bageplade eller pizzasten derinde.",
+      "Læg surdejspizzabunden på et stykke bagepapir.",
+      "Smør et jævnt lag Mutti pizzasauce ud på bunden, lad 1 cm kant være fri.",
+      "Drys revet mozzarella over pizzasaucen.",
+      "Fordel pepperoniskiverne jævnt over osten.",
+      "Krydr med tørret oregano og et lille drys salt.",
+      "Træk pizzaen på bagepapiret over på den varme plade og bag 10-12 minutter.",
+      "Tag pizzaen ud, når osten er gylden og boblende, og server straks."
+    ],
+    "tip": "Tilsæt frisk rucola og et drys parmesan efter bagning for et restaurant-touch.",
+    "dealItems": [
+      {
+        "name": "Coop Surdejspizzabund 240 g",
+        "store": "Coop 365",
+        "price": "12 kr."
+      },
+      {
+        "name": "Coop Revet Mozzarella 150-200 g",
+        "store": "Coop 365",
+        "price": "10 kr."
+      },
+      {
+        "name": "Tulip Pizzatopping Pepperoni 100-160 g",
+        "store": "Coop 365",
+        "price": "18 kr."
+      },
+      {
+        "name": "Mutti Pizzasauce 400 g",
+        "store": "SuperBrugsen / Kvickly",
+        "price": "14 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1037,
+    "title": "Cremet Pasta Bolognese med Hakket Oksekød",
+    "emoji": "🍝",
+    "time": "35 minutter",
+    "servings_count": 4,
+    "category": "Italiensk",
+    "cuisine": "🇮🇹 Italiensk",
+    "description": "En klassisk og trøstende italiensk bolognese lavet med saftigt hakket oksekød og en rig tomatsauce. Serveret over nykogt rummo fusilli for den perfekte middag. En opskrift der mætter familien og smager fantastisk.",
+    "ingredients": [
+      {
+        "text": "Coop Hakket Oksekød 8-12% 400 g",
+        "store": "Coop 365",
+        "price": "39,95 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Rummo Fusilli 500 g",
+        "store": "Coop 365",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Dolmio Bolognese pastasauce 450 g",
+        "store": "Coop 365",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Mutti Hakkede Tomater 130-400 g",
+        "store": "Meny",
+        "price": "9,95 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Cremefine Madlavning 250 ml",
+        "store": "Bilka",
+        "price": "10 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt, peber, olivenolie, tørret timian og hvidløg",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Varm olivenolie i en stor sauterpande ved medium-høj varme. Svits hakket oksekød i 5-6 minutter til det er brunet. Krydr med salt, peber og tørret timian.",
+      "Tilsæt finthakket hvidløg og steg 1 minut mere.",
+      "Hæld dolmio bolognese-sauce og mutti hakkede tomater i panden. Rør godt rundt og lad saucen simre ved lav varme i 15 minutter.",
+      "Tilsæt cremefine madlavning og rør det ind i saucen. Smag til med salt og peber.",
+      "Imens koges rummo fusilli i rigeligt saltet vand efter pakkens anvisning – ca. 10-12 minutter al dente.",
+      "Dræn pastaen og bland den med bolognese-saucen.",
+      "Anret i dybe tallerkener og server eventuelt med revet parmesan."
+    ],
+    "tip": "Lad saucen simre længere tid for endnu mere dybde i smagen – gerne 30-45 minutter.",
+    "dealItems": [
+      {
+        "name": "Coop Hakket Oksekød 8-12% 400 g",
+        "store": "Coop 365",
+        "price": "39,95 kr."
+      },
+      {
+        "name": "Rummo Fusilli 500 g",
+        "store": "Coop 365",
+        "price": "18 kr."
+      },
+      {
+        "name": "Dolmio Bolognese pastasauce 450 g",
+        "store": "Coop 365",
+        "price": "15 kr."
+      },
+      {
+        "name": "Mutti Hakkede Tomater 130-400 g",
+        "store": "Meny",
+        "price": "9,95 kr."
+      },
+      {
+        "name": "Cremefine Madlavning 250 ml",
+        "store": "Bilka",
+        "price": "10 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Nem"
+  },
+  {
+    "id": 1038,
+    "title": "Mexicansk Kyllingetortilla Bowl",
+    "emoji": "🌮",
+    "time": "25 minutter",
+    "servings_count": 4,
+    "category": "Mexicansk",
+    "cuisine": "🇲🇽 Mexicansk",
+    "description": "En farverig og mættende mexicansk bowl med krydret kylling, friske grøntsager og cremet avocado. Retten samler de bedste tex-mex smagsoplevelser i én nem middag. Perfekt til en hurtig hverdagsaften, hvor alle kan bygge deres egen bowl.",
+    "ingredients": [
+      {
+        "text": "Coop Tex Mex Tortilla 370 g",
+        "store": "Coop 365",
+        "price": "9 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Gestus Dansk Kyllingebrystfilet 1 kg",
+        "store": "Meny",
+        "price": "85 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Santa Maria Tex Mex Krydderi",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
+        "store": "Coop 365",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling Cocktailtomater 500 g",
+        "store": "Bilka",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Coop Feta 150 g",
+        "store": "Coop 365",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Citronsaft, salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Skær kyllingebrystfileten i strimler og krydr dem grundigt med tex mex-krydderiblandingen samt salt og peber.",
+      "Varm en pande op med lidt olie og steg kyllingestrimler ved middel-høj varme i 6-8 minutter, til de er gennemstegte og gyldne.",
+      "Halvér avocadoerne, fjern kernen og skær frugtkødet i skiver. Drys med lidt citronsaft for at undgå brunfarvning.",
+      "Del cocktailtomaterne i halve. Smuldr fetaen.",
+      "Varm tortillaerne kort på en tør pande eller i mikroovn i 30 sekunder.",
+      "Anret bowls: Læg tortillaen i en skål, top med krydret kylling, avocadoskiver, tomater og smuldret feta.",
+      "Server med ekstra tex mex-sauce eller cremefraiche efter smag."
+    ],
+    "tip": "Tilsæt en dåse skyldne sorte bønner fra pantry for ekstra protein og fibre, og drys med friskhakkede forårsløg for farve og smag.",
+    "dealItems": [
+      {
+        "name": "Coop Tex Mex Tortilla 370 g",
+        "store": "Coop 365",
+        "price": "9 kr."
+      },
+      {
+        "name": "Gestus Dansk Kyllingebrystfilet 1 kg",
+        "store": "Meny",
+        "price": "85 kr."
+      },
+      {
+        "name": "Santa Maria Tex Mex Krydderi",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Änglamark Økologiske Spiseklare Avocadoer 2 stk.",
+        "store": "Coop 365",
+        "price": "25 kr."
+      },
+      {
+        "name": "Salling Cocktailtomater 500 g",
+        "store": "Bilka",
+        "price": "18 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Let"
+  },
+  {
+    "id": 1039,
+    "title": "Græsk Gyros Pita med Tzatziki",
+    "emoji": "🍽️",
+    "time": "25 minutter",
+    "servings_count": 4,
+    "category": "Verden",
+    "cuisine": "🌍 Verden",
+    "description": "En autentisk græsk gademadfavorit med krydret gyros, hjemmelavet tzatziki og sprøde grøntsager samlet i bløde pitabrød. Retten er nem at forberede og perfekt til en afslappet middag eller sammenkomst. Den fyldige gyros kombineret med den friske tzatziki er et klassisk match.",
+    "ingredients": [
+      {
+        "text": "Salling Gyros 300-400 g",
+        "store": "Bilka",
+        "price": "39 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Irma Pitabrød 4 stk / 440 g",
+        "store": "Coop 365",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Koliös Græsk Yoghurt 500 g",
+        "store": "Coop 365",
+        "price": "15 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Dansk Agurk",
+        "store": "Bilka",
+        "price": "8 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Peberfrugt",
+        "store": "Bilka",
+        "price": "6 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salling ØKO Dansk Basilikum",
+        "store": "Bilka",
+        "price": "25 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Hvidløg, salt, peber og tørret dild",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Start med tzatzikien: Riv halvdelen af agurken groft og pres al saft ud med hænderne eller et klæde. Det er vigtigt at fjerne overskydende væske.",
+      "Bland den pressede agurk med den græske yoghurt, 1-2 fed presset hvidløg, tørret dild, salt og peber. Stil tzatzikien i køleskabet mens du tilbereder resten.",
+      "Skær den resterende agurk og peberfrugten i strimler.",
+      "Varm en pande op med lidt olie og steg gyros-kødet ved høj varme i 5-7 minutter, til det er sprødt og gennemstegt. Rør jævnligt.",
+      "Varm pitabrødene i en tør pande i 1-2 minutter på hver side, eller indpakket i folie i ovnen ved 180°C i 5 minutter.",
+      "Åbn pitabrødene og smør generøst med tzatziki. Fyld med varm gyros, agurk- og peberfrugt-strimler.",
+      "Drys med frisk basilikum og server straks med ekstra tzatziki ved siden af."
+    ],
+    "tip": "For ekstra autentisk smag: krydr gyros-kødet med en blanding af spidskommen, oregano og paprika inden stegning, selvom kødet allerede er krydret.",
+    "dealItems": [
+      {
+        "name": "Salling Gyros 300-400 g",
+        "store": "Bilka",
+        "price": "39 kr."
+      },
+      {
+        "name": "Irma Pitabrød 4 stk / 440 g",
+        "store": "Coop 365",
+        "price": "18 kr."
+      },
+      {
+        "name": "Koliös Græsk Yoghurt 500 g",
+        "store": "Coop 365",
+        "price": "15 kr."
+      },
+      {
+        "name": "Dansk Agurk",
+        "store": "Bilka",
+        "price": "8 kr."
+      },
+      {
+        "name": "Peberfrugt",
+        "store": "Bilka",
+        "price": "6 kr."
+      }
+    ],
+    "dietaryFilters": [],
+    "difficulty": "Let"
+  },
+  {
+    "id": 1040,
+    "title": "Klassisk Dansk Hotdog med Syltede Rødløg og Sennep",
+    "emoji": "🌿",
+    "time": "20 minutter",
+    "servings_count": 6,
+    "category": "Nordisk",
+    "cuisine": "🇩🇰 Nordisk",
+    "description": "En ultimativ dansk hotdog med sprøde pølsehorn, saftfulde grillpølser og alle de klassiske tilbehør. Syltede rødløg og sennep giver den perfekte balance mellem surt og stærkt. Ideel til en hurtig frokost eller aftensmad i det gode vejr.",
+    "ingredients": [
+      {
+        "text": "Bager 6 Pølsebrød",
+        "store": "Bilka",
+        "price": "20 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Langeländer Grillpølser 540-560 g",
+        "store": "Coop 365",
+        "price": "35 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Zelected Syltede Rødløg 115-500 g",
+        "store": "Bilka",
+        "price": "26 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Böhncke Hotdogdressing 255-425 g",
+        "store": "Bilka",
+        "price": "18 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Beauvais Ketchup 265-500 g",
+        "store": "Coop 365",
+        "price": "19 kr.",
+        "isPantry": false
+      },
+      {
+        "text": "Salt og peber",
+        "store": null,
+        "price": null,
+        "isPantry": true
+      }
+    ],
+    "steps": [
+      "Varm en grillpande eller stegepande op til medium-høj varme.",
+      "Grill langeländer grillpølserne i 8-10 minutter, vend dem jævnligt til de er gyldne på alle sider.",
+      "Varm pølsebrødene i ovnen ved 180°C i 5 minutter, eller split dem og rist dem på panden.",
+      "Læg en grillpølse i hvert brød.",
+      "Topp med rigeligt med hotdogdressing, ketchup og syltede rødløg.",
+      "Server straks og nyd den klassiske danske sommer-hotdog!"
+    ],
+    "tip": "Tilsæt ristede løg og råsyltede agurker for den fulde gadehotdog-oplevelse.",
+    "dealItems": [
+      {
+        "name": "Bager 6 Pølsebrød",
+        "store": "Bilka",
+        "price": "20 kr."
+      },
+      {
+        "name": "Langeländer Grillpølser 540-560 g",
+        "store": "Coop 365",
+        "price": "35 kr."
+      },
+      {
+        "name": "Zelected Syltede Rødløg 115-500 g",
+        "store": "Bilka",
+        "price": "26 kr."
+      },
+      {
+        "name": "Böhncke Hotdogdressing 255-425 g",
+        "store": "Bilka",
+        "price": "18 kr."
+      },
+      {
+        "name": "Beauvais Ketchup 265-500 g",
+        "store": "Coop 365",
+        "price": "19 kr."
+      }
+    ],
+    "dietaryFilters": [],
     "difficulty": "Nem"
   }
 ]
