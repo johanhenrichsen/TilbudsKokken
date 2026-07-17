@@ -1303,7 +1303,7 @@ export default function App() {
           <div className="splash-ring splash-ring-2" />
           <div className="splash-content">
             <div className="splash-logo">
-              <LogoIcon size={140} />
+              <LogoFull size="md" />
             </div>
             <p className="splash-tagline">Bedre tilbud. Bedre mad.</p>
           </div>
