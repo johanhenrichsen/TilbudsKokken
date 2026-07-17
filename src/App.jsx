@@ -510,7 +510,7 @@ function FeedbackResults() {
     const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = `spotkokken-feedback-${Date.now()}.csv`; a.click();
+    a.href = url; a.download = `tilbudskokken-feedback-${Date.now()}.csv`; a.click();
     URL.revokeObjectURL(url);
   }
 
@@ -523,7 +523,7 @@ function FeedbackResults() {
   return (
     <div className="fb-results-page">
       <div className="fb-results-header">
-        <h1 className="fb-results-title">Feedback — Spotkokken</h1>
+        <h1 className="fb-results-title">Feedback — Tilbudskokken</h1>
         <div className="fb-results-actions">
           <span className="fb-results-count">{responses.length} svar</span>
           <button className="fb-results-export-btn" onClick={exportCSV} disabled={responses.length === 0}>
@@ -1023,7 +1023,7 @@ export default function App() {
   // ── Share ───────────────────────────────────────────────────────
   async function shareRecipe(r) {
     const ingredientLines = (r.ingredients || []).map(ing => ing.text || ing).join("\n");
-    const text = `${r.emoji} ${r.title}\n\nIngredienser:\n${ingredientLines}\n\nFremgangsmåde:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}${r.tip ? `\n\nTip: ${r.tip}` : ""}\n\n— Spotkokken`;
+    const text = `${r.emoji} ${r.title}\n\nIngredienser:\n${ingredientLines}\n\nFremgangsmåde:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}${r.tip ? `\n\nTip: ${r.tip}` : ""}\n\n— Tilbudskokken`;
     try {
       if (navigator.share) {
         await navigator.share({ title: r.title, text, url: window.location.href });
@@ -1519,7 +1519,7 @@ export default function App() {
           <div className="hero-brand">
             <LogoIcon size={42} />
             <div className="hero-brand-text">
-              <span className="hero-brand-name">Spotkokken</span>
+              <span className="hero-brand-name">Tilbudskokken</span>
               <span className="hero-brand-slogan">Bedre tilbud. Bedre mad.</span>
             </div>
           </div>

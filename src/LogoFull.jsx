@@ -11,7 +11,7 @@ export default function LogoFull({ size = "md", className = "" }) {
       width={px}
       height={px}
       className={`logo-full${className ? ` ${className}` : ""}`}
-      alt="Spotkokken"
+      alt="Tilbudskokken"
       style={{ display: "block" }}
     />
   );
