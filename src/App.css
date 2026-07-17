@@ -3072,7 +3072,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
 }
 .splash-logo img {
   display: block;
-  width: clamp(56px, 15vw, 96px);
+  width: clamp(80px, 20vw, 130px);
   height: auto;
   filter: drop-shadow(0 4px 20px rgba(74,184,74,0.4)) drop-shadow(0 2px 8px rgba(0,0,0,0.4));
 }
