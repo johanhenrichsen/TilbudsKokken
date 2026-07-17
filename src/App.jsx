@@ -226,11 +226,14 @@ function calcPricePerPerson(recipe) {
   let hasPrice = false;
   for (const di of (recipe.dealItems || [])) {
     const m = String(di.price || '').match(/(\d+(?:[.,]\d+)?)/);
-    if (m) { total += parseFloat(m[1].replace(',', '.')); hasPrice = true; }
+    if (m) {
+      const val = parseFloat(m[1].replace(',', '.'));
+      if (val > 0) { total += val; hasPrice = true; }
+    }
   }
-  if (!hasPrice) return null;
+  if (!hasPrice || servings <= 0) return null;
   const pp = Math.round(total / servings);
-  return (pp < 2 || pp > 150) ? null : pp;
+  return (pp < 1 || pp > 500 || !isFinite(pp)) ? null : pp;
 }
 
 // Keyword regexes matched against actual ingredient texts (case-insensitive).
@@ -297,33 +300,56 @@ function attachSwipeDismiss(el, onDismiss) {
   };
 }
 
+const CARD_SV_OPTIONS = [2, 4, 6];
+
 function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, onAddToPlan, onToggleSave }) {
-  const [photoUrl, setPhotoUrl] = useState(() => {
-    return localStorage.getItem(`photo_${r.title}`) || null;
+  const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(`photo_${r.id}`) || null);
+  const [photoLoading, setPhotoLoading] = useState(() => {
+    return !localStorage.getItem(`photo_${r.id}`) && !localStorage.getItem(`photo_fail_${r.id}`);
   });
+  const [cardServings, setCardServings] = useState(() => {
+    const saved = parseInt(localStorage.getItem('defaultServings')) || r.servings_count || 4;
+    return CARD_SV_OPTIONS.reduce((a, b) => Math.abs(b - saved) < Math.abs(a - saved) ? b : a);
+  });
+
   useEffect(() => {
-    if (photoUrl) return;
-    console.log('fetching photo for:', r.title);
-    fetch(`/api/pexels?query=${encodeURIComponent(r.title + ' food')}`)
+    if (localStorage.getItem(`photo_fail_${r.id}`)) { setPhotoLoading(false); return; }
+    const cached = localStorage.getItem(`photo_${r.id}`);
+    if (cached) { setPhotoUrl(cached); setPhotoLoading(false); return; }
+    setPhotoLoading(true);
+    fetch(`/api/pexels?query=${encodeURIComponent(r.title + ' food dish')}`)
       .then(res => res.json())
       .then(data => {
-        if (data.url) {
-          localStorage.setItem(`photo_${r.title}`, data.url);
-          setPhotoUrl(data.url);
+        const url = data?.url;
+        if (url) {
+          localStorage.setItem(`photo_${r.id}`, url);
+          setPhotoUrl(url);
+        } else {
+          localStorage.setItem(`photo_fail_${r.id}`, '1');
         }
+        setPhotoLoading(false);
       })
-      .catch(() => {});
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const pricePerPerson = calcPricePerPerson(r);
+      .catch(() => {
+        localStorage.setItem(`photo_fail_${r.id}`, '1');
+        setPhotoLoading(false);
+      });
+  }, [r.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const basePp = calcPricePerPerson(r);
+  const totalPrice = basePp != null ? Math.round(basePp * cardServings) : null;
+
   return (
     <div
       className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
       onClick={() => onSelect(r)}
     >
       <div className="card-photo-wrap">
-        {photoUrl
-          ? <img className="card-photo" src={photoUrl} alt="" loading="lazy" />
-          : <div className="card-photo-placeholder"><span>{r.emoji}</span></div>
+        {photoLoading
+          ? <div className="card-photo-skeleton" />
+          : photoUrl
+            ? <img className="card-photo" src={photoUrl} alt="" loading="lazy"
+                onError={() => { setPhotoUrl(null); localStorage.removeItem(`photo_${r.id}`); }} />
+            : <div className="card-photo-placeholder"><span>{r.emoji}</span></div>
         }
         <div className="card-photo-gradient" />
         <div className="recipe-category-tag card-photo-tag">{r.emoji} {r.category}</div>
@@ -339,11 +365,24 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
           <span>⏱ {r.time}</span>
           <span>🥘 {(r.ingredients || []).length} ing.</span>
         </div>
-        {pricePerPerson != null && (
-          <div className="recipe-card-price">
-            ca. {pricePerPerson} kr. pr. person
-          </div>
-        )}
+
+        {/* Serving selector + price */}
+        <div className="card-servings-row" onClick={e => e.stopPropagation()}>
+          <span className="card-sv-label">👥</span>
+          {CARD_SV_OPTIONS.map(n => (
+            <button
+              key={n}
+              className={`card-sv-btn${cardServings === n ? ' active' : ''}`}
+              onClick={e => { e.stopPropagation(); setCardServings(n); }}
+            >
+              {n}
+            </button>
+          ))}
+          {totalPrice != null && (
+            <span className="card-sv-price">≈ {totalPrice} kr.</span>
+          )}
+        </div>
+
         <div className="recipe-deal-tags">
           {(r.dealItems || []).slice(0, 3).map(di => {
             const available = availableNames.has(di.name);
@@ -416,7 +455,129 @@ function RecipeCounter({ chains }) {
   );
 }
 
+// ── Feedback helpers ─────────────────────────────────────────────────────────
+function StarRating({ value, onChange }) {
+  return (
+    <div className="fb-stars" role="radiogroup">
+      {[1,2,3,4,5].map(n => (
+        <button
+          key={n}
+          type="button"
+          className={`fb-star${n <= value ? " active" : ""}`}
+          onClick={() => onChange(n)}
+          aria-label={`${n} stjerne${n !== 1 ? "r" : ""}`}
+        >★</button>
+      ))}
+    </div>
+  );
+}
+
+// Apply theme synchronously before first paint when rendering standalone
+(() => {
+  const theme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  if (theme === "dark" || (!theme && prefersDark)) {
+    document.documentElement.classList.add("dark");
+  }
+})();
+
+function FeedbackResults() {
+  const [responses, setResponses] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("feedbackResponses") || "[]"); } catch { return []; }
+  });
+
+  useEffect(() => {
+    document.body.style.background = document.documentElement.classList.contains("dark") ? "#0d1a0c" : "#f4f2ed";
+    return () => { document.body.style.background = ""; };
+  }, []);
+
+  function exportCSV() {
+    const cols = [
+      "Tidsstempel","Side",
+      "Nem at finde opskrift (1-5)","Design (1-5)","Sandsynlighed for brug (1-5)",
+      "Stødte på fejl","Hvornår","Butik","Erstatter/supplerer","Brug hyppighed",
+      "Bemærkede","Hvad mangler","Kommentarer",
+    ];
+    const rows = responses.map(r => [
+      r.timestamp, r.page,
+      r.findRecipe, r.design, r.likelihood,
+      r.hadBugs === true ? "Ja" : r.hadBugs === false ? "Nej" : "",
+      r.when, r.store, r.replace, r.frequency,
+      Array.isArray(r.noticed) ? r.noticed.join("; ") : "",
+      r.whatsMissing, r.comments,
+    ].map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(","));
+    const csv = [cols.map(c => `"${c}"`).join(","), ...rows].join("\n");
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `spotkokken-feedback-${Date.now()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function clearAll() {
+    if (!window.confirm("Slet alle svar?")) return;
+    localStorage.removeItem("feedbackResponses");
+    setResponses([]);
+  }
+
+  return (
+    <div className="fb-results-page">
+      <div className="fb-results-header">
+        <h1 className="fb-results-title">Feedback — Spotkokken</h1>
+        <div className="fb-results-actions">
+          <span className="fb-results-count">{responses.length} svar</span>
+          <button className="fb-results-export-btn" onClick={exportCSV} disabled={responses.length === 0}>
+            Eksporter CSV
+          </button>
+          <button className="fb-results-clear-btn" onClick={clearAll} disabled={responses.length === 0}>
+            Ryd alle
+          </button>
+          <a className="fb-results-back" href="/">← Tilbage</a>
+        </div>
+      </div>
+      {responses.length === 0 ? (
+        <div className="fb-results-empty">Ingen svar endnu.</div>
+      ) : (
+        <div className="fb-results-table-wrap">
+          <table className="fb-results-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Tid</th>
+                <th>Find opskrift</th><th>Design</th><th>Brug sandsynlighed</th>
+                <th>Fejl?</th><th>Hvornår</th><th>Butik</th>
+                <th>Erstatter</th><th>Hyppighed</th>
+                <th>Brugte</th><th>Hvad mangler</th><th>Kommentarer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...responses].reverse().map((r, i) => (
+                <tr key={r.id || i}>
+                  <td>{responses.length - i}</td>
+                  <td className="fb-td-time">{new Date(r.timestamp).toLocaleString("da-DK")}</td>
+                  <td className="fb-td-center">{r.findRecipe ? `${r.findRecipe}/5` : "—"}</td>
+                  <td className="fb-td-center">{r.design ? `${r.design}/5` : "—"}</td>
+                  <td className="fb-td-center">{r.likelihood ? `${r.likelihood}/5` : "—"}</td>
+                  <td className="fb-td-center">{r.hadBugs === true ? "Ja" : r.hadBugs === false ? "Nej" : "—"}</td>
+                  <td>{r.when || "—"}</td>
+                  <td>{r.store || "—"}</td>
+                  <td>{r.replace || "—"}</td>
+                  <td>{r.frequency || "—"}</td>
+                  <td>{Array.isArray(r.noticed) ? r.noticed.join(", ") : "—"}</td>
+                  <td className="fb-td-text">{r.whatsMissing || "—"}</td>
+                  <td className="fb-td-text">{r.comments || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function App() {
+  if (window.location.pathname === "/feedback-results") return <FeedbackResults />;
+
   const [darkMode, setDarkMode] = useState(() => {
     try {
       const saved = localStorage.getItem("theme");
@@ -540,6 +701,18 @@ export default function App() {
   const [prefsOpen, setPrefsOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState("anbefalet");
   const [quickFilters, setQuickFilters] = useState(new Set());
+
+  // ── Feedback ─────────────────────────────────────────────────────
+  const [showFeedbackPanel, setShowFeedbackPanel] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const FEEDBACK_EMPTY = {
+    findRecipe: 0, design: 0, likelihood: 0,
+    hadBugs: null,
+    when: "", store: "", replace: "", frequency: "",
+    noticed: [],
+    whatsMissing: "", comments: "",
+  };
+  const [feedbackForm, setFeedbackForm] = useState(FEEDBACK_EMPTY);
 
   // ── Splash screen ────────────────────────────────────────────────
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
@@ -773,6 +946,27 @@ export default function App() {
     try { localStorage.removeItem("checkedItems"); } catch {}
   }
 
+  // ── Feedback ─────────────────────────────────────────────────────
+  function submitFeedback() {
+    const entry = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      page: window.location.pathname,
+      ...feedbackForm,
+      noticed: [...feedbackForm.noticed],
+    };
+    try {
+      const existing = JSON.parse(localStorage.getItem("feedbackResponses") || "[]");
+      localStorage.setItem("feedbackResponses", JSON.stringify([...existing, entry]));
+    } catch {}
+    setFeedbackSubmitted(true);
+    setTimeout(() => {
+      setShowFeedbackPanel(false);
+      setFeedbackSubmitted(false);
+      setFeedbackForm(FEEDBACK_EMPTY);
+    }, 2000);
+  }
+
   // ── Save / delete ───────────────────────────────────────────────
   function saveRecipe(r) {
     const entry = { ...r, savedAt: Date.now() };
@@ -791,6 +985,33 @@ export default function App() {
     if (existing) deleteSavedRecipe(existing.savedAt);
     else saveRecipe(r);
   }
+
+  function addAllSavedToShoppingList(recipes) {
+    const targetRecipes = recipes || savedRecipes;
+    const existingNorm = new Set(shoppingList.map(s =>
+      s.toLowerCase().replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, '').trim()
+    ));
+    const toAdd = [];
+    for (const r of targetRecipes) {
+      for (const ing of (r.ingredients || [])) {
+        if (ing.isPantry || !ing.store) continue;
+        const text = ing.text || '';
+        const norm = text.toLowerCase().replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, '').trim();
+        if (norm && !existingNorm.has(norm)) {
+          existingNorm.add(norm);
+          toAdd.push(text);
+        }
+      }
+    }
+    if (toAdd.length === 0) return 0;
+    setShoppingList(prev => {
+      const next = [...prev, ...toAdd];
+      try { localStorage.setItem('shoppingList', JSON.stringify(next)); } catch {}
+      return next;
+    });
+    return toAdd.length;
+  }
+
   function toggleExpanded(savedAt) {
     setExpandedSaved(prev => {
       const next = new Set(prev);
@@ -802,13 +1023,23 @@ export default function App() {
   // ── Share ───────────────────────────────────────────────────────
   async function shareRecipe(r) {
     const ingredientLines = (r.ingredients || []).map(ing => ing.text || ing).join("\n");
-    const text = `${r.title}\n\nIngredienser:\n${ingredientLines}\n\nFremgangsmåde:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}${r.tip ? `\n\nTip: ${r.tip}` : ""}`;
-    if (navigator.share) {
-      await navigator.share({ title: r.title, text });
-    } else {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+    const text = `${r.emoji} ${r.title}\n\nIngredienser:\n${ingredientLines}\n\nFremgangsmåde:\n${r.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}${r.tip ? `\n\nTip: ${r.tip}` : ""}\n\n— Spotkokken`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: r.title, text, url: window.location.href });
+      } else {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        } catch {}
+      }
     }
   }
 
@@ -1072,9 +1303,8 @@ export default function App() {
           <div className="splash-ring splash-ring-2" />
           <div className="splash-content">
             <div className="splash-logo">
-              <LogoFull size="4xl" />
+              <LogoIcon size={180} />
             </div>
-            <p className="splash-tagline">BEDRE TILBUD. BEDRE MAD.</p>
           </div>
         </div>
       )}
@@ -1210,18 +1440,21 @@ export default function App() {
         <div className="store-picker-overlay" onClick={e => e.target === e.currentTarget && setShowStorePicker(false)}>
           <div className="store-picker-card">
             <div className="sp-modal-header">
-              <h2 className="sp-title">Dine butikker</h2>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {selectedChains.size < CHAIN_ORDER.length && (
-                  <button className="sp-clear-btn" onClick={selectAllStores}>Vælg alle</button>
-                )}
-                {selectedChains.size > 0 && (
-                  <button className="sp-clear-btn" onClick={clearStores}>Ryd</button>
-                )}
-                <button className="sp-close-btn" onClick={() => setShowStorePicker(false)}>×</button>
+              <div>
+                <h2 className="sp-title">Dine butikker</h2>
+                <div className="sp-chain-count-row">
+                  <span className="sp-chain-count-badge">{selectedChains.size}/{CHAIN_ORDER.length} valgt</span>
+                  {selectedChains.size < CHAIN_ORDER.length && (
+                    <button className="sp-select-all-btn" onClick={selectAllStores}>+ Vælg alle</button>
+                  )}
+                  {selectedChains.size > 0 && (
+                    <button className="sp-clear-btn" onClick={clearStores}>Ryd</button>
+                  )}
+                </div>
               </div>
+              <button className="sp-close-btn" onClick={() => setShowStorePicker(false)}>×</button>
             </div>
-            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Vælg de kæder du handler i — vi finder opskrifterne til dig.</p>
+            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Tryk på en kæde for at vælge eller fravælge den.</p>
             <div style={{ flex: 1, overflowY: "auto" }}>
               <div className="ob-chain-grid">
                 {CHAIN_ORDER.map(chain => {
@@ -1307,14 +1540,19 @@ export default function App() {
         </div>
 
         {setupComplete && (
-          <div className="local-store-badge">
+          <div className="local-store-badge" onClick={() => setShowStorePicker(true)} role="button" tabIndex={0} title="Administrer butikker">
             <span className="local-store-dots">
               {[...new Set((localStores || []).map(s => s.chain))].map(ch => (
                 <span key={ch} className="chain-dot" style={{ background: CHAIN_COLORS[ch] }} />
               ))}
             </span>
-            <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
-            <button className="skift-btn" onClick={() => setShowStorePicker(true)}>Skift</button>
+            <span className="local-store-label">
+              {localStores && localStores.length > 1
+                ? <><strong>{localStores.length} butikker</strong> valgt</>
+                : <><strong>{storeHeaderLabel(localStores)}</strong></>
+              }
+            </span>
+            <button className="skift-btn" onClick={e => { e.stopPropagation(); setShowStorePicker(true); }}>Skift</button>
           </div>
         )}
       </div>
@@ -1610,11 +1848,22 @@ export default function App() {
               </div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button
-                  className="share-btn"
+                  className={`share-btn${copied ? " copied" : ""}`}
                   onClick={() => shareRecipe(selectedRecipe)}
                   title="Del opskrift"
                 >
-                  {copied ? "✓" : "↗"} <span>{copied ? "Kopieret!" : "Del"}</span>
+                  {copied ? (
+                    <>✓ <span>Kopieret!</span></>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                        <polyline points="16 6 12 2 8 6"/>
+                        <line x1="12" y1="2" x2="12" y2="15"/>
+                      </svg>
+                      <span>Del</span>
+                    </>
+                  )}
                 </button>
                 <button
                   className={`save-btn${isRecipeSaved ? " saved" : ""}`}
@@ -1782,6 +2031,44 @@ export default function App() {
         /* Browse view — only shown after at least one store is selected */
         setupComplete ? (
           <div className="recipes-section">
+
+            {/* ── Quick diet + sort strip ─────────────────── */}
+            <div className="quick-strip-wrap">
+              <div className="quick-strip">
+                <span className="quick-strip-sep">Kost</span>
+                {[
+                  { val: "Alle", label: "Alle" },
+                  { val: "Vegetar", label: "🥦 Vegetar" },
+                  { val: "Veganer", label: "🌱 Veganer" },
+                  { val: "Glutenfri", label: "🌾 Glutenfri" },
+                  { val: "Mælkefri", label: "🥛 Mælkefri" },
+                ].map(f => (
+                  <button
+                    key={f.val}
+                    className={`qs-pill${diet === f.val ? " active" : ""}`}
+                    onClick={() => setDiet(f.val)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+                <span className="quick-strip-sep">Sorter</span>
+                {[
+                  { id: "anbefalet", label: "⭐ Anbefalet" },
+                  { id: "pris-asc",  label: "💰 Billigst" },
+                  { id: "hurtigst", label: "⚡ Hurtigst" },
+                  { id: "populaer", label: "🔥 Populær" },
+                ].map(s => (
+                  <button
+                    key={s.id}
+                    className={`qs-pill qs-sort-pill${sortOrder === s.id ? " active" : ""}`}
+                    onClick={() => setSortOrder(s.id)}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="recipe-browse-section">
               <div className="section-header-row">
                 <button
@@ -2073,25 +2360,45 @@ export default function App() {
             Du har ikke gemt nogen opskrifter endnu — tryk på 🔖 på en opskrift for at gemme den
           </div>
         ) : (
-          <div className="saved-sheet-list">
-            {savedRecipes.map(r => (
-              <div
-                key={r.savedAt}
-                className="saved-sheet-card"
-                onClick={() => { setShowSavedPanel(false); selectRecipe(r); }}
-              >
-                <div className="saved-sheet-card-info">
-                  <div className="saved-sheet-card-title">{r.emoji} {r.title}</div>
-                  <div className="saved-sheet-card-meta">⏱ {r.time} · 👥 {r.servings_count || 4} pers.</div>
+          <>
+            <div className="saved-sheet-list">
+              {savedRecipes.map(r => (
+                <div
+                  key={r.savedAt}
+                  className="saved-sheet-card"
+                  onClick={() => { setShowSavedPanel(false); selectRecipe(r); }}
+                >
+                  <div className="saved-sheet-card-info">
+                    <div className="saved-sheet-card-title">{r.emoji} {r.title}</div>
+                    <div className="saved-sheet-card-meta">⏱ {r.time} · 👥 {r.servings_count || 4} pers.</div>
+                  </div>
+                  <button
+                    className="saved-sheet-unsave"
+                    onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}
+                    title="Fjern fra gemte"
+                  >×</button>
                 </div>
-                <button
-                  className="saved-sheet-unsave"
-                  onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}
-                  title="Fjern fra gemte"
-                >×</button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+            <div className="saved-sheet-footer">
+              <button
+                className="saved-shoplist-btn"
+                onClick={() => {
+                  const added = addAllSavedToShoppingList();
+                  if (added > 0) {
+                    setShowSavedPanel(false);
+                    setShowShoppingSheet(true);
+                  }
+                }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                Tilføj alle til indkøbsliste
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -2133,6 +2440,241 @@ export default function App() {
       </div>
     </div>
   )}
+
+  {/* ── Mobile bottom navigation ─────────────────────────────────── */}
+  {setupComplete && onboardingStep === null && (
+    <nav className="mobile-bottom-nav" aria-label="Navigation">
+      {[
+        {
+          id: "opskrifter",
+          label: "Opskrifter",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 6h18M3 12h18M3 18h11"/>
+            </svg>
+          ),
+          active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet,
+          badge: null,
+          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
+        },
+        {
+          id: "madplan",
+          label: "Madplan",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          ),
+          active: showMealPlanPanel,
+          badge: planCount > 0 ? planCount : null,
+          onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowMealPlanPanel(v => !v); },
+        },
+        {
+          id: "gemt",
+          label: "Gemt",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
+          ),
+          active: showSavedPanel,
+          badge: savedRecipes.length > 0 ? savedRecipes.length : null,
+          onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowSavedPanel(v => !v); },
+        },
+        {
+          id: "indkob",
+          label: "Indkøb",
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+          ),
+          active: showShoppingSheet,
+          badge: shoppingList.length > 0 ? shoppingList.length : null,
+          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(v => !v); },
+        },
+      ].map(tab => (
+        <button key={tab.id} className={`bnav-item${tab.active ? " active" : ""}`} onClick={tab.onClick} aria-label={tab.label}>
+          <span className="bnav-icon">
+            {tab.icon}
+            {tab.badge != null && <span className="bnav-badge">{tab.badge}</span>}
+          </span>
+          <span className="bnav-label">{tab.label}</span>
+        </button>
+      ))}
+    </nav>
+  )}
+
+  {/* ── Feedback button ───────────────────────────────────────────── */}
+  <button
+    className="fb-fab"
+    onClick={() => { setShowFeedbackPanel(true); setFeedbackSubmitted(false); setFeedbackForm(FEEDBACK_EMPTY); }}
+    aria-label="Giv feedback"
+    title="Giv feedback"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <span className="fb-fab-label">Feedback</span>
+  </button>
+
+  {/* ── Feedback panel ────────────────────────────────────────────── */}
+  {showFeedbackPanel && (
+    <div className="fb-overlay" onClick={() => setShowFeedbackPanel(false)}>
+      <div className="fb-panel" onClick={e => e.stopPropagation()}>
+        <div className="fb-panel-drag-handle" />
+        <div className="fb-panel-header">
+          <span className="fb-panel-title">Din mening tæller</span>
+          <button className="fb-panel-close" onClick={() => setShowFeedbackPanel(false)} aria-label="Luk">×</button>
+        </div>
+
+        {feedbackSubmitted ? (
+          <div className="fb-submitted">
+            <div className="fb-submitted-icon">✓</div>
+            <div className="fb-submitted-text">Tak for din feedback!</div>
+          </div>
+        ) : (
+          <div className="fb-form">
+            {/* ─ Ratings ─ */}
+            <div className="fb-field">
+              <label className="fb-label">Hvor let var det at finde en opskrift?</label>
+              <StarRating value={feedbackForm.findRecipe} onChange={v => setFeedbackForm(f => ({...f, findRecipe: v}))} />
+            </div>
+            <div className="fb-field">
+              <label className="fb-label">Hvordan vil du vurdere det overordnede design?</label>
+              <StarRating value={feedbackForm.design} onChange={v => setFeedbackForm(f => ({...f, design: v}))} />
+            </div>
+            <div className="fb-field">
+              <label className="fb-label">Hvor sandsynligt er det at du bruger appen til din ugentlige indkøbstur?</label>
+              <StarRating value={feedbackForm.likelihood} onChange={v => setFeedbackForm(f => ({...f, likelihood: v}))} />
+            </div>
+
+            {/* ─ Bug toggle ─ */}
+            <div className="fb-field fb-field-row">
+              <label className="fb-label">Stødte du på fejl eller forvirrende øjeblikke?</label>
+              <div className="fb-toggle-row">
+                {["Ja", "Nej"].map(opt => (
+                  <button
+                    key={opt}
+                    type="button"
+                    className={`fb-toggle-btn${feedbackForm.hadBugs === (opt === "Ja") ? " active" : ""}`}
+                    onClick={() => setFeedbackForm(f => ({...f, hadBugs: opt === "Ja"}))}
+                  >{opt}</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="fb-divider" />
+
+            {/* ─ Usage questions ─ */}
+            <div className="fb-field">
+              <label className="fb-label">Hvornår ville du oftest bruge appen?</label>
+              <div className="fb-chips">
+                {["Inden indkøb", "Ugentlig madplan", "Inspiration", "Andet"].map(opt => (
+                  <button key={opt} type="button"
+                    className={`fb-chip${feedbackForm.when === opt ? " active" : ""}`}
+                    onClick={() => setFeedbackForm(f => ({...f, when: f.when === opt ? "" : opt}))}
+                  >{opt}</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="fb-field">
+              <label className="fb-label">Hvilken butik handler du normalt i?</label>
+              <div className="fb-chips">
+                {["Rema 1000", "Netto", "Coop 365", "En blanding", "Andet"].map(opt => (
+                  <button key={opt} type="button"
+                    className={`fb-chip${feedbackForm.store === opt ? " active" : ""}`}
+                    onClick={() => setFeedbackForm(f => ({...f, store: f.store === opt ? "" : opt}))}
+                  >{opt}</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="fb-field">
+              <label className="fb-label">Ville du bruge denne i stedet for — eller sideløbende med — din normale metode?</label>
+              <div className="fb-chips">
+                {["I stedet for", "Sideløbende", "Ville nok ikke bruge den"].map(opt => (
+                  <button key={opt} type="button"
+                    className={`fb-chip${feedbackForm.replace === opt ? " active" : ""}`}
+                    onClick={() => setFeedbackForm(f => ({...f, replace: f.replace === opt ? "" : opt}))}
+                  >{opt}</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="fb-field">
+              <label className="fb-label">Hvor tit tror du, du ville bruge appen?</label>
+              <div className="fb-chips">
+                {["Dagligt", "Ugentligt", "Et par gange om måneden", "Sjældent"].map(opt => (
+                  <button key={opt} type="button"
+                    className={`fb-chip${feedbackForm.frequency === opt ? " active" : ""}`}
+                    onClick={() => setFeedbackForm(f => ({...f, frequency: f.frequency === opt ? "" : opt}))}
+                  >{opt}</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="fb-field">
+              <label className="fb-label">Hvilke af disse lagde du mærke til eller brugte? <span className="fb-label-sub">(vælg alle der passer)</span></label>
+              <div className="fb-chips">
+                {["Butikfiltrering", "Pris per person", "Indkøbsliste", "Gemte opskrifter", "Ingen af disse"].map(opt => {
+                  const checked = feedbackForm.noticed.includes(opt);
+                  return (
+                    <button key={opt} type="button"
+                      className={`fb-chip${checked ? " active" : ""}`}
+                      onClick={() => setFeedbackForm(f => ({
+                        ...f,
+                        noticed: checked
+                          ? f.noticed.filter(x => x !== opt)
+                          : [...f.noticed, opt],
+                      }))}
+                    >{opt}</button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="fb-divider" />
+
+            {/* ─ Open text ─ */}
+            <div className="fb-field">
+              <label className="fb-label">Hvad mangler der for at du ville bruge den regelmæssigt?</label>
+              <textarea
+                className="fb-textarea"
+                rows={2}
+                placeholder="Fx en funktion, integration, noget der mangler…"
+                value={feedbackForm.whatsMissing}
+                onChange={e => setFeedbackForm(f => ({...f, whatsMissing: e.target.value}))}
+              />
+            </div>
+
+            <div className="fb-field">
+              <label className="fb-label">Kommentarer eller fejl du stødte på</label>
+              <textarea
+                className="fb-textarea"
+                rows={2}
+                placeholder="Beskriv hvad der skete og hvornår…"
+                value={feedbackForm.comments}
+                onChange={e => setFeedbackForm(f => ({...f, comments: e.target.value}))}
+              />
+            </div>
+
+            <button
+              className="fb-submit-btn"
+              onClick={submitFeedback}
+              disabled={!feedbackForm.findRecipe && !feedbackForm.design && !feedbackForm.likelihood}
+            >
+              Send feedback
+            </button>
+            <p className="fb-anon-note">Anonym — ingen persondata gemmes</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
+
     </>
   );
 }
