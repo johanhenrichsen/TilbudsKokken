@@ -4314,21 +4314,26 @@ html.dark .card-sv-price { color: #7ab87a; }
 
 /* ─── Quick diet + sort strip ────────────────── */
 .quick-strip-wrap {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   margin: 0 0 4px;
   position: relative;
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
-  mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
 }
 .quick-strip {
   display: flex;
   align-items: center;
   gap: 6px;
   overflow-x: auto;
-  padding: 8px 16px 8px;
+  padding: 6px 16px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
 }
+.quick-strip-sort {
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+html.dark .quick-strip-sort { border-top-color: rgba(255,255,255,0.06); }
 .quick-strip::-webkit-scrollbar { display: none; }
 .quick-strip-sep {
   font-size: 10px;
@@ -4373,15 +4378,17 @@ html.dark .qs-pill:hover { background: var(--surface-2); border-color: #4a7050; 
 html.dark .qs-pill.active { background: #3a5a3a; border-color: var(--accent); color: white; box-shadow: 0 2px 8px rgba(232,147,74,0.2); }
 
 @media (max-width: 600px) {
-  .quick-strip { padding: 6px 0 6px 0; gap: 5px; }
   .qs-pill { font-size: 12px; padding: 6px 11px; min-height: 36px; }
   .quick-strip-wrap {
     margin-left: -0.75rem;
     margin-right: -0.75rem;
-    -webkit-mask-image: linear-gradient(to right, transparent 0, black 0.75rem, black calc(100% - 2.5rem), transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0, black 0.75rem, black calc(100% - 2.5rem), transparent 100%);
   }
-  .quick-strip { padding-left: 0.75rem; padding-right: 2.5rem; }
+  .quick-strip {
+    gap: 5px;
+    padding: 6px 2.5rem 6px 0.75rem;
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+  }
 }
 
 /* ─── Store picker count row ─────────────────── */
