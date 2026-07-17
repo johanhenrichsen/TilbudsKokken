@@ -3060,33 +3060,36 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(232,147,74,0.25); }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.75rem;
   text-align: center;
   position: relative;
   z-index: 1;
+  padding: 0 2rem;
 }
 .splash-logo {
-  margin-bottom: 1.25rem;
   opacity: 0;
   animation: splashLogoIn 1.1s 0.05s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 .splash-logo img {
   display: block;
+  width: clamp(56px, 15vw, 96px);
+  height: auto;
   filter: drop-shadow(0 4px 20px rgba(74,184,74,0.4)) drop-shadow(0 2px 8px rgba(0,0,0,0.4));
 }
 @keyframes splashLogoIn {
-  from { opacity: 0; transform: translateY(32px) scale(0.93); }
+  from { opacity: 0; transform: translateY(24px) scale(0.93); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .splash-tagline {
-  font-size: 34px;
+  font-size: clamp(24px, 6vw, 38px);
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -0.5px;
   margin: 0;
   opacity: 0;
-  line-height: 1.15;
+  line-height: 1.2;
   text-align: center;
+  max-width: min(480px, 90vw);
   text-shadow: 0 2px 16px rgba(0,0,0,0.35);
   animation: splashTextIn 0.65s 1.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
