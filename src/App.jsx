@@ -1517,7 +1517,7 @@ export default function App() {
       <div className="app-hero">
         <div className="hero-topbar">
           <div className="hero-brand">
-            <LogoIcon size={42} />
+            <LogoIcon size={24} />
             <div className="hero-brand-text">
               <span className="hero-brand-name">Tilbudskokken</span>
               <span className="hero-brand-slogan">Bedre tilbud. Bedre mad.</span>
