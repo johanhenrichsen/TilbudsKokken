@@ -1634,9 +1634,9 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Header — single compact row, max ~56px ── */
   .app-hero { padding: 0.4rem 0.75rem; }
-  .hero-brand svg { width: 12px !important; height: 12px !important; }
-  .hero-brand-slogan { font-size: 18px; }
-  .hero-brand-name { font-size: 13px; }
+  .hero-brand svg { width: 36px !important; height: 36px !important; }
+  .hero-brand-slogan { font-size: 11px; }
+  .hero-brand-name { font-size: 12px; }
   .hero-topbar-right { gap: 4px; }
   .header-actions { gap: 2px; }
   .header-icon-btn { width: 38px; height: 38px; font-size: 16px; }
@@ -3946,23 +3946,23 @@ html.dark .saved-sheet-unsave:hover { background: rgba(220,80,80,0.12); }
   gap: 1px;
 }
 .hero-brand-name {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
   line-height: 1.1;
 }
 .hero-brand-slogan {
-  font-size: 20px;
-  font-weight: 800;
-  color: #2e5a38;
-  letter-spacing: -0.3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4a7050;
+  letter-spacing: 0.01em;
   line-height: 1;
   white-space: nowrap;
 }
-html.dark .hero-brand-slogan { color: #7aba7a; }
+html.dark .hero-brand-slogan { color: #6a9a6a; }
 @media (min-width: 600px) {
-  .hero-brand-name { font-size: 22px; }
-  .hero-brand-slogan { font-size: 22px; }
+  .hero-brand-name { font-size: 14px; }
+  .hero-brand-slogan { font-size: 12px; }
 }
 
 /* ─── Setup flow progress bar ────────────────── */
