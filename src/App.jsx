@@ -333,7 +333,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
 
   return (
     <div
-      className={`recipe-browse-card${r.fullyMatched ? " featured" : ""}`}
+      className={`recipe-browse-card reveal${r.fullyMatched ? " featured" : ""}`}
       onClick={() => onSelect(r)}
     >
       <div className="card-photo-wrap">
@@ -880,6 +880,30 @@ export default function App() {
   const filteredOthers = applySort(others.filter(matchRecipe));
   const priceFiltered = priceMin > 0 || priceMax !== null;
   const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || pantryItems.size > 0 || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+
+  // ── Scroll-triggered reveals (viewport-based, respects reduced-motion) ──
+  const revealSig =
+    filteredRecommended.map(r => r.id).join(",") + "|" +
+    filteredOthers.map(r => r.id).join(",") + "|" +
+    (collapsedSections.recommended ? "0" : "1") +
+    (collapsedSections.others ? "0" : "1") + "|" +
+    (showSavedPanel ? "s" : "");
+  useEffect(() => {
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const els = document.querySelectorAll(".reveal:not(.is-visible)");
+    if (reduce) { els.forEach(el => el.classList.add("is-visible")); return; }
+    if (!els.length) return;
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("is-visible");
+          obs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, [revealSig]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const popularRecipes = Object.keys(popularityMap).length > 0
     ? [...recipeBank]

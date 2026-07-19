@@ -79,7 +79,7 @@ html, body {
 .app-hero {
   background: #2B2620;
   border: 1px solid rgba(238,230,216,0.1);
-  border-radius: 8px;
+  border-radius: 2px;
   padding: 0.7rem 1rem;
   margin-bottom: 1rem;
   --logo-wordmark: #EEE6D8;
@@ -4396,23 +4396,40 @@ html.dark .sort-select {
   color: rgba(124,143,90,0.18);
 }
 
-/* ─── Staggered card entrance ────────────────── */
-@keyframes card-rise {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ─── Scroll-triggered reveals ───────────────── */
+/* Elements tagged .reveal start hidden and animate in when an
+   IntersectionObserver (see App.jsx) adds .is-visible as they enter
+   the viewport. Uses the independent `translate` property (not
+   `transform`) so it composes cleanly with cards' hover lift.
+   Disabled entirely under prefers-reduced-motion. */
+.reveal {
+  opacity: 0;
+  translate: 0 18px;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              translate 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, translate;
 }
-.section-body-grid .recipe-browse-card {
-  animation: card-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+.reveal.is-visible {
+  opacity: 1;
+  translate: 0 0;
 }
-.section-body-grid .recipe-browse-card:nth-child(1)  { animation-delay: 0.03s; }
-.section-body-grid .recipe-browse-card:nth-child(2)  { animation-delay: 0.08s; }
-.section-body-grid .recipe-browse-card:nth-child(3)  { animation-delay: 0.13s; }
-.section-body-grid .recipe-browse-card:nth-child(4)  { animation-delay: 0.18s; }
-.section-body-grid .recipe-browse-card:nth-child(5)  { animation-delay: 0.22s; }
-.section-body-grid .recipe-browse-card:nth-child(6)  { animation-delay: 0.26s; }
-.section-body-grid .recipe-browse-card:nth-child(7)  { animation-delay: 0.29s; }
-.section-body-grid .recipe-browse-card:nth-child(8)  { animation-delay: 0.32s; }
-.section-body-grid .recipe-browse-card:nth-child(n+9) { animation-delay: 0.35s; }
+/* Recipe cards carry a higher-specificity `transition` shorthand in the
+   dark theme; re-declare it here (winning specificity) so the reveal's
+   opacity/translate actually ease, while keeping hover transform snappy. */
+html.dark .recipe-browse-card.reveal {
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              translate 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.2s cubic-bezier(0.34, 1.4, 0.64, 1),
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+/* Gentle positional stagger for a screenful of cards entering together */
+.section-body-grid .reveal:nth-child(2)   { transition-delay: 0.04s; }
+.section-body-grid .reveal:nth-child(3)   { transition-delay: 0.08s; }
+.section-body-grid .reveal:nth-child(4)   { transition-delay: 0.10s; }
+.section-body-grid .reveal:nth-child(5)   { transition-delay: 0.12s; }
+.section-body-grid .reveal:nth-child(6)   { transition-delay: 0.14s; }
+.section-body-grid .reveal:nth-child(n+7) { transition-delay: 0.16s; }
 
 /* ─── Recipe detail sheet: slide up ──────────── */
 @keyframes sheet-rise {
@@ -5207,4 +5224,34 @@ html:not(.dark) .fb-results-table td { color: #2c2016; border-color: #352F2B; }
   .fb-fab-label { display: none; }
   .fb-panel { max-height: 92dvh; }
   .fb-form { gap: 16px; padding: 14px 16px 18px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION — honour the user's OS-level preference.
+   Neutralises keyframe entrances, scroll reveals, and long
+   transitions while keeping final resting states fully visible.
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Scroll-reveal elements must render fully visible, never mid-transition */
+  .reveal {
+    opacity: 1 !important;
+    translate: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  /* Suppress ambient/looping decorative motion */
+  .splash-glow,
+  .splash-ring,
+  .card-photo-skeleton,
+  .chain-recipe-count {
+    animation: none !important;
+  }
 }
