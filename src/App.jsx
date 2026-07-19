@@ -482,7 +482,7 @@ function FeedbackResults() {
   });
 
   useEffect(() => {
-    document.body.style.background = document.documentElement.classList.contains("dark") ? "#0d1a0c" : "#f4f2ed";
+    document.body.style.background = document.documentElement.classList.contains("dark") ? "#1B1613" : "#F1E9DB";
     return () => { document.body.style.background = ""; };
   }, []);
 
