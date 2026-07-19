@@ -6,35 +6,34 @@ const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticReci
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 
-const CHAIN_COLORS = {
-  // Salling Group
-  "Netto":                    "#FFD700",
-  "Føtex":                    "#0052A5",
-  "Bilka":                    "#E30613",
-  // Rema
-  "Rema 1000":                "#CC0000",
-  // Coop
-  "Coop 365":                 "#00853F",
-  "Coop 365discount":         "#00853F",
-  "SuperBrugsen / Kvickly":   "#FF6B00",
-  "Dagli'Brugsen / Brugsen":  "#8B1A1A",
-  // Independent
-  "Meny":                     "#1A1A2E",
-  "Spar":                     "#E8A000",
-  // International discounters
-  "Lidl":                     "#0050AA",
+// Neutral chain identity: short monograms shown in on-brand badges
+// instead of per-chain colours (which clashed with the dark palette).
+const CHAIN_ABBR = {
+  "Netto": "N",
+  "Føtex": "F",
+  "Bilka": "B",
+  "Rema 1000": "R1",
+  "Coop 365": "C365",
+  "Coop 365discount": "C365",
+  "SuperBrugsen / Kvickly": "SB",
+  "SuperBrugsen": "SB",
+  "Kvickly": "KV",
+  "Dagli'Brugsen / Brugsen": "DB",
+  "Dagli'Brugsen": "DB",
+  "Brugsen": "DB",
+  "Meny": "MENY",
+  "Spar": "SPAR",
+  "Lidl": "LIDL",
 };
-
-// Normalized lookup so "Coop 365discount" and "coop 365discount" both resolve.
-const _CHAIN_COLORS_NORM = new Map(
-  Object.entries(CHAIN_COLORS).map(([k, v]) => [k.toLowerCase().trim(), v])
+const _CHAIN_ABBR_NORM = new Map(
+  Object.entries(CHAIN_ABBR).map(([k, v]) => [k.toLowerCase().trim(), v])
 );
-const _LIGHT_CHAINS = new Set(["netto", "spar"]);
-function getChainColor(store) {
-  return store ? (_CHAIN_COLORS_NORM.get(store.toLowerCase().trim()) ?? "#888") : "#888";
-}
-function chainIsLight(store) {
-  return store ? _LIGHT_CHAINS.has(store.toLowerCase().trim()) : false;
+function getChainAbbr(store) {
+  if (!store) return "?";
+  const hit = _CHAIN_ABBR_NORM.get(store.toLowerCase().trim());
+  if (hit) return hit;
+  const cleaned = store.replace(/[^0-9A-Za-zÆØÅæøå]/g, "");
+  return (cleaned.slice(0, 3) || "?").toUpperCase();
 }
 
 const CHAIN_ORDER = [
@@ -383,7 +382,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
                 key={di.name}
                 className={`deal-item-tag${available ? " available" : " unavailable"}`}
               >
-                <span className="deal-store-dot" style={{ background: getChainColor(di.store) }} />
+                <span className="chain-badge deal-chain-badge">{getChainAbbr(di.store)}</span>
                 {di.name.replace(/ \d+.*$/, "")}
               </span>
             );
@@ -1136,7 +1135,6 @@ export default function App() {
     }
     return Object.entries(byStore).map(([store, items]) => ({
       store,
-      color: getChainColor(store),
       items: Object.entries(items).map(([key, texts]) => ({
         dealItem: key,
         merged: mergeIngredientTexts(texts),
@@ -1387,7 +1385,7 @@ export default function App() {
                           className={`ob-chain-card${sel ? " selected" : ""}`}
                           onClick={() => toggleChain(chain)}
                         >
-                          <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                          <span className="chain-badge ob-chain-badge">{getChainAbbr(chain)}</span>
                           <span className="ob-chain-name">{chain}</span>
                           <span className={`ob-chain-check${sel ? " checked" : ""}`}>✓</span>
                         </button>
@@ -1485,7 +1483,7 @@ export default function App() {
                       className={`ob-chain-card${sel ? " selected" : ""}`}
                       onClick={() => toggleLocalChain(chain)}
                     >
-                      <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                      <span className="chain-badge ob-chain-badge">{getChainAbbr(chain)}</span>
                       <span className="ob-chain-name">{chain}</span>
                       <span className={`ob-chain-check${sel ? " checked" : ""}`}>✓</span>
                     </button>
@@ -1577,7 +1575,7 @@ export default function App() {
           <div className="local-store-badge" onClick={() => setShowStorePicker(true)} role="button" tabIndex={0} title="Administrer butikker">
             <span className="local-store-dots">
               {[...new Set((localStores || []).map(s => s.chain))].map(ch => (
-                <span key={ch} className="chain-dot" style={{ background: CHAIN_COLORS[ch] }} />
+                <span key={ch} className="chain-badge chain-badge--active">{getChainAbbr(ch)}</span>
               ))}
             </span>
             <span className="local-store-label">
@@ -1622,7 +1620,7 @@ export default function App() {
                     className={`ob-chain-card${sel ? " selected" : ""}`}
                     onClick={() => toggleLocalChain(chain)}
                   >
-                    <span className="ob-chain-color" style={{ background: CHAIN_COLORS[chain] }} />
+                    <span className="chain-badge ob-chain-badge">{getChainAbbr(chain)}</span>
                     <span className="ob-chain-name">{chain}</span>
                     <span className={`ob-chain-check${sel ? " checked" : ""}`}>✓</span>
                   </button>
@@ -1934,8 +1932,8 @@ export default function App() {
             <div className="recipe-deal-tags" style={{ marginBottom: 12 }}>
               {(selectedRecipe.dealItems || []).map(di => (
                 <span key={di.name} className="deal-item-tag available">
-                  <span className="deal-store-dot" style={{ background: getChainColor(di.store) }} />
-                  {di.name} · {di.store}
+                  <span className="chain-badge deal-chain-badge">{getChainAbbr(di.store)}</span>
+                  {di.name}
                 </span>
               ))}
             </div>
@@ -1994,13 +1992,8 @@ export default function App() {
                       {scaled}{ing.price ? ` · ${ing.price}` : ""}
                     </span>
                     {isDeal && (
-                      <span
-                        className="store-badge-pill"
-                        style={{
-                          background: getChainColor(ing.store),
-                          color: chainIsLight(ing.store) ? "#1a1a1a" : "#fff",
-                        }}
-                      >
+                      <span className="store-badge-pill">
+                        <span className="chain-badge">{getChainAbbr(ing.store)}</span>
                         {ing.store}
                       </span>
                     )}
@@ -2269,7 +2262,7 @@ export default function App() {
               combinedList.map(group => (
                 <div key={group.store} className="combined-list-store">
                   <div className="combined-list-store-label">
-                    <span className="deal-store-dot" style={{ background: group.color }} />
+                    <span className="chain-badge">{getChainAbbr(group.store)}</span>
                     {group.store}
                   </div>
                   <ul className="combined-list-items">
@@ -2365,7 +2358,7 @@ export default function App() {
             combinedList.map(group => (
               <div key={group.store} className="combined-list-store">
                 <div className="combined-list-store-label">
-                  <span className="deal-store-dot" style={{ background: group.color }} />
+                  <span className="chain-badge">{getChainAbbr(group.store)}</span>
                   {group.store}
                 </div>
                 <ul className="combined-list-items">
