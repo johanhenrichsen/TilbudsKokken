@@ -5,7 +5,6 @@ import weeklyRecipesJson from "./data/weeklyRecipes.json";
 const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticRecipes;
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
-import LogoFull from "./LogoFull";
 
 const CHAIN_COLORS = {
   // Salling Group

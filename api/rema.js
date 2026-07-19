@@ -1,5 +1,5 @@
 const BASE = "https://cphapp.rema1000.dk/api/v3";
-const UA = "Spotkokken/1.0 (tilbuds-kokken.vercel.app)";
+const UA = "Tilbudskokken/1.0 (tilbuds-kokken.vercel.app)";
 
 // Rema department slugs that contain cooking ingredients
 const FOOD_DEPT_SLUGS = new Set([

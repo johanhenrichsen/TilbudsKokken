@@ -1,11 +1,11 @@
 {
-  "name": "Spotkokken",
-  "short_name": "Spotkokken",
+  "name": "Tilbudskokken",
+  "short_name": "Tilbudskokken",
   "description": "Generér opskrifter fra ugens tilbudsvarer",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a2e1a",
-  "theme_color": "#1a2e1a",
+  "background_color": "#1B1613",
+  "theme_color": "#1B1613",
   "icons": [
     {
       "src": "/icon-192.png",

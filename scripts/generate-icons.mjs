@@ -43,39 +43,70 @@ function generatePNG(size, pixelFn) {
   ]);
 }
 
+// ── Tilbudskokken mark: brick-red price tag + cream fork on warm bg ──
+// Design space is 192px. The mark geometry mirrors LogoIcon.jsx / favicon.svg,
+// mapped from the guide's 120-space with scale s and centre (96,96).
+const RUGBROD = [27, 22, 19, 255];   // #1B1613
+const PRISROD = [193, 68, 46, 255];  // #C1442E
+const PAPIR   = [238, 230, 216, 255]; // #EEE6D8
+
+const MS = 3.4;                       // mark scale
+const map = (ox, oy) => [96 + (ox - 55) * MS, 96 + (oy - 40) * MS];
+
+// Tag polygon (rightward-pointing price tag), mapped to 192 space
+const TAG = [
+  map(40, 27), map(58, 27), map(70, 40), map(58, 53), map(41, 41),
+];
+// Fork strokes as line segments [x1,y1,x2,y2]
+const FORK = [
+  [...map(55, 35), ...map(55, 47)], // long middle tine
+  [...map(52, 35), ...map(52, 40)], // left tine
+  [...map(58, 35), ...map(58, 40)], // right tine
+  [...map(52, 40), ...map(58, 40)], // neck / crossbar
+];
+const FORK_HW = (1.6 * MS) / 2 + 1.4; // stroke half-width (a touch bolder)
+const [HOLE_X, HOLE_Y] = map(46, 32);
+const HOLE_R = 2.4 * MS;
+
+function pointInPoly(x, y, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+function distToSeg(x, y, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const len2 = dx * dx + dy * dy || 1;
+  let t = ((x - x1) * dx + (y - y1) * dy) / len2;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(x - (x1 + t * dx), y - (y1 + t * dy));
+}
+
 // All coordinates are in a 192px design space, scaled to actual size.
 function iconPixel(x, y, size) {
   const s = size / 192;
   const px = x / s;
   const py = y / s;
 
-  // Rounded rectangle background (radius 36)
-  const bgR = 36;
-  let inBg = true;
-  if ((px < bgR || px > 192 - bgR) && (py < bgR || py > 192 - bgR)) {
-    const cx = px < bgR ? bgR : 192 - bgR;
-    const cy = py < bgR ? bgR : 192 - bgR;
-    inBg = Math.sqrt((px - cx) ** 2 + (py - cy) ** 2) <= bgR;
+  // Full-bleed warm background (maskable-safe — content sits in centre)
+  let col = RUGBROD;
+
+  // Tag body
+  if (pointInPoly(px, py, TAG)) col = PRISROD;
+
+  // Fork (cream) sits over the tag
+  for (const [x1, y1, x2, y2] of FORK) {
+    if (distToSeg(px, py, x1, y1, x2, y2) <= FORK_HW) { col = PAPIR; break; }
   }
-  if (!inBg) return [0, 0, 0, 0]; // transparent outside rounded rect
 
-  // Fork shape (white), centered at x=96 in 192-space
-  // 3 tines: each 10px wide, 52px tall, 7px gap between
-  // Neck: full fork width, 12px tall
-  // Handle: 18px wide, 76px tall
-  const inTine1  = px >= 74  && px <= 84  && py >= 28 && py <= 80;
-  const inTine2  = px >= 91  && px <= 101 && py >= 28 && py <= 80;
-  const inTine3  = px >= 108 && px <= 118 && py >= 28 && py <= 80;
-  const inNeck   = px >= 74  && px <= 118 && py >= 78 && py <= 90;
-  const inHandle = px >= 87  && px <= 105 && py >= 90 && py <= 166;
+  // Tag hole punched last so nothing overpaints it
+  if (Math.hypot(px - HOLE_X, py - HOLE_Y) <= HOLE_R) col = RUGBROD;
 
-  // Rounded bottom cap of handle
-  const inHandleCap = Math.sqrt((px - 96) ** 2 + (py - 166) ** 2) <= 9;
-
-  if (inTine1 || inTine2 || inTine3 || inNeck || inHandle || inHandleCap) {
-    return [255, 255, 255, 255]; // white
-  }
-  return [26, 46, 26, 255]; // #1a2e1a green
+  return col;
 }
 
 for (const size of [192, 512]) {
