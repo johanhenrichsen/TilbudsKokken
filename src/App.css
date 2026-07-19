@@ -5363,6 +5363,167 @@ html:not(.dark) .share-btn { background: #FBF6EC; border-color: #DED3C0; color: 
 html:not(.dark) .share-btn:hover { border-color: rgba(168,122,30,0.4); color: #A87A1E; background: #FBF6EC; }
 html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #7A7061; }
 
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE-FIRST REDESIGN — purpose-built phone layouts.
+   Appended last so it wins over the earlier scaled-down rules.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────── Phones (≤ 600px) ───────── */
+@media (max-width: 600px) {
+  /* Shell: safe-area gutters, clearance for bottom nav.
+     (h-scroll is already prevented by the base `overflow-x: clip`, which
+     — unlike `hidden` — does not break the sticky search below.) */
+  .app {
+    padding: 0.7rem 0.9rem;
+    padding-left: max(0.9rem, env(safe-area-inset-left));
+    padding-right: max(0.9rem, env(safe-area-inset-right));
+    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ── Header — compact single row ── */
+  .app-hero { padding: 10px 0 12px; margin-bottom: 12px; }
+  .hero-topbar { gap: 8px; align-items: center; }
+  .hero-brand { gap: 10px; min-width: 0; flex: 1; }
+  .hero-brand svg { width: 34px !important; height: 34px !important; }
+  .hero-brand-text { min-width: 0; }
+  .hero-brand-name { font-size: 17px; }
+  .hero-brand-slogan {
+    font-size: 10.5px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .hero-topbar-right { gap: 6px; flex-shrink: 0; }
+  .header-actions { gap: 4px; }
+  .header-icon-btn { width: 40px; height: 40px; }
+  .week-badge { display: none; }   /* freed for a clean icon cluster */
+
+  /* ── Store selector — horizontal swipe row (44px), edge fade ── */
+  .local-store-badge {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 4px 0;
+    border-top: 1px solid #2B2620;
+  }
+  .local-store-dots {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding: 4px 0;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - 1.75rem), transparent 100%);
+  }
+  .local-store-dots::-webkit-scrollbar { display: none; }
+  .local-store-label { flex-shrink: 0; font-size: 12px; white-space: nowrap; }
+  .skift-btn { flex-shrink: 0; min-height: 40px; padding: 8px 14px; font-size: 12px; }
+
+  /* ── Search — full width, sticky at top on scroll ── */
+  .search-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 95;
+    margin: 0 -0.9rem 10px;
+    padding: 8px 0.9rem;
+    padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    background: #141010;
+    border-bottom: 1px solid #26201C;
+  }
+  .search-input { padding: 13px 44px 13px 15px; font-size: 16px; }  /* 16px = no iOS auto-zoom */
+
+  /* ── Filters — horizontal pill rows (scroll, not sticky) ── */
+  .quick-strip-wrap { position: static; margin: 0 0 10px; background: transparent; border-bottom: none; }
+  .quick-strip { gap: 8px; padding: 4px 0; }
+  .qs-pill { min-height: 40px; padding: 9px 15px; font-size: 14px; }
+  .quick-strip-sep { font-size: 10px; }
+
+  /* ── Tilpas — compact accordion (collapsed by default) ── */
+  .prefs-trigger { min-height: 50px; padding: 12px 14px; }
+  .prefs-trigger-sub { display: none; }
+
+  /* ── Recipe grid — single column, big tappable cards ── */
+  .recipe-browse-grid { grid-template-columns: 1fr; gap: 16px; }
+  .card-photo-wrap { height: 210px; }
+  .card-body { padding: 14px 16px 16px; }
+  .recipe-browse-title { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.18; }
+  .recipe-browse-meta { font-size: 12.5px; gap: 12px; }
+
+  /* Serving / price as one clean horizontal strip */
+  .card-servings-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #1F1915;
+    border: 1px solid #39322A;
+    border-radius: 0;
+    padding: 7px 8px 7px 12px;
+    margin: 12px 0 2px;
+  }
+  .card-sv-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: #8C8375; margin-right: 2px; flex-shrink: 0;
+  }
+  .card-sv-btn { flex: 1; min-width: 0; min-height: 40px; font-size: 15px; font-weight: 600; border-radius: 0; }
+  .card-sv-price {
+    margin-left: 6px; padding-left: 8px;
+    border-left: 1px solid #39322A;
+    font-family: var(--font-mono); font-size: 14px; font-weight: 700;
+    color: #CE9F3E; white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* Card action row — primary plan button dominant */
+  .card-action-row { gap: 8px; }
+  .add-to-plan-btn { min-height: 46px; font-size: 14px; flex: 1; }
+  .card-save-btn { min-width: 46px; min-height: 46px; }
+
+  /* ── Recipe detail — readable, with sticky bottom actions ── */
+  .recipe-detail-sheet { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .recipe-title { font-size: 25px; line-height: 1.15; }
+  .ingredient-item { font-size: 15px; line-height: 1.75; }
+  .step-item { font-size: 15px; line-height: 1.7; }
+
+  body.recipe-open .mobile-bottom-nav { display: none; }
+  body.recipe-open .fb-fab { display: none; }
+
+  .detail-actions {
+    position: fixed !important;
+    left: 0; right: 0; bottom: 0;
+    z-index: 120;
+    display: flex !important;
+    gap: 8px;
+    margin: 0 !important;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: #1B1613;
+    border-top: 1px solid #39322A;
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.35);
+  }
+  .detail-actions .save-btn,
+  .detail-actions .add-to-plan-btn.detail { flex: 1; min-height: 48px; justify-content: center; }
+  .detail-actions .share-btn { flex: 0 0 auto; min-height: 48px; min-width: 48px; justify-content: center; }
+
+  /* Larger tap targets for checkboxes / add buttons */
+  .shopping-check-btn { width: 30px; height: 30px; }
+  .shopping-item .shopping-check-btn { width: 28px; height: 28px; }
+  .ingredient-add-btn { width: 40px; height: 40px; font-size: 16px; }
+  .shopping-item { padding: 12px 4px; }
+  .shopping-item-label { font-size: 15px; }
+}
+
+/* ───────── Small phones (≤ 380px) ───────── */
+@media (max-width: 380px) {
+  .hero-brand-slogan { display: none; }
+  .hero-brand-name { font-size: 16px; }
+  .header-icon-btn { width: 38px; height: 38px; }
+  .card-photo-wrap { height: 182px; }
+  .qs-pill { padding: 9px 13px; }
+  .card-sv-btn { font-size: 14px; }
+}
+
 /* ── Search ── */
 html:not(.dark) .search-input { background: #FBF6EC; border-color: #DED3C0; color: #221C17; }
 html:not(.dark) .search-input::placeholder { color: #7A7061; }

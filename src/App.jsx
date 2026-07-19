@@ -1882,7 +1882,7 @@ export default function App() {
                 <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
                 {selectedRecipe.subtitle && <p className="recipe-subtitle">{selectedRecipe.subtitle}</p>}
               </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <div className="detail-actions" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button
                   className={`share-btn${copied ? " copied" : ""}`}
                   onClick={() => shareRecipe(selectedRecipe)}
