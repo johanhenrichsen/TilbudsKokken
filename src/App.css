@@ -1077,27 +1077,29 @@ html, body {
   justify-content: center;
   min-width: 20px;
   height: 18px;
-  padding: 0 5px;
+  padding: 0 5px 0 4px;
   box-sizing: border-box;
   font-family: var(--font-mono);
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1;
-  color: #A69C8D;
-  background: #2B2620;
-  border: 1px solid #39322A;
-  border-radius: 4px;
+  color: rgba(238,230,216,0.65);
+  background: rgba(238,230,216,0.04);
+  border: 1px solid rgba(238,230,216,0.10);
+  border-left: 2.5px solid var(--chain-color, rgba(238,230,216,0.18));
+  border-radius: 3px;
   white-space: nowrap;
   flex-shrink: 0;
   vertical-align: middle;
 }
-/* Selected / active — the single accent, tinted-outline so a row of them
-   stays calm on the dark palette */
+/* Active state — chain color becomes brighter, slight bg tint */
 .chain-badge--active {
-  color: #CE9F3E;
-  background: rgba(206,159,62,0.14);
-  border-color: rgba(206,159,62,0.55);
+  color: #EEE6D8;
+  background: rgba(238,230,216,0.08);
+  border-color: rgba(238,230,216,0.18);
+  border-left-color: var(--chain-color, #CE9F3E);
+  border-left-width: 3px;
 }
 
 /* ─── Ingredient deal/pantry styling ────────── */
@@ -2938,25 +2940,27 @@ html.dark .ob-select-all-btn:hover { background: rgba(238,230,216,0.45); color: 
 html.dark .ob-chain-card { background: var(--surface); border-color: var(--border-dark); }
 html.dark .ob-chain-card:hover { border-color: rgba(238,230,216,0.45); background: var(--surface-2); }
 html.dark .ob-chain-card.selected { background: linear-gradient(135deg, #352F2B 0%, #352F2B 100%); border-color: var(--accent); box-shadow: 0 4px 20px rgba(206,159,62,0.15); }
-/* Chain badge inside selection cards — larger, and gold-filled when chosen */
+/* Chain badge inside selection cards — larger, chain-color border */
 .ob-chain-badge {
   min-width: 36px;
   height: 24px;
   font-size: 11px;
   border-radius: 4px;
+  border-left-width: 3px;
 }
 .ob-chain-card.selected .ob-chain-badge {
-  color: #1B1613;
-  background: var(--accent);
-  border-color: var(--accent);
+  color: #EEE6D8;
+  background: rgba(238,230,216,0.10);
+  border-color: rgba(238,230,216,0.2);
+  border-left-color: var(--chain-color, #CE9F3E);
 }
 .ob-chain-name {
   font-size: 16px;
   font-weight: 700;
-  color: #352F2B;
+  color: #EEE6D8;
   flex: 1;
 }
-html.dark .ob-chain-name { color: #d0ecd0; }
+html.dark .ob-chain-name { color: rgba(238,230,216,0.8); }
 .ob-chain-check {
   width: 24px; height: 24px;
   border-radius: 50%;
@@ -4551,10 +4555,10 @@ html.dark .recipe-browse-card.reveal {
   margin-left: 2px;
   white-space: nowrap;
 }
-html.dark .card-sv-btn { background: rgba(193,68,46,0.12); border-color: rgba(238,230,216,0.1); color: #7C8F5A; }
-html.dark .card-sv-btn:hover { background: #352F2B; border-color: #C1442E; }
-html.dark .card-sv-btn.active { background: rgba(238,230,216,0.45); border-color: #7C8F5A; color: rgba(124,143,90,0.18); }
-html.dark .card-sv-price { color: #7C8F5A; }
+html.dark .card-sv-btn { background: rgba(193,68,46,0.10); border-color: rgba(238,230,216,0.15); color: rgba(238,230,216,0.65); }
+html.dark .card-sv-btn:hover { background: rgba(193,68,46,0.18); border-color: #C1442E; color: #EEE6D8; }
+html.dark .card-sv-btn.active { background: #C1442E; border-color: #C1442E; color: #EEE6D8; }
+html.dark .card-sv-price { color: #CE9F3E; }
 
 /* Ensure serving row doesn't trigger card hover */
 .card-servings-row button { pointer-events: auto; }
@@ -5663,7 +5667,8 @@ html:not(.dark) .popular-badge-pill { background: #CE9F3E; color: #221C17; }
 
 /* ── Card sort/save button ── */
 html:not(.dark) .card-sv-btn { background: rgba(185,62,41,0.07); border-color: #DED3C0; color: #7A7061; }
-html:not(.dark) .card-sv-btn.active { background: rgba(185,62,41,0.12); border-color: rgba(185,62,41,0.4); color: #B93E29; }
+html:not(.dark) .card-sv-btn:hover { background: rgba(185,62,41,0.12); border-color: rgba(185,62,41,0.4); color: #B93E29; }
+html:not(.dark) .card-sv-btn.active { background: #B93E29; border-color: #B93E29; color: #FBF6EC; }
 
 /* ── deal-item tag ── */
 html:not(.dark) .deal-item-tag.available { background: #FBF6EC; color: #5F7040; border-color: rgba(95,112,64,0.3); }
@@ -5704,7 +5709,18 @@ html:not(.dark) .recipe-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .shopping-list-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .saved-recipes-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .card-photo-wrap { background: #EFE4D2; }
-html:not(.dark) .chain-badge { background: #EFE4D2; color: #7A7061; border-color: #DED3C0; }
+html:not(.dark) .chain-badge {
+  background: rgba(34,28,23,0.04);
+  color: #5C5245;
+  border-color: #DED3C0;
+  border-left-color: var(--chain-color, #DED3C0);
+}
+html:not(.dark) .chain-badge--active {
+  background: rgba(34,28,23,0.06);
+  color: #221C17;
+  border-color: #DED3C0;
+  border-left-color: var(--chain-color, #B93E29);
+}
 html:not(.dark) .store-picker-onboarding { background: #F1E9DB; border-color: #DED3C0; }
 html:not(.dark) .store-picker-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .sp-close-btn { background: #EFE4D2; color: #5C5245; border-color: #DED3C0; }
