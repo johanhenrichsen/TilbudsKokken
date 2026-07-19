@@ -22,13 +22,8 @@ const CHAIN_COLORS = {
   // Independent
   "Meny":                     "#1A1A2E",
   "Spar":                     "#E8A000",
-  "Eurospar":                 "#006400",
   // International discounters
   "Lidl":                     "#0050AA",
-  "Aldi":                     "#004B9B",
-  // Legacy / closed (kept for data compatibility)
-  "Fakta":                    "#D40000",
-  "Irma":                     "#9B1B30",
 };
 
 // Normalized lookup so "Coop 365discount" and "coop 365discount" both resolve.
@@ -51,11 +46,9 @@ const CHAIN_ORDER = [
   // Coop
   "Coop 365", "SuperBrugsen / Kvickly", "Dagli'Brugsen / Brugsen",
   // Independent
-  "Meny", "Spar", "Eurospar",
+  "Meny", "Spar",
   // International discounters
-  "Lidl", "Aldi",
-  // Legacy
-  "Fakta", "Irma",
+  "Lidl",
 ];
 
 const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];

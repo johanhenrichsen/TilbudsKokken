@@ -35,7 +35,7 @@ const MIN_DEAL_ITEMS = 3;
 const CANONICAL_STORES = [
   'Netto', 'Føtex', 'Bilka', 'Rema 1000', 'Coop 365',
   'SuperBrugsen / Kvickly', "Dagli'Brugsen / Brugsen",
-  'Meny', 'Spar', 'Eurospar', 'Lidl', 'Aldi', 'Fakta', 'Irma',
+  'Meny', 'Spar', 'Lidl',
 ];
 
 const SHEET_NAME_MAP = {
@@ -51,11 +51,7 @@ const SHEET_NAME_MAP = {
   "Dagli'Brugsen":            "Dagli'Brugsen / Brugsen",
   'Meny':                     'Meny',
   'Spar':                     'Spar',
-  'Eurospar':                 'Eurospar',
   'Lidl':                     'Lidl',
-  'Aldi':                     'Aldi',
-  'Fakta':                    'Fakta',
-  'Irma':                     'Irma',
 };
 
 // ── 1. Read products ──────────────────────────────────────────────────────────
