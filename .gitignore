@@ -33,3 +33,4 @@ tmprema*.json
 
 # Script output
 scripts/output/
+.vercel
