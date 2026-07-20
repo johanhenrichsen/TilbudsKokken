@@ -142,11 +142,12 @@ html, body {
   background: rgba(206,159,62,0.08);
   color: #CE9F3E;
 }
+.diet-btn:active { transform: scale(0.94); opacity: 0.8; }
 .diet-btn.active {
   background: rgba(206,159,62,0.15);
   color: #CE9F3E;
   border-color: #CE9F3E;
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* ─── Store cards ────────────────────────────── */
@@ -677,6 +678,7 @@ html, body {
   color: rgba(238,230,216,0.55);
 }
 .store-toggle:hover { border-color: rgba(206,159,62,0.45); color: #CE9F3E; }
+.store-toggle:active { transform: scale(0.95); opacity: 0.82; }
 .store-toggle.active {
   border-color: #CE9F3E;
   background: rgba(206,159,62,0.12);
@@ -1071,35 +1073,26 @@ html, body {
   padding: 3px 0;
 }
 /* ─── Neutral chain monogram badge (replaces colour dots) ─── */
+/* Chain identity dot — solid color circle, no text */
 .chain-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 18px;
-  padding: 0 5px 0 4px;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--chain-color, rgba(238,230,216,0.28));
+  border: none;
+  padding: 0;
   box-sizing: border-box;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  color: rgba(238,230,216,0.65);
-  background: rgba(238,230,216,0.04);
-  border: 1px solid rgba(238,230,216,0.10);
-  border-left: 2.5px solid var(--chain-color, rgba(238,230,216,0.18));
-  border-radius: 3px;
-  white-space: nowrap;
   flex-shrink: 0;
   vertical-align: middle;
 }
-/* Active state — chain color becomes brighter, slight bg tint */
+/* Active dot — slightly larger with a ring */
 .chain-badge--active {
-  color: #EEE6D8;
-  background: rgba(238,230,216,0.08);
-  border-color: rgba(238,230,216,0.18);
-  border-left-color: var(--chain-color, #CE9F3E);
-  border-left-width: 3px;
+  width: 10px;
+  height: 10px;
+  background: var(--chain-color, #CE9F3E);
+  outline: 2px solid var(--chain-color, #CE9F3E);
+  outline-offset: 1.5px;
 }
 
 /* ─── Ingredient deal/pantry styling ────────── */
@@ -1406,6 +1399,7 @@ html, body {
   flex-direction: column;
   padding: 1.5rem 1.5rem 2.5rem;
   box-sizing: border-box;
+  animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .sp-modal-header {
   display: flex;
@@ -2940,19 +2934,18 @@ html.dark .ob-select-all-btn:hover { background: rgba(238,230,216,0.45); color: 
 html.dark .ob-chain-card { background: var(--surface); border-color: var(--border-dark); }
 html.dark .ob-chain-card:hover { border-color: rgba(238,230,216,0.45); background: var(--surface-2); }
 html.dark .ob-chain-card.selected { background: linear-gradient(135deg, #352F2B 0%, #352F2B 100%); border-color: var(--accent); box-shadow: 0 4px 20px rgba(206,159,62,0.15); }
-/* Chain badge inside selection cards — larger, chain-color border */
+/* Chain badge inside selection cards — larger dot */
 .ob-chain-badge {
-  min-width: 36px;
-  height: 24px;
-  font-size: 11px;
-  border-radius: 4px;
-  border-left-width: 3px;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 50%;
+  background: var(--chain-color, rgba(238,230,216,0.3));
 }
 .ob-chain-card.selected .ob-chain-badge {
-  color: #EEE6D8;
-  background: rgba(238,230,216,0.10);
-  border-color: rgba(238,230,216,0.2);
-  border-left-color: var(--chain-color, #CE9F3E);
+  background: var(--chain-color, #CE9F3E);
+  outline: 2px solid var(--chain-color, #CE9F3E);
+  outline-offset: 1.5px;
 }
 .ob-chain-name {
   font-size: 16px;
@@ -4350,6 +4343,11 @@ html.dark .prefs-trigger-sub { color: #8C8375; }
 }
 .prefs-body {
   padding: 0 16px 14px;
+  animation: prefs-body-in 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes prefs-body-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .prefs-group-label {
   font-size: 11px;
@@ -4575,6 +4573,7 @@ html.dark .card-sv-price { color: #CE9F3E; }
   align-items: center;
   gap: 8px;
   overflow-x: auto;
+  scroll-behavior: smooth;
   padding: 8px 0;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
@@ -4615,6 +4614,7 @@ html.dark .quick-strip-sep { color: #8C8375; }
   transition: background 0.16s ease, color 0.16s ease;
 }
 .qs-pill:hover { background: #322C25; color: #C9BFAF; }
+.qs-pill:active { transform: scale(0.95); opacity: 0.82; }
 .qs-pill.active {
   background: #C1442E;
   color: #EEE6D8;
@@ -4696,7 +4696,7 @@ html.dark .ob-chain-card.selected .ob-chain-name { color: rgba(238,230,216,0.45)
     border-top: 1px solid rgba(0,0,0,0.06);
   }
   html.dark .local-store-badge { border-color: rgba(255,255,255,0.06); color: var(--cream-dim); }
-  .chain-badge { min-width: 18px; height: 17px; font-size: 9px; padding: 0 4px; }
+  .chain-badge { width: 7px; height: 7px; }
   .skift-btn { padding: 2px 9px; font-size: 11px; }
 }
 
@@ -5528,6 +5528,21 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   .card-sv-btn { font-size: 14px; }
 }
 
+/* ───────── Tiny phones (≤ 340px / iPhone SE 1st gen) ─── */
+@media (max-width: 340px) {
+  .app-hero { padding: 0.3rem 0.6rem; }
+  .hero-brand svg { width: 28px !important; height: 28px !important; }
+  .header-icon-btn { width: 34px; height: 34px; }
+  .sort-select { min-width: 72px; font-size: 10px; padding: 3px 14px 3px 7px; }
+  .section-toggle-label { font-size: 14px; letter-spacing: 0; }
+  .diet-btn { padding: 5px 10px; font-size: 11px; }
+  .qs-pill { padding: 8px 10px; font-size: 13px; }
+  .prefs-trigger { padding: 8px 10px; }
+  .prefs-trigger-title { font-size: 13px; }
+  .card-body { padding: 10px 12px 14px; }
+  .recipe-browse-title { font-size: 16px; }
+}
+
 /* ── Search ── */
 html:not(.dark) .search-input { background: #FBF6EC; border-color: #DED3C0; color: #221C17; }
 html:not(.dark) .search-input::placeholder { color: #7A7061; }
@@ -5710,16 +5725,12 @@ html:not(.dark) .shopping-list-card { background: #FBF6EC; border-color: #DED3C0
 html:not(.dark) .saved-recipes-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .card-photo-wrap { background: #EFE4D2; }
 html:not(.dark) .chain-badge {
-  background: rgba(34,28,23,0.04);
-  color: #5C5245;
-  border-color: #DED3C0;
-  border-left-color: var(--chain-color, #DED3C0);
+  background: var(--chain-color, rgba(34,28,23,0.28));
+  border: none;
 }
 html:not(.dark) .chain-badge--active {
-  background: rgba(34,28,23,0.06);
-  color: #221C17;
-  border-color: #DED3C0;
-  border-left-color: var(--chain-color, #B93E29);
+  background: var(--chain-color, #B93E29);
+  outline-color: var(--chain-color, #B93E29);
 }
 html:not(.dark) .store-picker-onboarding { background: #F1E9DB; border-color: #DED3C0; }
 html:not(.dark) .store-picker-card { background: #FBF6EC; border-color: #DED3C0; }
@@ -5780,6 +5791,13 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   .splash-ring,
   .card-photo-skeleton,
   .chain-recipe-count {
+    animation: none !important;
+  }
+  /* Suppress entrance animations */
+  .prefs-body,
+  .store-picker-card,
+  .shopping-sheet,
+  .recipe-detail-sheet {
     animation: none !important;
   }
 }
