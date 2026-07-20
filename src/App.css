@@ -77,6 +77,12 @@ html, body {
   color: var(--text);
   overflow-x: clip;
 }
+.app.app-entering {
+  animation: app-enter-slide 0.32s cubic-bezier(0.2, 0, 0, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app.app-entering { animation: none !important; }
+}
 
 /* ─── Header ─────────────────────────────────── */
 .app-hero {
@@ -150,7 +156,7 @@ html, body {
   background: rgba(206,159,62,0.15);
   color: #CE9F3E;
   border-color: #CE9F3E;
-  transform: scale(1.03);
+  animation: chipSelect 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 /* ─── Store cards ────────────────────────────── */
@@ -863,6 +869,10 @@ html, body {
   object-fit: cover;
   object-position: center;
   display: block;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.recipe-browse-card:hover .card-photo {
+  transform: scale(1.06);
 }
 .card-photo-placeholder {
   width: 100%;
@@ -1455,7 +1465,7 @@ html, body {
   font-family: inherit;
   transition: background 0.15s;
 }
-.sp-close-btn:hover { background: #eee; }
+.sp-close-btn:hover { background: var(--border, rgba(238,230,216,0.12)); }
 .sp-clear-btn {
   background: none;
   border: 1.5px solid #f0c0c0;
@@ -1985,6 +1995,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     transform: none;
     box-shadow: 0 2px 14px rgba(100,70,20,0.08), 0 1px 3px rgba(0,0,0,0.04);
   }
+  .recipe-browse-card:hover .card-photo { transform: none; }
   .recipe-browse-card.featured:hover {
     box-shadow: 0 4px 20px rgba(100,70,20,0.10), 0 1px 4px rgba(0,0,0,0.04);
   }
@@ -2352,13 +2363,14 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes mpSlideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  0%   { transform: translateY(100%); opacity: 0.4; }
+  60%  { opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 .mp-sheet-drag-handle {
   width: 36px;
   height: 4px;
-  background: #ddd;
+  background: var(--border-dark, rgba(238,230,216,0.18));
   border-radius: 2px;
   margin: 0 auto 1rem;
 }
@@ -2482,7 +2494,7 @@ html.dark .mp-clear-no { background: rgba(238,230,216,0.1); color: var(--text-fa
 html.dark .mp-clear-no:hover { background: rgba(238,230,216,0.1); }
 
 html.dark .mp-sheet { background: #2B2620; }
-html.dark .mp-sheet-drag-handle { background: rgba(238,230,216,0.1); }
+html.dark .mp-sheet-drag-handle { background: rgba(238,230,216,0.14); }
 html.dark .mp-sheet-title { color: var(--cream); }
 html.dark .mp-sheet-close { background: rgba(238,230,216,0.1); color: var(--text-faint); }
 html.dark .mp-sheet-day {
@@ -2716,6 +2728,14 @@ html.dark .header-icon-btn { background: #2B2620; border: none; color: #C9BFAF; 
 html.dark .header-icon-btn:hover { background: #322C25; color: var(--text); }
 
 /* ─── Onboarding overlay ─────────────────────── */
+@keyframes ob-exit-slide {
+  0%   { transform: translateX(0) scale(1); opacity: 1; }
+  100% { transform: translateX(-40px) scale(0.97); opacity: 0; }
+}
+@keyframes app-enter-slide {
+  0%   { transform: translateX(24px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
 .ob-overlay {
   position: fixed;
   inset: 0;
@@ -2725,7 +2745,14 @@ html.dark .header-icon-btn:hover { background: #322C25; color: var(--text); }
   flex-direction: column;
   overflow: hidden;
 }
+.ob-overlay.exiting {
+  animation: ob-exit-slide 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+  pointer-events: none;
+}
 html.dark .ob-overlay { background: #1B1613; }
+@media (prefers-reduced-motion: reduce) {
+  .ob-overlay.exiting { animation: none !important; opacity: 0; }
+}
 
 /* Welcome screen */
 .ob-welcome {
@@ -4433,9 +4460,9 @@ html.dark .prefs-pantry { border: none; }
    Disabled entirely under prefers-reduced-motion. */
 .reveal {
   opacity: 0;
-  translate: 0 18px;
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              translate 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  translate: 0 22px;
+  transition: opacity 0.45s ease-out,
+              translate 0.52s cubic-bezier(0.22, 1.12, 0.36, 1);
   will-change: opacity, translate;
 }
 .reveal.is-visible {
@@ -4446,19 +4473,19 @@ html.dark .prefs-pantry { border: none; }
    dark theme; re-declare it here (winning specificity) so the reveal's
    opacity/translate actually ease, while keeping hover transform snappy. */
 html.dark .recipe-browse-card.reveal {
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              translate 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.2s cubic-bezier(0.34, 1.4, 0.64, 1),
-              box-shadow 0.2s ease,
-              border-color 0.2s ease;
+  transition: opacity 0.45s ease-out,
+              translate 0.52s cubic-bezier(0.22, 1.12, 0.36, 1),
+              transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1),
+              box-shadow 0.22s ease,
+              border-color 0.22s ease;
 }
 /* Gentle positional stagger for a screenful of cards entering together */
-.section-body-grid .reveal:nth-child(2)   { transition-delay: 0.04s; }
-.section-body-grid .reveal:nth-child(3)   { transition-delay: 0.08s; }
-.section-body-grid .reveal:nth-child(4)   { transition-delay: 0.10s; }
-.section-body-grid .reveal:nth-child(5)   { transition-delay: 0.12s; }
-.section-body-grid .reveal:nth-child(6)   { transition-delay: 0.14s; }
-.section-body-grid .reveal:nth-child(n+7) { transition-delay: 0.16s; }
+.section-body-grid .reveal:nth-child(2)   { transition-delay: 0.03s; }
+.section-body-grid .reveal:nth-child(3)   { transition-delay: 0.06s; }
+.section-body-grid .reveal:nth-child(4)   { transition-delay: 0.09s; }
+.section-body-grid .reveal:nth-child(5)   { transition-delay: 0.11s; }
+.section-body-grid .reveal:nth-child(6)   { transition-delay: 0.13s; }
+.section-body-grid .reveal:nth-child(n+7) { transition-delay: 0.14s; }
 
 /* ─── Recipe detail sheet: slide up ──────────── */
 @keyframes sheet-rise {
@@ -5874,11 +5901,13 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
     background: var(--surface, #2B2620);
     border-bottom: 1px solid var(--border, rgba(238,230,216,0.07));
     position: sticky;
-    top: 0;
+    top: calc(65px + env(safe-area-inset-top, 0px));
     z-index: 10;
     gap: 0;
+    transition: top 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
+body.search-collapsed .mobile-filter-row { top: 0 !important; }
 
 .mfr-btn {
   display: inline-flex;
@@ -5926,6 +5955,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
+  animation: badgePop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 /* ── Overflow menu sheet ── */
@@ -5938,7 +5968,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border-radius: 16px 16px 0 0;
   padding: 8px 0 max(20px, env(safe-area-inset-bottom, 20px));
   z-index: 1100;
-  animation: mpSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: mpSlideUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .overflow-menu-item {
@@ -5977,7 +6007,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   background: var(--surface, #2B2620);
   border-radius: 16px 16px 0 0;
   z-index: 1100;
-  animation: mpSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: mpSlideUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
   display: flex;
   flex-direction: column;
   max-height: 80dvh;
@@ -6039,11 +6069,23 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
+@keyframes chipSelect {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(0.91); }
+  65%  { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+@keyframes badgePop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
 .filter-chip:active { transform: scale(0.96); opacity: 0.82; }
 .filter-chip.active {
   background: rgba(206,159,62,0.16);
   border-color: var(--accent, #CE9F3E);
   color: var(--accent, #CE9F3E);
+  animation: chipSelect 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .filter-sheet-footer {
@@ -6063,7 +6105,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   font-weight: 700;
   cursor: pointer;
 }
-.filter-sheet-apply:active { opacity: 0.88; transform: scale(0.98); }
+.filter-sheet-apply:active { opacity: 0.92; transform: scale(0.97); transition: transform 0.1s cubic-bezier(0.34, 1.4, 0.64, 1); }
 
 /* Light mode overrides for new mobile components */
 html:not(.dark) .mobile-filter-row {

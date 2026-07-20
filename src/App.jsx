@@ -622,14 +622,12 @@ export default function App() {
       if (v) {
         const parsed = JSON.parse(v);
         if (!Array.isArray(parsed)) return null;
-        // migrate from old branch-level format to chain-level format
-        if (parsed.length > 0 && parsed[0].chain) {
-          const seen = new Set();
-          return parsed
-            .filter(s => s.chain && !seen.has(s.chain) && seen.add(s.chain))
-            .map(s => ({ chain: s.chain }));
-        }
-        return parsed;
+        // old format without chain field — force re-setup to avoid {undefined} in selectedChains
+        if (parsed.length > 0 && !parsed[0].chain) return null;
+        const seen = new Set();
+        return parsed
+          .filter(s => s.chain && !seen.has(s.chain) && seen.add(s.chain))
+          .map(s => ({ chain: s.chain }));
       }
       // migrate from old single-store key
       const old = localStorage.getItem("localStore");
@@ -723,6 +721,7 @@ export default function App() {
     } catch {}
     return 0;
   });
+  const [onboardingExiting, setOnboardingExiting] = useState(false);
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
@@ -788,6 +787,19 @@ export default function App() {
     }
     return () => document.body.classList.remove("recipe-open");
   }, [selectedRecipe]);
+
+  // Sync search-collapsed body class so mobile-filter-row top can transition via CSS
+  useEffect(() => {
+    document.body.classList.toggle("search-collapsed", searchHidden);
+    return () => document.body.classList.remove("search-collapsed");
+  }, [searchHidden]);
+
+  // Lock body scroll while any bottom sheet / modal is open
+  useEffect(() => {
+    const open = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showStorePicker || showFeedbackPanel;
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [showSavedPanel, showFilterSheet, showOverflowMenu, showShoppingSheet, showMealPlanPanel, showStorePicker, showFeedbackPanel]);
 
   // ── Swipe-to-dismiss bottom sheets ──────────────────────────────
   const [shoppingSheetEl, setShoppingSheetEl] = useState(null);
@@ -958,7 +970,7 @@ export default function App() {
           obs.unobserve(e.target);
         }
       });
-    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
+    }, { rootMargin: "0px 0px 100px 0px", threshold: 0.01 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, [revealSig]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -1314,7 +1326,8 @@ export default function App() {
       setDiet(pendingDiet);
       localStorage.setItem("defaultServings", String(pendingServings));
       localStorage.setItem("onboardingDone", "true");
-      setOnboardingStep(null);
+      setOnboardingExiting(true);
+      setTimeout(() => { setOnboardingStep(null); setOnboardingExiting(false); }, 290);
     }
   }
 
@@ -1376,7 +1389,7 @@ export default function App() {
 
   return (
     <>
-    <div className="app">
+    <div className={`app${onboardingExiting ? " app-entering" : ""}`}>
 
       {/* ── Splash screen ──────────────────────────────────────── */}
       {showSplash && (
@@ -1395,7 +1408,7 @@ export default function App() {
 
       {/* ── Onboarding overlay ─────────────────────────────────── */}
       {onboardingStep !== null && (
-        <div className="ob-overlay">
+        <div className={`ob-overlay${onboardingExiting ? " exiting" : ""}`}>
 
           {/* Welcome screen */}
           {onboardingStep === 0 && (
