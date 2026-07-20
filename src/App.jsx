@@ -5,6 +5,7 @@ import weeklyRecipesJson from "./data/weeklyRecipes.json";
 const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticRecipes;
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
+import { allShoppablesInList, removeCheckedItems, savedServingsFor } from "./shoppingLogic";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -191,6 +192,18 @@ function pantryMatchIngredient(ingText, searchTerm) {
   return extras ? extras.some(s => ing.includes(s)) : false;
 }
 
+// Returns which of the added pantry ingredients a recipe actually uses.
+// Drives the relevance sort and the "X/Y ingredienser" card indicator — never filters.
+function getPantryMatches(r, pantrySet) {
+  if (pantrySet.size === 0) return [];
+  const ings = r.ingredients || [];
+  const matched = [];
+  for (const p of pantrySet) {
+    if (ings.some(ing => pantryMatchIngredient(ing.text || ing, p))) matched.push(p);
+  }
+  return matched;
+}
+
 function getISOWeek(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -320,7 +333,7 @@ function attachSwipeDismiss(el, onDismiss) {
 
 const CARD_SV_OPTIONS = [2, 4, 6];
 
-function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, onAddToPlan, onToggleSave }) {
+function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave }) {
   const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(`photo_${r.id}`) || null);
   const [photoLoading, setPhotoLoading] = useState(() => {
     return !localStorage.getItem(`photo_${r.id}`) && !localStorage.getItem(`photo_fail_${r.id}`);
@@ -387,6 +400,26 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
           )}
         </div>
 
+        {/* Ingredient-match indicator — only when the user has added ingredients */}
+        {pantryTotal > 0 && (
+          <div
+            className={`card-pantry-match${
+              r.pantryMatchCount >= pantryTotal ? " full" : ""
+            }${r.pantryMatchCount === 0 ? " none" : ""}`}
+          >
+            <span className="card-pantry-match-count">
+              {r.pantryMatchCount}/{pantryTotal} ingredienser
+            </span>
+            {r.pantryMatchCount > 0 && (
+              <span className="card-pantry-match-items">
+                {(r.pantryMatches || []).map(m => (
+                  <span key={m} className="card-pantry-match-chip">{m}</span>
+                ))}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Serving selector + price */}
         <div className="card-servings-row" onClick={e => e.stopPropagation()}>
           <span className="card-sv-label">Pers.</span>
@@ -431,7 +464,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
           </button>
           <button
             className={`card-save-btn${isSaved ? " saved" : ""}`}
-            onClick={e => { e.stopPropagation(); onToggleSave(r); }}
+            onClick={e => { e.stopPropagation(); onToggleSave(r, cardServings); }}
             title={isSaved ? "Fjern fra gemte" : "Gem til senere"}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -653,7 +686,6 @@ export default function App() {
     try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
   });
   const [copied, setCopied] = useState(false);
-  const [addedToList, setAddedToList] = useState(false);
   const [searchHidden, setSearchHidden] = useState(false);
   const [stepsOpen, setStepsOpen] = useState(true);
   const [savedRecipes, setSavedRecipes] = useState(() => {
@@ -794,12 +826,21 @@ export default function App() {
     return () => document.body.classList.remove("search-collapsed");
   }, [searchHidden]);
 
-  // Lock body scroll while any bottom sheet / modal is open
+  // True whenever any bottom sheet / modal / overlay is open. Used both to lock
+  // scrolling and to hide the floating action buttons so they can't intercept
+  // clicks meant for an open sheet (QA bugs #6 / #7).
+  const anyModalOpen = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showStorePicker || showFeedbackPanel;
+
+  // Lock page scroll while any bottom sheet / modal is open. The document scrolls
+  // on the root <html> element (body has default overflow), so locking body alone
+  // leaves the wheel able to scroll the background — lock both (QA bug #5).
   useEffect(() => {
-    const open = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showStorePicker || showFeedbackPanel;
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [showSavedPanel, showFilterSheet, showOverflowMenu, showShoppingSheet, showMealPlanPanel, showStorePicker, showFeedbackPanel]);
+    const html = document.documentElement;
+    const body = document.body;
+    html.style.overflow = anyModalOpen ? "hidden" : "";
+    body.style.overflow = anyModalOpen ? "hidden" : "";
+    return () => { html.style.overflow = ""; body.style.overflow = ""; };
+  }, [anyModalOpen]);
 
   // ── Swipe-to-dismiss bottom sheets ──────────────────────────────
   const [shoppingSheetEl, setShoppingSheetEl] = useState(null);
@@ -839,12 +880,17 @@ export default function App() {
         ];
         return !texts.some(t => pattern.test(t));
       })
-      .map(r => ({
-        ...r,
-        matchCount: (r.dealItems || []).length,
-        fullyMatched: selectedChains.size === 0
-          || (r.dealItems || []).every(di => selectedChains.has(di.store)),
-      }));
+      .map(r => {
+        const pantryMatches = getPantryMatches(r, pantryItems);
+        return {
+          ...r,
+          matchCount: (r.dealItems || []).length,
+          fullyMatched: selectedChains.size === 0
+            || (r.dealItems || []).every(di => selectedChains.has(di.store)),
+          pantryMatches,
+          pantryMatchCount: pantryMatches.length,
+        };
+      });
   }
 
   const scoredRecipes = getScoredRecipes(diet);
@@ -879,14 +925,10 @@ export default function App() {
 
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
-    // Chain split is handled by fullyMatched in getScoredRecipes;
-    // matchRecipe only applies search / time / cuisine / pantry / price.
-    if (pantryItems.size > 0) {
-      const allCovered = [...pantryItems].every(p =>
-        (r.ingredients || []).some(ing => pantryMatchIngredient(ing.text || ing, p))
-      );
-      if (!allCovered) return false;
-    }
+    // Chain split is handled by fullyMatched in getScoredRecipes.
+    // Added ingredients ("tilføj ingredienser") no longer filter here — they drive a
+    // relevance sort (see applySort) so all recipes stay visible, just reordered.
+    // matchRecipe only applies search / time / cuisine / price.
     if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
     if (search) {
       const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
@@ -925,34 +967,51 @@ export default function App() {
     return true;
   }
 
+  // Comparator for the user's chosen "Sorter" option. Returns 0 for "anbefalet"
+  // so a stable sort preserves the incoming (recommended) order.
+  function sortComparator(a, b) {
+    switch (sortOrder) {
+      case "pris-asc":  return (calcPricePerPerson(a) ?? Infinity) - (calcPricePerPerson(b) ?? Infinity);
+      case "pris-desc": return (calcPricePerPerson(b) ?? -Infinity) - (calcPricePerPerson(a) ?? -Infinity);
+      case "hurtigst":  return parseMinutes(a.time) - parseMinutes(b.time);
+      case "populaer":  return (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0);
+      case "nyeste":    return (recipeIndexMap.get(b.id) ?? 0) - (recipeIndexMap.get(a.id) ?? 0);
+      default:          return 0; // "anbefalet" — keep input order
+    }
+  }
+
   function applySort(recipes) {
-    if (sortOrder === "anbefalet") return recipes;
-    const arr = [...recipes];
-    if (sortOrder === "pris-asc") {
-      return arr.sort((a, b) => (calcPricePerPerson(a) ?? Infinity) - (calcPricePerPerson(b) ?? Infinity));
-    }
-    if (sortOrder === "pris-desc") {
-      return arr.sort((a, b) => (calcPricePerPerson(b) ?? -Infinity) - (calcPricePerPerson(a) ?? -Infinity));
-    }
-    if (sortOrder === "hurtigst") {
-      return arr.sort((a, b) => parseMinutes(a.time) - parseMinutes(b.time));
-    }
-    if (sortOrder === "populaer") {
-      return arr.sort((a, b) => (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0));
-    }
-    if (sortOrder === "nyeste") {
-      return arr.sort((a, b) => (recipeIndexMap.get(b.id) ?? 0) - (recipeIndexMap.get(a.id) ?? 0));
-    }
-    return recipes;
+    const pantryActive = pantryItems.size > 0;
+    // No added ingredients + "anbefalet" → nothing to reorder.
+    if (!pantryActive && sortOrder === "anbefalet") return recipes;
+    // Array.prototype.sort is stable, so equal keys keep their incoming order.
+    return [...recipes].sort((a, b) => {
+      if (pantryActive) {
+        // Ingredient-match relevance is the primary key; more matches rank higher.
+        const d = (b.pantryMatchCount || 0) - (a.pantryMatchCount || 0);
+        if (d !== 0) return d;
+      }
+      // Chosen "Sorter" option acts as the tiebreaker.
+      return sortComparator(a, b);
+    });
   }
 
   const filteredRecommended = applySort(recommended.filter(matchRecipe));
   const filteredOthers = applySort(others.filter(matchRecipe));
+  // How many currently-shown recipes actually use ≥1 of the added ingredients.
+  const pantryMatchTotal = pantryItems.size > 0
+    ? filteredRecommended.filter(r => r.pantryMatchCount > 0).length
+      + filteredOthers.filter(r => r.pantryMatchCount > 0).length
+    : 0;
   const priceFiltered = priceMin > 0 || priceMax !== null;
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || pantryItems.size > 0 || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   // ── Scroll-triggered reveals (viewport-based, respects reduced-motion) ──
   const revealSig =
+    // `selectedRecipe` flips when entering/leaving the detail view. Including it here
+    // re-runs the effect on back-navigation so the freshly-remounted list cards get
+    // re-observed (otherwise they stay stuck at opacity:0 — see QA bug #1).
+    (selectedRecipe ? "detail" : "list") + "|" +
     filteredRecommended.map(r => r.id).join(",") + "|" +
     filteredOthers.map(r => r.id).join(",") + "|" +
     (collapsedSections.recommended ? "0" : "1") +
@@ -1029,7 +1088,7 @@ export default function App() {
   }
   function clearCheckedItems() {
     setShoppingList(prev => {
-      const next = prev.filter(item => !checkedItems.has(item));
+      const next = removeCheckedItems(prev, checkedItems);
       try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
       return next;
     });
@@ -1038,6 +1097,20 @@ export default function App() {
   }
 
   // ── Feedback ─────────────────────────────────────────────────────
+  // Open the feedback survey, first closing any other sheet so we never stack
+  // two modals on top of each other (single modal at a time — QA bug #7 guard).
+  function openFeedback() {
+    setShowSavedPanel(false);
+    setShowMealPlanPanel(false);
+    setShowShoppingSheet(false);
+    setShowFilterSheet(false);
+    setShowOverflowMenu(false);
+    setShowStorePicker(false);
+    setFeedbackSubmitted(false);
+    setFeedbackForm(FEEDBACK_EMPTY);
+    setShowFeedbackPanel(true);
+  }
+
   function submitFeedback() {
     const entry = {
       id: Date.now(),
@@ -1059,8 +1132,11 @@ export default function App() {
   }
 
   // ── Save / delete ───────────────────────────────────────────────
-  function saveRecipe(r) {
-    const entry = { ...r, savedAt: Date.now() };
+  // `servingsSel` captures the serving size the user had selected when saving so
+  // the "Gemte opskrifter" sheet shows the real count, not the recipe default
+  // (QA bug #4). Falls back to the recipe's own serving count when not provided.
+  function saveRecipe(r, servingsSel) {
+    const entry = { ...r, savedAt: Date.now(), savedServings: savedServingsFor(r, servingsSel) };
     const next = [entry, ...savedRecipes];
     setSavedRecipes(next);
     localStorage.setItem("savedRecipes", JSON.stringify(next));
@@ -1071,10 +1147,10 @@ export default function App() {
     setSavedRecipes(next);
     localStorage.setItem("savedRecipes", JSON.stringify(next));
   }
-  function toggleSaveRecipe(r) {
+  function toggleSaveRecipe(r, servingsSel) {
     const existing = savedRecipes.find(s => s.id === r.id);
     if (existing) deleteSavedRecipe(existing.savedAt);
-    else saveRecipe(r);
+    else saveRecipe(r, servingsSel);
   }
 
   function addAllSavedToShoppingList(recipes) {
@@ -1366,6 +1442,11 @@ export default function App() {
   }
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.id === selectedRecipe.id);
+
+  // Whether the selected recipe's shoppable (deal) ingredients are already on the
+  // shopping list. Drives the persistent "Til indkøb" → "Tilføjet ✓" state so it
+  // reflects real list membership instead of a 2-second timer (QA bug #3).
+  const detailInList = selectedRecipe ? allShoppablesInList(selectedRecipe, shoppingList) : false;
   const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
 
   // ── Render a grid of recipe cards ──────────────────────────────
@@ -1380,6 +1461,7 @@ export default function App() {
         isSaved={savedRecipes.some(s => s.id === r.id)}
         isPopular={top3Ids.has(r.id)}
         availableNames={availableNames}
+        pantryTotal={pantryItems.size}
         onSelect={selectRecipe}
         onAddToPlan={setAddingToPlan}
         onToggleSave={toggleSaveRecipe}
@@ -1853,8 +1935,8 @@ export default function App() {
                       <span className="pantry-trigger-title">Hvad har du derhjemme?</span>
                       <span className="pantry-trigger-sub">
                         {pantryItems.size > 0
-                          ? `${filteredRecommended.length + filteredOthers.length} af ${scoredRecipes.length} opskrifter passer til dit køleskab`
-                          : "Tilføj ingredienser — vi finder opskrifter du allerede kan lave"}
+                          ? `${pantryMatchTotal} opskrifter matcher dine ingredienser — vist øverst`
+                          : "Tilføj ingredienser — vi rykker opskrifter du kan lave nu øverst"}
                       </span>
                     </span>
                     {pantryItems.size > 0 && (
@@ -1930,8 +2012,8 @@ export default function App() {
                       )}
                       {pantryItems.size > 0 && (
                         <button className="pantry-find-btn" onClick={() => { setShowPantry(false); setPrefsOpen(false); }}>
-                          Find opskrifter
-                          <span className="pantry-find-count">{filteredRecommended.length + filteredOthers.length}</span>
+                          Vis rangering
+                          <span className="pantry-find-count">{pantryMatchTotal}</span>
                         </button>
                       )}
                     </div>
@@ -1945,9 +2027,9 @@ export default function App() {
           {pantryItems.size > 0 && !showPantry && (
             <div className="pantry-filter-banner">
               <span className="pantry-filter-banner-text">
-                Filtreret efter dine ingredienser — <strong>{filteredRecommended.length + filteredOthers.length} opskrifter</strong> fundet
+                Sorteret efter dine ingredienser — <strong>{pantryMatchTotal} opskrifter</strong> matcher, vist øverst
               </span>
-              <button className="pantry-filter-banner-clear" onClick={clearPantry}>Ryd filter</button>
+              <button className="pantry-filter-banner-clear" onClick={clearPantry}>Ryd</button>
             </div>
           )}
         </>
@@ -1987,7 +2069,7 @@ export default function App() {
                 </button>
                 <button
                   className={`save-btn${isRecipeSaved ? " saved" : ""}`}
-                  onClick={() => toggleSaveRecipe(selectedRecipe)}
+                  onClick={() => toggleSaveRecipe(selectedRecipe, servings)}
                   title={isRecipeSaved ? "Fjern fra gemte" : "Gem opskrift"}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -1996,14 +2078,14 @@ export default function App() {
                   <span>{isRecipeSaved ? "Gemt" : "Gem opskrift"}</span>
                 </button>
                 <button
-                  className={`save-btn detail-list-btn${addedToList ? " added" : ""}`}
-                  onClick={() => { addAllSavedToShoppingList([selectedRecipe]); setAddedToList(true); setTimeout(() => setAddedToList(false), 2000); }}
+                  className={`save-btn detail-list-btn${detailInList ? " added" : ""}`}
+                  onClick={() => addAllSavedToShoppingList([selectedRecipe])}
                   title="Tilføj ingredienser til indkøbsliste"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                   </svg>
-                  <span>{addedToList ? "Tilføjet ✓" : "Til indkøb"}</span>
+                  <span>{detailInList ? "Tilføjet ✓" : "Til indkøb"}</span>
                 </button>
                 {(() => {
                   const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
@@ -2265,9 +2347,7 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="section-empty-state">
-                      {pantryItems.size > 0 && !search
-                        ? "Vi fandt ingen match til dine ingredienser — prøv at fjerne én"
-                        : search
+                      {search
                         ? "Ingen opskrifter matchede — prøv et andet ord eller juster filtrene lidt"
                         : "Ingen opskrifter fra disse butikker denne uge — prøv at tilføje en ekstra butik"}
                     </div>
@@ -2489,8 +2569,9 @@ export default function App() {
       )}
     </aside>}
 
-  {/* Shopping cart FAB — hidden whenever meal plan is active (sidebar or panel) */}
-  {shoppingList.length > 0 && planCount === 0 && (
+  {/* Shopping cart FAB — hidden whenever meal plan is active (sidebar or panel)
+      or any sheet/modal is open (so it can't overlap sheet content). */}
+  {shoppingList.length > 0 && planCount === 0 && !anyModalOpen && (
     <button className="shopping-cart-fab" onClick={() => setShowShoppingSheet(true)} aria-label="Indkøbsliste">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
@@ -2524,7 +2605,7 @@ export default function App() {
                 >
                   <div className="saved-sheet-card-info">
                     <div className="saved-sheet-card-title">{r.emoji} {r.title}</div>
-                    <div className="saved-sheet-card-meta">{r.time} · {r.servings_count || 4} pers.</div>
+                    <div className="saved-sheet-card-meta">{r.time} · {r.savedServings || r.servings_count || 4} pers.</div>
                   </div>
                   <button
                     className="saved-sheet-unsave"
@@ -2660,10 +2741,15 @@ export default function App() {
     </nav>
   )}
 
-  {/* ── Feedback button ───────────────────────────────────────────── */}
+  {/* ── Feedback button ───────────────────────────────────────────────
+      Hidden while any sheet/modal is open so it can never render on top of
+      (and steal clicks from) an open sheet — this is what made "Start forfra"
+      appear to open the feedback survey (QA bug #7). Raised above the cart FAB
+      when both are visible so the cart badge stays clear (QA bug #2). */}
+  {!anyModalOpen && (
   <button
-    className="fb-fab"
-    onClick={() => { setShowFeedbackPanel(true); setFeedbackSubmitted(false); setFeedbackForm(FEEDBACK_EMPTY); }}
+    className={`fb-fab${(shoppingList.length > 0 && planCount === 0) ? " fb-fab--raised" : ""}`}
+    onClick={openFeedback}
     aria-label="Giv feedback"
     title="Giv feedback"
   >
@@ -2672,6 +2758,7 @@ export default function App() {
     </svg>
     <span className="fb-fab-label">Feedback</span>
   </button>
+  )}
 
   {/* ── Feedback panel ────────────────────────────────────────────── */}
   {showFeedbackPanel && (
