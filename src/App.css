@@ -372,6 +372,35 @@ html, body {
   color: var(--text-dim);
   margin: 1.25rem 0 10px;
 }
+/* Collapsible section header (Fremgangsmåde) */
+.section-label-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+  min-height: 40px;
+}
+.section-label-count {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--muted, #8C8375);
+}
+.section-label-toggle .section-chevron {
+  color: var(--muted, #8C8375);
+  transition: transform 0.25s ease;
+  transform: rotate(0deg);
+}
+.section-label-toggle .section-chevron.open { transform: rotate(180deg); }
+/* "Til indkøb" confirmation flash */
+.detail-list-btn.added { color: #7C8F5A !important; border-color: #7C8F5A !important; }
 .ingredient-add-btn {
   width: 26px; height: 26px;
   border: none;
@@ -5412,6 +5441,9 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
     border-bottom: 1px solid #26201C;
   }
   .search-input { padding: 13px 44px 13px 15px; font-size: 16px; }  /* 16px = no iOS auto-zoom */
+  /* Collapse the sticky search when scrolling down so it doesn't hold space */
+  .search-wrap { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
+  .search-wrap.search-hidden { transform: translateY(-115%); }
 
   /* ── Filters — horizontal pill rows (scroll, not sticky) ── */
   .quick-strip-wrap { position: static; margin: 0 0 10px; background: transparent; border-bottom: none; }
@@ -5479,9 +5511,16 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
     border-top: 1px solid #39322A;
     box-shadow: 0 -6px 20px rgba(0,0,0,0.35);
   }
-  .detail-actions .save-btn,
-  .detail-actions .add-to-plan-btn.detail { flex: 1; min-height: 48px; justify-content: center; }
-  .detail-actions .share-btn { flex: 0 0 auto; min-height: 48px; min-width: 48px; justify-content: center; }
+  /* Primary thumb actions = Save + Til indkøb (both carry .save-btn);
+     Share + Plan collapse to icon-only squares to keep the bar uncluttered */
+  .detail-actions .save-btn { flex: 1; min-height: 48px; justify-content: center; }
+  .detail-actions .share-btn,
+  .detail-actions .add-to-plan-btn.detail {
+    flex: 0 0 auto; min-height: 48px; min-width: 48px;
+    justify-content: center; padding-left: 0; padding-right: 0;
+  }
+  .detail-actions .share-btn span,
+  .detail-actions .add-to-plan-btn.detail span { display: none; }
 
   /* Larger tap targets for checkboxes / add buttons */
   .shopping-check-btn { width: 30px; height: 30px; }
