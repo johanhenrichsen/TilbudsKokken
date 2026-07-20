@@ -6,6 +6,10 @@ body {
   font-family: 'Literata', Georgia, 'Times New Roman', serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Contain the onboarding→app slide transforms (overlay slides off-screen left,
+     app slides in from the right) so neither adds a horizontal scrollbar.
+     `clip` (not `hidden`) doesn't create a scroll container, so sticky UI still works. */
+  overflow-x: clip;
 }
 
 html:not(.dark) body { background: #F1E9DB; }

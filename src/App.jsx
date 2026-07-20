@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { createPortal } from "react-dom";
 import "./App.css";
 import { recipeBank as staticRecipes } from "./recipes";
 import weeklyRecipesJson from "./data/weeklyRecipes.json";
@@ -754,6 +755,9 @@ export default function App() {
     return 0;
   });
   const [onboardingExiting, setOnboardingExiting] = useState(false);
+  // Direction of the last onboarding step change: 1 = forward, -1 = back.
+  // Drives which side each step slides in from so the sequence reads as one motion.
+  const [obDir, setObDir] = useState(1);
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
@@ -805,8 +809,8 @@ export default function App() {
   useEffect(() => {
     if (!showSplash) return;
     sessionStorage.setItem("splashShown", "true");
-    const t1 = setTimeout(() => setSplashExiting(true), 2000);
-    const t2 = setTimeout(() => setShowSplash(false), 2650);
+    const t1 = setTimeout(() => setSplashExiting(true), 2400);
+    const t2 = setTimeout(() => setShowSplash(false), 3150);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -1391,6 +1395,7 @@ export default function App() {
 
   function handleOnboardingContinue() {
     if (onboardingStep < 3) {
+      setObDir(1);
       setOnboardingStep(s => s + 1);
     } else {
       const storesArray = CHAIN_ORDER
@@ -1403,7 +1408,9 @@ export default function App() {
       localStorage.setItem("defaultServings", String(pendingServings));
       localStorage.setItem("onboardingDone", "true");
       setOnboardingExiting(true);
-      setTimeout(() => { setOnboardingStep(null); setOnboardingExiting(false); }, 290);
+      // Keep in sync with the .ob-overlay.exiting / .app-entering animation
+      // duration in App.css (0.36s) so the overlay isn't unmounted mid-slide.
+      setTimeout(() => { setOnboardingStep(null); setOnboardingExiting(false); }, 380);
     }
   }
 
@@ -1480,16 +1487,20 @@ export default function App() {
           <div className="splash-ring" />
           <div className="splash-ring splash-ring-2" />
           <div className="splash-content">
-            <div className="splash-logo">
-              <LogoIcon size={96} />
+            <div className="splash-mark">
+              <LogoIcon size={120} holeColor="#1B1613" />
             </div>
+            <div className="splash-wordmark">Tilbudskokken</div>
             <p className="splash-tagline">Bedre tilbud. Bedre mad.</p>
           </div>
         </div>
       )}
 
-      {/* ── Onboarding overlay ─────────────────────────────────── */}
-      {onboardingStep !== null && (
+      {/* ── Onboarding overlay ───────────────────────────────────
+          Portaled to <body> so `.app`'s transform during the enter animation
+          can't become its containing block (which would box the fixed overlay
+          to the centered column and flash on desktop). */}
+      {onboardingStep !== null && createPortal((
         <div className={`ob-overlay${onboardingExiting ? " exiting" : ""}`}>
 
           {/* Welcome screen */}
@@ -1500,7 +1511,7 @@ export default function App() {
               <div className="ob-welcome-content">
                 <LogoIcon size={200} className="ob-welcome-logo" />
                 <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
-                <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
+                <button className="ob-cta-btn" onClick={() => { setObDir(1); setOnboardingStep(1); }}>
                   Kom i gang →
                 </button>
               </div>
@@ -1511,7 +1522,7 @@ export default function App() {
           {onboardingStep > 0 && (
             <div className="ob-step-layout">
               <div className="ob-topbar">
-                <button className="ob-back-btn" onClick={() => setOnboardingStep(s => s - 1)}>
+                <button className="ob-back-btn" onClick={() => { setObDir(-1); setOnboardingStep(s => s - 1); }}>
                   ← Tilbage
                 </button>
                 <div className="ob-progress">
@@ -1524,7 +1535,7 @@ export default function App() {
 
               {/* Step 1 — Store selection */}
               {onboardingStep === 1 && (
-                <div className="ob-content" key="s1">
+                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s1">
                   <h2 className="ob-title">Vælg dine butikker</h2>
                   <p className="ob-desc">Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.</p>
                   <button
@@ -1558,7 +1569,7 @@ export default function App() {
 
               {/* Step 2 — Dietary preference */}
               {onboardingStep === 2 && (
-                <div className="ob-content" key="s3">
+                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s3">
                   <h2 className="ob-title">Kostpræferencer</h2>
                   <p className="ob-desc">Vælg din kostpræference — vi tilpasser opskrifterne.</p>
                   <div className="ob-diet-grid">
@@ -1587,7 +1598,7 @@ export default function App() {
 
               {/* Step 3 — Serving size */}
               {onboardingStep === 3 && (
-                <div className="ob-content" key="s4">
+                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s4">
                   <h2 className="ob-title">Hvor mange personer?</h2>
                   <p className="ob-desc">Vi tilpasser portionsstørrelserne til dit husstand.</p>
                   <div className="ob-servings-picker">
@@ -1611,7 +1622,7 @@ export default function App() {
             </div>
           )}
         </div>
-      )}
+      ), document.body)}
 
       {/* Store picker modal (skift / administrer) */}
       {showStorePicker && (
