@@ -33,10 +33,40 @@
   --border-dark:    rgba(238,230,216,0.1);
   --border:         rgba(238,230,216,0.1);
 
-  /* Typography */
-  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
-  --font-sans:  'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono:  'JetBrains Mono', ui-monospace, Consolas, monospace;
+  /* Typography — three-font system
+     Display  : Bricolage Grotesque (headings, titles, large numbers)
+     Body     : Literata             (descriptions, ingredients, UI copy)
+     Stamp    : Space Mono           (prices, meta, week badge, counts) */
+  --font-serif: 'Bricolage Grotesque', ui-sans-serif, sans-serif;
+  --font-sans:  'Literata', Georgia, 'Times New Roman', serif;
+  --font-mono:  'Space Mono', ui-monospace, Consolas, monospace;
+
+  /* Type scale — sizes */
+  --type-display:   clamp(28px, 5vw, 40px);
+  --type-h1:        26px;
+  --type-h2:        20px;
+  --type-h3:        16px;
+  --type-body-lg:   16px;
+  --type-body:      14px;
+  --type-body-sm:   13px;
+  --type-caption:   12px;
+  --type-micro:     11px;
+  --type-stamp-lg:  14px;
+  --type-stamp:     11.5px;
+  --type-stamp-sm:  10px;
+
+  /* Type scale — tracking */
+  --tracking-display: -0.025em;
+  --tracking-heading: -0.018em;
+  --tracking-title:   -0.012em;
+  --tracking-stamp:    0.035em;
+  --tracking-badge:    0.07em;
+
+  /* Type scale — line-heights */
+  --lh-heading: 1.18;
+  --lh-body:    1.65;
+  --lh-instr:   1.78;
+  --lh-tight:   1.3;
 
   /* Legacy compat */
   --bg-light: #1B1613;
@@ -100,9 +130,9 @@ html, body {
   background: rgba(206,159,62,0.12);
   color: #CE9F3E;
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-size: var(--type-stamp-sm, 10px);
+  font-weight: 700;
+  letter-spacing: var(--tracking-badge, 0.07em);
   padding: 5px 10px;
   border-radius: 0;
   white-space: nowrap;
@@ -110,13 +140,14 @@ html, body {
 }
 .app-title {
   font-family: var(--font-serif);
+  font-optical-sizing: auto;
   font-size: 28px;
   font-weight: 700;
   color: var(--text);
   margin: 0 0 6px;
   position: relative;
-  letter-spacing: -0.5px;
-  line-height: 1.15;
+  letter-spacing: var(--tracking-heading, -0.018em);
+  line-height: var(--lh-heading, 1.18);
 }
 .app-subtitle {
   font-size: 13px;
@@ -193,9 +224,9 @@ html, body {
 }
 .store-item:hover { background: rgba(238,230,216,0.06); }
 .store-item.selected { background: rgba(124,143,90,0.12); }
-.item-name { font-size: 12px; color: var(--text); }
-.item-price { font-size: 12px; font-weight: 600; color: #7C8F5A; text-align: right; }
-.item-unit { font-size: 10px; color: var(--text-faint); text-align: right; }
+.item-name { font-size: var(--type-body-sm, 13px); color: var(--text); line-height: var(--lh-body, 1.65); }
+.item-price { font-family: var(--font-mono); font-size: var(--type-stamp, 11.5px); font-weight: 700; letter-spacing: var(--tracking-stamp, 0.035em); color: #7C8F5A; text-align: right; }
+.item-unit { font-family: var(--font-mono); font-size: var(--type-stamp-sm, 10px); letter-spacing: var(--tracking-stamp, 0.035em); color: var(--text-faint); text-align: right; }
 
 /* ─── Bottom bar ─────────────────────────────── */
 .bottom-bar {
@@ -212,7 +243,7 @@ html, body {
 }
 .item-count { font-size: 13px; color: var(--text-dim); font-weight: 500; }
 .item-count strong { color: var(--text); font-weight: 700; }
-.total-price { font-size: 13px; color: #7C8F5A; font-weight: 600; }
+.total-price { font-family: var(--font-mono); font-size: var(--type-stamp-lg, 14px); color: #7C8F5A; font-weight: 700; letter-spacing: var(--tracking-stamp, 0.035em); }
 .item-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
 .item-chip {
   background: rgba(124,143,90,0.12);
@@ -343,12 +374,13 @@ html, body {
 }
 .recipe-title {
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-optical-sizing: auto;
+  font-size: 26px;
   font-weight: 800;
   color: var(--text);
   margin: 0 0 10px;
-  letter-spacing: -0.2px;
-  line-height: 1.15;
+  letter-spacing: var(--tracking-heading, -0.018em);
+  line-height: var(--lh-heading, 1.18);
 }
 .recipe-meta-bar {
   display: flex;
@@ -361,19 +393,22 @@ html, body {
   flex-wrap: wrap;
 }
 .recipe-detail-price {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 14px;
   color: #7C8F5A;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: var(--tracking-stamp, 0.035em);
   text-align: center;
   padding: 10px 0 4px;
   border-bottom: 1px solid rgba(238,230,216,0.06);
   margin-bottom: 4px;
 }
-.recipe-detail-price-pp { opacity: 0.75; }
+.recipe-detail-price-pp { opacity: 0.75; font-size: 12px; font-weight: 400; }
 .section-label {
-  font-size: 10px;
+  font-size: var(--type-stamp-sm, 10px);
+  font-family: var(--font-mono);
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-badge, 0.07em);
   text-transform: uppercase;
   color: var(--text-dim);
   margin: 1.25rem 0 10px;
@@ -426,45 +461,48 @@ html, body {
 .ingredient-add-btn:hover:not(:disabled) { transform: scale(1.2); }
 .ingredient-add-btn:disabled { opacity: 0.7; cursor: default; }
 .ingredient-item {
-  font-size: 13px;
+  font-size: var(--type-body, 14px);
   color: var(--text);
   padding: 4px 0;
   display: flex;
   align-items: center;
   gap: 8px;
+  line-height: var(--lh-body, 1.65);
 }
 .step-item {
-  font-size: 13px;
-  color: #333;
-  padding: 9px 0 9px 34px;
+  font-size: var(--type-body-lg, 16px);
+  color: var(--text);
+  padding: 10px 0 10px 36px;
   position: relative;
-  line-height: 1.6;
+  line-height: var(--lh-instr, 1.78);
 }
 .step-item:not(:last-child) { border-bottom: 1px solid rgba(238,230,216,0.08); }
 .step-number {
   position: absolute;
-  left: 0; top: 11px;
-  width: 20px; height: 20px;
+  left: 0; top: 13px;
+  width: 22px; height: 22px;
   background: #C1442E;
   color: var(--text);
   border-radius: 50%;
+  font-family: var(--font-mono);
   font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .recipe-subtitle {
-  font-size: 14px;
+  font-size: var(--type-body, 14px);
   color: var(--text-dim);
   margin: 4px 0 0 0;
   font-style: italic;
-  line-height: 1.4;
+  line-height: var(--lh-body, 1.65);
 }
 .recipe-description {
-  font-size: 15px;
+  font-size: var(--type-body-lg, 16px);
   color: var(--text);
-  line-height: 1.6;
+  line-height: var(--lh-instr, 1.78);
   margin: 0 0 1.25rem 0;
   font-style: italic;
 }
@@ -662,13 +700,18 @@ html, body {
   gap: 8px;
 }
 .saved-recipe-title {
-  font-size: 14px;
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--type-h3, 16px);
   font-weight: 700;
+  letter-spacing: var(--tracking-title, -0.012em);
   color: var(--text);
   margin-bottom: 2px;
 }
 .saved-recipe-meta {
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: var(--type-stamp-sm, 10px);
+  letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
 }
 .saved-recipe-chevron {
@@ -788,23 +831,26 @@ html, body {
 }
 .section-toggle-label {
   font-family: var(--font-serif);
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-optical-sizing: auto;
+  font-size: var(--type-h1, 20px);
+  font-weight: 700;
   color: var(--text);
-  letter-spacing: -0.6px;
+  letter-spacing: var(--tracking-heading, -0.018em);
+  line-height: var(--lh-heading, 1.18);
   flex: 1;
 }
 .section-intro {
-  font-size: 12px;
+  font-size: var(--type-body-sm, 13px);
   color: var(--muted);
   padding: 0 16px 10px;
-  line-height: 1.5;
+  line-height: var(--lh-body, 1.65);
   margin-top: -4px;
 }
 .section-count-badge {
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--type-stamp-sm, 10px);
+  font-weight: 700;
+  letter-spacing: var(--tracking-stamp, 0.035em);
   color: #8C8375;
   background: #2B2620;
   padding: 3px 8px;
@@ -949,38 +995,84 @@ html, body {
   margin-bottom: 8px;
 }
 
-/* Title — Lora serif, Papir */
+/* Title — Bricolage Grotesque, Papir */
 .recipe-browse-title {
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-optical-sizing: auto;
+  font-size: var(--type-h3, 16px);
   font-weight: 700;
   color: var(--text);
-  line-height: 1.25;
-  letter-spacing: 0;
-  margin-bottom: 6px;
+  line-height: var(--lh-tight, 1.3);
+  letter-spacing: var(--tracking-title, -0.012em);
+  margin-bottom: 5px;
 }
 
-/* Metadata line — muted Papir, JetBrains Mono for time/servings */
+/* Metadata line — Space Mono stamp feel */
 .recipe-browse-meta {
   display: flex;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--type-stamp-sm, 10px);
+  letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
   margin-bottom: 8px;
 }
-/* Price — JetBrains Mono, Dild color */
+
+/* ── Ingredient-match indicator (added-ingredients relevance sort) ────── */
+.card-pantry-match {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.card-pantry-match-count {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--type-stamp-sm, 10px);
+  font-weight: 700;
+  letter-spacing: var(--tracking-stamp, 0.035em);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(124, 143, 90, 0.16);
+  color: #7C8F5A;
+  border: 1px solid rgba(124, 143, 90, 0.32);
+}
+.card-pantry-match.full .card-pantry-match-count {
+  background: #7C8F5A;
+  color: #fff;
+  border-color: #7C8F5A;
+}
+.card-pantry-match.none .card-pantry-match-count {
+  background: transparent;
+  color: var(--text-faint);
+  border-color: rgba(150, 140, 125, 0.3);
+}
+.card-pantry-match-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.card-pantry-match-chip {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(200, 146, 42, 0.16);
+  color: #C8922A;
+  border: 1px solid rgba(200, 146, 42, 0.28);
+}
+/* Price — Space Mono, Dild color */
 .recipe-card-price {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: var(--type-stamp, 11.5px);
   color: #7C8F5A;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 8px;
-  letter-spacing: -0.1px;
+  letter-spacing: var(--tracking-stamp, 0.035em);
 }
 .recipe-card-price-pp { opacity: 0.7; }
 
-/* Store row — JetBrains Mono, muted + round Prisrød arrow btn */
+/* Store row — Space Mono, muted + round Prisrød arrow btn */
 .recipe-browse-stores {
   display: flex;
   align-items: center;
@@ -995,7 +1087,8 @@ html, body {
   align-items: center;
   gap: 4px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: var(--type-stamp-sm, 10px);
+  letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
   font-weight: 400;
 }
@@ -1809,18 +1902,18 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .search-input { padding: 12px 44px 12px 16px; font-size: 15px; }
 
   /* ── Recipe cards — full-width, dominant title ── */
-  .recipe-browse-title { font-size: 18px; font-weight: 800; letter-spacing: -0.2px; }
-  .recipe-browse-meta { font-size: 11px; }
+  .recipe-browse-title { font-size: 17px; font-weight: 700; letter-spacing: var(--tracking-title, -0.012em); }
+  .recipe-browse-meta { font-size: 10px; letter-spacing: var(--tracking-stamp, 0.035em); }
   .recipe-deal-tags { gap: 5px; flex-wrap: wrap; max-height: 52px; overflow: hidden; }
   .card-body { padding: 12px 14px 16px; }
   .card-photo-wrap { height: 175px; }
 
-  /* ── Recipe detail — readable line height, generous spacing ── */
+  /* ── Recipe detail — generous Literata line-height for reading ── */
   .recipe-card { padding: 1rem; }
-  .recipe-title { font-size: 24px; letter-spacing: 0.01em; line-height: 1.15; }
+  .recipe-title { font-size: 24px; letter-spacing: var(--tracking-heading, -0.018em); line-height: var(--lh-heading, 1.18); }
   .recipe-meta-bar { gap: 10px; font-size: 12px; flex-wrap: wrap; }
-  .ingredient-item { font-size: 14px; line-height: 1.6; }
-  .step-item { font-size: 14px; line-height: 1.65; padding: 10px 0 10px 36px; }
+  .ingredient-item { font-size: 15px; line-height: var(--lh-body, 1.65); }
+  .step-item { font-size: 15px; line-height: var(--lh-instr, 1.78); padding: 10px 0 10px 36px; }
 
   /* ── Tap targets — 44px minimum ── */
   .add-to-plan-btn { min-height: 44px; padding: 11px 16px; font-size: 13px; }
@@ -2554,8 +2647,8 @@ html.dark .recipe-browse-card:hover {
 html.dark .section-toggle-label {
   color: var(--cream);
   font-family: var(--font-serif);
-  font-size: 19px;
-  letter-spacing: -0.3px;
+  font-size: var(--type-h1, 20px);
+  letter-spacing: var(--tracking-heading, -0.018em);
 }
 html.dark .section-count-badge { color: #CE9F3E; background: rgba(206,159,62,0.12); }
 html.dark .section-chevron { color: rgba(238,230,216,0.35); }
@@ -2805,12 +2898,14 @@ html.dark .ob-welcome {
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
 }
 .ob-welcome-title {
-  font-size: 40px;
-  font-weight: 900;
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: clamp(32px, 6vw, 44px);
+  font-weight: 800;
   color: #1a321a;
   margin: 0 0 8px;
-  letter-spacing: -1.5px;
-  line-height: 1.1;
+  letter-spacing: var(--tracking-display, -0.025em);
+  line-height: 1.08;
 }
 html.dark .ob-welcome-title { color: var(--cream); font-family: var(--font-serif); }
 .ob-welcome-tagline {
@@ -2926,19 +3021,21 @@ html.dark .ob-step-counter { color: var(--text-faint); }
   to   { opacity: 1; }
 }
 .ob-title {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
   font-size: 26px;
   font-weight: 800;
   color: #352F2B;
   margin: 0 0 8px;
-  letter-spacing: -0.5px;
+  letter-spacing: var(--tracking-heading, -0.018em);
   line-height: 1.15;
 }
 html.dark .ob-title { color: var(--cream); font-family: var(--font-serif); }
 .ob-desc {
-  font-size: 14px;
+  font-size: var(--type-body, 14px);
   color: var(--text-dim);
   margin: 0 0 1.75rem;
-  line-height: 1.55;
+  line-height: var(--lh-body, 1.65);
 }
 html.dark .ob-desc { color: var(--text-faint); }
 
@@ -3300,13 +3397,15 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(206,159,62,0.12); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 .splash-tagline {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
   font-size: clamp(24px, 6vw, 38px);
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: -0.5px;
+  letter-spacing: var(--tracking-display, -0.025em);
   margin: 0;
   opacity: 0;
-  line-height: 1.2;
+  line-height: 1.12;
   text-align: center;
   max-width: min(480px, 90vw);
   text-shadow: 0 2px 16px rgba(0,0,0,0.35);
@@ -4371,23 +4470,28 @@ html.dark .prefs-trigger:hover { background: #2B2620; }
   gap: 1px;
 }
 .prefs-trigger-title {
-  font-size: 14px;
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-size: var(--type-h3, 16px);
   font-weight: 600;
+  letter-spacing: var(--tracking-title, -0.012em);
   color: var(--text);
-  line-height: 1.2;
+  line-height: var(--lh-tight, 1.3);
 }
 html.dark .prefs-trigger-title { color: var(--cream); }
 .prefs-trigger-sub {
-  font-size: 11px;
+  font-size: var(--type-body-sm, 13px);
   color: var(--muted);
-  line-height: 1;
+  line-height: var(--lh-body, 1.65);
 }
 html.dark .prefs-trigger-sub { color: #8C8375; }
 .prefs-active-badge {
+  font-family: var(--font-mono);
   background: var(--accent);
   color: #1B1613;
-  font-size: 11px;
+  font-size: var(--type-stamp-sm, 10px);
   font-weight: 700;
+  letter-spacing: var(--tracking-stamp, 0.035em);
   min-width: 18px;
   height: 18px;
   border-radius: 0;
@@ -4406,10 +4510,11 @@ html.dark .prefs-trigger-sub { color: #8C8375; }
   to   { opacity: 1; transform: translateY(0); }
 }
 .prefs-group-label {
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--type-stamp-sm, 10px);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: var(--tracking-badge, 0.07em);
   color: var(--muted);
   margin: 12px 0 6px;
 }
@@ -4928,6 +5033,15 @@ html.dark .saved-shoplist-btn:hover { background: #C1442E; }
 }
 .fb-fab:active { transform: translateY(0); }
 .fb-fab-label { line-height: 1; }
+
+/* When the shopping-cart FAB is also visible (desktop only — it's hidden on
+   mobile), lift the feedback button above the 56px cart circle so the cart's
+   count badge is never tucked behind it (QA bug #2). */
+@media (min-width: 1100px) {
+  .fb-fab--raised {
+    bottom: calc(24px + 56px + 14px + env(safe-area-inset-bottom, 0px));
+  }
+}
 
 /* Overlay + panel */
 .fb-overlay {
@@ -5827,7 +5941,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   .card-price-inline {
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-family: var(--font-mono, 'Space Mono', monospace);
     font-weight: 700;
     color: #CE9F3E;
   }
@@ -5850,7 +5964,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border: 1px solid var(--border, rgba(238,230,216,0.14));
   border-radius: 10px;
   color: var(--text, #EEE6D8);
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 16px;
   outline: none;
 }
@@ -5864,7 +5978,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border: 1px solid var(--border, rgba(238,230,216,0.14));
   border-radius: 10px;
   color: var(--text, #EEE6D8);
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -5880,7 +5994,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border: 1px solid var(--accent, #CE9F3E);
   background: rgba(206,159,62,0.14);
   color: var(--accent, #CE9F3E);
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -5918,7 +6032,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border: none;
   padding: 0;
   cursor: pointer;
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 12.5px;
   font-weight: 500;
   color: var(--text, #EEE6D8);
@@ -5980,7 +6094,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 15px;
   font-weight: 500;
   color: var(--text, #EEE6D8);
@@ -6022,9 +6136,11 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 }
 
 .filter-sheet-title {
-  font-family: var(--font-serif, 'Lora', serif);
-  font-size: 17px;
-  font-weight: 600;
+  font-family: var(--font-serif, 'Bricolage Grotesque', sans-serif);
+  font-optical-sizing: auto;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-heading, -0.018em);
   color: var(--text, #EEE6D8);
 }
 
@@ -6044,10 +6160,11 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 }
 
 .filter-sheet-label {
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: var(--type-stamp-sm, 10px);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-badge, 0.07em);
   color: var(--muted, rgba(238,230,216,0.45));
 }
 
@@ -6063,7 +6180,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border: 1px solid var(--border, rgba(238,230,216,0.12));
   background: var(--surface-2, #352F2B);
   color: var(--text, #EEE6D8);
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
@@ -6100,7 +6217,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border: none;
   background: var(--accent, #CE9F3E);
   color: #1B1613;
-  font-family: var(--font-sans, 'Archivo', sans-serif);
+  font-family: var(--font-sans, 'Literata', Georgia, serif);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
