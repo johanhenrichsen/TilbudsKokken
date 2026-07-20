@@ -382,6 +382,9 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, onSelect, o
         <div className="recipe-browse-meta">
           <span>{r.time}</span>
           <span>{(r.ingredients || []).length} ing.</span>
+          {totalPrice != null && (
+            <span className="card-price-inline">≈ {totalPrice} kr.</span>
+          )}
         </div>
 
         {/* Serving selector + price */}
@@ -723,6 +726,8 @@ export default function App() {
   const [prefsOpen, setPrefsOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState("anbefalet");
   const [quickFilters, setQuickFilters] = useState(new Set());
+  const [showOverflowMenu, setShowOverflowMenu] = useState(false);
+  const [showFilterSheet, setShowFilterSheet] = useState(false);
 
   // ── Feedback ─────────────────────────────────────────────────────
   const [showFeedbackPanel, setShowFeedbackPanel] = useState(false);
@@ -778,9 +783,14 @@ export default function App() {
   const setupComplete = selectedChains.size > 0;
 
   function getAvailableItemNames() {
-    return new Set(
-      stores.filter(s => selectedChains.has(s.name)).flatMap(s => s.items.map(it => it.name))
-    );
+    if (selectedChains.size === 0) return new Set();
+    const names = new Set();
+    for (const r of recipeBank) {
+      for (const di of (r.dealItems || [])) {
+        if (selectedChains.has(di.store)) names.add(di.name);
+      }
+    }
+    return names;
   }
 
   function getScoredRecipes(dietFilter) {
@@ -1027,7 +1037,7 @@ export default function App() {
     localStorage.setItem("savedRecipes", JSON.stringify(next));
   }
   function toggleSaveRecipe(r) {
-    const existing = savedRecipes.find(s => s.title === r.title);
+    const existing = savedRecipes.find(s => s.id === r.id);
     if (existing) deleteSavedRecipe(existing.savedAt);
     else saveRecipe(r);
   }
@@ -1183,6 +1193,11 @@ export default function App() {
     });
   }
 
+  function changeDiet(val) {
+    setDiet(val);
+    try { localStorage.setItem("defaultDiet", val); } catch {}
+  }
+
   function toggleSection(key) {
     setCollapsedSections(prev => {
       const next = { ...prev, [key]: !prev[key] };
@@ -1314,7 +1329,7 @@ export default function App() {
     return `${list[0].chain} og ${list.length - 1} andre`;
   }
 
-  const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
+  const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.id === selectedRecipe.id);
   const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
 
   // ── Render a grid of recipe cards ──────────────────────────────
@@ -1326,7 +1341,7 @@ export default function App() {
         key={r.id}
         r={r}
         inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
-        isSaved={savedRecipes.some(s => s.title === r.title)}
+        isSaved={savedRecipes.some(s => s.id === r.id)}
         isPopular={top3Ids.has(r.id)}
         availableNames={availableNames}
         onSelect={selectRecipe}
@@ -1530,7 +1545,7 @@ export default function App() {
             <div className="sp-modal-header">
               <div>
                 <h2 className="sp-title">Vælg dag</h2>
-                <p style={{ margin: 0, fontSize: 13, color: "#6b7280" }}>{addingToPlan.emoji} {addingToPlan.title}</p>
+                <p style={{ margin: 0, fontSize: 13, color: "var(--text-dim)" }}>{addingToPlan.emoji} {addingToPlan.title}</p>
               </div>
               <button className="sp-close-btn" onClick={() => setAddingToPlan(null)}>×</button>
             </div>
@@ -1570,7 +1585,13 @@ export default function App() {
           <div className="hero-topbar-right">
             <div className="week-badge">{weekBadge}</div>
             <div className="header-actions">
-              <button className="header-icon-btn header-icon-btn--bookmark" onClick={() => setShowSavedPanel(true)} title="Gemte opskrifter">
+              <button className="header-icon-btn header-overflow-btn" onClick={() => setShowOverflowMenu(true)} title="Menu" aria-label="Menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                  <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
+                </svg>
+                {savedRecipes.length > 0 && <span className="header-badge">{savedRecipes.length}</span>}
+              </button>
+              <button className="header-icon-btn header-icon-btn--bookmark header-icon-btn--desktop" onClick={() => setShowSavedPanel(true)} title="Gemte opskrifter">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                 </svg>
@@ -1578,7 +1599,7 @@ export default function App() {
                   <span className="header-badge">{savedRecipes.length}</span>
                 )}
               </button>
-              <button className="header-icon-btn" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
+              <button className="header-icon-btn header-icon-btn--desktop" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
                 {darkMode ? (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
@@ -1589,7 +1610,7 @@ export default function App() {
                   </svg>
                 )}
               </button>
-              <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">
+              <button className="header-icon-btn header-icon-btn--desktop" onClick={openSettings} title="Indstillinger">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
@@ -1722,7 +1743,7 @@ export default function App() {
                 <div className="prefs-group-label">Kost</div>
                 <div className="diet-filters prefs-filter-row">
                   {dietFilters.map(f => (
-                    <button key={f} onClick={() => setDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
+                    <button key={f} onClick={() => changeDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
                   ))}
                 </div>
 
@@ -2095,6 +2116,33 @@ export default function App() {
         setupComplete ? (
           <div className="recipes-section">
 
+            {/* ── Mobile: condensed filter row (replaces quick-strip on small screens) ── */}
+            <div className="mobile-filter-row">
+              <button className="mfr-btn" onClick={() => setShowStorePicker(true)}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>{[...new Set((localStores || []).map(s => s.chain))].length} butikker</span>
+              </button>
+              <div className="mfr-divider" />
+              <button className="mfr-btn" onClick={() => setShowFilterSheet(true)}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                </svg>
+                <span>Filtre</span>
+                {(activeFilterCount + (sortOrder !== "anbefalet" ? 1 : 0)) > 0 && (
+                  <span className="mfr-badge">{activeFilterCount + (sortOrder !== "anbefalet" ? 1 : 0)}</span>
+                )}
+              </button>
+              <div className="mfr-divider" />
+              <button className="mfr-btn mfr-sort" onClick={() => setShowFilterSheet(true)}>
+                <span>{{ anbefalet: "Anbefalet", "pris-asc": "Billigst", hurtigst: "Hurtigst", populaer: "Populær" }[sortOrder]}</span>
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M4 6 L8 10 L12 6"/>
+                </svg>
+              </button>
+            </div>
+
             {/* ── Quick diet + sort strip ─────────────────── */}
             <div className="quick-strip-wrap">
               <div className="quick-strip">
@@ -2109,7 +2157,7 @@ export default function App() {
                   <button
                     key={f.val}
                     className={`qs-pill${diet === f.val ? " active" : ""}`}
-                    onClick={() => setDiet(f.val)}
+                    onClick={() => changeDiet(f.val)}
                   >
                     {f.label}
                   </button>
@@ -2151,14 +2199,6 @@ export default function App() {
                     <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
-                <select className="sort-select" value={sortOrder} onChange={e => setSortOrder(e.target.value)} aria-label="Sortering">
-                  <option value="anbefalet">Anbefalet</option>
-                  <option value="pris-asc">Pris: Lavest</option>
-                  <option value="pris-desc">Pris: Højest</option>
-                  <option value="hurtigst">Hurtigst</option>
-                  <option value="populaer">Mest populær</option>
-                  <option value="nyeste">Nyeste</option>
-                </select>
               </div>
               {!collapsedSections.recommended && (
                 <p className="section-intro">Bygget på denne uges bedste tilbud fra dine butikker</p>
@@ -2199,14 +2239,6 @@ export default function App() {
                     <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
-                <select className="sort-select" value={sortOrder} onChange={e => setSortOrder(e.target.value)} aria-label="Sortering">
-                  <option value="anbefalet">Anbefalet</option>
-                  <option value="pris-asc">Pris: Lavest</option>
-                  <option value="pris-desc">Pris: Højest</option>
-                  <option value="hurtigst">Hurtigst</option>
-                  <option value="populaer">Mest populær</option>
-                  <option value="nyeste">Nyeste</option>
-                </select>
               </div>
               {!collapsedSections.others && (
                 <p className="section-intro">Udforsk mere — bare hent et ekstra tilbud fra en ny butik</p>
@@ -2486,7 +2518,7 @@ export default function App() {
             const checked = checkedItems.has(item);
             return (
               <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`} onClick={() => toggleCheckedItem(item)}>
-                <button className="shopping-check-btn" onClick={e => e.stopPropagation()} aria-label={checked ? "Fjern hak" : "Sæt hak"} tabIndex={-1}>
+                <button className="shopping-check-btn" onClick={e => { e.stopPropagation(); toggleCheckedItem(item); }} aria-label={checked ? "Fjern hak" : "Sæt hak"} tabIndex={-1}>
                   {checked ? (
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="2,7 6,11 12,3"/>
@@ -2739,6 +2771,170 @@ export default function App() {
             <p className="fb-anon-note">Anonym — ingen persondata gemmes</p>
           </div>
         )}
+      </div>
+    </div>
+  )}
+
+  {/* ── Overflow menu bottom sheet (mobile) ─────────────────────── */}
+  {showOverflowMenu && (
+    <div className="mp-sheet-overlay" onClick={() => setShowOverflowMenu(false)}>
+      <div className="overflow-menu-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <button className="overflow-menu-item" onClick={() => { setShowSavedPanel(true); setShowOverflowMenu(false); }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Gemte opskrifter</span>
+          {savedRecipes.length > 0 && <span className="overflow-menu-badge">{savedRecipes.length}</span>}
+        </button>
+        <button className="overflow-menu-item" onClick={() => { setDarkMode(d => !d); setShowOverflowMenu(false); }}>
+          {darkMode ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          )}
+          <span>{darkMode ? "Lys tilstand" : "Mørk tilstand"}</span>
+        </button>
+        <button className="overflow-menu-item" onClick={() => { openSettings(); setShowOverflowMenu(false); }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Indstillinger</span>
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* ── Filter & sort bottom sheet (mobile) ──────────────────────── */}
+  {showFilterSheet && (
+    <div className="mp-sheet-overlay" onClick={() => setShowFilterSheet(false)}>
+      <div className="filter-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <div className="filter-sheet-header">
+          <span className="filter-sheet-title">Filtre &amp; sortering</span>
+          <button className="mp-sheet-close" onClick={() => setShowFilterSheet(false)} aria-label="Luk">×</button>
+        </div>
+        <div className="filter-sheet-body">
+          <div className="filter-sheet-group">
+            <div className="filter-sheet-label">Kosttype</div>
+            <div className="filter-chip-row">
+              {[
+                { val: "Alle", label: "Alle" },
+                { val: "Vegetar", label: "Vegetar" },
+                { val: "Veganer", label: "Veganer" },
+                { val: "Glutenfri", label: "Glutenfri" },
+                { val: "Mælkefri", label: "Mælkefri" },
+              ].map(f => (
+                <button key={f.val} className={`filter-chip${diet === f.val ? " active" : ""}`} onClick={() => changeDiet(f.val)}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="filter-sheet-group">
+            <div className="filter-sheet-label">Hurtigfiltre</div>
+            <div className="filter-chip-row">
+              {[
+                { id: "under20kr",  label: "Under 20 kr." },
+                { id: "under20min", label: "Under 20 min" },
+                { id: "populaere",  label: "Populære" },
+                { id: "enbutik",    label: "Én butik" },
+              ].map(f => (
+                <button key={f.id} className={`filter-chip${quickFilters.has(f.id) ? " active" : ""}`} onClick={() => toggleQuickFilter(f.id)}>
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="filter-sheet-group">
+            <div className="filter-sheet-label">Tid</div>
+            <div className="filter-chip-row">
+              {timeFilters.map(f => (
+                <button key={f} className={`filter-chip${timeFilter === f ? " active" : ""}`} onClick={() => setTimeFilter(f)}>{f}</button>
+              ))}
+            </div>
+          </div>
+          {CUISINE_ORDER.length > 2 && (
+            <div className="filter-sheet-group">
+              <div className="filter-sheet-label">Køkken</div>
+              <div className="filter-chip-row">
+                {CUISINE_ORDER.map(c => (
+                  <button key={c} className={`filter-chip${cuisineFilter === c ? " active" : ""}`} onClick={() => setCuisineFilter(c)}>{c}</button>
+                ))}
+              </div>
+            </div>
+          )}
+          {maxRecipePrice > 0 && (
+            <div className="filter-sheet-group">
+              <div className="filter-sheet-label">Pris pr. person</div>
+              <div className="price-range-wrap prefs-price-wrap">
+                <div className="price-range-header">
+                  <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
+                    {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
+                    {priceFiltered && (
+                      <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
+                    )}
+                  </span>
+                </div>
+                <div className="price-range-track-wrap">
+                  <div className="price-range-track-bg" />
+                  <div className="price-range-fill" style={{ left: `${(priceMin / maxRecipePrice) * 100}%`, right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%` }} />
+                  <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
+                    onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }} />
+                  <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
+                    onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }} />
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="filter-sheet-group">
+            <div className="filter-sheet-label">Køleskab</div>
+            <div className="fs-pantry-input-row">
+              <input
+                className="fs-pantry-input"
+                type="text"
+                placeholder="Tilføj ingrediens du har..."
+                value={pantryInput}
+                onChange={e => setPantryInput(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(); } }}
+              />
+              <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>Tilføj</button>
+            </div>
+            {pantryItems.size > 0 && (
+              <div className="fs-pantry-chips">
+                {[...pantryItems].map(item => (
+                  <button key={item} className="fs-pantry-chip" onClick={() => togglePantryItem(item)}>
+                    {item} <span aria-hidden="true">×</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="filter-sheet-group">
+            <div className="filter-sheet-label">Sorter efter</div>
+            <div className="filter-chip-row">
+              {[
+                { id: "anbefalet", label: "Anbefalet" },
+                { id: "pris-asc",  label: "Billigst" },
+                { id: "hurtigst", label: "Hurtigst" },
+                { id: "populaer", label: "Populær" },
+              ].map(s => (
+                <button key={s.id} className={`filter-chip${sortOrder === s.id ? " active" : ""}`} onClick={() => setSortOrder(s.id)}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="filter-sheet-footer">
+          <button className="filter-sheet-apply" onClick={() => setShowFilterSheet(false)}>
+            Vis {(filteredRecommended.length + filteredOthers.length)} opskrifter
+          </button>
+        </div>
       </div>
     </div>
   )}

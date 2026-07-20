@@ -5,6 +5,10 @@ body {
   background: #1B1613;
 }
 
+html:not(.dark) body { background: #F1E9DB; }
+html:not(.dark) h1, html:not(.dark) h2 { color: #221C17; }
+html:not(.dark) code, html:not(.dark) .counter { color: #221C17; }
+
 #root {
   max-width: 100%;
   min-height: 100svh;
