@@ -3043,7 +3043,8 @@ html.dark .ob-overlay { background: #1B1613; }
   padding: 3rem 2rem;
   position: relative;
   background: linear-gradient(160deg, #1B1613 0%, #1B1613 50%, #1B1613 100%);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   --logo-main: rgba(238,230,216,0.45);
   --logo-bg: #0a160a;
   --logo-leaf: #7C8F5A;
@@ -3694,6 +3695,15 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(206,159,62,0.12); }
 
 /* ── Onboarding welcome logo ─────────────────── */
 .ob-welcome-logo { margin: 0 auto 2.5rem; width: min(240px, 52vw); height: auto; display: block; }
+
+/* Short phones — keep welcome screen content visible without scrolling */
+@media (max-height: 640px) {
+  .ob-welcome { padding: 1.5rem 1.5rem; align-items: flex-start; }
+  .ob-welcome-logo { width: min(120px, 32vw) !important; margin-bottom: 1rem; }
+  .ob-welcome-tagline { font-size: 16px; margin-bottom: 10px; }
+  .ob-welcome-desc { font-size: 15px; line-height: 1.6; margin-bottom: 1.5rem; }
+  .ob-cta-btn { padding: 15px 32px; font-size: 17px; }
+}
 
 /* ─── Card badges row (top of recipe card) ──── */
 .card-badges {
