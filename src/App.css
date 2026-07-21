@@ -5997,7 +5997,9 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
    ═══════════════════════════════════════════════════════════════ */
 
 /* Desktop: show individual header buttons; hide overflow trigger */
-.header-overflow-btn { display: none; }
+/* position:relative so the saved-count .header-badge anchors to this button
+   (top/right -2px) instead of a distant positioned ancestor. */
+.header-overflow-btn { display: none; position: relative; }
 
 @media (max-width: 600px) {
   /* Header: show overflow trigger; hide individual buttons */
