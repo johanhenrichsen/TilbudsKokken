@@ -833,7 +833,7 @@ export default function App() {
   // True whenever any bottom sheet / modal / overlay is open. Used both to lock
   // scrolling and to hide the floating action buttons so they can't intercept
   // clicks meant for an open sheet (QA bugs #6 / #7).
-  const anyModalOpen = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showStorePicker || showFeedbackPanel;
+  const anyModalOpen = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showStorePicker || showFeedbackPanel || addingToPlan != null;
 
   // Lock page scroll while any bottom sheet / modal is open. The document scrolls
   // on the root <html> element (body has default overflow), so locking body alone
@@ -2336,7 +2336,7 @@ export default function App() {
                   onClick={() => toggleSection("recommended")}
                   aria-expanded={!collapsedSections.recommended}
                 >
-                  <span className="section-toggle-label">Ugens opskrifter</span>
+                  <span className="section-toggle-label">{search.trim() ? "Søgeresultater" : "Ugens opskrifter"}</span>
                   <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
                   <svg
                     className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
@@ -2348,7 +2348,11 @@ export default function App() {
                 </button>
               </div>
               {!collapsedSections.recommended && (
-                <p className="section-intro">Bygget på denne uges bedste tilbud fra dine butikker</p>
+                <p className="section-intro">
+                  {search.trim()
+                    ? `${filteredRecommended.length + filteredOthers.length} resultat${(filteredRecommended.length + filteredOthers.length) === 1 ? "" : "er"} for "${search.trim()}"`
+                    : "Bygget på denne uges bedste tilbud fra dine butikker"}
+                </p>
               )}
               <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
@@ -2659,30 +2663,38 @@ export default function App() {
           <div className="shopping-sheet-title">Indkøbsliste</div>
           <button className="mp-sheet-close" onClick={() => setShowShoppingSheet(false)}>×</button>
         </div>
-        <ul className="shopping-sheet-list">
-          {shoppingList.map((item, i) => {
-            const checked = checkedItems.has(item);
-            return (
-              <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`} onClick={() => toggleCheckedItem(item)}>
-                <button className="shopping-check-btn" onClick={e => { e.stopPropagation(); toggleCheckedItem(item); }} aria-label={checked ? "Fjern hak" : "Sæt hak"} tabIndex={-1}>
-                  {checked ? (
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="2,7 6,11 12,3"/>
-                    </svg>
-                  ) : null}
-                </button>
-                <span className="shopping-sheet-text">{item}</span>
-                <button className="shopping-item-remove" onClick={e => { e.stopPropagation(); removeFromShoppingList(i); }}>×</button>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="shopping-sheet-footer">
-          {checkedItems.size > 0 && (
-            <button className="mp-clear-btn mp-clear-btn--safe" onClick={clearCheckedItems}>Ryd afkrydsede</button>
-          )}
-          <button className="mp-clear-btn" onClick={clearShoppingList}>Start forfra</button>
-        </div>
+        {shoppingList.length === 0 ? (
+          <div className="saved-sheet-empty">
+            Din indkøbsliste er tom endnu — åbn en opskrift og tryk “Til indkøb” for at samle ingredienserne her.
+          </div>
+        ) : (
+          <>
+            <ul className="shopping-sheet-list">
+              {shoppingList.map((item, i) => {
+                const checked = checkedItems.has(item);
+                return (
+                  <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`} onClick={() => toggleCheckedItem(item)}>
+                    <button className="shopping-check-btn" onClick={e => { e.stopPropagation(); toggleCheckedItem(item); }} aria-label={checked ? "Fjern hak" : "Sæt hak"} tabIndex={-1}>
+                      {checked ? (
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="2,7 6,11 12,3"/>
+                        </svg>
+                      ) : null}
+                    </button>
+                    <span className="shopping-sheet-text">{item}</span>
+                    <button className="shopping-item-remove" onClick={e => { e.stopPropagation(); removeFromShoppingList(i); }}>×</button>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="shopping-sheet-footer">
+              {checkedItems.size > 0 && (
+                <button className="mp-clear-btn mp-clear-btn--safe" onClick={clearCheckedItems}>Ryd afkrydsede</button>
+              )}
+              <button className="mp-clear-btn" onClick={clearShoppingList}>Start forfra</button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )}
