@@ -108,7 +108,8 @@ html, body {
   overflow-x: clip;
 }
 .app.app-entering {
-  animation: app-enter-slide 0.36s cubic-bezier(0.2, 0, 0, 1) both;
+  animation: app-enter-slide 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 40ms;
 }
 @media (prefers-reduced-motion: reduce) {
   .app.app-entering { animation: none !important; }
@@ -2843,15 +2844,16 @@ html.dark .header-icon-btn { background: #2B2620; border: none; color: #C9BFAF; 
 html.dark .header-icon-btn:hover { background: #322C25; color: var(--text); }
 
 /* ─── Onboarding overlay ─────────────────────── */
-/* Onboarding slides fully out to the left while the app slides in from the
-   right — one continuous motion. Both share the same ease-out timing. */
+/* Overlay sweeps left with ease-in (accelerates away).
+   App rises in from slight right offset with expo ease-out (snaps into place).
+   40 ms stagger: overlay starts moving, then app fades up — sequential reveal. */
 @keyframes ob-exit-slide {
-  0%   { transform: translateX(0); opacity: 1; }
-  100% { transform: translateX(-100%); opacity: 0; }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
 }
 @keyframes app-enter-slide {
-  0%   { transform: translateX(44px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  from { transform: translateX(56px) scale(0.97); opacity: 0; }
+  to   { transform: translateX(0)     scale(1);   opacity: 1; }
 }
 .ob-overlay {
   position: fixed;
@@ -2863,7 +2865,7 @@ html.dark .header-icon-btn:hover { background: #322C25; color: var(--text); }
   overflow: hidden;
 }
 .ob-overlay.exiting {
-  animation: ob-exit-slide 0.36s cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: ob-exit-slide 0.38s cubic-bezier(0.4, 0, 1, 1) forwards;
   pointer-events: none;
 }
 html.dark .ob-overlay { background: #1B1613; }
@@ -5714,13 +5716,16 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   body.recipe-open .mobile-bottom-nav { display: none; }
   body.recipe-open .fb-fab { display: none; }
 
-  .detail-actions {
-    position: fixed !important;
+  /* Desktop inline bar is hidden on mobile; the docked bar (portaled to
+     <body>) is the fixed bottom bar so position:fixed is viewport-relative. */
+  .detail-actions.detail-actions--inline { display: none !important; }
+  .detail-actions--dock {
+    position: fixed;
     left: 0; right: 0; bottom: 0;
     z-index: 120;
     display: flex !important;
     gap: 8px;
-    margin: 0 !important;
+    margin: 0;
     padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
     background: #1B1613;
     border-top: 1px solid #39322A;
@@ -6000,6 +6005,10 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
 /* position:relative so the saved-count .header-badge anchors to this button
    (top/right -2px) instead of a distant positioned ancestor. */
 .header-overflow-btn { display: none; position: relative; }
+
+/* Docked recipe-detail action bar is a mobile-only element (portaled to
+   <body>); the desktop inline bar handles ≥601px. Shown by the mobile rule. */
+.detail-actions--dock { display: none; }
 
 @media (max-width: 600px) {
   /* Header: show overflow trigger; hide individual buttons */

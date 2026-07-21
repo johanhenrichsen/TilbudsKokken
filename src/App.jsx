@@ -1455,6 +1455,69 @@ export default function App() {
   const detailInList = selectedRecipe ? allShoppablesInList(selectedRecipe, shoppingList) : false;
   const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
 
+  // The recipe-detail action buttons, shared between the desktop inline bar
+  // (in the recipe header) and the mobile docked bar. On mobile the docked bar
+  // is portaled to <body> (see below) so its position:fixed is relative to the
+  // viewport — the .recipe-detail-sheet is itself position:fixed;overflow:auto,
+  // and nesting the bar inside it left `bottom:0` resolving to the wrong box,
+  // so the bar drifted mid-scroll instead of staying pinned to the bottom.
+  const detailActionButtons = selectedRecipe && (
+    <>
+      <button
+        className={`share-btn${copied ? " copied" : ""}`}
+        onClick={() => shareRecipe(selectedRecipe)}
+        title="Del opskrift"
+      >
+        {copied ? (
+          <>✓ <span>Kopieret!</span></>
+        ) : (
+          <>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            <span>Del</span>
+          </>
+        )}
+      </button>
+      <button
+        className={`save-btn${isRecipeSaved ? " saved" : ""}`}
+        onClick={() => toggleSaveRecipe(selectedRecipe, servings)}
+        title={isRecipeSaved ? "Fjern fra gemte" : "Gem opskrift"}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>{isRecipeSaved ? "Gemt" : "Gem opskrift"}</span>
+      </button>
+      <button
+        className={`save-btn detail-list-btn${detailInList ? " added" : ""}`}
+        onClick={() => addAllSavedToShoppingList([selectedRecipe])}
+        title="Tilføj ingredienser til indkøbsliste"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span>{detailInList ? "Tilføjet ✓" : "Til indkøb"}</span>
+      </button>
+      {(() => {
+        const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
+        return (
+          <button
+            className={`add-to-plan-btn detail${inPlan ? " in-plan" : ""}`}
+            onClick={() => !inPlan && setAddingToPlan(selectedRecipe)}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>{inPlan ? "I madplan" : "Tilføj til ugen"}</span>
+          </button>
+        );
+      })()}
+    </>
+  );
+
   // ── Render a grid of recipe cards ──────────────────────────────
   function renderRecipeGrid(recipes) {
     const availableNames = getAvailableItemNames();
@@ -2057,59 +2120,8 @@ export default function App() {
                 <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
                 {selectedRecipe.subtitle && <p className="recipe-subtitle">{selectedRecipe.subtitle}</p>}
               </div>
-              <div className="detail-actions" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <button
-                  className={`share-btn${copied ? " copied" : ""}`}
-                  onClick={() => shareRecipe(selectedRecipe)}
-                  title="Del opskrift"
-                >
-                  {copied ? (
-                    <>✓ <span>Kopieret!</span></>
-                  ) : (
-                    <>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                        <polyline points="16 6 12 2 8 6"/>
-                        <line x1="12" y1="2" x2="12" y2="15"/>
-                      </svg>
-                      <span>Del</span>
-                    </>
-                  )}
-                </button>
-                <button
-                  className={`save-btn${isRecipeSaved ? " saved" : ""}`}
-                  onClick={() => toggleSaveRecipe(selectedRecipe, servings)}
-                  title={isRecipeSaved ? "Fjern fra gemte" : "Gem opskrift"}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-                  </svg>
-                  <span>{isRecipeSaved ? "Gemt" : "Gem opskrift"}</span>
-                </button>
-                <button
-                  className={`save-btn detail-list-btn${detailInList ? " added" : ""}`}
-                  onClick={() => addAllSavedToShoppingList([selectedRecipe])}
-                  title="Tilføj ingredienser til indkøbsliste"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                  </svg>
-                  <span>{detailInList ? "Tilføjet ✓" : "Til indkøb"}</span>
-                </button>
-                {(() => {
-                  const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
-                  return (
-                    <button
-                      className={`add-to-plan-btn detail${inPlan ? " in-plan" : ""}`}
-                      onClick={() => !inPlan && setAddingToPlan(selectedRecipe)}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                      </svg>
-                      <span>{inPlan ? "I madplan" : "Tilføj til ugen"}</span>
-                    </button>
-                  );
-                })()}
+              <div className="detail-actions detail-actions--inline" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {detailActionButtons}
               </div>
             </div>
 
@@ -2410,6 +2422,15 @@ export default function App() {
 
 
     </div>
+
+  {/* Mobile docked recipe-detail action bar.
+      Portaled to <body> so position:fixed is relative to the viewport and the
+      bar stays pinned to the bottom while the recipe sheet scrolls. Hidden on
+      desktop via CSS (the inline .detail-actions--inline bar is used there). */}
+  {selectedRecipe && createPortal(
+    <div className="detail-actions detail-actions--dock">{detailActionButtons}</div>,
+    document.body
+  )}
 
   {/* Mobile meal plan bottom sheet */}
   {showMealPlanPanel && (
