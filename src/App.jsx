@@ -1408,9 +1408,8 @@ export default function App() {
       localStorage.setItem("defaultServings", String(pendingServings));
       localStorage.setItem("onboardingDone", "true");
       setOnboardingExiting(true);
-      // Keep in sync with the .ob-overlay.exiting / .app-entering animation
-      // duration in App.css (0.36s) so the overlay isn't unmounted mid-slide.
-      setTimeout(() => { setOnboardingStep(null); setOnboardingExiting(false); }, 380);
+      // Keep in sync with app-enter-slide: 40ms delay + 520ms duration = 560ms total.
+      setTimeout(() => { setOnboardingStep(null); setOnboardingExiting(false); }, 580);
     }
   }
 
@@ -1718,7 +1717,6 @@ export default function App() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
                   <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
                 </svg>
-                {savedRecipes.length > 0 && <span className="header-badge">{savedRecipes.length}</span>}
               </button>
               <button className="header-icon-btn header-icon-btn--bookmark header-icon-btn--desktop" onClick={() => setShowSavedPanel(true)} title="Gemte opskrifter">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -2944,13 +2942,6 @@ export default function App() {
     <div className="mp-sheet-overlay" onClick={() => setShowOverflowMenu(false)}>
       <div className="overflow-menu-sheet" onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
-        <button className="overflow-menu-item" onClick={() => { setShowSavedPanel(true); setShowOverflowMenu(false); }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-          </svg>
-          <span>Gemte opskrifter</span>
-          {savedRecipes.length > 0 && <span className="overflow-menu-badge">{savedRecipes.length}</span>}
-        </button>
         <button className="overflow-menu-item" onClick={() => { setDarkMode(d => !d); setShowOverflowMenu(false); }}>
           {darkMode ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
