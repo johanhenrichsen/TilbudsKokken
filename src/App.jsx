@@ -563,21 +563,9 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
         </div>
 
         <div className="recipe-deal-tags">
-          {(r.dealItems || []).slice(0, 3).map(di => {
-            const available = availableNames.has(di.name);
-            return (
-              <span
-                key={di.name}
-                className={`deal-item-tag${available ? " available" : " unavailable"}`}
-              >
-                <span className="chain-badge deal-chain-badge" style={getChainColor(di.store) ? { '--chain-color': getChainColor(di.store) } : undefined}></span>
-                {di.name.replace(/ \d+.*$/, "")}
-              </span>
-            );
-          })}
-          {(r.dealItems || []).length > 3 && (
-            <span className="deal-item-overflow">og {(r.dealItems || []).length - 3} mere</span>
-          )}
+          {[...new Set((r.dealItems || []).map(di => di.store))].map(ch => (
+            <span key={ch} className="deal-chain-tag">{ch}</span>
+          ))}
         </div>
         <div className="card-action-row">
           <button
@@ -1935,11 +1923,6 @@ export default function App() {
 
         {setupComplete && (
           <div className="local-store-badge" onClick={() => setShowStorePicker(true)} role="button" tabIndex={0} title="Administrer butikker">
-            <span className="local-store-dots">
-              {[...new Set((localStores || []).map(s => s.chain))].map(ch => (
-                <span key={ch} className="chain-badge chain-badge--active" style={getChainColor(ch) ? { '--chain-color': getChainColor(ch) } : undefined}></span>
-              ))}
-            </span>
             <span className="local-store-label">
               {localStores && localStores.length > 1
                 ? <><strong>{localStores.length} butikker</strong> valgt</>

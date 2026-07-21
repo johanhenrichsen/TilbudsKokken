@@ -24,21 +24,27 @@
 
   /* UI tokens — single dark theme */
   --text:           #EEE6D8;
-  --text-dim:       rgba(238,230,216,0.65);
-  --text-faint:     rgba(238,230,216,0.45);
-  --text-ghost:     rgba(238,230,216,0.22);
-  --muted:          rgba(238,230,216,0.5);
+  --text-dim:       rgba(238,230,216,0.75);
+  --text-faint:     rgba(238,230,216,0.60);
+  --text-ghost:     rgba(238,230,216,0.35);
+  --muted:          rgba(238,230,216,0.60);
   --surface:        #2B2620;
   --surface-2:      #352F2B;
   --border-dark:    rgba(238,230,216,0.1);
   --border:         rgba(238,230,216,0.1);
 
+  /* Border radius system */
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      14px;
+  --radius-pill:    999px;
+
   /* Typography — three-font system
-     Display  : Bricolage Grotesque (headings, titles, large numbers)
-     Body     : Literata             (descriptions, ingredients, UI copy)
-     Stamp    : Space Mono           (prices, meta, week badge, counts) */
-  --font-serif: 'Bricolage Grotesque', ui-sans-serif, sans-serif;
-  --font-sans:  'Literata', Georgia, 'Times New Roman', serif;
+     Display  : Fraunces   (variable opsz serif — headings, titles, large numbers)
+     Body     : DM Sans    (geometric humanist — descriptions, ingredients, UI copy)
+     Stamp    : Space Mono (monospace — prices, meta, week badge, counts) */
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans:  'DM Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono:  'Space Mono', ui-monospace, Consolas, monospace;
 
   /* Type scale — sizes */
@@ -49,11 +55,11 @@
   --type-body-lg:   16px;
   --type-body:      14px;
   --type-body-sm:   13px;
-  --type-caption:   12px;
-  --type-micro:     11px;
+  --type-caption:   13px;
+  --type-micro:     12px;
   --type-stamp-lg:  14px;
-  --type-stamp:     11.5px;
-  --type-stamp-sm:  10px;
+  --type-stamp:     12px;
+  --type-stamp-sm:  11px;
 
   /* Type scale — tracking */
   --tracking-display: -0.025em;
@@ -131,7 +137,7 @@ html, body {
   background: rgba(206,159,62,0.12);
   color: #CE9F3E;
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-weight: 700;
   letter-spacing: var(--tracking-badge, 0.07em);
   padding: 5px 10px;
@@ -142,6 +148,7 @@ html, body {
 .app-title {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
+  font-variation-settings: 'WONK' 1;
   font-size: 28px;
   font-weight: 700;
   color: var(--text);
@@ -194,7 +201,7 @@ html, body {
 /* ─── Store cards ────────────────────────────── */
 .store-card {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   overflow: hidden;
 }
@@ -226,13 +233,13 @@ html, body {
 .store-item:hover { background: rgba(238,230,216,0.06); }
 .store-item.selected { background: rgba(124,143,90,0.12); }
 .item-name { font-size: var(--type-body-sm, 13px); color: var(--text); line-height: var(--lh-body, 1.65); }
-.item-price { font-family: var(--font-mono); font-size: var(--type-stamp, 11.5px); font-weight: 700; letter-spacing: var(--tracking-stamp, 0.035em); color: #7C8F5A; text-align: right; }
-.item-unit { font-family: var(--font-mono); font-size: var(--type-stamp-sm, 10px); letter-spacing: var(--tracking-stamp, 0.035em); color: var(--text-faint); text-align: right; }
+.item-price { font-family: var(--font-mono); font-size: var(--type-stamp, 12px); font-weight: 700; letter-spacing: var(--tracking-stamp, 0.035em); color: #7C8F5A; text-align: right; }
+.item-unit { font-family: var(--font-mono); font-size: var(--type-stamp-sm, 11px); letter-spacing: var(--tracking-stamp, 0.035em); color: var(--text-faint); text-align: right; }
 
 /* ─── Bottom bar ─────────────────────────────── */
 .bottom-bar {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   padding: 14px 18px;
   margin-bottom: 1.5rem;
@@ -368,7 +375,7 @@ html, body {
 /* ─── Recipe card ────────────────────────────── */
 .recipe-card {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
   padding: 2rem;
   margin-bottom: 1rem;
@@ -376,6 +383,7 @@ html, body {
 .recipe-title {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
+  font-variation-settings: 'WONK' 1;
   font-size: 26px;
   font-weight: 800;
   color: var(--text);
@@ -406,7 +414,7 @@ html, body {
 }
 .recipe-detail-price-pp { opacity: 0.75; font-size: 12px; font-weight: 400; }
 .section-label {
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-family: var(--font-mono);
   font-weight: 700;
   letter-spacing: var(--tracking-badge, 0.07em);
@@ -429,7 +437,7 @@ html, body {
 }
 .section-label-count {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: none;
@@ -486,7 +494,7 @@ html, body {
   color: var(--text);
   border-radius: 50%;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -567,7 +575,7 @@ html, body {
 /* ─── Shopping list ──────────────────────────── */
 .shopping-list-card {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
   padding: 1.5rem;
   margin-top: 0;
@@ -679,7 +687,7 @@ html, body {
 /* ─── Saved recipes ──────────────────────────── */
 .saved-recipes-card {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
   padding: 1.5rem;
   margin-top: 1rem;
@@ -711,12 +719,12 @@ html, body {
 }
 .saved-recipe-meta {
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
 }
 .saved-recipe-chevron {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-faint);
 }
 .saved-recipe-delete {
@@ -790,6 +798,46 @@ html, body {
 }
 .loading-text { font-size: 14px; color: var(--text-dim); font-weight: 500; margin: 0; }
 
+/* ─── Entry animations ───────────────────────── */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes overlay-in {
+  from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
+  to   { background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); }
+}
+
+.recipe-browse-card {
+  animation: card-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.recipe-browse-card:nth-child(1) { animation-delay: 0ms; }
+.recipe-browse-card:nth-child(2) { animation-delay: 60ms; }
+.recipe-browse-card:nth-child(3) { animation-delay: 110ms; }
+.recipe-browse-card:nth-child(4) { animation-delay: 160ms; }
+.recipe-browse-card:nth-child(5) { animation-delay: 200ms; }
+.recipe-browse-card:nth-child(6) { animation-delay: 235ms; }
+.recipe-browse-card:nth-child(7) { animation-delay: 265ms; }
+.recipe-browse-card:nth-child(8) { animation-delay: 290ms; }
+.recipe-browse-card:nth-child(n+9) { animation-delay: 310ms; }
+
+.recipe-title       { animation: fade-up 0.38s 0.04s cubic-bezier(0.16,1,0.3,1) both; }
+.recipe-meta-bar    { animation: fade-up 0.38s 0.10s cubic-bezier(0.16,1,0.3,1) both; }
+.recipe-description { animation: fade-up 0.38s 0.15s cubic-bezier(0.16,1,0.3,1) both; }
+.recipe-tips-block  { animation: fade-up 0.38s 0.20s cubic-bezier(0.16,1,0.3,1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .recipe-browse-card,
+  .recipe-title,
+  .recipe-meta-bar,
+  .recipe-description,
+  .recipe-tips-block { animation: none !important; }
+}
+
 /* ─── Empty state ────────────────────────────── */
 .empty-state {
   text-align: center;
@@ -833,6 +881,7 @@ html, body {
 .section-toggle-label {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
+  font-variation-settings: 'WONK' 1;
   font-size: var(--type-h1, 20px);
   font-weight: 700;
   color: var(--text);
@@ -849,7 +898,7 @@ html, body {
 }
 .section-count-badge {
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-weight: 700;
   letter-spacing: var(--tracking-stamp, 0.035em);
   color: #8C8375;
@@ -891,16 +940,23 @@ html, body {
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
+.recipe-browse-grid .recipe-browse-card:first-child {
+  grid-column: 1 / -1;
+}
+.recipe-browse-grid .recipe-browse-card:first-child .card-photo-wrap {
+  height: 240px;
+}
 .recipe-browse-card {
   background: #2B2620;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(238,230,216,0.08);
   box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15);
   padding: 0;
   overflow: hidden;
   cursor: pointer;
   position: relative;
-  transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.22s ease;
+  transition: transform 0.25s cubic-bezier(0.33, 1, 0.68, 1),
+              box-shadow 0.25s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 /* ─── Card photo ─────────────────────────────── */
@@ -933,7 +989,13 @@ html, body {
 .card-photo-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, rgba(27,22,19,0.65) 100%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 45%,
+    rgba(27,22,19,0.4) 65%,
+    rgba(27,22,19,0.88) 100%
+  );
   pointer-events: none;
 }
 
@@ -948,7 +1010,7 @@ html, body {
   background: #7C8F5A;
   color: #1B1613;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   padding: 3px 9px;
   border-radius: 999px;
@@ -973,8 +1035,8 @@ html, body {
   padding: 14px 16px 16px;
 }
 .recipe-browse-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.2);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.5), 0 6px 16px rgba(0,0,0,0.3);
 }
 .recipe-browse-card:active {
   transform: scale(0.965);
@@ -996,10 +1058,11 @@ html, body {
   margin-bottom: 8px;
 }
 
-/* Title — Bricolage Grotesque, Papir */
+/* Title — Fraunces, Papir */
 .recipe-browse-title {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
+  font-variation-settings: 'WONK' 1;
   font-size: var(--type-h3, 16px);
   font-weight: 700;
   color: var(--text);
@@ -1013,7 +1076,7 @@ html, body {
   display: flex;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
   margin-bottom: 8px;
@@ -1029,7 +1092,7 @@ html, body {
 .card-pantry-match-count {
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-weight: 700;
   letter-spacing: var(--tracking-stamp, 0.035em);
   padding: 2px 8px;
@@ -1055,7 +1118,7 @@ html, body {
 }
 .card-pantry-match-chip {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 11px;
   padding: 1px 6px;
   border-radius: 4px;
   background: rgba(200, 146, 42, 0.16);
@@ -1065,7 +1128,7 @@ html, body {
 /* Price — Space Mono, Dild color */
 .recipe-card-price {
   font-family: var(--font-mono);
-  font-size: var(--type-stamp, 11.5px);
+  font-size: var(--type-stamp, 12px);
   color: #7C8F5A;
   font-weight: 700;
   margin-bottom: 8px;
@@ -1088,7 +1151,7 @@ html, body {
   align-items: center;
   gap: 4px;
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
   font-weight: 400;
@@ -1121,7 +1184,7 @@ html, body {
   border-radius: 4px;
   padding: 3px 9px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   margin-top: 4px;
 }
@@ -1187,7 +1250,7 @@ html, body {
   gap: 4px;
   border-radius: 4px;
   padding: 3px 9px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
 }
 .deal-item-tag.available {
@@ -1200,8 +1263,19 @@ html, body {
   color: var(--text-faint);
   border: 1px solid rgba(238,230,216,0.1);
 }
+.deal-chain-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(238,230,216,0.07);
+  color: var(--text-dim);
+  border: 1px solid rgba(238,230,216,0.12);
+}
 .deal-item-overflow {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-faint);
   font-weight: 500;
   white-space: nowrap;
@@ -1266,7 +1340,7 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-faint);
   margin: 8px 0 1.25rem;
   padding: 8px 10px;
@@ -1489,7 +1563,7 @@ html, body {
 /* ─── Onboarding ─────────────────────────────── */
 .store-picker-onboarding {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   padding: 1.5rem;
   box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
   max-height: calc(100svh - 210px);
@@ -1519,10 +1593,13 @@ html, body {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 300; /* above mobile bottom nav (260) — mobile bug #4 */
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  animation: overlay-in 0.28s ease both;
 }
 .store-picker-card {
   background: #2B2620;
@@ -1625,10 +1702,13 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 300; /* above mobile bottom nav (260) — mobile bug #4 */
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  animation: overlay-in 0.28s ease both;
 }
 .day-picker-card {
   background: #2B2620;
@@ -1661,13 +1741,13 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .day-picker-btn.occupied { background: rgba(206,159,62,0.12); border-color: rgba(206,159,62,0.4); }
 .day-picker-short { font-size: 11px; font-weight: 700; color: var(--text); }
 .day-picker-full { display: none; }
-.day-picker-recipe { font-size: 9px; color: var(--text-faint); text-align: center; line-height: 1.3; max-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.day-picker-empty-label { font-size: 9px; color: rgba(206,159,62,0.3); font-weight: 600; }
+.day-picker-recipe { font-size: 11px; color: var(--text-faint); text-align: center; line-height: 1.3; max-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.day-picker-empty-label { font-size: 11px; color: rgba(206,159,62,0.3); font-weight: 600; }
 
 /* ─── Meal plan card ─────────────────────────── */
 .meal-plan-card {
   background: #2B2620;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
   padding: 1.5rem;
   margin-top: 1rem;
@@ -1726,7 +1806,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .meal-plan-day.filled:active { cursor: grabbing; }
 .meal-plan-day.dragging { opacity: 0.5; transform: scale(0.97); }
 .meal-plan-day-name {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-faint);
   text-transform: uppercase;
@@ -1736,7 +1816,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .meal-plan-day.filled .meal-plan-day-name { color: #C1442E; }
 .meal-plan-emoji { font-size: 20px; margin-bottom: 4px; }
 .meal-plan-recipe-title {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: #352F2B;
   text-align: center;
@@ -1748,7 +1828,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   word-break: break-word;
   width: 100%;
 }
-.meal-plan-recipe-meta { font-size: 9px; color: var(--cream-dim); margin-top: 3px; }
+.meal-plan-recipe-meta { font-size: 11px; color: var(--cream-dim); margin-top: 3px; }
 .meal-plan-servings {
   display: flex;
   align-items: center;
@@ -1773,7 +1853,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   transition: background 0.12s;
 }
 .plan-sv-btn:hover { background: rgba(124,143,90,0.12); }
-.meal-plan-empty-label { font-size: 10px; color: var(--text-faint); margin-top: auto; }
+.meal-plan-empty-label { font-size: 11px; color: var(--text-faint); margin-top: auto; }
 .meal-plan-remove {
   position: absolute;
   top: 5px; right: 5px;
@@ -1897,12 +1977,12 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   /* ── Header — single compact row, max ~56px ── */
   .app-hero { padding: 0.4rem 0.75rem; }
   .hero-brand svg { width: 36px !important; height: 36px !important; }
-  .hero-brand-slogan { font-size: 11px; }
+  .hero-brand-slogan { font-size: 12px; }
   .hero-brand-name { font-size: 12px; }
   .hero-topbar-right { gap: 4px; }
   .header-actions { gap: 2px; }
   .header-icon-btn { width: 44px; height: 44px; }
-  .week-badge { font-size: 10px; padding: 3px 7px; }
+  .week-badge { font-size: 11px; padding: 3px 7px; }
 
   /* ── Store badge — hidden on mobile (accessible via ⚙) ── */
   .local-store-badge { display: none; }
@@ -1913,12 +1993,12 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Recipe cards — full-width, dominant title ── */
   .recipe-browse-title { font-size: 17px; font-weight: 700; letter-spacing: var(--tracking-title, -0.012em); }
-  .recipe-browse-meta { font-size: 10px; letter-spacing: var(--tracking-stamp, 0.035em); }
+  .recipe-browse-meta { font-size: 11px; letter-spacing: var(--tracking-stamp, 0.035em); }
   .recipe-deal-tags { gap: 5px; flex-wrap: wrap; max-height: 52px; overflow: hidden; }
   .card-body { padding: 12px 14px 16px; }
   .card-photo-wrap { height: 175px; }
 
-  /* ── Recipe detail — generous Literata line-height for reading ── */
+  /* ── Recipe detail — generous DM Sans line-height for reading ── */
   .recipe-card { padding: 1rem; }
   .recipe-title { font-size: 24px; letter-spacing: var(--tracking-heading, -0.018em); line-height: var(--lh-heading, 1.18); }
   .recipe-meta-bar { gap: 10px; font-size: 12px; flex-wrap: wrap; }
@@ -1955,7 +2035,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Section headings ── */
   .section-toggle-label { font-size: 16px; letter-spacing: 0.02em; }
-  .section-intro { font-size: 11px; padding: 0 12px 6px; margin-top: -2px; }
+  .section-intro { font-size: 12px; padding: 0 12px 6px; margin-top: -2px; }
   .recipe-browse-section { margin-bottom: 1.25rem; }
   /* ── Meal plan grid — scroll snap ── */
   .meal-plan-grid { scroll-snap-type: x mandatory; }
@@ -1998,7 +2078,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   html.dark .recipe-detail-sheet .back-btn {
     background: rgba(11,18,11,0.95);
     border-bottom-color: var(--border-dark);
-    color: rgba(238,230,216,0.45);
+    color: var(--text-faint);
   }
   .recipe-detail-sheet .recipe-card {
     border-radius: 0;
@@ -2018,7 +2098,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   }
 
   /* ── Card corners — slightly tighter radius on phone ── */
-  .recipe-browse-card { border-radius: 4px; }
+  .recipe-browse-card { border-radius: var(--radius-sm); }
 
   /* ── Shopping sheet rows — full-width tap target ── */
   .shopping-sheet-item { cursor: pointer; padding: 14px 20px; }
@@ -2026,7 +2106,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Prefs section — compact on mobile ── */
   .prefs-body { padding: 0 12px 12px; }
-  .prefs-group-label { margin: 10px 0 5px; font-size: 10px; }
+  .prefs-group-label { margin: 10px 0 5px; font-size: 11px; }
 
   /* ── Setup invite card — breathing room ── */
   .setup-invite-card { padding: 16px 14px 12px; }
@@ -2052,7 +2132,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Card serving row — readable on mobile ── */
   .card-sv-btn { min-height: 36px; padding: 4px 10px; font-size: 13px; }
-  .card-sv-label { font-size: 11px; }
+  .card-sv-label { font-size: 12px; }
   .card-servings-row { gap: 5px; }
 
   /* ── Card action row — full-width plan button ── */
@@ -3547,7 +3627,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(206,159,62,0.12); }
   background: #CE9F3E;
   color: #1B1613;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   padding: 5px 14px 5px 10px;
   letter-spacing: 0.5px;
@@ -3589,7 +3669,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(206,159,62,0.12); }
 }
 .tilbud-maerke-original {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   color: rgba(27,22,19,0.6);
   text-decoration: line-through;
@@ -3611,7 +3691,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(206,159,62,0.12); }
   background: rgba(124,143,90,0.1);
   border: 1px solid rgba(124,143,90,0.28);
   color: #7C8F5A;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   padding: 3px 7px;
   border-radius: 4px;
@@ -3623,7 +3703,7 @@ html.dark .sp-confirm-btn { box-shadow: 0 4px 16px rgba(206,159,62,0.12); }
 /* ─── Cuisine badge (recipe cards) ──────────── */
 .cuisine-badge {
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-faint);
   background: rgba(106,138,106,0.08);
@@ -3684,7 +3764,7 @@ html.dark .price-range-wrap { background: var(--surface); }
   margin-bottom: 12px;
 }
 .price-range-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
@@ -4237,7 +4317,7 @@ html.dark .shopping-sheet-item.checked .shopping-sheet-text { color: var(--text-
   top: -2px; right: -2px;
   background: var(--accent);
   color: #1B1613;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1;
   min-width: 16px;
@@ -4554,7 +4634,7 @@ html.dark .prefs-trigger-sub { color: #8C8375; }
   font-family: var(--font-mono);
   background: var(--accent);
   color: #1B1613;
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-weight: 700;
   letter-spacing: var(--tracking-stamp, 0.035em);
   min-width: 18px;
@@ -4576,7 +4656,7 @@ html.dark .prefs-trigger-sub { color: #8C8375; }
 }
 .prefs-group-label {
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--tracking-badge, 0.07em);
@@ -4788,7 +4868,7 @@ html.dark .card-sv-price { color: #CE9F3E; }
 html.dark .quick-strip-sort { border-top-color: rgba(255,255,255,0.06); }
 .quick-strip::-webkit-scrollbar { display: none; }
 .quick-strip-sep {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -5017,7 +5097,7 @@ html.dark .saved-shoplist-btn:hover { background: #C1442E; }
     right: -7px;
     background: var(--accent);
     color: #2B2620;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     min-width: 16px;
     height: 16px;
@@ -5030,7 +5110,7 @@ html.dark .saved-shoplist-btn:hover { background: #C1442E; }
   }
 
   .bnav-label {
-    font-size: 9.5px;
+    font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -5289,7 +5369,7 @@ html.dark .saved-shoplist-btn:hover { background: #C1442E; }
 
 .fb-anon-note {
   text-align: center;
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--text-faint);
   margin: -8px 0 0;
 }
@@ -5411,7 +5491,7 @@ html.dark .saved-shoplist-btn:hover { background: #C1442E; }
   text-align: left;
   white-space: nowrap;
   border-bottom: 1px solid rgba(238,230,216,0.08);
-  font-size: 11.5px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -5666,7 +5746,7 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   .quick-strip-wrap { position: static; margin: 0 0 10px; background: transparent; border-bottom: none; }
   .quick-strip { gap: 8px; padding: 4px 0; }
   .qs-pill { min-height: 40px; padding: 9px 15px; font-size: 14px; }
-  .quick-strip-sep { font-size: 10px; }
+  .quick-strip-sep { font-size: 11px; }
 
   /* ── Tilpas — compact accordion (collapsed by default) ── */
   .prefs-trigger { min-height: 50px; padding: 12px 14px; }
@@ -5691,7 +5771,7 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
     margin: 12px 0 2px;
   }
   .card-sv-label {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
     color: #8C8375; margin-right: 2px; flex-shrink: 0;
   }
   .card-sv-btn { flex: 1; min-width: 0; min-height: 40px; font-size: 15px; font-weight: 600; border-radius: 0; }
@@ -5919,6 +5999,7 @@ html:not(.dark) .card-sv-btn.active { background: #B93E29; border-color: #B93E29
 
 /* ── deal-item tag ── */
 html:not(.dark) .deal-item-tag.available { background: #FBF6EC; color: #5F7040; border-color: rgba(95,112,64,0.3); }
+html:not(.dark) .deal-chain-tag { background: rgba(0,0,0,0.04); color: var(--text-dim); border-color: rgba(0,0,0,0.1); }
 
 /* ── Skeleton shimmer ── */
 html:not(.dark) .card-photo-skeleton { background: linear-gradient(90deg, #EFE4D2 25%, #DED3C0 37%, #EFE4D2 63%); }
@@ -6050,7 +6131,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border: 1px solid var(--border, rgba(238,230,216,0.14));
   border-radius: 10px;
   color: var(--text, #EEE6D8);
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 16px;
   outline: none;
 }
@@ -6064,7 +6145,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border: 1px solid var(--border, rgba(238,230,216,0.14));
   border-radius: 10px;
   color: var(--text, #EEE6D8);
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -6080,7 +6161,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   border: 1px solid var(--accent, #CE9F3E);
   background: rgba(206,159,62,0.14);
   color: var(--accent, #CE9F3E);
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -6118,7 +6199,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border: none;
   padding: 0;
   cursor: pointer;
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 12.5px;
   font-weight: 500;
   color: var(--text, #EEE6D8);
@@ -6152,7 +6233,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border-radius: 8px;
   background: var(--accent, #CE9F3E);
   color: #1B1613;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1;
   animation: badgePop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -6180,7 +6261,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 15px;
   font-weight: 500;
   color: var(--text, #EEE6D8);
@@ -6222,7 +6303,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 }
 
 .filter-sheet-title {
-  font-family: var(--font-serif, 'Bricolage Grotesque', sans-serif);
+  font-family: var(--font-serif, 'Fraunces', Georgia, serif);
   font-optical-sizing: auto;
   font-size: 18px;
   font-weight: 700;
@@ -6247,7 +6328,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 
 .filter-sheet-label {
   font-family: var(--font-mono);
-  font-size: var(--type-stamp-sm, 10px);
+  font-size: var(--type-stamp-sm, 11px);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--tracking-badge, 0.07em);
@@ -6266,7 +6347,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border: 1px solid var(--border, rgba(238,230,216,0.12));
   background: var(--surface-2, #352F2B);
   color: var(--text, #EEE6D8);
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
@@ -6303,7 +6384,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border: none;
   background: var(--accent, #CE9F3E);
   color: #1B1613;
-  font-family: var(--font-sans, 'Literata', Georgia, serif);
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
