@@ -15,11 +15,12 @@ export default function LogoFull({ size = "md", className = "", tagline = false 
       <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
         <span
           style={{
-            fontFamily: "'Lora', Georgia, serif",
+            fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)",
             fontWeight: 600,
             fontSize: px * 0.62,
-            color: "#EEE6D8",
-            letterSpacing: "-0.01em",
+            color: "var(--text, #EEE6D8)",
+            letterSpacing: "-0.02em",
+            fontVariationSettings: "'WONK' 1",
           }}
         >
           Tilbudskokken
@@ -27,10 +28,10 @@ export default function LogoFull({ size = "md", className = "", tagline = false 
         {tagline && (
           <span
             style={{
-              fontFamily: "'Archivo', sans-serif",
+              fontFamily: "var(--font-sans, 'DM Sans', sans-serif)",
               fontWeight: 500,
               fontSize: px * 0.26,
-              color: "#A69C8D",
+              color: "var(--text-faint, #A69C8D)",
               letterSpacing: "0.02em",
               marginTop: px * 0.12,
             }}

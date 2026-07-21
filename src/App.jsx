@@ -505,7 +505,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
           : photoUrl
             ? <img className="card-photo" src={photoUrl} alt="" loading="lazy"
                 onError={() => { setPhotoUrl(null); localStorage.removeItem(photoKey); }} />
-            : <div className="card-photo-placeholder"><span>{r.emoji}</span></div>
+            : <div className="card-photo-placeholder"><LogoIcon size={48} style={{ opacity: 0.18 }} /></div>
         }
         <div className="card-photo-gradient" />
         <div className="recipe-category-tag card-photo-tag">{r.emoji} {r.category}</div>
