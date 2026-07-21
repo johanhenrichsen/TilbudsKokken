@@ -28,11 +28,12 @@ export default function LogoFull({ size = "md", className = "", tagline = false 
         {tagline && (
           <span
             style={{
-              fontFamily: "var(--font-sans, 'DM Sans', sans-serif)",
-              fontWeight: 500,
+              fontFamily: "var(--font-serif, 'Fraunces', Georgia, serif)",
+              fontStyle: "italic",
+              fontWeight: 400,
               fontSize: px * 0.26,
               color: "var(--text-faint, #A69C8D)",
-              letterSpacing: "0.02em",
+              letterSpacing: "-0.005em",
               marginTop: px * 0.12,
             }}
           >

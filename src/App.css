@@ -526,11 +526,14 @@ html, body {
   line-height: var(--lh-body, 1.65);
 }
 .recipe-description {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-optical-sizing: auto;
   font-size: var(--type-body-lg, 16px);
   color: var(--text);
   line-height: var(--lh-instr, 1.78);
   margin: 0 0 1.25rem 0;
-  font-style: italic;
   border-left: 2px solid #B83A24;
   padding-left: 14px;
   margin-left: 2px;
@@ -901,12 +904,13 @@ html, body {
 .section-toggle-label {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
-  font-variation-settings: 'WONK' 1;
+  font-style: italic;
+  font-variation-settings: 'WONK' 0;
   font-feature-settings: "liga" 1, "kern" 1, "onum" 1;
   font-size: var(--type-h1, 20px);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
-  letter-spacing: var(--tracking-heading, -0.018em);
+  letter-spacing: -0.01em;
   line-height: var(--lh-heading, 1.18);
   flex: 1;
 }
@@ -970,6 +974,36 @@ html, body {
 .recipe-browse-grid .recipe-browse-card:first-child .recipe-browse-title {
   font-size: 20px;
 }
+
+/* ─── Editorial break card ───────────────────── */
+.recipe-browse-editorial-break {
+  grid-column: 1 / -1;
+  padding: 28px 4px 24px;
+  border-top: 1px solid rgba(238,230,216,0.07);
+  border-bottom: 1px solid rgba(238,230,216,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0;
+}
+.editorial-break-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  font-optical-sizing: auto;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.editorial-break-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
 .recipe-browse-card {
   background: #2B2620;
   border-radius: var(--radius-md);
@@ -5867,6 +5901,15 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   .shopping-item-label { font-size: 15px; }
 }
 
+/* ───────── Editorial break — mobile ───────── */
+@media (max-width: 600px) {
+  .recipe-browse-editorial-break { padding: 20px 2px 18px; }
+  .editorial-break-quote { font-size: 18px; }
+}
+@media (max-width: 380px) {
+  .editorial-break-quote { font-size: 16px; }
+}
+
 /* ───────── Small phones (≤ 380px) ───────── */
 @media (max-width: 380px) {
   .hero-brand-slogan { display: none; }
@@ -5882,7 +5925,7 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   .app-hero { padding: 0.3rem 0.6rem; }
   .hero-brand svg { width: 28px !important; height: 28px !important; }
   .header-icon-btn { width: 34px; height: 34px; }
-  .section-toggle-label { font-size: 14px; letter-spacing: 0; }
+  .section-toggle-label { font-size: 14px; letter-spacing: 0; font-style: italic; }
   .diet-btn { padding: 5px 10px; font-size: 11px; }
   .qs-pill { padding: 8px 10px; font-size: 13px; }
   .prefs-trigger { padding: 8px 10px; }

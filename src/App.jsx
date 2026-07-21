@@ -571,14 +571,14 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
           <button
             className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
             onClick={e => { e.stopPropagation(); if (!inPlan) onAddToPlan(r); }}
-            title={inPlan ? "Allerede på ugeplanen" : "Sæt på ugeplanen"}
+            title={inPlan ? "Allerede på ugen" : "Sæt på ugen"}
           >
-            {inPlan ? "På ugeplanen" : "Sæt på ugeplanen"}
+            {inPlan ? "På ugen" : "Sæt på ugen"}
           </button>
           <button
             className={`card-save-btn${isSaved ? " saved" : ""}`}
             onClick={e => { e.stopPropagation(); onToggleSave(r, cardServings); }}
-            title={isSaved ? "Fjern fra gemte" : "Gem til senere"}
+            title={isSaved ? "Fjern fra gemte" : "Gem"}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
@@ -1634,20 +1634,32 @@ export default function App() {
   function renderRecipeGrid(recipes) {
     const availableNames = getAvailableItemNames();
     const top3Ids = new Set(popularRecipes.slice(0, 3).map(p => p.id));
-    return recipes.map(r => (
-      <RecipeCard
-        key={r.id}
-        r={r}
-        inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
-        isSaved={savedRecipes.some(s => s.id === r.id)}
-        isPopular={top3Ids.has(r.id)}
-        availableNames={availableNames}
-        pantryTotal={pantryItems.size}
-        onSelect={selectRecipe}
-        onAddToPlan={setAddingToPlan}
-        onToggleSave={toggleSaveRecipe}
-      />
-    ));
+    const result = [];
+    recipes.forEach((r, i) => {
+      result.push(
+        <RecipeCard
+          key={r.id}
+          r={r}
+          inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
+          isSaved={savedRecipes.some(s => s.id === r.id)}
+          isPopular={top3Ids.has(r.id)}
+          availableNames={availableNames}
+          pantryTotal={pantryItems.size}
+          onSelect={selectRecipe}
+          onAddToPlan={setAddingToPlan}
+          onToggleSave={toggleSaveRecipe}
+        />
+      );
+      if (i === 5 && recipes.length > 7) {
+        result.push(
+          <div key="editorial-break" className="recipe-browse-editorial-break">
+            <span className="editorial-break-quote">Sæsonens mad. Til denne uges pris.</span>
+            <span className="editorial-break-sub">Alle opskrifter er bygget på tilbud fra dine butikker</span>
+          </div>
+        );
+      }
+    });
+    return result;
   }
 
   return (
@@ -2345,7 +2357,7 @@ export default function App() {
             <div className="shopping-list-card">
               <div className="shopping-list-header">
                 <div className="section-label" style={{ margin: 0 }}>
-                  Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+                  {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>
                   {checkedItems.size > 0 && (
@@ -2495,7 +2507,7 @@ export default function App() {
                   onClick={() => toggleSection("others")}
                   aria-expanded={!collapsedSections.others}
                 >
-                  <span className="section-toggle-label">Kræver andre butikker</span>
+                  <span className="section-toggle-label">Andre butikker</span>
                   <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
                   <svg
                     className={`section-chevron${collapsedSections.others ? "" : " open"}`}
@@ -2843,7 +2855,7 @@ export default function App() {
         },
         {
           id: "madplan",
-          label: "Madplan",
+          label: "Ugen",
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
@@ -2867,7 +2879,7 @@ export default function App() {
         },
         {
           id: "indkob",
-          label: "Indkøb",
+          label: "Kurv",
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
@@ -3098,7 +3110,7 @@ export default function App() {
       <div className="filter-sheet" onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="filter-sheet-header">
-          <span className="filter-sheet-title">Filtre &amp; sortering</span>
+          <span className="filter-sheet-title">Filtre</span>
           <button className="mp-sheet-close" onClick={() => setShowFilterSheet(false)} aria-label="Luk">×</button>
         </div>
         <div className="filter-sheet-body">
