@@ -34,9 +34,9 @@
   --border:         rgba(238,230,216,0.1);
 
   /* Border radius system */
-  --radius-sm:      6px;
-  --radius-md:      10px;
-  --radius-lg:      14px;
+  --radius-sm:      3px;
+  --radius-md:      4px;
+  --radius-lg:      6px;
   --radius-pill:    999px;
 
   /* Typography — three-font system
@@ -316,7 +316,7 @@ html, body {
   background: #B83A24;
   color: var(--text);
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 11px 22px;
   font-size: 13px;
   font-weight: 600;
@@ -340,7 +340,7 @@ html, body {
   background: transparent;
   border: 1.5px solid #CE9F3E;
   color: #CE9F3E;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 5px 14px;
   font-size: 11px;
   font-weight: 600;
@@ -1367,7 +1367,7 @@ html, body {
 /* ─── Ingredient deal/pantry styling ────────── */
 .ingredient-item.ingredient-deal {
   background: rgba(124,143,90,0.12);
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 4px 6px;
   font-weight: 600;
   color: #352F2B;
@@ -1404,7 +1404,7 @@ html, body {
   margin: 8px 0 1.25rem;
   padding: 8px 10px;
   background: #2B2620;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 .ingredient-legend span {
   display: flex;
@@ -1662,7 +1662,7 @@ html, body {
 }
 .store-picker-card {
   background: #2B2620;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
   width: 100%;
   max-width: 720px;
   max-height: 85svh;
@@ -1771,7 +1771,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 }
 .day-picker-card {
   background: #2B2620;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
   width: 100%;
   max-width: 720px;
   padding: 1.5rem 1.5rem 2.5rem;
@@ -2520,7 +2520,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   background: #e85a3a;
   color: var(--text);
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 8px;
   font-size: 12px;
   font-weight: 700;
@@ -2534,7 +2534,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   background: #352F2B;
   color: #444;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 8px;
   font-size: 12px;
   font-weight: 600;
@@ -2602,7 +2602,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 }
 .mp-sheet {
   background: #2B2620;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
   width: 100%;
   max-height: 88vh;
   overflow-y: auto;
@@ -3228,7 +3228,7 @@ html.dark .ob-desc { color: var(--text-faint); }
   margin: 0 0 10px auto;
   background: none;
   border: 1.5px solid #B83A24;
-  border-radius: 8px;
+  border-radius: 4px;
   color: #B83A24;
   font-size: 13px;
   font-weight: 600;
@@ -4285,7 +4285,7 @@ html.dark .pantry-filter-banner-text { color: var(--text-faint); }
 /* ─── Shopping list bottom sheet ─────────────── */
 .shopping-sheet {
   background: #2B2620;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
   animation: mpSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0 0 env(safe-area-inset-bottom, 0px);
   max-height: 88vh;
@@ -4382,7 +4382,7 @@ html.dark .shopping-sheet-item.checked .shopping-sheet-text { color: var(--text-
   line-height: 1;
   min-width: 16px;
   height: 16px;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 0 3px;
   display: flex; align-items: center; justify-content: center;
   pointer-events: none;
@@ -4426,7 +4426,7 @@ html.dark .card-save-btn.saved { background: #352F2B; border-color: var(--text-f
   position: absolute;
   bottom: 0; left: 0; right: 0;
   background: #2B2620;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
   max-height: 88vh;
   display: flex;
   flex-direction: column;
@@ -5172,7 +5172,7 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
     font-weight: 800;
     min-width: 16px;
     height: 16px;
-    border-radius: 8px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5285,7 +5285,7 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
   max-width: 520px;
   max-height: 88dvh;
   background: #1B1613;
-  border-radius: 8px 8px 0 0;
+  border-radius: 6px 6px 0 0;
   border-top: 1.5px solid rgba(238,230,216,0.08);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -5508,7 +5508,7 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
 }
 .fb-results-export-btn, .fb-results-clear-btn, .fb-results-back {
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -6201,6 +6201,18 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
 /* Inline card price is mobile-only (desktop shows it in the servings row) */
 .card-price-inline { display: none; }
 
+/* ── Card price line — always visible in browse grid ── */
+.card-price-line {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: #CE9F3E;
+  letter-spacing: 0.03em;
+  margin: 1px 0 4px;
+  line-height: 1;
+}
+html:not(.dark) .card-price-line { color: #A07820; }
+
 /* ── Filter sheet: pantry input + chips ── */
 .fs-pantry-input-row { display: flex; gap: 8px; }
 .fs-pantry-input {
@@ -6209,7 +6221,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   padding: 11px 13px;
   background: var(--surface-2, #352F2B);
   border: 1px solid var(--border, rgba(238,230,216,0.14));
-  border-radius: 10px;
+  border-radius: 4px;
   color: var(--text, #EEE6D8);
   font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 16px;
@@ -6223,7 +6235,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   min-height: 44px;
   background: var(--surface-2, #352F2B);
   border: 1px solid var(--border, rgba(238,230,216,0.14));
-  border-radius: 10px;
+  border-radius: 4px;
   color: var(--text, #EEE6D8);
   font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
   font-size: 14px;
@@ -6310,7 +6322,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
-  border-radius: 8px;
+  border-radius: 4px;
   background: var(--accent, #CE9F3E);
   color: #1B1613;
   font-size: 11px;
@@ -6326,7 +6338,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   left: 0;
   right: 0;
   background: var(--surface, #2B2620);
-  border-radius: 16px 16px 0 0;
+  border-radius: 6px 6px 0 0;
   padding: 8px 0 max(20px, env(safe-area-inset-bottom, 20px));
   z-index: 1100;
   animation: mpSlideUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -6356,7 +6368,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   font-size: 11px;
   font-weight: 700;
   padding: 1px 6px;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 /* ── Filter & sort sheet ── */
@@ -6366,7 +6378,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   left: 0;
   right: 0;
   background: var(--surface, #2B2620);
-  border-radius: 16px 16px 0 0;
+  border-radius: 6px 6px 0 0;
   z-index: 1100;
   animation: mpSlideUp 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
   display: flex;
@@ -6460,7 +6472,7 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 .filter-sheet-apply {
   width: 100%;
   padding: 13px;
-  border-radius: 10px;
+  border-radius: 4px;
   border: none;
   background: var(--accent, #CE9F3E);
   color: #1B1613;

@@ -19,7 +19,7 @@ body {
   border-radius: 4px;
 }
 .btn-primary:focus-visible { outline-color: #EEE6D8; }
-.recipe-browse-card:focus-visible { outline-color: #CE9F3E; outline-width: 2px; border-radius: 10px; }
+.recipe-browse-card:focus-visible { outline-color: #CE9F3E; outline-width: 2px; border-radius: var(--radius-md, 4px); }
 
 /* ─── Light mode overrides ───────────────────── */
 html:not(.dark) {

@@ -517,12 +517,12 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
       </div>
       <div className="card-body">
         <div className="recipe-browse-title">{r.title}</div>
+        {totalPrice != null && (
+          <div className="card-price-line">≈ {totalPrice} kr.</div>
+        )}
         <div className="recipe-browse-meta">
           <span>{r.time}</span>
           <span>{(r.ingredients || []).length} ing.</span>
-          {totalPrice != null && (
-            <span className="card-price-inline">≈ {totalPrice} kr.</span>
-          )}
         </div>
 
         {/* Ingredient-match indicator — only when the user has added ingredients */}
