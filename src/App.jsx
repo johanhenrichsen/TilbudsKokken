@@ -518,7 +518,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
       <div className="card-body">
         <div className="recipe-browse-title">{r.title}</div>
         {basePp != null && (
-          <div className="card-price-line">≈ {Math.round(basePp)} kr. / pers.</div>
+          <div className="card-price-line">ca. {Math.round(basePp)} kr. / pers.</div>
         )}
         <div className="recipe-browse-meta">
           <span>{r.time}</span>
@@ -1693,7 +1693,8 @@ export default function App() {
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
                 <LogoIcon size={200} className="ob-welcome-logo" />
-                <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
+                <p className="ob-welcome-tagline">Bedre tilbud. Bedre mad.</p>
+                <p className="ob-welcome-desc">Opskrifter bygget præcis på hvad der er på tilbud i dine butikker denne uge.</p>
                 <button className="ob-cta-btn" onClick={() => { setObDir(1); setOnboardingStep(1); }}>
                   Kom i gang →
                 </button>
@@ -2488,9 +2489,17 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="section-empty-state">
-                      {search
-                        ? "Ingen opskrifter matchede — prøv et andet ord eller juster filtrene lidt"
-                        : "Ingen opskrifter fra disse butikker denne uge — prøv at tilføje en ekstra butik"}
+                      {search ? (
+                        <>
+                          <span className="empty-state-label">Ingen match.</span>
+                          <span className="empty-state-hint">Prøv et kortere søgeord eller juster filtrene</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="empty-state-label">Ingen opskrifter denne uge.</span>
+                          <span className="empty-state-hint">Tilføj en ekstra butik under filtre</span>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -2526,7 +2535,7 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="section-empty-state">
-                      Super! Alle ugens opskrifter matcher allerede dine butikker.
+                      <span className="empty-state-label">Alle opskrifter er fra dine butikker.</span>
                     </div>
                   )}
                 </div>
