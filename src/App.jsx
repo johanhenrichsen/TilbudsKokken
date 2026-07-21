@@ -334,10 +334,134 @@ function attachSwipeDismiss(el, onDismiss) {
 
 const CARD_SV_OPTIONS = [2, 4, 6];
 
+// ── Recipe photo query builder ───────────────────────────────────────────────
+// Recipe titles are Danish, but Pexels is an English stock-photo library, so
+// searching the raw title (e.g. "Klassiske Frikadeller med Kartofler") returns
+// generic/irrelevant images. We translate the dish into English keywords first.
+// Bump PHOTO_CACHE_VER whenever this logic changes so cached photos are refetched.
+const PHOTO_CACHE_VER = "v2";
+
+// Multi-word dish identities, matched against the whole lowercased title first
+// (longer/more specific phrases before shorter ones). The matched span is then
+// removed so its component words aren't re-processed.
+const PHOTO_PHRASES = [
+  ["butter chicken", "indian butter chicken curry"],
+  ["tikka masala", "chicken tikka masala"],
+  ["pasta al forno", "pasta al forno bake"],
+  ["spaghetti bolognese", "spaghetti bolognese"],
+  ["pasta bolognese", "pasta bolognese"],
+  ["pasta carbonara", "spaghetti carbonara"],
+  ["gravad laks", "cured salmon gravlax"],
+  ["sushi bowl", "salmon sushi bowl"],
+  ["poke bowl", "poke bowl"],
+  ["rejepoke", "shrimp poke bowl"],
+  ["taco bowl", "taco bowl"],
+  ["tacobowl", "taco bowl"],
+  ["taco-aften", "tacos"],
+  ["butternut squash", "butternut squash soup"],
+  // Note: sides like garlic bread / fries are intentionally NOT phrases — they
+  // would otherwise lead the query over the main protein and mislead the photo.
+  ["smørrebrød", "danish open sandwich smorrebrod"],
+  ["stjerneskud", "danish shrimp open sandwich"],
+  ["miso ramen", "miso ramen"],
+  ["ramensuppe", "ramen soup"],
+  ["svamperisotto", "mushroom risotto"],
+  ["kyllingespyd", "grilled chicken skewers"],
+  ["kyllingebowl", "chicken rice bowl"],
+  ["kyllingesalat", "chicken salad"],
+  ["kyllingesteg", "roast chicken"],
+  ["kyllingekurry", "chicken curry"],
+  ["kyllingetortilla", "chicken tortilla"],
+  ["kyllingatortilla", "chicken tortilla"],
+  ["laksepasta", "creamy salmon pasta"],
+  ["lakseburger", "salmon burger"],
+  ["oksekødsgryde", "beef stew"],
+  ["svinekoteletter", "pork chops"],
+  ["kartoffelmos", "mashed potatoes"],
+  ["grøntsagssuppe", "vegetable soup"],
+];
+
+// Single-token Danish→English food terms. Unmapped tokens are dropped, which
+// naturally strips Danish filler ("med", "og") and sauce names we don't model.
+const PHOTO_WORDS = {
+  // proteins
+  kylling: "chicken", kyllinge: "chicken", laks: "salmon", lakse: "salmon",
+  rejer: "shrimp", reje: "shrimp", spareribs: "pork ribs", dorade: "sea bream",
+  gyros: "gyros", krebinetter: "pork patties", flanksteak: "flank steak",
+  lammecuolotte: "roast lamb", lamme: "lamb", lam: "lamb", svinekam: "roast pork loin",
+  frikadeller: "danish meatballs", oksekød: "beef", okse: "beef", oksesteg: "roast beef",
+  torsk: "cod", fiskefilet: "fish fillet", fisk: "fish", leverpostej: "liver pate",
+  chorizo: "chorizo", pepperoni: "pepperoni", bacon: "bacon", chicken: "chicken",
+  // burgers / breads
+  burger: "burger", smashburger: "smashburger", burgerbrød: "burger",
+  hotdog: "hot dog", hotdogs: "hot dogs", brioche: "brioche", baguette: "baguette",
+  rugbrød: "rye bread", knækbrøds: "crispbread", pita: "pita", tortilla: "tortilla",
+  wrap: "wrap", naan: "naan", pizza: "pizza", surdejsbund: "sourdough",
+  // pasta / rice / noodles
+  spaghetti: "spaghetti", pasta: "pasta", lasagne: "lasagna", risotto: "risotto",
+  ris: "rice", basmatiris: "basmati rice", jasminris: "jasmine rice",
+  nudler: "noodles", udonnudler: "udon noodles", soba: "soba noodles", udon: "udon noodles",
+  couscous: "couscous", kartofler: "potatoes",
+  // dish types
+  ramen: "ramen", gyoza: "gyoza dumplings", sushi: "sushi", tempura: "tempura",
+  suppe: "soup", salat: "salad", gryde: "stew", steg: "roast", bowl: "bowl",
+  tacos: "tacos", taco: "tacos", tærte: "tart", jordbærtærte: "strawberry tart",
+  // cheeses
+  parmesan: "parmesan", mozzarella: "mozzarella", feta: "feta", fetacreme: "feta",
+  ricotta: "ricotta", cheddar: "cheddar cheese",
+  // veg / sides
+  broccoli: "broccoli", asparges: "asparagus", majs: "corn", edamame: "edamame",
+  mukimame: "edamame", rødkål: "red cabbage", squash: "squash", linser: "lentils",
+  spinat: "spinach", avocado: "avocado", rodfrugter: "root vegetables",
+  grøntsager: "vegetables", tomater: "tomatoes", cherrytomater: "cherry tomatoes",
+  rødløg: "red onion", løg: "onion", æbler: "apple", asaparges: "asparagus",
+  // flavour identities
+  teriyaki: "teriyaki", miso: "miso", misopaste: "miso", kimchi: "kimchi",
+  tikka: "tikka", masala: "masala", curry: "curry", kurry: "curry", karry: "curry",
+  kyllingekurry: "chicken curry", dal: "indian dal", raita: "raita", hummus: "hummus",
+  tabbouleh: "tabbouleh", tzatziki: "tzatziki", pesto: "pesto", carbonara: "carbonara",
+  bolognese: "bolognese", chimichurri: "chimichurri", butter: "butter",
+  // cooking methods (kept for plating context)
+  grillet: "grilled", ovnbagt: "oven baked", bagte: "baked", bagt: "baked",
+  stegt: "pan fried", cremet: "creamy", sprød: "crispy",
+};
+
+// Category → English cuisine hint appended for cultural plating accuracy.
+const PHOTO_CUISINE = {
+  Asiatisk: "asian", Indisk: "indian", Italiensk: "italian", Mexicansk: "mexican",
+  Middelhavet: "mediterranean", Mellemøstlig: "middle eastern", Nordisk: "",
+  Amerikansk: "", Verden: "",
+};
+
+function buildPhotoQuery(r) {
+  let t = ` ${(r.title || "").toLowerCase()} `;
+  const kws = [];
+  const push = v => v.split(" ").forEach(w => { if (w && !kws.includes(w)) kws.push(w); });
+
+  // Phrase pass — capture and remove multi-word dish identities first.
+  for (const [phrase, en] of PHOTO_PHRASES) {
+    if (t.includes(phrase)) { push(en); t = t.split(phrase).join(" "); }
+  }
+  // Token pass — translate remaining single words; drop the rest.
+  for (const tok of t.split(/[^a-zæøåé]+/i)) {
+    if (!tok || tok.length < 2) continue;
+    const en = PHOTO_WORDS[tok];
+    if (en) push(en);
+  }
+
+  let words = kws.slice(0, 6);
+  if (words.length === 0) words = ["food", "dish"]; // safety net
+  const cuisine = PHOTO_CUISINE[r.category];
+  const q = [...(cuisine && !words.includes(cuisine) ? [cuisine] : []), ...words].join(" ");
+  return `${q} food`.trim();
+}
+
 function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave }) {
-  const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(`photo_${r.id}`) || null);
+  const photoKey = `photo_${PHOTO_CACHE_VER}_${r.id}`;
+  const photoFailKey = `photo_fail_${PHOTO_CACHE_VER}_${r.id}`;
+  const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(photoKey) || null);
   const [photoLoading, setPhotoLoading] = useState(() => {
-    return !localStorage.getItem(`photo_${r.id}`) && !localStorage.getItem(`photo_fail_${r.id}`);
+    return !localStorage.getItem(photoKey) && !localStorage.getItem(photoFailKey);
   });
   const [cardServings, setCardServings] = useState(() => {
     const saved = parseInt(localStorage.getItem('defaultServings')) || r.servings_count || 4;
@@ -345,24 +469,24 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
   });
 
   useEffect(() => {
-    if (localStorage.getItem(`photo_fail_${r.id}`)) { setPhotoLoading(false); return; }
-    const cached = localStorage.getItem(`photo_${r.id}`);
+    if (localStorage.getItem(photoFailKey)) { setPhotoLoading(false); return; }
+    const cached = localStorage.getItem(photoKey);
     if (cached) { setPhotoUrl(cached); setPhotoLoading(false); return; }
     setPhotoLoading(true);
-    fetch(`/api/pexels?query=${encodeURIComponent(r.title + ' food dish')}`)
+    fetch(`/api/pexels?query=${encodeURIComponent(buildPhotoQuery(r))}`)
       .then(res => res.json())
       .then(data => {
         const url = data?.url;
         if (url) {
-          localStorage.setItem(`photo_${r.id}`, url);
+          localStorage.setItem(photoKey, url);
           setPhotoUrl(url);
         } else {
-          localStorage.setItem(`photo_fail_${r.id}`, '1');
+          localStorage.setItem(photoFailKey, '1');
         }
         setPhotoLoading(false);
       })
       .catch(() => {
-        localStorage.setItem(`photo_fail_${r.id}`, '1');
+        localStorage.setItem(photoFailKey, '1');
         setPhotoLoading(false);
       });
   }, [r.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -380,7 +504,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
           ? <div className="card-photo-skeleton" />
           : photoUrl
             ? <img className="card-photo" src={photoUrl} alt="" loading="lazy"
-                onError={() => { setPhotoUrl(null); localStorage.removeItem(`photo_${r.id}`); }} />
+                onError={() => { setPhotoUrl(null); localStorage.removeItem(photoKey); }} />
             : <div className="card-photo-placeholder"><span>{r.emoji}</span></div>
         }
         <div className="card-photo-gradient" />
