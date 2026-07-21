@@ -17,7 +17,7 @@ export default function LogoIcon({ size = 40, className = "", holeColor = "#1B16
       {/* Price-tag / folded-ribbon body */}
       <path
         d="M40 26 H58 L70 38 a3 3 0 0 1 0 4 L58 54 a3 3 0 0 1 -4 0 L42 42 a3 3 0 0 1 -1 -2 V27 a1 1 0 0 1 1 -1 Z"
-        fill="#C1442E"
+        fill="#B83A24"
       />
       {/* Tag hole */}
       <circle cx="46" cy="32" r="2.4" fill={holeColor} />

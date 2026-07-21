@@ -508,7 +508,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
             : <div className="card-photo-placeholder"><LogoIcon size={48} style={{ opacity: 0.18 }} /></div>
         }
         <div className="card-photo-gradient" />
-        <div className="recipe-category-tag card-photo-tag">{r.emoji} {r.category}</div>
+        <div className="recipe-category-tag card-photo-tag">{r.category}</div>
         {isPopular && (
           <div className="card-photo-badge">
             <span className="popular-badge-pill">Populær</span>
