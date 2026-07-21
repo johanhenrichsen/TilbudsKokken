@@ -3,7 +3,7 @@
 body {
   margin: 0;
   background: #1B1613;
-  font-family: 'Literata', Georgia, 'Times New Roman', serif;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   /* Contain the onboarding→app slide transforms (overlay slides off-screen left,
@@ -12,9 +12,41 @@ body {
   overflow-x: clip;
 }
 
-html:not(.dark) body { background: #F1E9DB; }
-html:not(.dark) h1, html:not(.dark) h2 { color: #221C17; }
-html:not(.dark) code, html:not(.dark) .counter { color: #221C17; }
+/* ─── Focus states ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid #CE9F3E;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.btn-primary:focus-visible { outline-color: #EEE6D8; }
+.recipe-browse-card:focus-visible { outline-color: #CE9F3E; outline-width: 2px; border-radius: 10px; }
+
+/* ─── Light mode overrides ───────────────────── */
+html:not(.dark) {
+  --rugbrod:     #F5F0E1;
+  --tinplate:    #EDE6D6;
+  --tinplate-hi: #E5DCC9;
+  --papir:       #1B1613;
+  --sennep:      #A07820;
+  --dild:        #4A6830;
+  --text:        #1B1613;
+  --text-dim:    rgba(27,22,19,0.72);
+  --text-faint:  rgba(27,22,19,0.50);
+  --text-ghost:  rgba(27,22,19,0.28);
+  --muted:       rgba(27,22,19,0.50);
+  --surface:     #EDE6D6;
+  --surface-2:   #E5DCC9;
+  --border:      rgba(27,22,19,0.10);
+  --border-dark: rgba(27,22,19,0.18);
+  --cream-dim:   rgba(27,22,19,0.55);
+  --accent:      #A07820;
+  --accent-dim:  rgba(160,120,32,0.14);
+  --sage:        #4A6830;
+}
+html:not(.dark) body { background: #F5F0E1; }
+html:not(.dark)::before { opacity: 0.03; }
+html:not(.dark) h1, html:not(.dark) h2 { color: #1B1613; }
+html:not(.dark) code, html:not(.dark) .counter { color: #1B1613; }
 
 #root {
   max-width: 100%;
@@ -44,7 +76,7 @@ html:not(.dark) code, html:not(.dark) .counter { color: #221C17; }
 }
 
 h1, h2 {
-  font-family: 'Bricolage Grotesque', ui-sans-serif, sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 700;
   color: #EEE6D8;
   font-optical-sizing: auto;
