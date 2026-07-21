@@ -4658,7 +4658,12 @@ html.dark .recipe-browse-card.reveal {
 /* ─── Recipe detail sheet: slide up ──────────── */
 @keyframes sheet-rise {
   from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
+  /* End on `none`, not translateY(0): with fill-mode `both` a retained
+     translateY(0) is still a transform, which would make .recipe-detail-sheet
+     the containing block for the position:fixed .detail-actions bar and pin it
+     mid-scroll instead of to the viewport bottom. `none` drops the containing
+     block once the entrance finishes so the bar stays fixed. */
+  to   { opacity: 1; transform: none; }
 }
 @media (max-width: 639px) {
   .recipe-detail-sheet {
