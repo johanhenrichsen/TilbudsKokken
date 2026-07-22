@@ -71,12 +71,20 @@ const CHAIN_ORDER = [
   // Rema
   "Rema 1000",
   // Coop
-  "Coop 365", "SuperBrugsen / Kvickly", "Dagli'Brugsen / Brugsen",
+  "Coop 365", "SuperBrugsen", "Dagli'Brugsen / Brugsen",
   // Independent
   "Meny", "Spar",
   // International discounters
   "Lidl",
 ];
+
+// Maps legacy / variant store names → canonical CHAIN_ORDER key.
+// Handles old localStorage entries and recipe data that still uses "/ Kvickly".
+const CHAIN_CANONICAL = {
+  "SuperBrugsen / Kvickly": "SuperBrugsen",
+  "Kvickly":                "SuperBrugsen",
+};
+function canonicalChain(name) { return CHAIN_CANONICAL[name] || name; }
 
 const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
 const CUISINE_SEARCH_MAP = {
@@ -591,7 +599,7 @@ function countRecipesForChains(chains) {
   if (chains.size === 0) return 0;
   return recipeBank.filter(r =>
     (r.dealItems || []).length > 0 &&
-    (r.dealItems || []).every(di => chains.has(di.store))
+    (r.dealItems || []).every(di => chains.has(canonicalChain(di.store)))
   ).length;
 }
 
@@ -912,6 +920,30 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
   const [splashExiting, setSplashExiting] = useState(false);
 
+  // ── PWA install prompt ───────────────────────────────────────────
+  const [installEvent, setInstallEvent] = useState(null);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("installDismissed")) return;
+    const handler = e => { e.preventDefault(); setInstallEvent(e); };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+  useEffect(() => {
+    if (!installEvent || showSplash || onboardingStep !== null) return;
+    const t = setTimeout(() => setShowInstallBanner(true), 45000);
+    return () => clearTimeout(t);
+  }, [installEvent, showSplash, onboardingStep]);
+  function triggerInstall() {
+    if (!installEvent) return;
+    installEvent.prompt();
+    installEvent.userChoice.then(() => { setInstallEvent(null); setShowInstallBanner(false); });
+  }
+  function dismissInstall() {
+    setShowInstallBanner(false);
+    try { localStorage.setItem("installDismissed", "1"); } catch {}
+  }
+
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
   const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
 
@@ -968,7 +1000,7 @@ export default function App() {
   }, [savedPanelEl]);
 
   // ── Matching ────────────────────────────────────────────────────
-  const selectedChains = new Set((localStores || []).map(s => s.chain));
+  const selectedChains = new Set((localStores || []).map(s => canonicalChain(s.chain)));
   const setupComplete = selectedChains.size > 0;
 
   function getAvailableItemNames() {
@@ -976,7 +1008,7 @@ export default function App() {
     const names = new Set();
     for (const r of recipeBank) {
       for (const di of (r.dealItems || [])) {
-        if (selectedChains.has(di.store)) names.add(di.name);
+        if (selectedChains.has(canonicalChain(di.store))) names.add(di.name);
       }
     }
     return names;
@@ -999,7 +1031,7 @@ export default function App() {
           ...r,
           matchCount: (r.dealItems || []).length,
           fullyMatched: selectedChains.size === 0
-            || (r.dealItems || []).every(di => selectedChains.has(di.store)),
+            || (r.dealItems || []).every(di => selectedChains.has(canonicalChain(di.store))),
           pantryMatches,
           pantryMatchCount: pantryMatches.length,
         };
@@ -3237,6 +3269,22 @@ export default function App() {
           </button>
         </div>
       </div>
+    </div>
+  )}
+
+  {showInstallBanner && (
+    <div className="install-banner">
+      <div className="install-banner-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 2v13M7 11l5 5 5-5"/><rect x="3" y="18" width="18" height="3" rx="1.5"/>
+        </svg>
+      </div>
+      <div className="install-banner-text">
+        <strong>Tilføj til hjemmeskærm</strong>
+        <span>Åbn Tilbudskokken som en app</span>
+      </div>
+      <button className="install-banner-cta" onClick={triggerInstall}>Tilføj</button>
+      <button className="install-banner-dismiss" onClick={dismissInstall} aria-label="Luk">×</button>
     </div>
   )}
 
