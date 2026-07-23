@@ -13,6 +13,17 @@ createRoot(document.getElementById('root')).render(
 )
 
 if ('serviceWorker' in navigator) {
+  // If an old service worker is already controlling this page, reload once when
+  // a new one takes over — this recovers clients stuck on a stale cached build.
+  // First-time visitors (no existing controller) are not reloaded.
+  if (navigator.serviceWorker.controller) {
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
+  }
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   });
