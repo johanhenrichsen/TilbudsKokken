@@ -218,7 +218,7 @@ html, body {
 .store-card {
   background: #2B2620;
   border-radius: var(--radius-md);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
   overflow: hidden;
 }
 .store-card-header {
@@ -398,7 +398,7 @@ html, body {
 .recipe-card {
   background: #2B2620;
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
   padding: 2rem;
   margin-bottom: 1rem;
 }
@@ -605,7 +605,7 @@ html, body {
 .shopping-list-card {
   background: #2B2620;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
   padding: 1.5rem;
   margin-top: 0;
 }
@@ -717,7 +717,7 @@ html, body {
 .saved-recipes-card {
   background: #2B2620;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
   padding: 1.5rem;
   margin-top: 1rem;
 }
@@ -1025,13 +1025,12 @@ html, body {
   background: #2B2620;
   border-radius: var(--radius-md);
   border: 1px solid rgba(238,230,216,0.08);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15);
   padding: 0;
   overflow: hidden;
   cursor: pointer;
   position: relative;
   transition: transform 0.25s cubic-bezier(0.33, 1, 0.68, 1),
-              box-shadow 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+              border-color 0.25s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 /* ─── Card photo ─────────────────────────────── */
@@ -1111,8 +1110,8 @@ html, body {
   padding: 14px 16px 16px;
 }
 .recipe-browse-card:hover {
-  transform: translateY(-4px) scale(1.015);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.5), 0 6px 16px rgba(0,0,0,0.3);
+  transform: translateY(-3px) scale(1.012);
+  border-color: rgba(206,159,62,0.4);
 }
 .recipe-browse-card:active {
   transform: scale(0.965);
@@ -1265,7 +1264,6 @@ html, body {
   margin-top: 4px;
 }
 .recipe-browse-card.featured {
-  box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
   border-color: rgba(206,159,62,0.2);
 }
 .recipe-browse-card.featured .card-body {
@@ -1293,6 +1291,21 @@ html, body {
 .share-btn:hover {
   background: rgba(124,143,90,0.12);
   border-color: #CE9F3E;
+  color: var(--text-faint);
+}
+/* Icon-only ghost — demoted tertiary action so it doesn't compete with the
+   primary "Tilføj til ugen" CTA. */
+.share-btn--icon {
+  padding: 6px;
+  width: 34px;
+  justify-content: center;
+  background: transparent;
+  border-color: rgba(238,230,216,0.14);
+  color: var(--text-ghost);
+}
+.share-btn--icon:hover {
+  background: rgba(238,230,216,0.04);
+  border-color: rgba(206,159,62,0.4);
   color: var(--text-faint);
 }
 
@@ -1643,8 +1656,8 @@ html, body {
 .store-picker-onboarding {
   background: #2B2620;
   border-radius: var(--radius-md);
+  border: 1px solid var(--border);
   padding: 1.5rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
   max-height: calc(100svh - 210px);
   overflow-y: auto;
   display: flex;
@@ -1765,15 +1778,17 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 }
 .add-to-plan-btn:hover { background: rgba(124,143,90,0.12); border-color: #7C8F5A; border-style: solid; }
 .add-to-plan-btn.in-plan { background: rgba(124,143,90,0.12); border-color: #7C8F5A; border-style: solid; color: #A03428; cursor: default; }
+/* Primary CTA in the recipe detail — the single filled action. */
 .add-to-plan-btn.detail {
-  background: #2B2620;
-  border: 1.5px solid rgba(206,159,62,0.3);
+  background: var(--tilbuds-rod);
+  border: 1.5px solid var(--tilbuds-rod);
   border-style: solid;
-  padding: 6px 14px;
+  color: #EEE6D8;
+  padding: 6px 16px;
   font-size: 12px;
   width: auto;
 }
-.add-to-plan-btn.detail:hover:not(.in-plan) { background: rgba(124,143,90,0.18); border-color: #CE9F3E; }
+.add-to-plan-btn.detail:hover:not(.in-plan) { background: var(--prisrod-hover); border-color: var(--prisrod-hover); }
 .add-to-plan-btn.detail.in-plan { background: rgba(124,143,90,0.12); border-color: rgba(206,159,62,0.4); color: #A03428; cursor: default; }
 
 /* ─── Day picker modal ───────────────────────── */
@@ -1827,7 +1842,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .meal-plan-card {
   background: #2B2620;
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
   padding: 1.5rem;
   margin-top: 1rem;
 }
@@ -2254,11 +2269,11 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   }
   .recipe-browse-card:hover {
     transform: none;
-    box-shadow: 0 2px 14px rgba(100,70,20,0.08), 0 1px 3px rgba(0,0,0,0.04);
+    border-color: rgba(238,230,216,0.08);
   }
   .recipe-browse-card:hover .card-photo { transform: none; }
   .recipe-browse-card.featured:hover {
-    box-shadow: 0 4px 20px rgba(100,70,20,0.10), 0 1px 4px rgba(0,0,0,0.04);
+    border-color: rgba(206,159,62,0.2);
   }
   html.dark .recipe-browse-card:hover .card-body { background: var(--surface); }
   .shopping-cart-fab:hover {
@@ -2442,7 +2457,16 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   flex: 1;
   min-width: 0;
 }
-.mp-sidebar-emoji { font-size: 18px; flex-shrink: 0; }
+.mp-sidebar-emoji {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-weight: 700; font-size: 14px;
+  color: var(--mono-accent, #CE9F3E);
+  background: color-mix(in srgb, var(--mono-accent, #CE9F3E) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mono-accent, #CE9F3E) 35%, transparent);
+  border-radius: 6px;
+}
 .mp-sidebar-recipe-info { flex: 1; min-width: 0; }
 .mp-sidebar-recipe-title {
   font-size: 12px;
@@ -2781,7 +2805,16 @@ html:not(.dark) .install-banner {
   flex: 1;
   min-width: 0;
 }
-.mp-sheet-emoji { font-size: 22px; flex-shrink: 0; }
+.mp-sheet-emoji {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-weight: 700; font-size: 16px;
+  color: var(--mono-accent, #CE9F3E);
+  background: color-mix(in srgb, var(--mono-accent, #CE9F3E) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mono-accent, #CE9F3E) 35%, transparent);
+  border-radius: 7px;
+}
 .mp-sheet-recipe-info { flex: 1; min-width: 0; }
 .mp-sheet-recipe-title {
   font-size: 14px;
@@ -2875,20 +2908,18 @@ html.dark .shopping-list-card,
 html.dark .saved-recipes-card,
 html.dark .meal-plan-card {
   background: var(--surface);
-  box-shadow: 0 4px 32px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04);
+  border: 1px solid var(--border-dark);
 }
 html.dark .recipe-browse-card {
   background: var(--surface);
   border: 1px solid var(--border-dark);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  transition: transform 0.2s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.4, 0.64, 1), border-color 0.2s ease;
 }
 html.dark .recipe-browse-card .card-body {
   background: var(--surface);
 }
 html.dark .recipe-browse-card.featured {
   border-color: rgba(206,159,62,0.2);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
 }
 html.dark .recipe-browse-card.featured .card-body {
   background: linear-gradient(135deg, #2B2620 0%, #352F2B 100%);
@@ -2966,7 +2997,9 @@ html.dark .back-btn:hover { color: var(--text-faint); }
 html.dark .add-to-plan-btn { border-color: rgba(238,230,216,0.1); color: #7C8F5A; }
 html.dark .add-to-plan-btn:hover { background: #352F2B; border-color: #B83A24; }
 html.dark .add-to-plan-btn.in-plan { background: #352F2B; border-color: var(--text-faint); color: #CE9F3E; }
-html.dark .add-to-plan-btn.detail { background: #352F2B; border-color: rgba(238,230,216,0.1); }
+html.dark .add-to-plan-btn.detail { background: var(--tilbuds-rod); border-color: var(--tilbuds-rod); color: #EEE6D8; }
+html.dark .add-to-plan-btn.detail:hover:not(.in-plan) { background: var(--prisrod-hover); border-color: var(--prisrod-hover); }
+html.dark .add-to-plan-btn.detail.in-plan { background: #352F2B; border-color: rgba(206,159,62,0.4); color: #CE9F3E; }
 
 html.dark .deal-item-tag.available { background: #352F2B; color: #7C8F5A; border-color: rgba(238,230,216,0.1); }
 html.dark .deal-item-tag.unavailable { background: #161e16; color: var(--text-faint); border-color: #222e22; }
@@ -4577,9 +4610,25 @@ html.dark .card-save-btn.saved { background: #352F2B; border-color: var(--text-f
   font-weight: 700;
   color: var(--text);
   margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.saved-sheet-title-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.saved-sheet-mono {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-weight: 700; font-size: 12px;
+  color: var(--mono-accent, #CE9F3E);
+  background: color-mix(in srgb, var(--mono-accent, #CE9F3E) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--mono-accent, #CE9F3E) 35%, transparent);
+  border-radius: 5px;
 }
 .saved-sheet-card-meta {
   font-size: 11px;
@@ -5757,7 +5806,7 @@ html:not(.dark) .diet-btn:hover { border-color: #CE9F3E; background: rgba(206,15
 html:not(.dark) .diet-btn.active { background: rgba(168,122,30,0.12); color: #A87A1E; border-color: #CE9F3E; }
 
 /* ── Store cards ── */
-html:not(.dark) .store-card { background: #FBF6EC; box-shadow: 0 1px 4px rgba(80,60,20,0.08); }
+html:not(.dark) .store-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .store-item { border-color: #DED3C0; color: #221C17; }
 html:not(.dark) .store-item:hover { background: rgba(34,28,23,0.04); }
 html:not(.dark) .store-item-name { color: #221C17; }
@@ -5782,11 +5831,9 @@ html:not(.dark) .card-arrow-btn:hover { background: #8F2818; }
 html:not(.dark) .recipe-browse-card {
   background: #FBF6EC;
   border-color: #DED3C0;
-  box-shadow: 0 2px 8px rgba(80,60,20,0.07), 0 1px 3px rgba(80,60,20,0.04);
 }
 html:not(.dark) .recipe-browse-card:hover {
   border-color: rgba(185,62,41,0.3);
-  box-shadow: 0 8px 24px rgba(80,60,20,0.11), 0 2px 6px rgba(80,60,20,0.05);
 }
 html:not(.dark) .recipe-browse-card.featured { border-color: rgba(168,122,30,0.35); }
 html:not(.dark) .recipe-browse-card.featured .card-body {
@@ -6238,7 +6285,9 @@ html:not(.dark) .chain-badge--active {
 html:not(.dark) .store-picker-onboarding { background: #F1E9DB; border-color: #DED3C0; }
 html:not(.dark) .store-picker-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .sp-close-btn { background: #EFE4D2; color: #5C5245; border-color: #DED3C0; }
-html:not(.dark) .add-to-plan-btn.detail { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
+html:not(.dark) .add-to-plan-btn.detail { background: #B93E29; border-color: #B93E29; color: #FBF6EC; }
+html:not(.dark) .add-to-plan-btn.detail:hover:not(.in-plan) { background: #8F2818; border-color: #8F2818; }
+html:not(.dark) .add-to-plan-btn.detail.in-plan { background: rgba(95,112,64,0.14); border-color: rgba(168,122,30,0.4); color: #5F7040; }
 html:not(.dark) .day-picker-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .meal-plan-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .meal-plan-day.empty { background: rgba(34,28,23,0.04); border-color: #DED3C0; }

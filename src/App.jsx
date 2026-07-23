@@ -103,6 +103,39 @@ const CUISINE_SEARCH_MAP = {
 const _availCuisines = new Set(recipeBank.map(r => r.cuisine).filter(Boolean));
 const CUISINE_ORDER = ["Alle", ...ALL_CUISINES_ORDERED.filter(c => _availCuisines.has(c))];
 
+// Cuisine-keyed accent + monogram — a designed stand-in for emoji iconography
+// in compact list rows (meal plan, saved recipes). Uses the warm-earth palette.
+const CUISINE_COLORS = {
+  "🇩🇰 Nordisk":      "#7C8F5A",
+  "🇮🇹 Italiensk":    "#B83A24",
+  "🇫🇷 Fransk":       "#5A7888",
+  "🇯🇵 Asiatisk":     "#A83030",
+  "🇮🇳 Indisk":       "#CE9F3E",
+  "🇬🇷 Middelhavet":  "#5A9A8A",
+  "🇲🇦 Mellemøstlig": "#9C8040",
+  "🇲🇽 Mexicansk":    "#C07038",
+  "🇺🇸 Amerikansk":   "#6A8B5A",
+};
+function recipeAccent(r) {
+  return (r && CUISINE_COLORS[r.cuisine]) || "#CE9F3E";
+}
+function recipeMonogram(r) {
+  const src = (r && (r.category || r.title)) || "";
+  const ch = src.replace(/[^A-Za-zÆØÅæøå]/g, "").charAt(0);
+  return (ch || "•").toUpperCase();
+}
+function RecipeMonogram({ recipe, className }) {
+  return (
+    <span
+      className={className}
+      style={{ "--mono-accent": recipeAccent(recipe) }}
+      aria-hidden="true"
+    >
+      {recipeMonogram(recipe)}
+    </span>
+  );
+}
+
 const PANTRY_CATEGORIES = [
   {
     id: "koed", label: "Kød & fisk",
@@ -1605,21 +1638,19 @@ export default function App() {
   const detailActionButtons = selectedRecipe && (
     <>
       <button
-        className={`share-btn${copied ? " copied" : ""}`}
+        className={`share-btn share-btn--icon${copied ? " copied" : ""}`}
         onClick={() => shareRecipe(selectedRecipe)}
         title="Del opskrift"
+        aria-label="Del opskrift"
       >
         {copied ? (
-          <>✓ <span>Kopieret!</span></>
+          <span aria-hidden="true">✓</span>
         ) : (
-          <>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-              <polyline points="16 6 12 2 8 6"/>
-              <line x1="12" y1="2" x2="12" y2="15"/>
-            </svg>
-            <span>Del</span>
-          </>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
         )}
       </button>
       <button
@@ -1882,7 +1913,7 @@ export default function App() {
             <div className="sp-modal-header">
               <div>
                 <h2 className="sp-title">Vælg dag</h2>
-                <p style={{ margin: 0, fontSize: 13, color: "var(--text-dim)" }}>{addingToPlan.emoji} {addingToPlan.title}</p>
+                <p style={{ margin: 0, fontSize: 13, color: "var(--text-dim)" }}>{addingToPlan.title}</p>
               </div>
               <button className="sp-close-btn" onClick={() => setAddingToPlan(null)}>×</button>
             </div>
@@ -1897,7 +1928,7 @@ export default function App() {
                   >
                     <span className="day-picker-short">{DAY_SHORT[i]}</span>
                     <span className="day-picker-full">{day}</span>
-                    {occupied && <span className="day-picker-recipe">{occupied.recipe.emoji} {occupied.recipe.title}</span>}
+                    {occupied && <span className="day-picker-recipe">{occupied.recipe.title}</span>}
                     {!occupied && <span className="day-picker-empty-label">Ledig</span>}
                   </button>
                 );
@@ -2586,7 +2617,7 @@ export default function App() {
               <div className="mp-sheet-day-name">{DAY_FULL[i]}</div>
               {entry ? (
                 <div className="mp-sheet-day-content">
-                  <span className="mp-sheet-emoji">{entry.recipe.emoji}</span>
+                  <RecipeMonogram recipe={entry.recipe} className="mp-sheet-emoji" />
                   <div className="mp-sheet-recipe-info">
                     <div className="mp-sheet-recipe-title">{entry.recipe.title}</div>
                     <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} pers.</div>
@@ -2677,7 +2708,7 @@ export default function App() {
             <div className="mp-sidebar-day-name">{DAY_SHORT[i]}</div>
             {entry ? (
               <div className="mp-sidebar-day-content">
-                <span className="mp-sidebar-emoji">{entry.recipe.emoji}</span>
+                <RecipeMonogram recipe={entry.recipe} className="mp-sidebar-emoji" />
                 <div className="mp-sidebar-recipe-info">
                   <div className="mp-sidebar-recipe-title">{entry.recipe.title}</div>
                   <div className="mp-sidebar-servings">
@@ -2777,7 +2808,7 @@ export default function App() {
                   onClick={() => { setShowSavedPanel(false); selectRecipe(r); }}
                 >
                   <div className="saved-sheet-card-info">
-                    <div className="saved-sheet-card-title">{r.emoji} {r.title}</div>
+                    <div className="saved-sheet-card-title"><RecipeMonogram recipe={r} className="saved-sheet-mono" /><span className="saved-sheet-title-text">{r.title}</span></div>
                     <div className="saved-sheet-card-meta">{r.time} · {r.savedServings || r.servings_count || 4} pers.</div>
                   </div>
                   <button
