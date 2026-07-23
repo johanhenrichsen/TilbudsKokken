@@ -1679,14 +1679,6 @@ export default function App() {
           onToggleSave={toggleSaveRecipe}
         />
       );
-      if (i === 5 && recipes.length > 7) {
-        result.push(
-          <div key="editorial-break" className="recipe-browse-editorial-break">
-            <span className="editorial-break-quote">Sæsonens mad. Til denne uges pris.</span>
-            <span className="editorial-break-sub">Alle opskrifter er bygget på tilbud fra dine butikker</span>
-          </div>
-        );
-      }
     });
     return result;
   }
@@ -2506,13 +2498,6 @@ export default function App() {
                   </svg>
                 </button>
               </div>
-              {!collapsedSections.recommended && (
-                <p className="section-intro">
-                  {search.trim()
-                    ? `${filteredRecommended.length + filteredOthers.length} resultat${(filteredRecommended.length + filteredOthers.length) === 1 ? "" : "er"} for "${search.trim()}"`
-                    : "Bygget på denne uges bedste tilbud fra dine butikker"}
-                </p>
-              )}
               <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredRecommended.length > 0 ? (
@@ -2556,9 +2541,6 @@ export default function App() {
                   </svg>
                 </button>
               </div>
-              {!collapsedSections.others && (
-                <p className="section-intro">Udforsk mere — bare hent et ekstra tilbud fra en ny butik</p>
-              )}
               <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredOthers.length > 0 ? (

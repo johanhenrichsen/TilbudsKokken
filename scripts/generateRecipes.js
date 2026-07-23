@@ -90,16 +90,29 @@ function formatProductList(products) {
     .join('\n');
 }
 
-const BASE_INSTRUCTIONS = `You are a recipe writer. Generate diverse recipes from any world cuisine. Each recipe must use ${MIN_DEAL_ITEMS}-5 products from the sale list as the main deal ingredients. Recipes may also use basic pantry staples (salt, pepper, olive oil, flour, sugar, dried spices etc.) — mark these isPantry:true with no store/price. Every deal ingredient MUST have the exact store name and price from the list. Return clean JSON array only, no markdown. Each recipe: { title (Danish), description (2-3 sentences Danish), ingredients: [{ text, store, price, isPantry }], steps: [strings in Danish], time, servings, cuisine, dietary: [], difficulty, tip, dealItems: [{ name, store, price }] }
+const BASE_INSTRUCTIONS = `You are a recipe writer. Generate HIGHLY DIVERSE recipes spanning many different world cuisines. Each recipe must use ${MIN_DEAL_ITEMS}-5 products from the sale list as the main deal ingredients. Recipes may also use basic pantry staples (salt, pepper, olive oil, flour, sugar, dried spices etc.) — mark these isPantry:true with no store/price. Every deal ingredient MUST have the exact store name and price from the list. Return clean JSON array only, no markdown. Each recipe: { title (Danish), description (2-3 sentences Danish), ingredients: [{ text, store, price, isPantry }], steps: [strings in Danish], time, servings, cuisine, cookingMethod (one of: stir-fry, bake, soup, curry, grill, bowl, braise, frittata, sheet-pan, roast, steam, salad), dietary: [], difficulty, tip, dealItems: [{ name, store, price }] }
+
+STRICT DIVERSITY RULES — you MUST follow these:
+1. NO two recipes in your response may share the same cuisine AND same primary protein.
+2. Spread across at least 4 different cuisines per batch: choose from Nordic, Italian, French, Asian, Indian, Mediterranean, Middle Eastern, Mexican, American, Thai, Korean, Moroccan.
+3. Use a variety of cooking METHODS: stir-fry, bake, soup/stew, curry, grill/pan-sear, salad/bowl, braise, frittata, stir-fry, sheet-pan.
+4. Include at least one vegetarian or fish recipe per batch.
+5. AVOID defaulting to pasta dishes — pasta recipes must be a minority (max 1-2 out of any batch).
 
 The store name in every deal ingredient MUST be one of these exact strings:
 ${CANONICAL_STORES.join('\n')}`;
 
-// Chain-focused prompt: Claude is asked to use ONLY products from a single chain
-function buildChainPrompt(count, chain, chainProducts) {
-  return `${BASE_INSTRUCTIONS}
+function formatAlreadyGenerated(recipes) {
+  if (!recipes || recipes.length === 0) return '';
+  const lines = recipes.map(r => `- ${r.title} (${r.cuisine}, cooking: ${r.cookingMethod || 'unknown'})`).join('\n');
+  return `\nALREADY GENERATED — do NOT create similar dishes:\n${lines}\n`;
+}
 
-Generate exactly ${count} recipes that each use ${MIN_DEAL_ITEMS}-5 products from ${chain}'s sale list below. All deal ingredients must come from ${chain} — do not mix in products from other stores.
+// Chain-focused prompt: Claude is asked to use ONLY products from a single chain
+function buildChainPrompt(count, chain, chainProducts, previousRecipes = []) {
+  return `${BASE_INSTRUCTIONS}
+${formatAlreadyGenerated(previousRecipes)}
+Generate exactly ${count} recipes that each use ${MIN_DEAL_ITEMS}-5 products from ${chain}'s sale list below. All deal ingredients must come from ${chain} — do not mix in products from other stores. Make the ${count} recipes as varied as possible: different cuisines, different cooking methods, different protein types.
 
 ${chain} products on sale this week:
 ${formatProductList(chainProducts)}
@@ -108,10 +121,10 @@ Return a JSON array of exactly ${count} recipes.`;
 }
 
 // Multi-chain prompt: encourages using products from at least two primary chains
-function buildMultiChainPrompt(count, primaryProducts) {
+function buildMultiChainPrompt(count, primaryProducts, previousRecipes = []) {
   return `${BASE_INSTRUCTIONS}
-
-Generate exactly ${count} recipes where each recipe uses deal ingredients from AT LEAST two different stores. Mix products from different chains in a single recipe where it makes culinary sense.
+${formatAlreadyGenerated(previousRecipes)}
+Generate exactly ${count} recipes where each recipe uses deal ingredients from AT LEAST two different stores. Mix products from different chains in a single recipe where it makes culinary sense. Each recipe must be a DIFFERENT cuisine and cooking style from the others.
 
 Products on sale this week:
 ${formatProductList(primaryProducts)}
@@ -120,10 +133,10 @@ Return a JSON array of exactly ${count} recipes.`;
 }
 
 // Fallback prompt for the remaining/other chains (non-primary)
-function buildOtherPrompt(count, products) {
+function buildOtherPrompt(count, products, previousRecipes = []) {
   return `${BASE_INSTRUCTIONS}
-
-Generate exactly ${count} diverse recipes from any world cuisine using the sale products below.
+${formatAlreadyGenerated(previousRecipes)}
+Generate exactly ${count} highly diverse recipes from different world cuisines using the sale products below. Prioritize cuisines and cooking methods NOT already covered above.
 
 Available products:
 ${formatProductList(products)}
@@ -201,6 +214,7 @@ function normalizeRecipe(raw, index) {
       isPantry: !!(ing.isPantry),
     })),
     steps:          Array.isArray(raw.steps) ? raw.steps : [],
+    cookingMethod:  raw.cookingMethod || '',
     tip:            raw.tip          || '',
     dealItems: (raw.dealItems || []).map(di => ({
       name:  String(di.name  || ''),
@@ -344,6 +358,18 @@ async function main() {
   console.log(`Fandt ${products.length} produkter fra ${storeSet.size} butikker: ${[...storeSet].join(', ')}\n`);
 
   const allRaw = [];
+  // Track normalized snapshots so each subsequent prompt knows what's been made
+  const generatedSummary = [];
+
+  function snapshotRecipes(rawBatch) {
+    for (const r of rawBatch) {
+      generatedSummary.push({
+        title: r.title || '',
+        cuisine: r.cuisine || '',
+        cookingMethod: r.cookingMethod || '',
+      });
+    }
+  }
 
   // ── Per-chain generation for primary chains ──────────────────────────────
   console.log(`Genererer opskrifter per kæde (mål: ${TARGET_PER_CHAIN} per kæde):\n`);
@@ -366,9 +392,10 @@ async function main() {
     }
 
     const count = maxFeasible;
-    const prompt = buildChainPrompt(count, chain, chainProducts);
+    const prompt = buildChainPrompt(count, chain, chainProducts, generatedSummary);
     const recipes = await generateBatch(client, chain, count, prompt);
     allRaw.push(...recipes);
+    snapshotRecipes(recipes);
 
     if (count < TARGET_PER_CHAIN) {
       console.log(`  ⚠️  ${chain}: mål ikke nået — ${count}/${TARGET_PER_CHAIN} (kun ${chainProducts.length} produkter i xlsx)`);
@@ -380,9 +407,10 @@ async function main() {
   if (primaryProducts.length >= MIN_DEAL_ITEMS * 2) {
     console.log('');
     const multiCount = 5;
-    const prompt = buildMultiChainPrompt(multiCount, primaryProducts);
+    const prompt = buildMultiChainPrompt(multiCount, primaryProducts, generatedSummary);
     const recipes = await generateBatch(client, 'Multi-kæde', multiCount, prompt);
     allRaw.push(...recipes);
+    snapshotRecipes(recipes);
   }
 
   // ── Remaining non-primary chains (Bilka, Lidl, etc.) ────────────────────
@@ -390,9 +418,10 @@ async function main() {
   if (otherProducts.length >= MIN_DEAL_ITEMS) {
     console.log('');
     const otherCount = 10;
-    const prompt = buildOtherPrompt(otherCount, otherProducts);
+    const prompt = buildOtherPrompt(otherCount, otherProducts, generatedSummary);
     const recipes = await generateBatch(client, 'Andre butikker', otherCount, prompt);
     allRaw.push(...recipes);
+    snapshotRecipes(recipes);
   }
 
   // ── Normalize and save ────────────────────────────────────────────────────

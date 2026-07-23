@@ -256,7 +256,6 @@ html, body {
 .bottom-bar {
   background: #2B2620;
   border-radius: var(--radius-md);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
   padding: 14px 18px;
   margin-bottom: 1.5rem;
   display: flex;
@@ -308,6 +307,13 @@ html, body {
   justify-content: center;
   font-family: inherit;
   flex-shrink: 0;
+  position: relative;
+}
+/* Extend tap target to 44px without enlarging the visible circle */
+.btn-round::after {
+  content: '';
+  position: absolute;
+  inset: -11px;
 }
 .btn-round:hover { background: rgba(193,68,46,0.2); }
 
@@ -931,13 +937,6 @@ html, body {
   letter-spacing: -0.01em;
   line-height: var(--lh-heading, 1.18);
   flex: 1;
-}
-.section-intro {
-  font-size: var(--type-body-sm, 13px);
-  color: var(--muted);
-  padding: 0 16px 10px;
-  line-height: var(--lh-body, 1.65);
-  margin-top: -4px;
 }
 .section-count-badge {
   font-family: var(--font-mono);
@@ -2115,7 +2114,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 
   /* ── Section headings ── */
   .section-toggle-label { font-size: 16px; letter-spacing: 0.02em; }
-  .section-intro { font-size: 12px; padding: 0 12px 6px; margin-top: -2px; }
   .recipe-browse-section { margin-bottom: 1.25rem; }
   /* ── Meal plan grid — scroll snap ── */
   .meal-plan-grid { scroll-snap-type: x mandatory; }
@@ -2211,7 +2209,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .prefs-trigger-title { font-size: 14px; }
 
   /* ── Card serving row — readable on mobile ── */
-  .card-sv-btn { min-height: 36px; padding: 4px 10px; font-size: 13px; }
+  .card-sv-btn { min-height: 44px; padding: 4px 10px; font-size: 13px; }
   .card-sv-label { font-size: 12px; }
   .card-servings-row { gap: 5px; }
 
