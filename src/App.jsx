@@ -2360,10 +2360,7 @@ export default function App() {
                       {scaled}{ing.price ? ` · ${ing.price}` : ""}
                     </span>
                     {isDeal && (
-                      <span className="store-badge-pill">
-                        <span className="chain-badge" style={getChainColor(ing.store) ? { '--chain-color': getChainColor(ing.store) } : undefined}></span>
-                        {ing.store}
-                      </span>
+                      <span className="deal-chain-tag">{ing.store}</span>
                     )}
                   </li>
                 );
