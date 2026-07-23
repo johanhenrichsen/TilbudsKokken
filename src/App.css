@@ -1117,7 +1117,7 @@ html, body {
   left: 10px;
   z-index: 2;
   background: rgba(27,22,19,0.55) !important;
-  color: var(--text) !important;
+  color: #F5EEE0 !important;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid rgba(238,230,216,0.15) !important;
@@ -5445,6 +5445,12 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
   .fb-fab--raised {
     bottom: calc(24px + 56px + 14px + env(safe-area-inset-bottom, 0px));
   }
+  /* Slide the feedback button clear of the meal-plan sidebar so it no longer
+     sits on top of it. Sidebar renders ~341px wide (300px content + 40px
+     padding + 1.5px border); add a 20px gap. */
+  body.has-mp-sidebar .fb-fab {
+    right: calc(300px + 40px + 20px);
+  }
 }
 
 /* Overlay + panel */
@@ -5526,7 +5532,7 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
   background: none;
   border: none;
   font-size: 28px;
-  color: rgba(238,230,216,0.08);
+  color: rgba(238,230,216,0.32);
   cursor: pointer;
   padding: 2px;
   line-height: 1;
@@ -5758,8 +5764,8 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
 /* ═══════════════════════════════════════════════════════════════
    LIGHT MODE — Kvittering theme
    BG #F1E9DB · Surface #FBF6EC · Text #221C17
-   Border #DED3C0 · Muted #7A7061 · Prisrød #B93E29
-   Sennep-text #A87A1E · Dild #5F7040
+   Border #DED3C0 · Muted #6F665A · Prisrød #B93E29
+   Sennep-text #7E5A0E · Dild #5F7040
    ═══════════════════════════════════════════════════════════════ */
 html:not(.dark) {
   background-color: #F1E9DB;
@@ -5774,7 +5780,7 @@ html:not(.dark) {
   --sennep-dim:     rgba(206,159,62,0.15);
   --dild:           #5F7040;
   --dild-dim:       rgba(95,112,64,0.12);
-  --accent:         #A87A1E;
+  --accent:         #7E5A0E;
   --accent-dim:     rgba(168,122,30,0.12);
   --accent-glow:    rgba(168,122,30,0.25);
   --accent-text:    #FBF6EC;
@@ -5784,9 +5790,9 @@ html:not(.dark) {
   --cream-dim:      rgba(34,28,23,0.55);
   --text:           #221C17;
   --text-dim:       rgba(34,28,23,0.65);
-  --text-faint:     #7A7061;
+  --text-faint:     #6F665A;
   --text-ghost:     rgba(34,28,23,0.3);
-  --muted:          #7A7061;
+  --muted:          #6F665A;
   --surface:        #FBF6EC;
   --surface-2:      #EFE4D2;
   --border-dark:    #DED3C0;
@@ -5805,10 +5811,13 @@ html:not(.dark) .app { color: #221C17; }
 /* ── Header ── */
 html:not(.dark) .app-hero { border-bottom-color: #DED3C0; --logo-wordmark: #221C17; }
 html:not(.dark) .app-title { color: #221C17; }
-html:not(.dark) .app-subtitle { color: #7A7061; }
+html:not(.dark) .app-subtitle { color: #6F665A; }
+html:not(.dark) .hero-brand-slogan { color: #7E5A0E; }
+html:not(.dark) .show-more-btn { color: #7E5A0E; border-color: rgba(126,90,14,0.4); }
+html:not(.dark) .quick-strip-sep { color: #6B6355; }
 html:not(.dark) .week-badge {
   background: rgba(168,122,30,0.10);
-  color: #A87A1E;
+  color: #7E5A0E;
   border-color: rgba(168,122,30,0.3);
 }
 html:not(.dark) .header-icon-btn {
@@ -5820,8 +5829,8 @@ html:not(.dark) .header-icon-btn:hover { background: rgba(34,28,23,0.10); color:
 
 /* ── Diet filter chips ── */
 html:not(.dark) .diet-btn { background: #FBF6EC; color: #5C5245; border-color: #DED3C0; }
-html:not(.dark) .diet-btn:hover { border-color: #CE9F3E; background: rgba(206,159,62,0.08); color: #A87A1E; }
-html:not(.dark) .diet-btn.active { background: rgba(168,122,30,0.12); color: #A87A1E; border-color: #CE9F3E; }
+html:not(.dark) .diet-btn:hover { border-color: #CE9F3E; background: rgba(206,159,62,0.08); color: #7E5A0E; }
+html:not(.dark) .diet-btn.active { background: rgba(168,122,30,0.12); color: #7E5A0E; border-color: #CE9F3E; }
 
 /* ── Store cards ── */
 html:not(.dark) .store-card { background: #FBF6EC; border-color: #DED3C0; }
@@ -5830,13 +5839,13 @@ html:not(.dark) .store-item:hover { background: rgba(34,28,23,0.04); }
 html:not(.dark) .store-item-name { color: #221C17; }
 html:not(.dark) .store-item-count,
 html:not(.dark) .store-item-unit,
-html:not(.dark) .store-deal-count { color: #7A7061; }
+html:not(.dark) .store-deal-count { color: #6F665A; }
 html:not(.dark) .store-logo-name { color: #221C17; }
 
 /* ── Buttons ── */
 html:not(.dark) .btn-primary { background: #B93E29; color: #FBF6EC; box-shadow: 0 4px 14px rgba(185,62,41,0.28); }
 html:not(.dark) .btn-primary:hover:not(:disabled) { background: #8F2818; }
-html:not(.dark) .btn-outline { background: transparent; border-color: #CE9F3E; color: #A87A1E; }
+html:not(.dark) .btn-outline { background: transparent; border-color: #CE9F3E; color: #7E5A0E; }
 html:not(.dark) .btn-outline:hover { background: rgba(168,122,30,0.08); }
 html:not(.dark) .btn-round { background: rgba(185,62,41,0.10); color: #B93E29; }
 html:not(.dark) .btn-round:hover { background: rgba(185,62,41,0.18); }
@@ -5859,21 +5868,21 @@ html:not(.dark) .recipe-browse-card.featured .card-body {
 }
 html:not(.dark) .card-body { background: #FBF6EC; }
 html:not(.dark) .card-photo-badge { background: #5F7040; color: #FBF6EC; }
-html:not(.dark) .card-photo-tag { background: rgba(168,122,30,0.12); color: #A87A1E; }
+html:not(.dark) .card-photo-tag { background: rgba(168,122,30,0.12); color: #7E5A0E; }
 html:not(.dark) .recipe-browse-title { color: #221C17; }
-html:not(.dark) .recipe-browse-meta { color: #7A7061; }
-html:not(.dark) .recipe-category-tag { background: rgba(168,122,30,0.10); color: #A87A1E; }
+html:not(.dark) .recipe-browse-meta { color: #6F665A; }
+html:not(.dark) .recipe-category-tag { background: rgba(168,122,30,0.10); color: #7E5A0E; }
 html:not(.dark) .recipe-card-price { color: #5F7040; }
-html:not(.dark) .store-tag { color: #7A7061; }
-html:not(.dark) .recipe-match-badge { background: rgba(168,122,30,0.12); color: #A87A1E; }
+html:not(.dark) .store-tag { color: #6F665A; }
+html:not(.dark) .recipe-match-badge { background: rgba(168,122,30,0.12); color: #7E5A0E; }
 html:not(.dark) .recipe-browse-card:hover .card-body { background: #EFE4D2; }
 
 /* ── Recipe detail ── */
 html:not(.dark) .recipe-detail-overlay { background: #F1E9DB; }
 html:not(.dark) .recipe-title { color: #221C17; }
-html:not(.dark) .recipe-meta-bar { color: #7A7061; border-color: #DED3C0; }
-html:not(.dark) .recipe-subtitle { color: #7A7061; }
-html:not(.dark) .recipe-description { color: #A87A1E; }
+html:not(.dark) .recipe-meta-bar { color: #6F665A; border-color: #DED3C0; }
+html:not(.dark) .recipe-subtitle { color: #6F665A; }
+html:not(.dark) .recipe-description { color: #7E5A0E; }
 html:not(.dark) .recipe-detail-price { color: #5F7040; border-color: #DED3C0; }
 html:not(.dark) .step-item { color: #5C5245; }
 html:not(.dark) .step-item:not(:last-child) { border-color: #DED3C0; }
@@ -5882,35 +5891,35 @@ html:not(.dark) .recipe-tips-block {
   background: linear-gradient(135deg, #FBF6EC 0%, #EFE4D2 100%);
   border-color: #DED3C0;
 }
-html:not(.dark) .recipe-tips-label { color: #A87A1E; }
+html:not(.dark) .recipe-tips-label { color: #7E5A0E; }
 html:not(.dark) .recipe-tip-item { color: #5C5245; }
 html:not(.dark) .recipe-tip-item::before { color: #B93E29; }
 html:not(.dark) .recipe-tip { background: linear-gradient(135deg, #FBF6EC 0%, #EFE4D2 100%); border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .difficulty-nem { background: rgba(95,112,64,0.12); color: #5F7040; }
-html:not(.dark) .difficulty-mellem { background: rgba(206,159,62,0.12); color: #A87A1E; }
+html:not(.dark) .difficulty-mellem { background: rgba(206,159,62,0.12); color: #7E5A0E; }
 html:not(.dark) .difficulty-avanceret { background: rgba(185,62,41,0.10); color: #B93E29; }
-html:not(.dark) .calories-meta { color: #7A7061; }
-html:not(.dark) .cuisine-badge { background: rgba(34,28,23,0.06); color: #7A7061; }
-html:not(.dark) .ingredient-legend { background: #EFE4D2; color: #7A7061; }
+html:not(.dark) .calories-meta { color: #6F665A; }
+html:not(.dark) .cuisine-badge { background: rgba(34,28,23,0.06); color: #6F665A; }
+html:not(.dark) .ingredient-legend { background: #EFE4D2; color: #6F665A; }
 html:not(.dark) .ingredient-item { color: #5C5245; }
 html:not(.dark) .ingredient-item.ingredient-deal { background: rgba(168,122,30,0.08); }
-html:not(.dark) .ingredient-deal-text { color: #A87A1E; }
-html:not(.dark) .ingredient-pantry-text { color: #7A7061; }
+html:not(.dark) .ingredient-deal-text { color: #7E5A0E; }
+html:not(.dark) .ingredient-pantry-text { color: #6F665A; }
 html:not(.dark) .ingredient-pantry-dot { background: #DED3C0; }
-html:not(.dark) .back-btn { color: #7A7061; }
+html:not(.dark) .back-btn { color: #6F665A; }
 html:not(.dark) .back-btn:hover { color: #221C17; }
-html:not(.dark) .section-label { color: #A87A1E; }
-html:not(.dark) .section-count-badge { color: #A87A1E; background: rgba(168,122,30,0.10); }
+html:not(.dark) .section-label { color: #7E5A0E; }
+html:not(.dark) .section-count-badge { color: #7E5A0E; background: rgba(168,122,30,0.10); }
 html:not(.dark) .section-toggle-label { color: #221C17; }
-html:not(.dark) .section-chevron { color: #7A7061; }
+html:not(.dark) .section-chevron { color: #6F665A; }
 html:not(.dark) .section-toggle-btn:hover { background: rgba(34,28,23,0.05); }
 html:not(.dark) .makeable-badge { background: rgba(95,112,64,0.10); border-color: rgba(95,112,64,0.25); color: #5F7040; }
 html:not(.dark) .add-to-plan-btn { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .add-to-plan-btn:hover:not(.in-plan) { background: #B93E29; color: #FBF6EC; border-color: #B93E29; }
-html:not(.dark) .add-to-plan-btn.in-plan { background: rgba(168,122,30,0.12); border-color: rgba(168,122,30,0.3); color: #A87A1E; }
-html:not(.dark) .share-btn { background: #FBF6EC; border-color: #DED3C0; color: #7A7061; }
-html:not(.dark) .share-btn:hover { border-color: rgba(168,122,30,0.4); color: #A87A1E; background: #FBF6EC; }
-html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #7A7061; }
+html:not(.dark) .add-to-plan-btn.in-plan { background: rgba(168,122,30,0.12); border-color: rgba(168,122,30,0.3); color: #7E5A0E; }
+html:not(.dark) .share-btn { background: #FBF6EC; border-color: #DED3C0; color: #6F665A; }
+html:not(.dark) .share-btn:hover { border-color: rgba(168,122,30,0.4); color: #7E5A0E; background: #FBF6EC; }
+html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #6F665A; }
 
 /* ═══════════════════════════════════════════════════════════════
    MOBILE-FIRST REDESIGN — purpose-built phone layouts.
@@ -6112,37 +6121,37 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
 
 /* ── Search ── */
 html:not(.dark) .search-input { background: #FBF6EC; border-color: #DED3C0; color: #221C17; }
-html:not(.dark) .search-input::placeholder { color: #7A7061; }
+html:not(.dark) .search-input::placeholder { color: #6F665A; }
 html:not(.dark) .search-input:focus { border-color: #CE9F3E; background: #FBF6EC; box-shadow: 0 0 0 3px rgba(206,159,62,0.12); }
-html:not(.dark) .search-clear { color: #7A7061; }
+html:not(.dark) .search-clear { color: #6F665A; }
 html:not(.dark) .search-clear:hover { color: #221C17; background: rgba(34,28,23,0.08); }
 
 /* ── Store toggle ── */
 html:not(.dark) .store-toggle { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
-html:not(.dark) .store-toggle:hover { border-color: #CE9F3E; color: #A87A1E; }
-html:not(.dark) .store-toggle.active { border-color: #CE9F3E; background: rgba(168,122,30,0.10); color: #A87A1E; }
+html:not(.dark) .store-toggle:hover { border-color: #CE9F3E; color: #7E5A0E; }
+html:not(.dark) .store-toggle.active { border-color: #CE9F3E; background: rgba(168,122,30,0.10); color: #7E5A0E; }
 
 /* ── Quick-strip pills ── */
 html:not(.dark) .qs-pill { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
-html:not(.dark) .qs-pill:hover { border-color: #CE9F3E; background: rgba(168,122,30,0.06); color: #A87A1E; }
-html:not(.dark) .qs-pill.active { background: rgba(168,122,30,0.12); border-color: #CE9F3E; color: #A87A1E; box-shadow: 0 2px 6px rgba(168,122,30,0.15); }
+html:not(.dark) .qs-pill:hover { border-color: #CE9F3E; background: rgba(168,122,30,0.06); color: #7E5A0E; }
+html:not(.dark) .qs-pill.active { background: rgba(168,122,30,0.12); border-color: #CE9F3E; color: #7E5A0E; box-shadow: 0 2px 6px rgba(168,122,30,0.15); }
 html:not(.dark) .quick-strip-wrap { background: #F1E9DB; border-color: #DED3C0; }
 
 /* ── Price range ── */
 html:not(.dark) .price-range-wrap { background: #FBF6EC; border-color: #DED3C0; }
-html:not(.dark) .price-range-label { color: #7A7061; }
+html:not(.dark) .price-range-label { color: #6F665A; }
 html:not(.dark) .price-range-display { color: #5C5245; }
-html:not(.dark) .price-range-display.active { color: #A87A1E; }
+html:not(.dark) .price-range-display.active { color: #7E5A0E; }
 html:not(.dark) .price-range-track-bg { background: #DED3C0; }
 html:not(.dark) .price-range-fill { background: #CE9F3E; }
 html:not(.dark) .price-range-input::-webkit-slider-thumb { background: #FBF6EC; border-color: #CE9F3E; box-shadow: 0 1px 4px rgba(80,60,20,0.15); }
 html:not(.dark) .price-range-input::-moz-range-thumb { background: #FBF6EC; border-color: #CE9F3E; }
-html:not(.dark) .price-range-reset { color: #A87A1E; }
+html:not(.dark) .price-range-reset { color: #7E5A0E; }
 
 /* ── Saved recipes ── */
 html:not(.dark) .saved-section { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .saved-recipe-title { color: #221C17; }
-html:not(.dark) .saved-recipe-meta { color: #7A7061; }
+html:not(.dark) .saved-recipe-meta { color: #6F665A; }
 html:not(.dark) .saved-recipe-delete:hover { color: #B93E29; background: rgba(185,62,41,0.08); }
 
 /* ── Shopping ── */
@@ -6152,7 +6161,7 @@ html:not(.dark) .shopping-sheet { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .shopping-sheet-header { border-color: #DED3C0; }
 html:not(.dark) .shopping-sheet-title { color: #221C17; }
 html:not(.dark) .shopping-item { color: #5C5245; border-color: #DED3C0; }
-html:not(.dark) .shopping-item.checked { color: #7A7061; }
+html:not(.dark) .shopping-item.checked { color: #6F665A; }
 html:not(.dark) .shopping-item-remove:hover { color: #B93E29; background: rgba(185,62,41,0.08); }
 html:not(.dark) .shopping-sheet-item { border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .shopping-sheet-item:active { background: rgba(34,28,23,0.04); }
@@ -6164,13 +6173,13 @@ html:not(.dark) .meal-plan-recipe-title { color: #221C17; }
 html:not(.dark) .meal-plan-fab { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; box-shadow: 0 4px 16px rgba(80,60,20,0.08); }
 html:not(.dark) .mp-sidebar { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .mp-sidebar-day-name,
-html:not(.dark) .mp-sidebar-servings { color: #7A7061; }
+html:not(.dark) .mp-sidebar-servings { color: #6F665A; }
 html:not(.dark) .mp-sidebar-recipe-title { color: #221C17; }
 html:not(.dark) .mp-sidebar-remove:hover { color: #B93E29; background: rgba(185,62,41,0.08); }
 html:not(.dark) .day-picker-btn { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .day-picker-btn.occupied { background: rgba(168,122,30,0.10); border-color: rgba(168,122,30,0.35); }
 html:not(.dark) .day-picker-btn:hover:not(.occupied) { background: rgba(34,28,23,0.05); border-color: rgba(34,28,23,0.2); }
-html:not(.dark) .day-picker-recipe { color: #7A7061; }
+html:not(.dark) .day-picker-recipe { color: #6F665A; }
 html:not(.dark) .mp-clear-btn--safe { color: #5C5245; border-color: #DED3C0; }
 html:not(.dark) .mp-clear-no { background: #EFE4D2; color: #5C5245; }
 html:not(.dark) .mp-clear-confirm { color: #5C5245; }
@@ -6178,7 +6187,7 @@ html:not(.dark) .mp-sheet { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .mp-sheet-day-name { color: #221C17; }
 html:not(.dark) .mp-sheet-close { background: #EFE4D2; color: #5C5245; }
 html:not(.dark) .mp-clear-no { background: #EFE4D2; color: #5C5245; }
-html:not(.dark) .mp-sidebar-day-name { color: #7A7061; }
+html:not(.dark) .mp-sidebar-day-name { color: #6F665A; }
 html:not(.dark) .mp-sheet-close { background: #EFE4D2; color: #5C5245; }
 
 /* ── Store picker ── */
@@ -6187,18 +6196,18 @@ html:not(.dark) .sp-sheet { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .sp-title { color: #221C17; }
 html:not(.dark) .sp-drag-handle { background: #DED3C0; }
 html:not(.dark) .store-search-input { background: #F1E9DB; border-color: #DED3C0; color: #221C17; }
-html:not(.dark) .store-search-input::placeholder { color: #7A7061; }
+html:not(.dark) .store-search-input::placeholder { color: #6F665A; }
 html:not(.dark) .store-branch-item { border-color: #DED3C0; }
 html:not(.dark) .store-branch-item:hover { background: rgba(34,28,23,0.04); border-color: rgba(168,122,30,0.3); }
 html:not(.dark) .store-branch-name { color: #221C17; }
 html:not(.dark) .store-branch-city,
-html:not(.dark) .store-branch-zip { color: #7A7061; }
-html:not(.dark) .chain-section-header { color: #A87A1E; }
-html:not(.dark) .sp-clear-btn { border-color: #DED3C0; color: #7A7061; }
+html:not(.dark) .store-branch-zip { color: #6F665A; }
+html:not(.dark) .chain-section-header { color: #7E5A0E; }
+html:not(.dark) .sp-clear-btn { border-color: #DED3C0; color: #6F665A; }
 html:not(.dark) .sp-clear-btn:hover { background: rgba(34,28,23,0.06); }
 
 /* ── Loading ── */
-html:not(.dark) .loading-text { color: #7A7061; }
+html:not(.dark) .loading-text { color: #6F665A; }
 html:not(.dark) .loading-dot { background: #5F7040; }
 
 /* ── Mobile bottom nav ── */
@@ -6211,8 +6220,8 @@ html:not(.dark) .bnav-badge { background: #B93E29; color: #FBF6EC; }
 html:not(.dark) .ob-overlay { background: #F1E9DB; }
 html:not(.dark) .ob-progress-dot { background: rgba(34,28,23,0.15); }
 html:not(.dark) .ob-progress-dot.active { background: #B93E29; }
-html:not(.dark) .ob-progress-dot.done { background: #A87A1E; }
-html:not(.dark) .ob-back-btn { color: #7A7061; }
+html:not(.dark) .ob-progress-dot.done { background: #7E5A0E; }
+html:not(.dark) .ob-back-btn { color: #6F665A; }
 html:not(.dark) .ob-back-btn:hover { color: #221C17; }
 html:not(.dark) .ob-welcome-title { color: #221C17; }
 html:not(.dark) .ob-welcome-desc { color: #5C5245; }
@@ -6221,7 +6230,7 @@ html:not(.dark) .ob-chain-card:hover { border-color: rgba(168,122,30,0.4); }
 html:not(.dark) .ob-chain-card.selected { border-color: #B93E29; background: rgba(185,62,41,0.06); }
 html:not(.dark) .ob-chain-name { color: #221C17; }
 html:not(.dark) .ob-chain-card.selected .ob-chain-name { color: #B93E29; }
-html:not(.dark) .ob-select-all-btn { border-color: #DED3C0; color: #7A7061; }
+html:not(.dark) .ob-select-all-btn { border-color: #DED3C0; color: #6F665A; }
 html:not(.dark) .ob-select-all-btn:hover { background: rgba(34,28,23,0.06); color: #221C17; }
 /* Step titles & descriptions */
 html:not(.dark) .ob-title { color: #221C17; }
@@ -6236,23 +6245,23 @@ html:not(.dark) .ob-diet-chip.selected .ob-diet-label { color: #B93E29; }
 html:not(.dark) .ob-sv-btn { background: #FBF6EC; border-color: #DED3C0; color: #B93E29; }
 html:not(.dark) .ob-sv-btn:hover { background: rgba(185,62,41,0.06); border-color: rgba(168,122,30,0.4); }
 html:not(.dark) .ob-sv-number { color: #221C17; }
-html:not(.dark) .ob-sv-label { color: #7A7061; }
-html:not(.dark) .setup-invite-sub { color: #7A7061; }
-html:not(.dark) .setup-invite-count { color: #A87A1E; }
+html:not(.dark) .ob-sv-label { color: #6F665A; }
+html:not(.dark) .setup-invite-sub { color: #6F665A; }
+html:not(.dark) .setup-invite-count { color: #7E5A0E; }
 html:not(.dark) .sfp-step--done { background: rgba(95,112,64,0.10); color: #5F7040; }
 
 /* ── Prefs / pantry ── */
 html:not(.dark) .prefs-trigger { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .prefs-trigger-title { color: #221C17; }
-html:not(.dark) .prefs-trigger-sub { color: #7A7061; }
+html:not(.dark) .prefs-trigger-sub { color: #6F665A; }
 html:not(.dark) .prefs-panel { background: #FBF6EC; border-color: #DED3C0; }
-html:not(.dark) .prefs-panel-close { color: #7A7061; }
+html:not(.dark) .prefs-panel-close { color: #6F665A; }
 html:not(.dark) .pantry-inline { border-color: #DED3C0; }
 html:not(.dark) .pantry-inline-header { color: #221C17; background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .pantry-suggest-chip { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .pantry-suggest-chip:hover { border-color: #B93E29; background: rgba(185,62,41,0.06); color: #B93E29; }
 html:not(.dark) .pantry-filter-banner { background: rgba(168,122,30,0.08); border-color: rgba(168,122,30,0.2); }
-html:not(.dark) .pantry-filter-banner-text { color: #A87A1E; }
+html:not(.dark) .pantry-filter-banner-text { color: #7E5A0E; }
 
 /* ── Price tag / tilbud badge ── */
 html:not(.dark) .tilbud-maerke { background: #CE9F3E; color: #221C17; }
@@ -6262,7 +6271,7 @@ html:not(.dark) .tilbud-maerke-original { color: rgba(34,28,23,0.55); }
 html:not(.dark) .popular-badge-pill { background: #CE9F3E; color: #221C17; }
 
 /* ── Card sort/save button ── */
-html:not(.dark) .card-sv-btn { background: rgba(185,62,41,0.07); border-color: #DED3C0; color: #7A7061; }
+html:not(.dark) .card-sv-btn { background: rgba(185,62,41,0.07); border-color: #DED3C0; color: #6F665A; }
 html:not(.dark) .card-sv-btn:hover { background: rgba(185,62,41,0.12); border-color: rgba(185,62,41,0.4); color: #B93E29; }
 html:not(.dark) .card-sv-btn.active { background: #B93E29; border-color: #B93E29; color: #FBF6EC; }
 
@@ -6274,31 +6283,31 @@ html:not(.dark) .deal-chain-tag { background: rgba(0,0,0,0.03); color: var(--tex
 html:not(.dark) .card-photo-skeleton { background: linear-gradient(90deg, #EFE4D2 25%, #DED3C0 37%, #EFE4D2 63%); }
 
 /* ── Feedback panel ── */
-html:not(.dark) .fb-fab { background: #FBF6EC; border-color: rgba(168,122,30,0.4); box-shadow: 0 4px 18px rgba(80,60,20,0.12); color: #A87A1E; }
+html:not(.dark) .fb-fab { background: #FBF6EC; border-color: rgba(168,122,30,0.4); box-shadow: 0 4px 18px rgba(80,60,20,0.12); color: #7E5A0E; }
 html:not(.dark) .fb-fab:hover { background: #F1E9DB; }
 html:not(.dark) .fb-panel { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .fb-panel-drag-handle { background: #DED3C0; }
 html:not(.dark) .fb-panel-header { border-color: #DED3C0; }
 html:not(.dark) .fb-panel-title { color: #221C17; }
-html:not(.dark) .fb-panel-close { color: #7A7061; }
+html:not(.dark) .fb-panel-close { color: #6F665A; }
 html:not(.dark) .fb-label { color: #221C17; }
-html:not(.dark) .fb-label-sub { color: #7A7061; }
-html:not(.dark) .fb-star { color: #DED3C0; }
+html:not(.dark) .fb-label-sub { color: #6F665A; }
+html:not(.dark) .fb-star { color: #BCAE97; }
 html:not(.dark) .fb-toggle-btn { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
-html:not(.dark) .fb-toggle-btn.active { background: rgba(168,122,30,0.10); border-color: #CE9F3E; color: #A87A1E; }
+html:not(.dark) .fb-toggle-btn.active { background: rgba(168,122,30,0.10); border-color: #CE9F3E; color: #7E5A0E; }
 html:not(.dark) .fb-chip { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
-html:not(.dark) .fb-chip.active { background: rgba(168,122,30,0.10); border-color: #CE9F3E; color: #A87A1E; }
+html:not(.dark) .fb-chip.active { background: rgba(168,122,30,0.10); border-color: #CE9F3E; color: #7E5A0E; }
 html:not(.dark) .fb-divider { background: #DED3C0; }
 html:not(.dark) .fb-textarea { background: #F1E9DB; border-color: #DED3C0; color: #221C17; }
-html:not(.dark) .fb-textarea::placeholder { color: #7A7061; }
+html:not(.dark) .fb-textarea::placeholder { color: #6F665A; }
 html:not(.dark) .fb-textarea:focus { border-color: #CE9F3E; background: #F1E9DB; }
-html:not(.dark) .fb-anon-note { color: #7A7061; }
+html:not(.dark) .fb-anon-note { color: #6F665A; }
 html:not(.dark) .fb-results-page { background: #F1E9DB; color: #221C17; }
 html:not(.dark) .fb-results-title { color: #221C17; }
 html:not(.dark) .fb-results-table-wrap { border-color: #DED3C0; }
 html:not(.dark) .fb-results-table th { background: #EFE4D2; color: #5C5245; border-color: #DED3C0; }
 html:not(.dark) .fb-results-table td { color: #221C17; border-color: #DED3C0; }
-html:not(.dark) .fb-td-time { color: #7A7061; }
+html:not(.dark) .fb-td-time { color: #6F665A; }
 
 /* ── Remaining component light-mode overrides ── */
 html:not(.dark) .bottom-bar { background: #FBF6EC; box-shadow: 0 1px 4px rgba(80,60,20,0.07); }
@@ -6323,18 +6332,18 @@ html:not(.dark) .add-to-plan-btn.detail.in-plan { background: rgba(95,112,64,0.1
 html:not(.dark) .day-picker-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .meal-plan-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .meal-plan-day.empty { background: rgba(34,28,23,0.04); border-color: #DED3C0; }
-html:not(.dark) .plan-sv-btn { background: #EFE4D2; color: #7A7061; border-color: #DED3C0; }
+html:not(.dark) .plan-sv-btn { background: #EFE4D2; color: #6F665A; border-color: #DED3C0; }
 html:not(.dark) .item-count { color: #5C5245; }
-html:not(.dark) .item-unit { color: #7A7061; }
-html:not(.dark) .skift-btn { background: #FBF6EC; border-color: #DED3C0; color: #7A7061; }
-html:not(.dark) .skift-btn:hover { background: #EFE4D2; border-color: rgba(168,122,30,0.4); color: #A87A1E; }
+html:not(.dark) .item-unit { color: #6F665A; }
+html:not(.dark) .skift-btn { background: #FBF6EC; border-color: #DED3C0; color: #6F665A; }
+html:not(.dark) .skift-btn:hover { background: #EFE4D2; border-color: rgba(168,122,30,0.4); color: #7E5A0E; }
 html:not(.dark) .deal-item-price { color: #B93E29; }
-html:not(.dark) .deal-item-store { color: #7A7061; }
-html:not(.dark) .meal-plan-empty-label { color: #7A7061; }
+html:not(.dark) .deal-item-store { color: #6F665A; }
+html:not(.dark) .meal-plan-empty-label { color: #6F665A; }
 html:not(.dark) .section-toggle-label { color: #221C17; font-family: var(--font-serif); }
 html:not(.dark) .recipe-browse-card .card-body { background: #FBF6EC; }
 html:not(.dark) .sp-close-btn:hover { background: #DED3C0; }
-html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
+html:not(.dark) .chain-section-recipe-count { color: #6F665A; }
 
 /* Mobile safe area for the feedback FAB */
 @media (max-width: 600px) {
@@ -6402,7 +6411,7 @@ html:not(.dark) .chain-section-recipe-count { color: #7A7061; }
   margin: 1px 0 4px;
   line-height: 1;
 }
-html:not(.dark) .card-price-line { color: #A07820; }
+html:not(.dark) .card-price-line { color: #7E5A0E; }
 
 /* ── Filter sheet: pantry input + chips ── */
 .fs-pantry-input-row { display: flex; gap: 8px; }
@@ -6680,19 +6689,19 @@ html:not(.dark) .mobile-filter-row {
   border-bottom-color: #DED3C0;
 }
 html:not(.dark) .mfr-btn { color: #221C17; }
-html:not(.dark) .mfr-sort { color: #7A7061; }
+html:not(.dark) .mfr-sort { color: #6F665A; }
 html:not(.dark) .mfr-divider { background: #DED3C0; }
 html:not(.dark) .overflow-menu-sheet { background: #FBF6EC; }
 html:not(.dark) .overflow-menu-item { color: #221C17; }
 html:not(.dark) .overflow-menu-item:active { background: rgba(34,28,23,0.06); }
-html:not(.dark) .overflow-menu-badge { background: #A87A1E; }
+html:not(.dark) .overflow-menu-badge { background: #7E5A0E; }
 html:not(.dark) .filter-sheet { background: #FBF6EC; }
 html:not(.dark) .filter-sheet-title { color: #221C17; }
-html:not(.dark) .filter-sheet-label { color: #7A7061; }
+html:not(.dark) .filter-sheet-label { color: #6F665A; }
 html:not(.dark) .filter-chip { background: #EFE4D2; border-color: #DED3C0; color: #221C17; }
-html:not(.dark) .filter-chip.active { background: rgba(168,122,30,0.12); border-color: #CE9F3E; color: #A87A1E; }
-html:not(.dark) .filter-sheet-apply { background: #A87A1E; color: #FBF6EC; }
-html:not(.dark) .mfr-badge { background: #A87A1E; }
+html:not(.dark) .filter-chip.active { background: rgba(168,122,30,0.12); border-color: #CE9F3E; color: #7E5A0E; }
+html:not(.dark) .filter-sheet-apply { background: #7E5A0E; color: #FBF6EC; }
+html:not(.dark) .mfr-badge { background: #7E5A0E; }
 
 /* Light mode fixes for mobile-first redesign hardcoded colors */
 @media (max-width: 600px) {
