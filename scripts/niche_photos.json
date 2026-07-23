@@ -1,47 +1,12 @@
 {
-  "generatedAt": "2026-07-23T14:30:34.988Z",
+  "generatedAt": "2026-07-23T14:35:48.494Z",
   "total": 149,
   "niche": [
-    {
-      "id": 1134,
-      "title": "Dansk Svinekød og Tomatgruppe",
-      "category": "Svinekød",
-      "query": "pork food",
-      "score": 4.8
-    },
-    {
-      "id": 1105,
-      "title": "Klassisk Dansk Køttboller med Tomatsauce",
-      "category": "Kød",
-      "query": "meatballs food",
-      "score": 5
-    },
-    {
-      "id": 1107,
-      "title": "Klassisk Dansk Smørsteeg med Kartofler",
-      "category": "Oksekød",
-      "query": "potatoes food",
-      "score": 5
-    },
-    {
-      "id": 1122,
-      "title": "Svineköd Wraps med Hjemmelavet Salsa",
-      "category": "Svinekød",
-      "query": "wrap food",
-      "score": 5
-    },
     {
       "id": 1128,
       "title": "Klassisk Dansk Lasagne",
       "category": "Kødretter",
       "query": "lasagna food",
-      "score": 5
-    },
-    {
-      "id": 1130,
-      "title": "Klassisk Dansk Svinestudeisu med Kartofler",
-      "category": "Svinekød",
-      "query": "potatoes food",
       "score": 5
     }
   ]

@@ -392,7 +392,7 @@ const CARD_SV_OPTIONS = [2, 4, 6];
 // searching the raw title (e.g. "Klassiske Frikadeller med Kartofler") returns
 // generic/irrelevant images. We translate the dish into English keywords first.
 // Bump PHOTO_CACHE_VER whenever this logic changes so cached photos are refetched.
-const PHOTO_CACHE_VER = "v4";
+const PHOTO_CACHE_VER = "v5";
 
 // Photos already assigned to a recipe card, so two recipes never show the same
 // image. Seeded once from localStorage (previously cached picks survive reloads)
@@ -541,6 +541,8 @@ const PHOTO_WORDS = {
   fløde: "cream", flødesauce: "creamy sauce", flødesovs: "creamy sauce",
   smørsauce: "butter sauce", smørsouce: "butter sauce", rødvin: "red wine",
   parmesankruste: "parmesan crust", wok: "stir fry", wraps: "wrap",
+  entrecote: "entrecote steak", smørstegt: "pan fried", svinestuvning: "pork stew",
+  tomatsovs: "tomato sauce", tomatsauce: "tomato sauce",
 };
 
 // Category → English cuisine hint appended for cultural plating accuracy.
