@@ -6240,6 +6240,10 @@ html:not(.dark) .ob-chain-card:hover { border-color: rgba(168,122,30,0.4); }
 html:not(.dark) .ob-chain-card.selected { border-color: #B93E29; background: rgba(185,62,41,0.06); }
 html:not(.dark) .ob-chain-name { color: #221C17; }
 html:not(.dark) .ob-chain-card.selected .ob-chain-name { color: #B93E29; }
+/* Light text on the red-filled continue button and selected checkmarks. */
+html:not(.dark) .ob-continue-btn { color: #FBF6EC; }
+html:not(.dark) .ob-chain-check.checked { color: #FBF6EC; }
+html:not(.dark) .ob-diet-check { color: #FBF6EC; }
 html:not(.dark) .ob-select-all-btn { border-color: #DED3C0; color: #6F665A; }
 html:not(.dark) .ob-select-all-btn:hover { background: rgba(34,28,23,0.06); color: #221C17; }
 /* Step titles & descriptions */
