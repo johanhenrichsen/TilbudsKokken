@@ -136,6 +136,11 @@ function RecipeMonogram({ recipe, className }) {
   );
 }
 
+// Cap how many recipe cards render at once. Each card mounts an <img> and
+// fires a Pexels fetch, so rendering the full list (100+) at once can crash
+// the tab on low-memory phones. Render in batches with a "show more" button.
+const PAGE_SIZE = 24;
+
 const PANTRY_CATEGORIES = [
   {
     id: "koed", label: "Kød & fisk",
@@ -913,6 +918,7 @@ export default function App() {
   const [pendingServings, setPendingServings] = useState(4);
   const [prefsOpen, setPrefsOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState("anbefalet");
+  const [visibleCounts, setVisibleCounts] = useState({ recommended: PAGE_SIZE, others: PAGE_SIZE });
   const [quickFilters, setQuickFilters] = useState(new Set());
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
@@ -1176,6 +1182,12 @@ export default function App() {
 
   const filteredRecommended = applySort(recommended.filter(matchRecipe));
   const filteredOthers = applySort(others.filter(matchRecipe));
+  // Reset the render cap to the first batch whenever the result set changes
+  // (search, sort, or filters), so we never mount the whole list at once.
+  const paginationSig = `${search.trim()}|${sortOrder}|${filteredRecommended.length}|${filteredOthers.length}`;
+  useEffect(() => {
+    setVisibleCounts({ recommended: PAGE_SIZE, others: PAGE_SIZE });
+  }, [paginationSig]);
   // How many currently-shown recipes actually use ≥1 of the added ingredients.
   const pantryMatchTotal = pantryItems.size > 0
     ? filteredRecommended.filter(r => r.pantryMatchCount > 0).length
@@ -1691,27 +1703,24 @@ export default function App() {
   );
 
   // ── Render a grid of recipe cards ──────────────────────────────
-  function renderRecipeGrid(recipes) {
+  function renderRecipeGrid(recipes, sectionKey) {
     const availableNames = getAvailableItemNames();
     const top3Ids = new Set(popularRecipes.slice(0, 3).map(p => p.id));
-    const result = [];
-    recipes.forEach((r, i) => {
-      result.push(
-        <RecipeCard
-          key={r.id}
-          r={r}
-          inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
-          isSaved={savedRecipes.some(s => s.id === r.id)}
-          isPopular={top3Ids.has(r.id)}
-          availableNames={availableNames}
-          pantryTotal={pantryItems.size}
-          onSelect={selectRecipe}
-          onAddToPlan={setAddingToPlan}
-          onToggleSave={toggleSaveRecipe}
-        />
-      );
-    });
-    return result;
+    const limit = sectionKey ? (visibleCounts[sectionKey] ?? recipes.length) : recipes.length;
+    return recipes.slice(0, limit).map(r => (
+      <RecipeCard
+        key={r.id}
+        r={r}
+        inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
+        isSaved={savedRecipes.some(s => s.id === r.id)}
+        isPopular={top3Ids.has(r.id)}
+        availableNames={availableNames}
+        pantryTotal={pantryItems.size}
+        onSelect={selectRecipe}
+        onAddToPlan={setAddingToPlan}
+        onToggleSave={toggleSaveRecipe}
+      />
+    ));
   }
 
   return (
@@ -2532,9 +2541,19 @@ export default function App() {
               <div className={`section-body-wrap${collapsedSections.recommended ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredRecommended.length > 0 ? (
-                    <div className="recipe-browse-grid section-body-grid">
-                      {renderRecipeGrid(filteredRecommended)}
-                    </div>
+                    <>
+                      <div className="recipe-browse-grid section-body-grid">
+                        {renderRecipeGrid(filteredRecommended, "recommended")}
+                      </div>
+                      {filteredRecommended.length > visibleCounts.recommended && (
+                        <button
+                          className="show-more-btn"
+                          onClick={() => setVisibleCounts(c => ({ ...c, recommended: c.recommended + PAGE_SIZE }))}
+                        >
+                          Vis flere ({filteredRecommended.length - visibleCounts.recommended})
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <div className="section-empty-state">
                       {search ? (
@@ -2575,9 +2594,19 @@ export default function App() {
               <div className={`section-body-wrap${collapsedSections.others ? " collapsed" : ""}`}>
                 <div className="section-body-inner">
                   {filteredOthers.length > 0 ? (
-                    <div className="recipe-browse-grid section-body-grid">
-                      {renderRecipeGrid(filteredOthers)}
-                    </div>
+                    <>
+                      <div className="recipe-browse-grid section-body-grid">
+                        {renderRecipeGrid(filteredOthers, "others")}
+                      </div>
+                      {filteredOthers.length > visibleCounts.others && (
+                        <button
+                          className="show-more-btn"
+                          onClick={() => setVisibleCounts(c => ({ ...c, others: c.others + PAGE_SIZE }))}
+                        >
+                          Vis flere ({filteredOthers.length - visibleCounts.others})
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <div className="section-empty-state">
                       <span className="empty-state-label">Alle opskrifter er fra dine butikker.</span>
