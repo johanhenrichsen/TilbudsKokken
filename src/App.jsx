@@ -1812,7 +1812,7 @@ export default function App() {
               <LogoIcon size={120} holeColor="#1B1613" />
             </div>
             <div className="splash-wordmark">Tilbudskokken</div>
-            <p className="splash-tagline">Bedre tilbud. Bedre mad.</p>
+            <p className="splash-tagline">God mad til bedre pris</p>
           </div>
         </div>
       )}
@@ -1831,7 +1831,7 @@ export default function App() {
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
                 <LogoIcon size={200} className="ob-welcome-logo" />
-                <p className="ob-welcome-tagline">Bedre tilbud. Bedre mad.</p>
+                <p className="ob-welcome-tagline">God mad til bedre pris</p>
                 <p className="ob-welcome-desc">Opskrifter bygget præcis på hvad der er på tilbud i dine butikker denne uge.</p>
                 <button className="ob-cta-btn" onClick={() => { setObDir(1); setOnboardingStep(1); }}>
                   Kom i gang →
@@ -2030,7 +2030,7 @@ export default function App() {
             <LogoIcon size={40} />
             <div className="hero-brand-text">
               <span className="hero-brand-name">Tilbudskokken</span>
-              <span className="hero-brand-slogan">Bedre tilbud. Bedre mad.</span>
+              <span className="hero-brand-slogan">God mad til bedre pris</span>
             </div>
           </div>
           <div className="hero-topbar-right">

@@ -37,7 +37,7 @@ export default function LogoFull({ size = "md", className = "", tagline = false 
               marginTop: px * 0.12,
             }}
           >
-            Bedre tilbud. Bedre mad.
+            God mad til bedre pris
           </span>
         )}
       </span>
