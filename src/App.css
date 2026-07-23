@@ -6172,6 +6172,16 @@ html:not(.dark) .combined-list-title { color: #221C17; }
 html:not(.dark) .meal-plan-recipe-title { color: #221C17; }
 html:not(.dark) .meal-plan-fab { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; box-shadow: 0 4px 16px rgba(80,60,20,0.08); }
 html:not(.dark) .mp-sidebar { background: #FBF6EC; border-color: #DED3C0; }
+/* Desktop meal-plan sidebar container was never themed for light mode
+   (the rule above targets the wrong class name). Theme it here. */
+html:not(.dark) .meal-plan-sidebar { background: #FBF6EC; border-left-color: #DED3C0; }
+html:not(.dark) .mp-sidebar-day { background: #FFFFFF; border-color: #DED3C0; }
+html:not(.dark) .mp-sidebar-day.filled { border-color: rgba(126,90,14,0.35); }
+html:not(.dark) .mp-sidebar-plus { border-color: rgba(126,90,14,0.45); color: #7E5A0E; }
+html:not(.dark) .mp-sidebar-footer { border-top-color: #DED3C0; }
+html:not(.dark) .mp-sidebar-count { color: #FBF6EC; }
+html:not(.dark) .mp-clear-btn { color: #B93E29; opacity: 1; }
+html:not(.dark) .combined-list-btn { color: #FBF6EC; }
 html:not(.dark) .mp-sidebar-day-name,
 html:not(.dark) .mp-sidebar-servings { color: #6F665A; }
 html:not(.dark) .mp-sidebar-recipe-title { color: #221C17; }
@@ -6256,6 +6266,9 @@ html:not(.dark) .prefs-trigger-title { color: #221C17; }
 html:not(.dark) .prefs-trigger-sub { color: #6F665A; }
 html:not(.dark) .prefs-panel { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .prefs-panel-close { color: #6F665A; }
+html:not(.dark) .pantry-trigger-btn { background: #FBF6EC; }
+html:not(.dark) .pantry-trigger-title { color: #221C17; }
+html:not(.dark) .pantry-trigger-sub { color: #6F665A; }
 html:not(.dark) .pantry-inline { border-color: #DED3C0; }
 html:not(.dark) .pantry-inline-header { color: #221C17; background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .pantry-suggest-chip { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
@@ -6292,7 +6305,21 @@ html:not(.dark) .fb-panel-title { color: #221C17; }
 html:not(.dark) .fb-panel-close { color: #6F665A; }
 html:not(.dark) .fb-label { color: #221C17; }
 html:not(.dark) .fb-label-sub { color: #6F665A; }
-html:not(.dark) .fb-star { color: #BCAE97; }
+html:not(.dark) .fb-star { color: #94856D; }
+/* Must out-specify the empty-star rule above (which is 0,2,1), else selected
+   stars never show the accent in light mode. */
+html:not(.dark) .fb-star.active { color: var(--accent); }
+/* Elements that use the gold accent as a BACKGROUND fill need light text in
+   light mode (the accent token is now a dark gold, so the original dark text
+   would be low-contrast). */
+html:not(.dark) .mp-sidebar-count,
+html:not(.dark) .ob-cta-btn,
+html:not(.dark) .pantry-count-badge,
+html:not(.dark) .header-badge,
+html:not(.dark) .prefs-active-badge,
+html:not(.dark) .bnav-badge,
+html:not(.dark) .fb-submit-btn,
+html:not(.dark) .fb-results-export-btn { color: #FBF6EC; }
 html:not(.dark) .fb-toggle-btn { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .fb-toggle-btn.active { background: rgba(168,122,30,0.10); border-color: #CE9F3E; color: #7E5A0E; }
 html:not(.dark) .fb-chip { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
@@ -6332,7 +6359,7 @@ html:not(.dark) .add-to-plan-btn.detail.in-plan { background: rgba(95,112,64,0.1
 html:not(.dark) .day-picker-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .meal-plan-card { background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .meal-plan-day.empty { background: rgba(34,28,23,0.04); border-color: #DED3C0; }
-html:not(.dark) .plan-sv-btn { background: #EFE4D2; color: #6F665A; border-color: #DED3C0; }
+html:not(.dark) .plan-sv-btn { background: #EFE4D2; color: #5C5245; border-color: #DED3C0; }
 html:not(.dark) .item-count { color: #5C5245; }
 html:not(.dark) .item-unit { color: #6F665A; }
 html:not(.dark) .skift-btn { background: #FBF6EC; border-color: #DED3C0; color: #6F665A; }
