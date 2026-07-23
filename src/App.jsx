@@ -103,6 +103,13 @@ const CUISINE_SEARCH_MAP = {
 const _availCuisines = new Set(recipeBank.map(r => r.cuisine).filter(Boolean));
 const CUISINE_ORDER = ["Alle", ...ALL_CUISINES_ORDERED.filter(c => _availCuisines.has(c))];
 
+// Display-only: strip the leading flag/globe emoji so "🇩🇰 Nordisk" renders as
+// "Nordisk". The emoji-prefixed string stays the canonical key everywhere else
+// (recipe data, search map, color map, filter matching), so nothing migrates.
+function cuisineLabel(c) {
+  return String(c || "").replace(/^[^\p{L}]+/u, "");
+}
+
 // Cuisine-keyed accent + monogram — a designed stand-in for emoji iconography
 // in compact list rows (meal plan, saved recipes). Uses the warm-earth palette.
 const CUISINE_COLORS = {
@@ -2166,7 +2173,7 @@ export default function App() {
                           onClick={() => setCuisineFilter(c)}
                           className={`diet-btn${cuisineFilter === c ? " active" : ""}`}
                         >
-                          {c}
+                          {cuisineLabel(c)}
                         </button>
                       ))}
                     </div>
@@ -2337,7 +2344,7 @@ export default function App() {
 
             <div className="recipe-meta-bar">
               <span>{selectedRecipe.time}</span>
-              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{selectedRecipe.cuisine}</span>}
+              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{cuisineLabel(selectedRecipe.cuisine)}</span>}
               {selectedRecipe.difficulty && (
                 <span className={`difficulty-badge difficulty-${selectedRecipe.difficulty === "Nem" ? "nem" : selectedRecipe.difficulty === "Avanceret" ? "avanceret" : "mellem"}`}>
                   {selectedRecipe.difficulty}
@@ -3254,7 +3261,7 @@ export default function App() {
               <div className="filter-sheet-label">Køkken</div>
               <div className="filter-chip-row">
                 {CUISINE_ORDER.map(c => (
-                  <button key={c} className={`filter-chip${cuisineFilter === c ? " active" : ""}`} onClick={() => setCuisineFilter(c)}>{c}</button>
+                  <button key={c} className={`filter-chip${cuisineFilter === c ? " active" : ""}`} onClick={() => setCuisineFilter(c)}>{cuisineLabel(c)}</button>
                 ))}
               </div>
             </div>
