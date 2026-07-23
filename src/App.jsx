@@ -385,7 +385,35 @@ const CARD_SV_OPTIONS = [2, 4, 6];
 // searching the raw title (e.g. "Klassiske Frikadeller med Kartofler") returns
 // generic/irrelevant images. We translate the dish into English keywords first.
 // Bump PHOTO_CACHE_VER whenever this logic changes so cached photos are refetched.
-const PHOTO_CACHE_VER = "v2";
+const PHOTO_CACHE_VER = "v3";
+
+// Photos already assigned to a recipe card, so two recipes never show the same
+// image. Seeded once from localStorage (previously cached picks survive reloads)
+// and extended as fresh cards resolve. JS is single-threaded, so the
+// check-then-add inside each fetch callback runs atomically — no race.
+const usedPhotos = new Set();
+let usedPhotosSeeded = false;
+function seedUsedPhotos() {
+  if (usedPhotosSeeded) return;
+  usedPhotosSeeded = true;
+  const prefix = `photo_${PHOTO_CACHE_VER}_`;
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(prefix)) {
+      const v = localStorage.getItem(k);
+      if (v) usedPhotos.add(v);
+    }
+  }
+}
+// Pick the highest-ranked candidate not already used by another card. Falls back
+// to the top candidate if every option is taken (better a repeat than no image).
+function pickUnusedPhoto(candidates) {
+  seedUsedPhotos();
+  const fresh = candidates.find(u => !usedPhotos.has(u));
+  const chosen = fresh || candidates[0] || null;
+  if (chosen) usedPhotos.add(chosen);
+  return chosen;
+}
 
 // Multi-word dish identities, matched against the whole lowercased title first
 // (longer/more specific phrases before shorter ones). The matched span is then
@@ -522,7 +550,8 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
     fetch(`/api/pexels?query=${encodeURIComponent(buildPhotoQuery(r))}`)
       .then(res => res.json())
       .then(data => {
-        const url = data?.url;
+        const candidates = data?.candidates?.length ? data.candidates : (data?.url ? [data.url] : []);
+        const url = pickUnusedPhoto(candidates);
         if (url) {
           localStorage.setItem(photoKey, url);
           setPhotoUrl(url);
