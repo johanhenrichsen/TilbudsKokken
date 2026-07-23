@@ -392,7 +392,7 @@ const CARD_SV_OPTIONS = [2, 4, 6];
 // searching the raw title (e.g. "Klassiske Frikadeller med Kartofler") returns
 // generic/irrelevant images. We translate the dish into English keywords first.
 // Bump PHOTO_CACHE_VER whenever this logic changes so cached photos are refetched.
-const PHOTO_CACHE_VER = "v3";
+const PHOTO_CACHE_VER = "v4";
 
 // Photos already assigned to a recipe card, so two recipes never show the same
 // image. Seeded once from localStorage (previously cached picks survive reloads)
@@ -505,6 +505,42 @@ const PHOTO_WORDS = {
   // cooking methods (kept for plating context)
   grillet: "grilled", ovnbagt: "oven baked", bagte: "baked", bagt: "baked",
   stegt: "pan fried", cremet: "creamy", sprød: "crispy",
+  // --- Danish compound dish names (each is one token, so it must be mapped
+  // whole; without these the query collapsed to the "food dish" safety net or a
+  // lone side like "potatoes"). ---
+  // fish & seafood
+  laksesteak: "salmon steak", laksefilet: "salmon fillet", laksefillet: "salmon fillet",
+  sommerlaks: "salmon", tunfisk: "tuna", tunfiskpasta: "tuna pasta",
+  havtaske: "monkfish", havtasker: "monkfish", rejesteg: "fried shrimp",
+  rejestegt: "fried shrimp", rejespagetti: "shrimp spaghetti",
+  rejenudler: "shrimp noodles", rejenuddler: "shrimp noodles",
+  krebsehale: "crayfish", krebsehaler: "crayfish", hummerhale: "lobster tail",
+  hummerhalesteg: "lobster tail",
+  // chicken & poultry
+  kyllingefilet: "chicken breast", kyllingebryst: "chicken breast",
+  kyllingebrystfilet: "chicken breast", kyllingelår: "chicken thighs",
+  kyllingestuvning: "chicken stew", kyllingragu: "chicken ragout",
+  kyllingeragu: "chicken ragout", kalkun: "turkey",
+  // pork
+  svinekød: "pork", svineköd: "pork", svinesteak: "pork steak",
+  svinesteaks: "pork steak", svinekotelet: "pork chop", svinekødwok: "pork stir fry",
+  karbonade: "breaded pork patty", karbonader: "breaded pork patty",
+  // beef & lamb
+  oksefars: "ground beef", oksefarsboller: "beef meatballs",
+  oksemørbrad: "beef tenderloin", oksebouillon: "beef broth", mørbrad: "pork tenderloin",
+  lammekølle: "leg of lamb", lammekolle: "leg of lamb",
+  // meatballs / minced dishes
+  kødboller: "meatballs", køtboller: "meatballs", køttboller: "meatballs",
+  farsboller: "meatballs", løgstuvning: "onion stew", gryderet: "stew",
+  // veg / sauces / aromatics
+  champignon: "mushroom", champignonsauce: "mushroom sauce", courgette: "zucchini",
+  zucchini: "zucchini", gulerod: "carrot", gulerødder: "carrots", gulerødssauce: "carrot",
+  citron: "lemon", citronmarineret: "lemon", citronsyltet: "lemon",
+  dild: "dill", dil: "dill", estragon: "tarragon", rosmarin: "rosemary",
+  kokos: "coconut", kokossauce: "coconut", kokosmælk: "coconut", kokosmelk: "coconut",
+  fløde: "cream", flødesauce: "creamy sauce", flødesovs: "creamy sauce",
+  smørsauce: "butter sauce", smørsouce: "butter sauce", rødvin: "red wine",
+  parmesankruste: "parmesan crust", wok: "stir fry", wraps: "wrap",
 };
 
 // Category → English cuisine hint appended for cultural plating accuracy.
