@@ -859,13 +859,10 @@ html, body {
 .recipe-description { animation: fade-up 0.38s 0.15s cubic-bezier(0.16,1,0.3,1) both; }
 .recipe-tips-block  { animation: fade-up 0.38s 0.20s cubic-bezier(0.16,1,0.3,1) both; }
 
-@media (prefers-reduced-motion: reduce) {
-  .recipe-browse-card,
-  .recipe-title,
-  .recipe-meta-bar,
-  .recipe-description,
-  .recipe-tips-block { animation: none !important; }
-}
+/* Note: the gentle entrance animations (card-enter, fade-up) are intentionally
+   kept even under prefers-reduced-motion — see the reduced-motion block at the
+   end of this file, which re-enables their duration. Only heavy ambient/looping
+   motion (shimmer, glow rings, large sheet slides) stays disabled there. */
 
 /* ─── Empty state ────────────────────────────── */
 .empty-state {
@@ -6710,7 +6707,19 @@ html:not(.dark) .mfr-badge { background: #A87A1E; }
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  /* Scroll-reveal elements must render fully visible, never mid-transition */
+  /* Keep the gentle entrance animations alive: restore their real duration so
+     they still play (the * rule above would otherwise make them instant).
+     This is a deliberate product choice to show these subtle motions on every
+     device, including phones with "Reduce Motion" enabled. */
+  .recipe-browse-card,
+  .recipe-title,
+  .recipe-meta-bar,
+  .recipe-description,
+  .recipe-tips-block {
+    animation-duration: 0.4s !important;
+  }
+  /* Scroll-reveal elements must render fully visible, never mid-transition.
+     The card-enter animation above supplies the motion instead. */
   .reveal {
     opacity: 1 !important;
     translate: none !important;
