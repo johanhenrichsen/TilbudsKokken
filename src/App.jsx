@@ -2306,16 +2306,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Deal items used */}
-            <div className="recipe-deal-tags" style={{ marginBottom: 12 }}>
-              {(selectedRecipe.dealItems || []).map(di => (
-                <span key={di.name} className="deal-item-tag available">
-                  <span className="chain-badge deal-chain-badge" style={getChainColor(di.store) ? { '--chain-color': getChainColor(di.store) } : undefined}></span>
-                  {di.name}
-                </span>
-              ))}
-            </div>
-
             <div className="recipe-meta-bar">
               <span>{selectedRecipe.time}</span>
               {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{selectedRecipe.cuisine}</span>}
