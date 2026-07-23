@@ -6223,6 +6223,20 @@ html:not(.dark) .ob-chain-name { color: #221C17; }
 html:not(.dark) .ob-chain-card.selected .ob-chain-name { color: #B93E29; }
 html:not(.dark) .ob-select-all-btn { border-color: #DED3C0; color: #7A7061; }
 html:not(.dark) .ob-select-all-btn:hover { background: rgba(34,28,23,0.06); color: #221C17; }
+/* Step titles & descriptions */
+html:not(.dark) .ob-title { color: #221C17; }
+html:not(.dark) .ob-desc { color: #5C5245; }
+/* Diet preference chips (Kostpræferencer) */
+html:not(.dark) .ob-diet-chip { background: #FBF6EC; border-color: #DED3C0; }
+html:not(.dark) .ob-diet-chip:hover { border-color: rgba(168,122,30,0.4); }
+html:not(.dark) .ob-diet-chip.selected { border-color: #B93E29; background: rgba(185,62,41,0.06); }
+html:not(.dark) .ob-diet-label { color: #221C17; }
+html:not(.dark) .ob-diet-chip.selected .ob-diet-label { color: #B93E29; }
+/* Servings picker (Hvor mange personer) */
+html:not(.dark) .ob-sv-btn { background: #FBF6EC; border-color: #DED3C0; color: #B93E29; }
+html:not(.dark) .ob-sv-btn:hover { background: rgba(185,62,41,0.06); border-color: rgba(168,122,30,0.4); }
+html:not(.dark) .ob-sv-number { color: #221C17; }
+html:not(.dark) .ob-sv-label { color: #7A7061; }
 html:not(.dark) .setup-invite-sub { color: #7A7061; }
 html:not(.dark) .setup-invite-count { color: #A87A1E; }
 html:not(.dark) .sfp-step--done { background: rgba(95,112,64,0.10); color: #5F7040; }
