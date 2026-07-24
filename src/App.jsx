@@ -634,7 +634,10 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
       <div className="card-body">
         <div className="recipe-browse-title">{r.title}</div>
         {totalPrice != null && (
-          <div className="card-price-line">ca. {totalPrice} kr. til {cardServings} pers.</div>
+          <div className="card-price-line">
+            ca. {totalPrice} kr. til {cardServings} pers.
+            <span className="card-price-pp"> · {Math.round(basePp)} kr. pr. person</span>
+          </div>
         )}
         <div className="recipe-browse-meta">
           <span>{r.time}</span>
