@@ -385,8 +385,6 @@ function attachSwipeDismiss(el, onDismiss) {
   };
 }
 
-const CARD_SV_OPTIONS = [2, 4, 6];
-
 // ── Recipe photo query builder ───────────────────────────────────────────────
 // Recipe titles are Danish, but Pexels is an English stock-photo library, so
 // searching the raw title (e.g. "Klassiske Frikadeller med Kartofler") returns
@@ -582,10 +580,8 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
   const [photoLoading, setPhotoLoading] = useState(() => {
     return !localStorage.getItem(photoKey) && !localStorage.getItem(photoFailKey);
   });
-  const [cardServings, setCardServings] = useState(() => {
-    const saved = parseInt(localStorage.getItem('defaultServings')) || r.servings_count || 4;
-    return CARD_SV_OPTIONS.reduce((a, b) => Math.abs(b - saved) < Math.abs(a - saved) ? b : a);
-  });
+  // Household size the user picked during onboarding — drives the total price shown.
+  const cardServings = parseInt(localStorage.getItem('defaultServings')) || r.servings_count || 4;
 
   useEffect(() => {
     if (localStorage.getItem(photoFailKey)) { setPhotoLoading(false); return; }
@@ -637,8 +633,8 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
       </div>
       <div className="card-body">
         <div className="recipe-browse-title">{r.title}</div>
-        {basePp != null && (
-          <div className="card-price-line">ca. {Math.round(basePp)} kr. / pers.</div>
+        {totalPrice != null && (
+          <div className="card-price-line">ca. {totalPrice} kr. til {cardServings} pers.</div>
         )}
         <div className="recipe-browse-meta">
           <span>{r.time}</span>
@@ -664,20 +660,6 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
             )}
           </div>
         )}
-
-        {/* Serving selector + price */}
-        <div className="card-servings-row" onClick={e => e.stopPropagation()}>
-          <span className="card-sv-label">Pers.</span>
-          {CARD_SV_OPTIONS.map(n => (
-            <button
-              key={n}
-              className={`card-sv-btn${cardServings === n ? ' active' : ''}`}
-              onClick={e => { e.stopPropagation(); setCardServings(n); }}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
 
         <div className="recipe-deal-tags">
           {[...new Set((r.dealItems || []).map(di => di.store))].map(ch => (
