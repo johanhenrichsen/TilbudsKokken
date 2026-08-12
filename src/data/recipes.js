@@ -1,0 +1,17 @@
+export const recipes = [
+  { id: 1, title: "Klassisk bolognese med spaghetti", time: "35 min", servings: 4,
+    ingredients: ["500g hakket oksekød","500g spaghetti","2 løg","400g dåsetomater","3 fed hvidløg","Salt og peber","1 tsk oregano","Olivenolie"],
+    steps: ["Hak løg og hvidløg og svits i olie.","Brun oksekødet.","Tilsæt tomater og krydderier.","Simr 20 min mens spaghetti koges.","Server med parmesan."],
+    tip: "Et skvæt mælk giver mildere sauce.",
+    tags: ["pasta","comfort","børnevenlig"], mainIngredients: ["oksekød","spaghetti","tomat"] },
+  { id: 2, title: "Citron-hvidløgskylling med ris", time: "30 min", servings: 4,
+    ingredients: ["600g kyllingefilet","300g ris","4 fed hvidløg","1 citron","Basilikum","Salt og peber","Olivenolie"],
+    steps: ["Kog ris.","Krydr kylling.","Svits hvidløg, steg kylling.","Pres citron over.","Server med ris."],
+    tip: "Lad kyllingen hvile før servering.",
+    tags: ["kylling","let"], mainIngredients: ["kylling","ris","citron"] },
+  { id: 3, title: "Laks med flødesauce og kartofler", time: "30 min", servings: 4,
+    ingredients: ["400g laksefilet","1kg kartofler","0.5L fløde","1 løg","Dild","Salt og peber","Smør","Citron"],
+    steps: ["Kog kartofler.","Krydr laks.","Steg laks i smør.","Lav flødesauce.","Anret med urter."],
+    tip: "Brug frisk dild for bedste smag.",
+    tags: ["fisk","fredagsmad"], mainIngredients: ["laks","kartofler","fløde"] },
+];
