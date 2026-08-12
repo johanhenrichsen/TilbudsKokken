@@ -18,7 +18,11 @@ const { values } = parseArgs({ options: {
 const log = (...a) => console.log(new Date().toISOString(), ...a);
 
 async function main() {
-  const dealers = DEALERS.filter(d => !values.dealer || d.key === values.dealer);
+  // Skip dealers without a confirmed Tjek dealerId (e.g. Aldi, Dagli'Brugsen —
+  // not on the platform). Querying with an empty dealerId returns a bogus default catalog.
+  const dealers = DEALERS
+    .filter(d => d.dealerId)
+    .filter(d => !values.dealer || d.key === values.dealer);
   const client = createTjekClient({ apiKey: process.env.TJEK_API_KEY });
   const state = await loadState(PATHS.state);
 
