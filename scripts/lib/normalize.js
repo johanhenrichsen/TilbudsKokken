@@ -21,7 +21,6 @@ export function toBaseRow(offer, dealer) {
     currency: offer.pricing?.currency ?? "DKK",
     weight,
     unit,
-    pricePerUnit: null,
   };
 }
 

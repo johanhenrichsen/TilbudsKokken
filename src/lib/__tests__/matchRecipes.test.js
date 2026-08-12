@@ -13,4 +13,12 @@ describe("matchRecipes", () => {
   it("returns [] when nothing matches", () => {
     expect(matchRecipes(["ananas"], recipes, 5)).toEqual([]);
   });
+  it("does not false-match short ingredients as substrings of unrelated products", () => {
+    const list = [{ id: 99, title: "Æggekage", time: "15 min", servings: 2,
+      ingredients: ["6 æg","salt"], steps: ["a","b","c"], tip: "x", tags: ["æg"], mainIngredients: ["æg"] }];
+    // "pålæg" contains "æg" as a substring but is not eggs
+    expect(matchRecipes(["pålæg"], list, 5)).toEqual([]);
+    // exact token still matches
+    expect(matchRecipes(["æg"], list, 5)).toHaveLength(1);
+  });
 });
