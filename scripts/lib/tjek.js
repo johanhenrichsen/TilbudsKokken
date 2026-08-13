@@ -63,8 +63,12 @@ export function createTjekClient({ apiKey, fetchImpl = fetch, now = () => new Da
       const t = now().getTime();
       const active = (list || [])
         .map(mapCatalog)
-        .find(c => new Date(c.runFrom).getTime() <= t && t <= new Date(c.runTill).getTime());
-      return active ?? null;
+        .filter(c => new Date(c.runFrom).getTime() <= t && t <= new Date(c.runTill).getTime());
+      if (active.length === 0) return null;
+      // A dealer often runs several catalogs at once (e.g. the weekly food avis
+      // AND a themed "Nonfood" catalog). Prefer the food avis.
+      const foodFirst = active.filter(c => !/nonfood/i.test(c.label));
+      return foodFirst[0] ?? active[0];
     },
     async getCatalogPages(catalogId) {
       const pages = await get(`/catalogs/${encodeURIComponent(catalogId)}/pages`);

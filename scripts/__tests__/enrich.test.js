@@ -29,6 +29,14 @@ describe("enrichRows", () => {
     expect(out.find(r => r.name === "Kyllingelår").price).toBe(45);
   });
 
+  it("parses Claude output wrapped in markdown fences and preamble", async () => {
+    const base = [{ store: "Netto", name: "Æbler", price: 10, currency: "DKK" }];
+    const callClaude = vi.fn(async () => "Her er resultatet:\n```json\n[{\"i\":0,\"name\":\"Æbler\",\"category\":\"Frugt\",\"servingIdea\":\"Snack\",\"labels\":[\"Dansk\"]}]\n```");
+    const out = await enrichRows(base, { callClaude });
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatchObject({ name: "Æbler", price: 10, category: "Frugt", labels: ["Dansk"] });
+  });
+
   it("falls back to the base row (uncategorised) if Claude returns invalid JSON", async () => {
     const base = [{ store: "Netto", name: "Æbler", price: 10 }];
     const callClaude = vi.fn(async () => "not json");
