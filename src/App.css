@@ -1972,6 +1972,51 @@ html.dark .ob-progress-dot.done { background: #5a8a5a; }
 }
 html.dark .ob-step-counter { color: #4a6a4a; }
 
+/* Language switcher */
+.ob-lang-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0.85rem 1.25rem 0;
+  flex-shrink: 0;
+}
+.ob-lang-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a7050;
+}
+html.dark .ob-lang-label { color: #7ab87a; }
+.ob-lang-toggle {
+  display: inline-flex;
+  background: #eef3ee;
+  border: 1px solid #d4e0d4;
+  border-radius: 999px;
+  padding: 3px;
+  gap: 3px;
+}
+html.dark .ob-lang-toggle { background: #1c2a1c; border-color: #2a3e2a; }
+.ob-lang-btn {
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 5px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.ob-lang-btn:hover { color: #2a5030; }
+html.dark .ob-lang-btn { color: #8aa08a; }
+html.dark .ob-lang-btn:hover { color: #b0d0b0; }
+.ob-lang-btn.active {
+  background: #4a7050;
+  color: #fff;
+}
+html.dark .ob-lang-btn.active { background: #5a8a5a; color: #fff; }
+
 /* Step content */
 .ob-content {
   flex: 1;

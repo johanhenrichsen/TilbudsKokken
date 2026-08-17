@@ -3,6 +3,7 @@ import "./App.css";
 import { recipeBank } from "./recipes";
 import LogoIcon from "./LogoIcon";
 import LogoFull from "./LogoFull";
+import { LANGUAGES, DIET_LABELS_EN, TIME_LABELS_EN, makeT } from "./i18n";
 
 const CHAIN_COLORS = {
   "Netto": "#e6a800",
@@ -147,7 +148,7 @@ function getISOWeek(date) {
   return { week: Math.ceil(((d - yearStart) / 86400000 + 1) / 7), year: d.getUTCFullYear() };
 }
 
-function StorePickerContent({ search, onSearch, selected, onToggle }) {
+function StorePickerContent({ search, onSearch, selected, onToggle, t }) {
   const q = search.toLowerCase();
   const filtered = STORE_BRANCHES.filter(s =>
     !q || s.name.toLowerCase().includes(q) || s.zip.includes(q) || s.city.toLowerCase().includes(q)
@@ -162,7 +163,7 @@ function StorePickerContent({ search, onSearch, selected, onToggle }) {
         <input
           className="store-search-input"
           type="text"
-          placeholder="Søg by eller postnummer..."
+          placeholder={t("Søg by eller postnummer...")}
           value={search}
           onChange={e => onSearch(e.target.value)}
           autoFocus
@@ -197,7 +198,7 @@ function StorePickerContent({ search, onSearch, selected, onToggle }) {
           </div>
         ))}
         {grouped.length === 0 && (
-          <p className="store-picker-empty">Ingen butikker fundet</p>
+          <p className="store-picker-empty">{t("Ingen butikker fundet")}</p>
         )}
       </div>
     </>
@@ -372,8 +373,27 @@ export default function App() {
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem("splashShown"));
   const [splashExiting, setSplashExiting] = useState(false);
 
+  const [lang, setLang] = useState(() => {
+    try { return localStorage.getItem("lang") || "da"; } catch { return "da"; }
+  });
+  const en = lang === "en";
+  const t = makeT(lang);
+  const dietLabel = (val) => (en ? DIET_LABELS_EN[val] ?? val : val);
+  const timeLabel = (val) => (en ? TIME_LABELS_EN[val] ?? val : val);
+  const peopleWord = (n) => (en ? (n === 1 ? "person" : "people") : (n === 1 ? "person" : "personer"));
+
+  function changeLang(next) {
+    setLang(next);
+    try { localStorage.setItem("lang", next); } catch {}
+    try { document.documentElement.lang = next; } catch {}
+  }
+
   const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
   const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
+
+  useEffect(() => {
+    try { document.documentElement.lang = lang; } catch {}
+  }, [lang]);
 
   useEffect(() => {
     if (!showSplash) return;
@@ -770,14 +790,15 @@ export default function App() {
   const selectedNames = new Set((localStores || []).map(s => s.name));
 
   function storeHeaderLabel(list) {
-    if (!list || list.length === 0) return "Ingen butik valgt";
+    if (!list || list.length === 0) return t("Ingen butik valgt");
     if (list.length === 1) return list[0].name;
-    if (list.length === 2) return `${list[0].name} og ${list[1].name}`;
-    return `${list[0].name} og ${list.length - 1} andre`;
+    const and = en ? "and" : "og";
+    if (list.length === 2) return `${list[0].name} ${and} ${list[1].name}`;
+    return `${list[0].name} ${and} ${list.length - 1} ${en ? "others" : "andre"}`;
   }
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.title === selectedRecipe.title);
-  const weekBadge = `UGE ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
+  const weekBadge = `${en ? "WEEK" : "UGE"} ${getWeekNumber(new Date())} · ${new Date().getFullYear()}`;
 
   // ── Madspild card ────────────────────────────────────────────────
   function MadspildCard({ r }) {
@@ -786,14 +807,14 @@ export default function App() {
     return (
       <div className="recipe-browse-card madspild-card" onClick={() => selectRecipe(r)}>
         <div className="card-badges">
-          <span className="madspild-badge">🌱 Madspild</span>
+          <span className="madspild-badge">{t("🌱 Madspild")}</span>
         </div>
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
         {r.cuisine && <div className="cuisine-badge">{r.cuisine}</div>}
         <div className="recipe-browse-title">{r.title}</div>
         <div className="recipe-browse-meta">
           <span>⏱ {r.time}</span>
-          <span>🥘 {r.ingredients.length} ing.</span>
+          <span>🥘 {r.ingredients.length} {en ? "ingr." : "ing."}</span>
         </div>
         <div className="madspild-deals-list">
           {r.madspildDeals.map(({ name, deal }) => (
@@ -810,7 +831,7 @@ export default function App() {
                   <span className="madspild-pct">-{deal.discount}%</span>
                 )}
                 {isExpiringSoon(deal.endTime) && (
-                  <span className="madspild-expiry-pill">⚠ Snart</span>
+                  <span className="madspild-expiry-pill">{t("⚠ Snart")}</span>
                 )}
               </span>
             </div>
@@ -821,7 +842,7 @@ export default function App() {
           if (total === 0) return null;
           return (
             <div className="madspild-card-total">
-              ca. {Math.round(total)} kr. for {r.servings_count || 4} personer
+              {en ? "approx." : "ca."} {Math.round(total)} kr. {en ? "for" : "for"} {r.servings_count || 4} {peopleWord(r.servings_count || 4)}
             </div>
           );
         })()}
@@ -829,7 +850,7 @@ export default function App() {
           className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
           onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
         >
-          {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+          {inPlan ? t("📅 I madplan") : t("📅 Tilføj til madplan")}
         </button>
       </div>
     );
@@ -848,8 +869,8 @@ export default function App() {
       >
         {(isPopular || makeable) && (
           <div className="card-badges">
-            {isPopular && <span className="popular-badge-pill">🔥 Populær</span>}
-            {makeable && <span className="makeable-badge">✓ Kan laves nu</span>}
+            {isPopular && <span className="popular-badge-pill">{t("🔥 Populær")}</span>}
+            {makeable && <span className="makeable-badge">{t("✓ Kan laves nu")}</span>}
           </div>
         )}
         <div className="recipe-category-tag">{r.emoji} {r.category}</div>
@@ -857,12 +878,12 @@ export default function App() {
         <div className="recipe-browse-title">{r.title}</div>
         <div className="recipe-browse-meta">
           <span>⏱ {r.time}</span>
-          <span>🥘 {r.ingredients.length} ing.</span>
+          <span>🥘 {r.ingredients.length} {en ? "ingr." : "ing."}</span>
         </div>
         {cardPrice != null && (
           <div className="recipe-card-price">
-            ca. {Math.round(cardPrice)} kr.
-            <span className="recipe-card-price-pp"> · {Math.round(cardPrice / (r.servings_count || 4))} kr. pr. person</span>
+            {en ? "approx." : "ca."} {Math.round(cardPrice)} kr.
+            <span className="recipe-card-price-pp"> · {Math.round(cardPrice / (r.servings_count || 4))} kr. {en ? "per person" : "pr. person"}</span>
           </div>
         )}
         <div className="recipe-deal-tags">
@@ -882,9 +903,9 @@ export default function App() {
         <button
           className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
           onClick={e => { e.stopPropagation(); if (!inPlan) setAddingToPlan(r); }}
-          title={inPlan ? "Allerede i madplan" : "Tilføj til madplan"}
+          title={inPlan ? t("Allerede i madplan") : t("Tilføj til madplan")}
         >
-          {inPlan ? "📅 I madplan" : "📅 Tilføj til madplan"}
+          {inPlan ? t("📅 I madplan") : t("📅 Tilføj til madplan")}
         </button>
       </div>
     );
@@ -903,7 +924,7 @@ export default function App() {
             <div className="splash-logo">
               <LogoFull size="4xl" />
             </div>
-            <p className="splash-tagline">BEDRE TILBUD. BEDRE MAD.</p>
+            <p className="splash-tagline">{t("BEDRE TILBUD. BEDRE MAD.")}</p>
           </div>
         </div>
       )}
@@ -919,9 +940,9 @@ export default function App() {
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
                 <LogoFull size="4xl" className="ob-welcome-logo" />
-                <p className="ob-welcome-desc">Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.</p>
+                <p className="ob-welcome-desc">{t("Få opskrifter der er bygget præcis på hvad der er på tilbud i dine butikker denne uge. Spar penge og spis godt.")}</p>
                 <button className="ob-cta-btn" onClick={() => setOnboardingStep(1)}>
-                  Kom i gang →
+                  {t("Kom i gang →")}
                 </button>
               </div>
             </div>
@@ -932,7 +953,7 @@ export default function App() {
             <div className="ob-step-layout">
               <div className="ob-topbar">
                 <button className="ob-back-btn" onClick={() => setOnboardingStep(s => s - 1)}>
-                  ← Tilbage
+                  {t("← Tilbage")}
                 </button>
                 <div className="ob-progress">
                   {[1, 2, 3].map(n => (
@@ -942,11 +963,29 @@ export default function App() {
                 <span className="ob-step-counter">{onboardingStep}/3</span>
               </div>
 
+              {/* Language switcher */}
+              <div className="ob-lang-row">
+                <span className="ob-lang-label">🌐 {t("Sprog")}</span>
+                <div className="ob-lang-toggle" role="group" aria-label={t("Sprog")}>
+                  {LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      type="button"
+                      className={`ob-lang-btn${lang === l.code ? " active" : ""}`}
+                      aria-pressed={lang === l.code}
+                      onClick={() => changeLang(l.code)}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Step 1 — Store selection */}
               {onboardingStep === 1 && (
                 <div className="ob-content" key="s1">
-                  <h2 className="ob-title">Vælg dine butikker</h2>
-                  <p className="ob-desc">Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.</p>
+                  <h2 className="ob-title">{t("Vælg dine butikker")}</h2>
+                  <p className="ob-desc">{t("Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.")}</p>
                   <div className="ob-chain-grid">
                     {CHAIN_ORDER.map(chain => {
                       const sel = pendingChains.has(chain);
@@ -969,15 +1008,15 @@ export default function App() {
               {/* Step 2 — Dietary preference */}
               {onboardingStep === 2 && (
                 <div className="ob-content" key="s2">
-                  <h2 className="ob-title">Kostpræferencer</h2>
-                  <p className="ob-desc">Vælg din kostpræference — vi tilpasser opskrifterne.</p>
+                  <h2 className="ob-title">{t("Kostpræferencer")}</h2>
+                  <p className="ob-desc">{t("Vælg din kostpræference — vi tilpasser opskrifterne.")}</p>
                   <div className="ob-diet-grid">
                     {[
-                      { label: "Ingen", val: "Alle",      icon: "🍽️" },
-                      { label: "Vegetar",  val: "Vegetar",  icon: "🥦" },
-                      { label: "Veganer",  val: "Veganer",  icon: "🌱" },
-                      { label: "Glutenfri",val: "Glutenfri",icon: "🌾" },
-                      { label: "Mælkefri", val: "Mælkefri", icon: "🥛" },
+                      { label: t("Ingen"), val: "Alle",      icon: "🍽️" },
+                      { label: dietLabel("Vegetar"),  val: "Vegetar",  icon: "🥦" },
+                      { label: dietLabel("Veganer"),  val: "Veganer",  icon: "🌱" },
+                      { label: dietLabel("Glutenfri"),val: "Glutenfri",icon: "🌾" },
+                      { label: dietLabel("Mælkefri"), val: "Mælkefri", icon: "🥛" },
                     ].map(({ label, val, icon }) => {
                       const sel = pendingDiet === val;
                       return (
@@ -999,13 +1038,13 @@ export default function App() {
               {/* Step 3 — Serving size */}
               {onboardingStep === 3 && (
                 <div className="ob-content" key="s3">
-                  <h2 className="ob-title">Hvor mange personer?</h2>
-                  <p className="ob-desc">Vi tilpasser portionsstørrelserne til dit husstand.</p>
+                  <h2 className="ob-title">{t("Hvor mange personer?")}</h2>
+                  <p className="ob-desc">{t("Vi tilpasser portionsstørrelserne til dit husstand.")}</p>
                   <div className="ob-servings-picker">
                     <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.max(1, s - 1))}>−</button>
                     <div className="ob-sv-display">
                       <span className="ob-sv-number">{pendingServings}</span>
-                      <span className="ob-sv-label">person{pendingServings !== 1 ? "er" : ""}</span>
+                      <span className="ob-sv-label">{peopleWord(pendingServings)}</span>
                     </div>
                     <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.min(10, s + 1))}>+</button>
                   </div>
@@ -1017,7 +1056,7 @@ export default function App() {
                 disabled={onboardingStep === 1 && pendingChains.size === 0}
                 onClick={handleOnboardingContinue}
               >
-                {onboardingStep === 3 ? "Gå til opskrifter →" : "Fortsæt →"}
+                {onboardingStep === 3 ? t("Gå til opskrifter →") : t("Fortsæt →")}
               </button>
             </div>
           )}
@@ -1029,15 +1068,16 @@ export default function App() {
         <div className="store-picker-overlay" onClick={e => e.target === e.currentTarget && setShowStorePicker(false)}>
           <div className="store-picker-card">
             <div className="sp-modal-header">
-              <h2 className="sp-title">Dine butikker</h2>
+              <h2 className="sp-title">{t("Dine butikker")}</h2>
               <button className="sp-close-btn" onClick={() => { setShowStorePicker(false); setStoreSearch(""); }}>×</button>
             </div>
-            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Klik for at tilføje eller fjerne butikker.</p>
+            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>{t("Klik for at tilføje eller fjerne butikker.")}</p>
             <StorePickerContent
               search={storeSearch}
               onSearch={setStoreSearch}
               selected={selectedNames}
               onToggle={toggleStore}
+              t={t}
             />
           </div>
         </div>
@@ -1049,7 +1089,7 @@ export default function App() {
           <div className="day-picker-card">
             <div className="sp-modal-header">
               <div>
-                <h2 className="sp-title">Vælg dag</h2>
+                <h2 className="sp-title">{t("Vælg dag")}</h2>
                 <p style={{ margin: 0, fontSize: 13, color: "#6b7280" }}>{addingToPlan.emoji} {addingToPlan.title}</p>
               </div>
               <button className="sp-close-btn" onClick={() => setAddingToPlan(null)}>×</button>
@@ -1066,7 +1106,7 @@ export default function App() {
                     <span className="day-picker-short">{DAY_SHORT[i]}</span>
                     <span className="day-picker-full">{day}</span>
                     {occupied && <span className="day-picker-recipe">{occupied.recipe.emoji} {occupied.recipe.title}</span>}
-                    {!occupied && <span className="day-picker-empty-label">Ledig</span>}
+                    {!occupied && <span className="day-picker-empty-label">{t("Ledig")}</span>}
                   </button>
                 );
               })}
@@ -1080,13 +1120,13 @@ export default function App() {
         <div className="pantry-overlay" onClick={e => e.target === e.currentTarget && setShowPantry(false)}>
           <div className="pantry-sheet">
             <div className="pantry-sheet-header">
-              <h2 className="pantry-sheet-title">🧺 Hvad har jeg derhjemme?</h2>
+              <h2 className="pantry-sheet-title">{t("🧺 Hvad har jeg derhjemme?")}</h2>
               <button className="sp-close-btn" onClick={() => setShowPantry(false)}>×</button>
             </div>
 
             <div className="pantry-controls">
               <div className="pantry-makeable-row">
-                <span className="pantry-makeable-label">Vis kun opskrifter jeg kan lave nu</span>
+                <span className="pantry-makeable-label">{t("Vis kun opskrifter jeg kan lave nu")}</span>
                 <div
                   className={`pantry-toggle-switch${onlyMakeable ? " on" : ""}`}
                   onClick={toggleOnlyMakeable}
@@ -1099,7 +1139,7 @@ export default function App() {
               </div>
               {pantryItems.size > 0 && (
                 <button className="pantry-clear-btn" onClick={clearPantry}>
-                  Ryd ({pantryItems.size})
+                  {en ? "Clear" : "Ryd"} ({pantryItems.size})
                 </button>
               )}
             </div>
@@ -1142,7 +1182,7 @@ export default function App() {
             <span className="hero-brand-name">TilbudsKokken</span>
           </div>
           <div className="header-actions">
-            <button className="header-icon-btn" onClick={openSettings} title="Indstillinger">⚙</button>
+            <button className="header-icon-btn" onClick={openSettings} title={t("Indstillinger")}>⚙</button>
           </div>
         </div>
 
@@ -1158,8 +1198,8 @@ export default function App() {
               <span key={ch} className="chain-dot" style={{ background: CHAIN_COLORS[ch] }} />
             ))}
           </span>
-          <span>{localStores && localStores.length > 1 ? "Dine butikker:" : "Din butik:"} <strong>{storeHeaderLabel(localStores)}</strong></span>
-          <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>skift</button>
+          <span>{localStores && localStores.length > 1 ? (en ? "Your stores:" : "Dine butikker:") : (en ? "Your store:" : "Din butik:")} <strong>{storeHeaderLabel(localStores)}</strong></span>
+          <button className="skift-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>{t("skift")}</button>
         </div>
       </div>
 
@@ -1168,7 +1208,7 @@ export default function App() {
         <input
           className="search-input"
           type="text"
-          placeholder="Søg opskrifter, ingredienser..."
+          placeholder={t("Søg opskrifter, ingredienser...")}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -1178,14 +1218,14 @@ export default function App() {
       {/* Diet filters */}
       <div className="diet-filters">
         {dietFilters.map(f => (
-          <button key={f} onClick={() => setDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
+          <button key={f} onClick={() => setDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{dietLabel(f)}</button>
         ))}
       </div>
 
       {/* Time filters */}
       <div className="diet-filters time-filters">
         {timeFilters.map(f => (
-          <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{f}</button>
+          <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{timeLabel(f)}</button>
         ))}
       </div>
 
@@ -1209,11 +1249,11 @@ export default function App() {
         className={`pantry-trigger-btn${pantryItems.size > 0 ? " has-items" : ""}`}
         onClick={() => setShowPantry(true)}
       >
-        <span>🧺 Hvad har jeg derhjemme?</span>
+        <span>{t("🧺 Hvad har jeg derhjemme?")}</span>
         {pantryItems.size > 0 ? (
-          <span className="pantry-count-badge">{pantryItems.size} varer</span>
+          <span className="pantry-count-badge">{pantryItems.size} {en ? "items" : "varer"}</span>
         ) : (
-          <span className="pantry-trigger-meta">Tilpas opskrifter til dit køleskab</span>
+          <span className="pantry-trigger-meta">{t("Tilpas opskrifter til dit køleskab")}</span>
         )}
       </button>
 
@@ -1221,7 +1261,7 @@ export default function App() {
       {selectedRecipe ? (
         <div className="recipe-detail-sheet">
           <button className="back-btn" onClick={() => { setSelectedRecipe(null); setShoppingList([]); }}>
-            ← Tilbage til opskrifter
+            {t("← Tilbage til opskrifter")}
           </button>
 
           <div className="recipe-card">
@@ -1234,16 +1274,16 @@ export default function App() {
                 <button
                   className="share-btn"
                   onClick={() => shareRecipe(selectedRecipe)}
-                  title="Del opskrift"
+                  title={t("Del opskrift")}
                 >
-                  {copied ? "✓" : "↗"} <span>{copied ? "Kopieret!" : "Del"}</span>
+                  {copied ? "✓" : "↗"} <span>{copied ? t("Kopieret!") : t("Del")}</span>
                 </button>
                 <button
                   className={`save-btn${isRecipeSaved ? " saved" : ""}`}
                   onClick={() => !isRecipeSaved && saveRecipe(selectedRecipe)}
-                  title={isRecipeSaved ? "Gemt" : "Gem opskrift"}
+                  title={isRecipeSaved ? t("Gemt") : t("Gem opskrift")}
                 >
-                  🔖 <span>{isRecipeSaved ? "Gemt" : "Gem"}</span>
+                  🔖 <span>{isRecipeSaved ? t("Gemt") : t("Gem")}</span>
                 </button>
                 {(() => {
                   const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
@@ -1252,7 +1292,7 @@ export default function App() {
                       className={`add-to-plan-btn detail${inPlan ? " in-plan" : ""}`}
                       onClick={() => !inPlan && setAddingToPlan(selectedRecipe)}
                     >
-                      📅 <span>{inPlan ? "I madplan" : "Madplan"}</span>
+                      📅 <span>{inPlan ? t("I madplan") : t("Madplan")}</span>
                     </button>
                   );
                 })()}
@@ -1272,7 +1312,7 @@ export default function App() {
             {/* Live madspild pricing banner */}
             {selectedRecipe.madspildDeals && selectedRecipe.madspildDeals.length > 0 && (
               <div className="madspild-detail-banner">
-                <div className="madspild-detail-banner-title">🌱 Madspild — aktuelle priser</div>
+                <div className="madspild-detail-banner-title">{t("🌱 Madspild — aktuelle priser")}</div>
                 {selectedRecipe.madspildDeals.map(({ name, deal }) => (
                   <div key={name} className="madspild-detail-row">
                     <span className="madspild-detail-desc">{deal.description || name}</span>
@@ -1282,7 +1322,7 @@ export default function App() {
                       {deal.discount != null && <span className="madspild-detail-pct">-{deal.discount}%</span>}
                     </span>
                     {isExpiringSoon(deal.endTime) && (
-                      <span className="madspild-expiry-pill">⚠ Udløber snart</span>
+                      <span className="madspild-expiry-pill">{t("⚠ Udløber snart")}</span>
                     )}
                     {deal.store && <span className="madspild-detail-store">{deal.store}</span>}
                   </div>
@@ -1302,7 +1342,7 @@ export default function App() {
               <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 👥
                 <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
-                {servings} personer
+                {servings} {peopleWord(servings)}
                 <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
               </span>
             </div>
@@ -1311,13 +1351,13 @@ export default function App() {
               if (price == null) return null;
               return (
                 <div className="recipe-detail-price">
-                  ca. {Math.round(price)} kr.
-                  <span className="recipe-detail-price-pp"> · {Math.round(price / servings)} kr. pr. person</span>
+                  {en ? "approx." : "ca."} {Math.round(price)} kr.
+                  <span className="recipe-detail-price-pp"> · {Math.round(price / servings)} kr. {en ? "per person" : "pr. person"}</span>
                 </div>
               );
             })()}
 
-            <div className="section-label">Ingredienser</div>
+            <div className="section-label">{t("Ingredienser")}</div>
             <ul className="ingredient-grid">
               {selectedRecipe.ingredients.map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
@@ -1346,11 +1386,11 @@ export default function App() {
             </ul>
 
             <div className="ingredient-legend">
-              <span><span className="legend-dot deal" />Tilbudsvare · klik + for indkøbsliste</span>
-              <span><span className="legend-dot pantry" />Pantry-vare · du har det hjemme</span>
+              <span><span className="legend-dot deal" />{t("Tilbudsvare · klik + for indkøbsliste")}</span>
+              <span><span className="legend-dot pantry" />{t("Pantry-vare · du har det hjemme")}</span>
             </div>
 
-            <div className="section-label">Fremgangsmåde</div>
+            <div className="section-label">{t("Fremgangsmåde")}</div>
             <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {selectedRecipe.steps.map((step, i) => (
                 <li key={i} className="step-item">
@@ -1362,7 +1402,7 @@ export default function App() {
 
             {(selectedRecipe.tips || selectedRecipe.tip) && (
               <div className="recipe-tips-block">
-                <div className="recipe-tips-label">💡 Tips</div>
+                <div className="recipe-tips-label">{t("💡 Tips")}</div>
                 {selectedRecipe.tips
                   ? selectedRecipe.tips.map((t, i) => <p key={i} className="recipe-tip-item">{t}</p>)
                   : <p className="recipe-tip-item">{selectedRecipe.tip}</p>
@@ -1376,9 +1416,9 @@ export default function App() {
             <div className="shopping-list-card">
               <div className="shopping-list-header">
                 <div className="section-label" style={{ margin: 0 }}>
-                  Indkøbsliste · {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+                  {en ? "Shopping list" : "Indkøbsliste"} · {shoppingList.length} {en ? (shoppingList.length === 1 ? "item" : "items") : (shoppingList.length === 1 ? "vare" : "varer")}
                 </div>
-                <button className="btn-outline" onClick={clearShoppingList}>Ryd liste</button>
+                <button className="btn-outline" onClick={clearShoppingList}>{t("Ryd liste")}</button>
               </div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {shoppingList.map((item, i) => (
@@ -1407,11 +1447,11 @@ export default function App() {
               >
                 <span className="madspild-toggle-left">
                   <span className="madspild-icon">🌱</span>
-                  <span className="madspild-title">Madspild</span>
+                  <span className="madspild-title">{t("Madspild")}</span>
                 </span>
                 {madspildRecipes.length > 0
-                  ? <span className="madspild-teaser-badge">{madspildRecipes.length} tilbud klar</span>
-                  : !dealsLoading && <span className="madspild-teaser-badge">Spar op til 50%</span>
+                  ? <span className="madspild-teaser-badge">{madspildRecipes.length} {en ? "deals ready" : "tilbud klar"}</span>
+                  : !dealsLoading && <span className="madspild-teaser-badge">{t("Spar op til 50%")}</span>
                 }
                 <svg
                   className={`section-chevron${collapsedSections.madspild ? "" : " open"}`}
@@ -1427,14 +1467,14 @@ export default function App() {
                   {dealsLoading ? (
                     <div className="madspild-loading">
                       <div className="madspild-dots"><span /><span /><span /></div>
-                      <p>Henter aktuelle madspildstilbud…</p>
+                      <p>{t("Henter aktuelle madspildstilbud…")}</p>
                     </div>
                   ) : madspildRecipes.length > 0 ? (
                     <div className="recipe-browse-grid section-body-grid">
                       {madspildRecipes.map(r => <MadspildCard key={r.id} r={r} />)}
                     </div>
                   ) : dealsData !== null ? (
-                    <p className="madspild-empty">Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.</p>
+                    <p className="madspild-empty">{t("Ingen madspildstilbud fundet i dine butikker lige nu — tjek igen senere.")}</p>
                   ) : null}
                 </div>
               </div>
@@ -1442,9 +1482,9 @@ export default function App() {
           ) : (
             <div className="madspild-cta">
               <span className="madspild-cta-icon">🌱</span>
-              <span className="madspild-cta-text">Tilføj Netto eller Føtex for at se madspildstilbud</span>
+              <span className="madspild-cta-text">{t("Tilføj Netto eller Føtex for at se madspildstilbud")}</span>
               <button className="madspild-cta-btn" onClick={() => { setShowStorePicker(true); setStoreSearch(""); }}>
-                Tilføj butik
+                {t("Tilføj butik")}
               </button>
             </div>
           )}
@@ -1456,8 +1496,8 @@ export default function App() {
                 onClick={() => toggleSection("recommended")}
                 aria-expanded={!collapsedSections.recommended}
               >
-                <span className="section-toggle-label">⭐ Denne uges anbefalinger</span>
-                <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
+                <span className="section-toggle-label">{t("⭐ Denne uges anbefalinger")}</span>
+                <span className="section-count-badge">{filteredRecommended.length} {en ? "recipes" : "opskrifter"}</span>
                 <svg
                   className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
                   width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -1483,8 +1523,8 @@ export default function App() {
                 onClick={() => toggleSection("others")}
                 aria-expanded={!collapsedSections.others}
               >
-                <span className="section-toggle-label">Kræver andre butikker</span>
-                <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
+                <span className="section-toggle-label">{t("Kræver andre butikker")}</span>
+                <span className="section-count-badge">{filteredOthers.length} {en ? "recipes" : "opskrifter"}</span>
                 <svg
                   className={`section-chevron${collapsedSections.others ? "" : " open"}`}
                   width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -1504,10 +1544,10 @@ export default function App() {
           )}
 
           {noResults && (
-            <div className="empty-state">Ingen opskrifter fundet</div>
+            <div className="empty-state">{t("Ingen opskrifter fundet")}</div>
           )}
           {!noResults && scoredRecipes.length === 0 && (
-            <div className="empty-state">Ingen opskrifter matcher det valgte filter</div>
+            <div className="empty-state">{t("Ingen opskrifter matcher det valgte filter")}</div>
           )}
         </>
       )}
@@ -1516,19 +1556,19 @@ export default function App() {
       {planCount > 0 && (
         <div className="meal-plan-card">
           <div className="meal-plan-header">
-            <div className="section-label" style={{ margin: 0 }}>📅 Madplan · {planCount} {planCount === 1 ? "dag" : "dage"}</div>
+            <div className="section-label" style={{ margin: 0 }}>{en ? "📅 Meal plan" : "📅 Madplan"} · {planCount} {en ? (planCount === 1 ? "day" : "days") : (planCount === 1 ? "dag" : "dage")}</div>
             <div className="meal-plan-header-btns">
               <button
                 className={`share-plan-btn${planCopied ? " copied" : ""}`}
                 onClick={shareMealPlan}
               >
-                {planCopied ? "✓ Kopieret!" : "Del madplan"}
+                {planCopied ? t("✓ Kopieret!") : t("Del madplan")}
               </button>
               <button
                 className="combined-list-btn"
                 onClick={() => setShowCombinedList(v => !v)}
               >
-                {showCombinedList ? "Skjul" : "Indkøbsliste"}
+                {showCombinedList ? t("Skjul") : t("Indkøbsliste")}
               </button>
             </div>
           </div>
@@ -1555,10 +1595,10 @@ export default function App() {
                       <span>{entry.servings}</span>
                       <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.min(10, entry.servings + 1))}>+</button>
                     </div>
-                    <button className="meal-plan-remove" onClick={() => removeFromPlan(i)} title="Fjern">×</button>
+                    <button className="meal-plan-remove" onClick={() => removeFromPlan(i)} title={t("Fjern")}>×</button>
                   </>
                 ) : (
-                  <div className="meal-plan-empty-label">Ledig</div>
+                  <div className="meal-plan-empty-label">{t("Ledig")}</div>
                 )}
               </div>
             ))}
@@ -1567,7 +1607,7 @@ export default function App() {
           {showCombinedList && (
             <div className="combined-list">
               {combinedList.length === 0 ? (
-                <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
+                <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>{t("Ingen tilbudsvarer i madplanen.")}</p>
               ) : (
                 combinedList.map(group => (
                   <div key={group.store} className="combined-list-store">
@@ -1595,7 +1635,7 @@ export default function App() {
       {savedRecipes.length > 0 && (
         <div className="saved-recipes-card">
           <div className="section-label" style={{ margin: "0 0 12px" }}>
-            🔖 Gemte opskrifter · {savedRecipes.length}
+            {en ? "🔖 Saved recipes" : "🔖 Gemte opskrifter"} · {savedRecipes.length}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {savedRecipes.map(r => {
@@ -1605,7 +1645,7 @@ export default function App() {
                   <div className="saved-recipe-header" onClick={() => toggleExpanded(r.savedAt)}>
                     <div>
                       <div className="saved-recipe-title">{r.title}</div>
-                      <div className="saved-recipe-meta">⏱ {r.time} · 👥 {r.servings_count || 4} personer</div>
+                      <div className="saved-recipe-meta">⏱ {r.time} · 👥 {r.servings_count || 4} {peopleWord(r.servings_count || 4)}</div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                       <span className="saved-recipe-chevron">{open ? "▲" : "▼"}</span>
@@ -1614,7 +1654,7 @@ export default function App() {
                   </div>
                   {open && (
                     <div className="saved-recipe-body">
-                      <div className="section-label" style={{ margin: "0 0 8px" }}>Ingredienser</div>
+                      <div className="section-label" style={{ margin: "0 0 8px" }}>{t("Ingredienser")}</div>
                       <ul className="ingredient-grid" style={{ marginBottom: "1rem" }}>
                         {r.ingredients.map((ing, i) => (
                           <li key={i} className="ingredient-item" style={{ gap: 6 }}>
@@ -1623,7 +1663,7 @@ export default function App() {
                           </li>
                         ))}
                       </ul>
-                      <div className="section-label" style={{ margin: "0 0 8px" }}>Fremgangsmåde</div>
+                      <div className="section-label" style={{ margin: "0 0 8px" }}>{t("Fremgangsmåde")}</div>
                       <ol style={{ listStyle: "none", padding: 0, margin: "0 0 1rem" }}>
                         {r.steps.map((step, i) => (
                           <li key={i} className="step-item">
@@ -1631,7 +1671,7 @@ export default function App() {
                           </li>
                         ))}
                       </ol>
-                      {r.tip && <div className="recipe-tip"><strong>Tips:</strong> {r.tip}</div>}
+                      {r.tip && <div className="recipe-tip"><strong>{t("Tips:")}</strong> {r.tip}</div>}
                     </div>
                   )}
                 </div>
