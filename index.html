@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>if(!window.matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.classList.add('dark')}</script>
+    <script>(function(){try{var t=localStorage.getItem('theme');var dark=t?t==='dark':!window.matchMedia('(prefers-color-scheme: light)').matches;if(dark)document.documentElement.classList.add('dark');}catch(e){if(!window.matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.classList.add('dark');}})()</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Fraunces (display/headings, variable opsz+wght) · DM Sans (body/UI) · Space Mono (prices/stamps) -->
