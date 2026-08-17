@@ -1036,6 +1036,8 @@ export default function App() {
   const [quickFilters, setQuickFilters] = useState(new Set());
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
+  // Which desktop quick-strip dropdown is open ("pris" | "koleskab" | null).
+  const [quickPanel, setQuickPanel] = useState(null);
 
   // Collapse the sticky search when scrolling down; reveal on scroll up / near top
   useEffect(() => {
@@ -2712,16 +2714,114 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              {/* Desktop entry to the full filter sheet (Tid/Køkken/Pris/Køleskab)
-                  which is otherwise only reachable from the mobile filter row. */}
+              {/* Tid / Køkken inline pills — formerly only in the filter sheet. */}
               <div className="quick-strip quick-strip-more">
-                <button className="qs-filter-btn" onClick={() => setShowFilterSheet(true)}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
-                  </svg>
-                  Flere filtre
-                  {activeFilterCount > 0 && <span className="qs-filter-badge">{activeFilterCount}</span>}
+                <span className="quick-strip-sep">Tid</span>
+                {timeFilters.map(f => (
+                  <button
+                    key={f}
+                    className={`qs-pill${timeFilter === f ? " active" : ""}`}
+                    onClick={() => setTimeFilter(f)}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+              {CUISINE_ORDER.length > 2 && (
+                <div className="quick-strip quick-strip-more">
+                  <span className="quick-strip-sep">Køkken</span>
+                  {CUISINE_ORDER.map(c => (
+                    <button
+                      key={c}
+                      className={`qs-pill${cuisineFilter === c ? " active" : ""}`}
+                      onClick={() => setCuisineFilter(c)}
+                    >
+                      {cuisineLabel(c)}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {/* Butik toggle + rich controls (Pris / Køleskab) as dropdown pills.
+                  Not a .quick-strip: its overflow must stay visible so the
+                  dropdown panels aren't clipped by scroll/mask. */}
+              <div className="quick-strip-more-row">
+                <span className="quick-strip-sep">Mere</span>
+                <button
+                  className={`qs-pill${quickFilters.has("enbutik") ? " active" : ""}`}
+                  onClick={() => toggleQuickFilter("enbutik")}
+                >
+                  Kun én butik
                 </button>
+                {maxRecipePrice > 0 && (
+                  <div className="qs-dd-wrap">
+                    <button
+                      className={`qs-pill qs-dd-pill${priceFiltered ? " active" : ""}`}
+                      onClick={() => setQuickPanel(p => (p === "pris" ? null : "pris"))}
+                    >
+                      {priceFiltered ? `Pris: ${priceMin}–${priceMax ?? maxRecipePrice} kr.` : "Pris"} ▾
+                    </button>
+                    {quickPanel === "pris" && (
+                      <>
+                        <div className="qs-dd-backdrop" onClick={() => setQuickPanel(null)} />
+                        <div className="qs-dd-panel">
+                          <div className="price-range-wrap prefs-price-wrap">
+                            <div className="price-range-header">
+                              <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
+                                {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
+                                {priceFiltered && (
+                                  <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
+                                )}
+                              </span>
+                            </div>
+                            <div className="price-range-track-wrap">
+                              <div className="price-range-track-bg" />
+                              <div className="price-range-fill" style={{ left: `${(priceMin / maxRecipePrice) * 100}%`, right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%` }} />
+                              <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
+                                onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }} />
+                              <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
+                                onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }} />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+                <div className="qs-dd-wrap">
+                  <button
+                    className={`qs-pill qs-dd-pill${pantryItems.size > 0 ? " active" : ""}`}
+                    onClick={() => setQuickPanel(p => (p === "koleskab" ? null : "koleskab"))}
+                  >
+                    {pantryItems.size > 0 ? `Køleskab (${pantryItems.size})` : "Køleskab"} ▾
+                  </button>
+                  {quickPanel === "koleskab" && (
+                    <>
+                      <div className="qs-dd-backdrop" onClick={() => setQuickPanel(null)} />
+                      <div className="qs-dd-panel">
+                        <div className="fs-pantry-input-row">
+                          <input
+                            className="fs-pantry-input"
+                            type="text"
+                            placeholder="Tilføj ingrediens du har..."
+                            value={pantryInput}
+                            onChange={e => setPantryInput(e.target.value)}
+                            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(); } }}
+                          />
+                          <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>Tilføj</button>
+                        </div>
+                        {pantryItems.size > 0 && (
+                          <div className="fs-pantry-chips">
+                            {[...pantryItems].map(item => (
+                              <button key={item} className="fs-pantry-chip" onClick={() => togglePantryItem(item)}>
+                                {item} <span aria-hidden="true">×</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
                 {activeFilterCount > 0 && (
                   <button className="qs-clear-btn" onClick={clearAllFilters}>Ryd filtre</button>
                 )}
