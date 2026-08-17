@@ -3088,6 +3088,8 @@ html.dark .day-picker-empty-label { color: rgba(238,230,216,0.1); }
   align-items: center;
   justify-content: space-between;
 }
+/* Desktop top-nav is hidden by default; the ≥900px block reveals it. */
+.desktop-nav { display: none; }
 .hero-brand {
   display: flex;
   align-items: center;
@@ -6717,4 +6719,97 @@ html:not(.dark) .mfr-badge { background: #7E5A0E; }
   .filter-sheet {
     animation: none !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP — full-bleed premium layout (PC only, ≥900px)
+   Everything below is gated to wide screens; phone/tablet layout
+   is untouched. The 720px column cap and mobile bottom nav only
+   ever apply below this breakpoint.
+   ═══════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  .app {
+    --app-pad: clamp(32px, 3.5vw, 48px);
+    max-width: none;
+    padding: 0 var(--app-pad) 56px;
+  }
+
+  /* Header becomes a full-width bar: break out of the app's side padding
+     so the background/border reach the screen edges while inner content
+     stays aligned to the same inset as everything else. */
+  .app-hero {
+    margin: 0 calc(-1 * var(--app-pad)) 22px;
+    padding: 14px var(--app-pad) 16px;
+  }
+  .app-hero::after { display: none; }   /* drop the little centered dash */
+
+  .hero-topbar { gap: 36px; }
+  .hero-brand { flex-shrink: 0; }
+
+  /* ── Full-width top navigation ── */
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: auto;          /* hug the brand; push actions to far right */
+  }
+  .dnav-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 14px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-dim, #A79E8E);
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+  }
+  .dnav-item:hover { color: var(--text); background: rgba(238,230,216,0.06); }
+  html:not(.dark) .dnav-item:hover { background: rgba(80,60,20,0.06); }
+  .dnav-item.active { color: #CE9F3E; }
+  html:not(.dark) .dnav-item.active { color: #7E5A0E; }
+  .dnav-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #B83A24;
+    color: #FBF6EC;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    line-height: 1;
+  }
+
+  /* ── Recipe grid → responsive, full-width multi-column ── */
+  .recipe-browse-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+  }
+  /* Neutralise the full-width "featured" first card — a uniform grid reads
+     cleaner at wide widths than one giant hero card. */
+  .recipe-browse-grid .recipe-browse-card:first-child { grid-column: auto; }
+  .recipe-browse-grid .recipe-browse-card:first-child .card-photo-wrap { height: 180px; }
+  .recipe-browse-grid .recipe-browse-card:first-child .recipe-browse-title { font-size: var(--type-h3, 16px); }
+
+  /* Keep reading/detail views at a comfortable measure, centered */
+  .recipe-detail-sheet { max-width: 900px; margin-left: auto; margin-right: auto; }
+
+  /* The top nav replaces the floating action buttons on desktop */
+  .meal-plan-fab,
+  .shopping-cart-fab { display: none !important; }
+}
+
+/* A little more air between cards on very wide monitors */
+@media (min-width: 1500px) {
+  .recipe-browse-grid { gap: 26px; }
 }
