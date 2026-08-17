@@ -360,8 +360,6 @@ function calcPricePerPerson(recipe) {
 
 // Keyword regexes matched against actual ingredient texts (case-insensitive).
 // Checked against both dealItems[].name and ingredients[].text so nothing slips through.
-// Keyword regexes matched against actual ingredient texts (case-insensitive).
-// Checked against both dealItems[].name and ingredients[].text so nothing slips through.
 const dietKeywords = {
   Vegetar:  /kylling|chicken|okse|grise|svine|pork|laks|salmon|tun|fisk|bacon|pølse|rejer|shrimp|torsk|\band|lam|bøf|spareribs|dorade|gyros|steak|pepperoni|krebinetter|fjerkræ/i,
   Veganer:  /kylling|chicken|okse|grise|svine|pork|laks|salmon|tun|fisk|bacon|pølse|rejer|shrimp|torsk|\band|lam|bøf|spareribs|dorade|gyros|steak|pepperoni|krebinetter|fjerkræ|mælk|fløde|smør|ost|mozzarella|parmesan|skyr|yoghurt|cremefine|æg/i,
