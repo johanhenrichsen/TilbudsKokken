@@ -132,20 +132,20 @@
       {
         "text": "Smør til rugbrødet",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk dild til pynt",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citronsaft",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -232,14 +232,14 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk koriander til pynt",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -322,20 +322,20 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citronsaft og citronskiver til pynt",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk dild",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -423,8 +423,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløgspulver",
@@ -558,6 +558,11 @@
         "name": "Forårsløg",
         "store": "Bilka",
         "price": "5 kr."
+      },
+      {
+        "name": "Sesamolie",
+        "store": "Lidl",
+        "price": "25 kr."
       }
     ],
     "dietaryFilters": [],
@@ -651,6 +656,11 @@
         "name": "Castello Cheddar hård ost 150-200 g",
         "store": "Bilka",
         "price": "30 kr."
+      },
+      {
+        "name": "Dansk Agurk",
+        "store": "Bilka",
+        "price": "8 kr."
       }
     ],
     "dietaryFilters": [],
@@ -744,6 +754,11 @@
         "name": "Forårsløg",
         "store": "Bilka",
         "price": "5 kr."
+      },
+      {
+        "name": "Sesamolie",
+        "store": "Lidl",
+        "price": "25 kr."
       }
     ],
     "dietaryFilters": [
@@ -794,8 +809,8 @@
       {
         "text": "Salt, peber, citronsaft og friske urter (timian/rosmarin)",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -828,6 +843,11 @@
         "name": "Salling Cocktailtomater 500 g",
         "store": "Bilka",
         "price": "18 kr."
+      },
+      {
+        "name": "Piccardo & Savore Ekstra Jomfru Olivenolie 750-1000 ml",
+        "store": "Bilka",
+        "price": "89 kr."
       }
     ],
     "dietaryFilters": [],
@@ -1070,14 +1090,14 @@
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Ingefær",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -1218,6 +1238,11 @@
         "name": "Salling Cocktailtomater 500 g",
         "store": "Bilka",
         "price": "18 kr."
+      },
+      {
+        "name": "Dansk Agurk",
+        "store": "Bilka",
+        "price": "8 kr."
       }
     ],
     "dietaryFilters": [],
@@ -1317,6 +1342,11 @@
         "name": "Ristede sesamfrø 100 g",
         "store": "Lidl",
         "price": "15 kr."
+      },
+      {
+        "name": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr."
       }
     ],
     "dietaryFilters": [
@@ -1373,8 +1403,8 @@
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -1475,7 +1505,7 @@
     "tip": "Tilsæt et blødkogt æg (6 minutter i kogende vand) for ekstra fylde og autenticitet.",
     "dealItems": [
       {
-        "name": "Salling Yakitori Kyllingespyd 300-1250 g",
+        "name": "Yakitori Kyllingespyd 300-1250 g",
         "store": "Bilka",
         "price": "89 kr."
       },
@@ -1641,14 +1671,14 @@
       {
         "text": "Sennep",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Ketchup",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -1888,20 +1918,20 @@
       {
         "text": "Citron",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt, peber og friske krydderurter (timian/rosmarin)",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -2014,7 +2044,7 @@
     "tip": "Tilsæt et spejlæg ovenpå for at gøre bowlen endnu mere mættende og autentisk.",
     "dealItems": [
       {
-        "name": "Salling Yakitori Kyllingespyd 300-1250 g",
+        "name": "Yakitori Kyllingespyd 300-1250 g",
         "store": "Bilka",
         "price": "89 kr."
       },
@@ -2037,6 +2067,11 @@
         "name": "Ristede sesamfrø 100 g",
         "store": "Lidl",
         "price": "15 kr."
+      },
+      {
+        "name": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr."
       }
     ],
     "dietaryFilters": [
@@ -2133,6 +2168,11 @@
         "name": "Forårsløg",
         "store": "Bilka",
         "price": "5 kr."
+      },
+      {
+        "name": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr."
       }
     ],
     "dietaryFilters": [
@@ -2229,6 +2269,11 @@
         "name": "Böhncke Burgerdressing 255-425 g",
         "store": "Bilka",
         "price": "18 kr."
+      },
+      {
+        "name": "Salling Cocktailtomater 500 g",
+        "store": "Bilka",
+        "price": "18 kr."
       }
     ],
     "dietaryFilters": [],
@@ -2289,8 +2334,8 @@
       {
         "text": "Sojasauce",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -2328,6 +2373,11 @@
         "name": "Wasabi Paste 43 g",
         "store": "Lidl",
         "price": "10 kr."
+      },
+      {
+        "name": "Ristede sesamfrø 100 g",
+        "store": "Lidl",
+        "price": "15 kr."
       }
     ],
     "dietaryFilters": [
@@ -2378,14 +2428,14 @@
       {
         "text": "Løg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Tørret oregano og timian",
@@ -2498,8 +2548,8 @@
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -2585,14 +2635,14 @@
       {
         "text": "Løg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt, peber og tørret oregano",
@@ -2680,8 +2730,8 @@
       {
         "text": "Mayonnaise",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -2814,6 +2864,11 @@
         "name": "Mutti Tomatpuré 130-400 g",
         "store": "Meny",
         "price": "9,95 kr."
+      },
+      {
+        "name": "Salling ØKO Dansk Basilikum",
+        "store": "Bilka",
+        "price": "25 kr."
       }
     ],
     "dietaryFilters": [],
@@ -2856,8 +2911,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -2868,8 +2923,8 @@
       {
         "text": "Friske urter (persille/timian)",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -2998,6 +3053,11 @@
         "name": "Forårsløg",
         "store": "Bilka",
         "price": "5 kr."
+      },
+      {
+        "name": "Salling ØKO Dansk Basilikum",
+        "store": "Bilka",
+        "price": "25 kr."
       }
     ],
     "dietaryFilters": [
@@ -3054,14 +3114,14 @@
       {
         "text": "Sojasauce",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Ingefær",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -3195,6 +3255,11 @@
         "name": "Ristede sesamfrø 100 g",
         "store": "Lidl",
         "price": "15 kr."
+      },
+      {
+        "name": "Forårsløg",
+        "store": "Bilka",
+        "price": "5 kr."
       }
     ],
     "dietaryFilters": [],
@@ -3255,8 +3320,8 @@
       {
         "text": "Citronsaft",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløgspulver",
@@ -3363,8 +3428,8 @@
       {
         "text": "Limesaft",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -3672,6 +3737,11 @@
         "name": "Salling Cocktailtomater 500 g",
         "store": "Bilka",
         "price": "18 kr."
+      },
+      {
+        "name": "Coop Feta 150 g",
+        "store": "Coop 365",
+        "price": "20 kr."
       }
     ],
     "dietaryFilters": [],
@@ -3765,6 +3835,11 @@
         "name": "Peberfrugt",
         "store": "Bilka",
         "price": "6 kr."
+      },
+      {
+        "name": "Salling ØKO Dansk Basilikum",
+        "store": "Bilka",
+        "price": "25 kr."
       }
     ],
     "dietaryFilters": [],
@@ -3887,8 +3962,8 @@
       {
         "text": "Æg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel 2 spsk.",
@@ -3899,8 +3974,8 @@
       {
         "text": "Mælk 1 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør til stegning",
@@ -3981,14 +4056,14 @@
       {
         "text": "Hvidløg 4 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Timian frisk eller tørret",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie 3 spsk.",
@@ -4074,14 +4149,14 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Spidskommen, paprika, chili",
@@ -4092,8 +4167,8 @@
       {
         "text": "Limesaft",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4167,20 +4242,20 @@
       {
         "text": "Kapers 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Citronskal og -saft fra 1 citron",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -4191,8 +4266,8 @@
       {
         "text": "Dild frisk eller tørret",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4267,14 +4342,14 @@
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Ingefær frisk 1 tsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Karry, gurkemeje, garam masala",
@@ -4285,8 +4360,8 @@
       {
         "text": "Hakkede tomater halvdåse",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4311,7 +4386,7 @@
         "price": "49 kr."
       },
       {
-        "name": "Kokosmælk 400 ml",
+        "name": "Kokosmælk 400 ml dåse",
         "store": "Rema 1000",
         "price": "22 kr."
       },
@@ -4372,8 +4447,8 @@
       {
         "text": "Smør 50 g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Rødvinseddike 2 spsk.",
@@ -4465,8 +4540,8 @@
       {
         "text": "Smør 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Sukker 1 tsk.",
@@ -4477,8 +4552,8 @@
       {
         "text": "Mayonnaise og ketchup",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4558,20 +4633,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hakkede tomater 1 dåse",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Grøntsagsbouillon 1 L",
@@ -4657,8 +4732,8 @@
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie 3 spsk.",
@@ -4675,8 +4750,8 @@
       {
         "text": "Citron halvt stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "steps": [
@@ -4746,14 +4821,14 @@
       {
         "text": "Æg 3 stk. samt 2 æggeblommer",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 1 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Sort peber",
@@ -4789,7 +4864,7 @@
         "price": "12 kr."
       },
       {
-        "name": "Parmesan 60 g",
+        "name": "Parmesan 60 g revet",
         "store": "Rema 1000",
         "price": "22 kr."
       }
@@ -4828,8 +4903,8 @@
       {
         "text": "Agurkeskiver",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4851,12 +4926,12 @@
         "price": "22 kr."
       },
       {
-        "name": "Rugbrød",
+        "name": "Rugbrød halvt brød",
         "store": "Føtex",
         "price": "18 kr."
       },
       {
-        "name": "Rødbeder syltet",
+        "name": "Rødbeder syltet 1 glas",
         "store": "Føtex",
         "price": "14 kr."
       }
@@ -4895,14 +4970,14 @@
       {
         "text": "Citron 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 1 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4920,12 +4995,12 @@
     "tip": "Bræk de træede ender af aspargesene ved at bøje dem – de knækker naturligt det rigtige sted.",
     "dealItems": [
       {
-        "name": "Laksesteak 300 g",
+        "name": "Laksesteak 2 stk. 300 g",
         "store": "Føtex",
         "price": "48 kr."
       },
       {
-        "name": "Grønne asparges",
+        "name": "Grønne asparges 1 bundt",
         "store": "Føtex",
         "price": "22 kr."
       },
@@ -4975,8 +5050,8 @@
       {
         "text": "Parmesan revet",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "15 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -4999,7 +5074,7 @@
         "price": "14 kr."
       },
       {
-        "name": "Basilikumpesto",
+        "name": "Basilikumpesto 130 g glas",
         "store": "Føtex",
         "price": "26 kr."
       },
@@ -5050,8 +5125,8 @@
       {
         "text": "Dijonsennep 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie 3 spsk.",
@@ -5068,8 +5143,8 @@
       {
         "text": "Honning 1 tsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -5142,14 +5217,14 @@
       {
         "text": "Løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Oksefond 5 dl",
@@ -5160,8 +5235,8 @@
       {
         "text": "Rosmarin frisk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -5234,20 +5309,20 @@
       {
         "text": "Dijonsennep 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citronsaft",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -5315,14 +5390,14 @@
       {
         "text": "Smør 50 g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk 1 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Sukker 1 spsk.",
@@ -5395,14 +5470,14 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Grøntsagsbouillon 8 dl",
@@ -5443,7 +5518,7 @@
         "price": "22 kr."
       },
       {
-        "name": "Ingefær frisk",
+        "name": "Ingefær frisk 2 cm",
         "store": "Føtex",
         "price": "8 kr."
       }
@@ -5503,8 +5578,8 @@
       {
         "text": "Hvidløg 4 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -5531,6 +5606,11 @@
         "name": "Kartofler 1 kg",
         "store": "Spar",
         "price": "12 kr."
+      },
+      {
+        "name": "Piskefløde 2 dl",
+        "store": "Eurospar",
+        "price": "14 kr."
       },
       {
         "name": "Estragon frisk",
@@ -5636,6 +5716,11 @@
         "price": "12 kr."
       },
       {
+        "name": "Rødvin 2 dl",
+        "store": "Eurospar",
+        "price": "20 kr."
+      },
+      {
         "name": "Rødbeder 3 stk.",
         "store": "SuperBrugsen / Kvickly",
         "price": "14 kr."
@@ -5687,20 +5772,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Tomatpuré 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -5727,6 +5812,11 @@
         "name": "Spaghetti 400 g",
         "store": "Spar",
         "price": "16 kr."
+      },
+      {
+        "name": "Hakkede tomater 2 dåser",
+        "store": "Eurospar",
+        "price": "18 kr."
       },
       {
         "name": "Gulerødder 2 stk.",
@@ -5785,8 +5875,8 @@
       {
         "text": "Harissa 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -5811,9 +5901,14 @@
     "tip": "Tilsæt en nip sukker til harissa-grøntsagerne – det balancerer krydderiet og fremhæver sødmen i tomaterne.",
     "dealItems": [
       {
-        "name": "Laks 2 fileter",
+        "name": "Laks 2 fileter 300 g",
         "store": "Meny",
         "price": "52 kr."
+      },
+      {
+        "name": "Couscous 200 g",
+        "store": "Eurospar",
+        "price": "14 kr."
       },
       {
         "name": "Squash 1 stk.",
@@ -5877,8 +5972,8 @@
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -5917,6 +6012,11 @@
         "name": "Spaghetti 250 g",
         "store": "Spar",
         "price": "12 kr."
+      },
+      {
+        "name": "Hvidvin tør 1 dl",
+        "store": "Eurospar",
+        "price": "16 kr."
       },
       {
         "name": "Cherrytomater 150 g",
@@ -5975,14 +6075,14 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Grøntsagsbouillon varm 8 dl",
@@ -6010,6 +6110,11 @@
         "name": "Blandede svampe 300 g",
         "store": "Meny",
         "price": "38 kr."
+      },
+      {
+        "name": "Risottoris 200 g",
+        "store": "Eurospar",
+        "price": "20 kr."
       },
       {
         "name": "Parmesan 60 g",
@@ -6075,8 +6180,8 @@
       {
         "text": "Citron 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -6104,6 +6209,11 @@
         "name": "Kyllingebryst 2 stk.",
         "store": "Meny",
         "price": "42 kr."
+      },
+      {
+        "name": "Bulgur 150 g",
+        "store": "Eurospar",
+        "price": "16 kr."
       },
       {
         "name": "Hummus 200 g",
@@ -6167,20 +6277,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg og ingefær",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hakkede tomater halvdåse",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Karry, gurkemeje, garam masala",
@@ -6198,6 +6308,11 @@
     ],
     "tip": "Tilsæt en klat smør lige inden servering for ekstra rigdom – det er den indiske hemmelighed der hedder \"tarka\".",
     "dealItems": [
+      {
+        "name": "Røde linser 300 g",
+        "store": "Eurospar",
+        "price": "18 kr."
+      },
       {
         "name": "Naan brød 4 stk.",
         "store": "Meny",
@@ -6268,14 +6383,14 @@
       {
         "text": "Dijonsennep 1 tsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Purløg hakket",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie og salt",
@@ -6293,7 +6408,7 @@
     "tip": "Lav tartarsaucen i god tid og lad den trække i køleskabet – smagen udvikler sig og bliver bedre.",
     "dealItems": [
       {
-        "name": "Paneret fiskefilet",
+        "name": "Paneret fiskefilet 4 stk.",
         "store": "Meny",
         "price": "42 kr."
       },
@@ -6303,12 +6418,17 @@
         "price": "12 kr."
       },
       {
-        "name": "Kapers",
+        "name": "Creme fraiche 38% 200 g",
+        "store": "Eurospar",
+        "price": "18 kr."
+      },
+      {
+        "name": "Kapers 1 spsk.",
         "store": "SuperBrugsen / Kvickly",
         "price": "14 kr."
       },
       {
-        "name": "Syltede agurker",
+        "name": "Agurker syltede 2 spsk.",
         "store": "Dagli'Brugsen / Brugsen",
         "price": "10 kr."
       }
@@ -6359,8 +6479,8 @@
       {
         "text": "Løg og hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Muskatnød og oregano",
@@ -6399,6 +6519,11 @@
         "name": "Lasagneplader 250 g",
         "store": "Spar",
         "price": "16 kr."
+      },
+      {
+        "name": "Frossen spinat 400 g",
+        "store": "Eurospar",
+        "price": "18 kr."
       },
       {
         "name": "Hakkede tomater 2 dåser",
@@ -6440,8 +6565,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -6509,8 +6634,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -6521,14 +6646,14 @@
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 2 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -6578,20 +6703,20 @@
       {
         "text": "Gul løg 3 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk 100ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -6666,8 +6791,8 @@
       {
         "text": "Frisk dild",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenollie",
@@ -6734,20 +6859,20 @@
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 25g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -6814,14 +6939,14 @@
       {
         "text": "Gul løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivensolie 2 spsk.",
@@ -6894,8 +7019,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -6918,8 +7043,8 @@
       {
         "text": "Løg 1 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -6969,20 +7094,20 @@
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -6993,14 +7118,14 @@
       {
         "text": "Frisk persille 1 håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citron 1/2",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -7050,20 +7175,20 @@
       {
         "text": "Brødkrummer",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Æg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7074,8 +7199,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillon",
@@ -7086,8 +7211,8 @@
       {
         "text": "Fløde",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -7137,8 +7262,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7149,14 +7274,14 @@
       {
         "text": "Hvidløg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -7205,14 +7330,14 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7223,7 +7348,7 @@
       {
         "text": "Citron 1 stk.",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       }
     ],
@@ -7273,20 +7398,20 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7348,14 +7473,14 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7366,8 +7491,8 @@
       {
         "text": "Rødkål fra dåse eller frisk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Eddike",
@@ -7429,20 +7554,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillonterning ½ stk.",
@@ -7516,20 +7641,20 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og sort peber",
@@ -7591,14 +7716,14 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel til panering 3 spsk.",
@@ -7609,8 +7734,8 @@
       {
         "text": "Æg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7621,8 +7746,8 @@
       {
         "text": "Citron 1 halv",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -7672,20 +7797,20 @@
       {
         "text": "Gul løg 3 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Gulerødder 300g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7755,8 +7880,8 @@
       {
         "text": "Kartofler 1 kg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenollie 4 spsk.",
@@ -7779,8 +7904,8 @@
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -7830,14 +7955,14 @@
       {
         "text": "Kartofler 1 kg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -7899,14 +8024,14 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Ferskt timian",
@@ -7917,8 +8042,8 @@
       {
         "text": "Citron 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og hvid peber",
@@ -7929,8 +8054,8 @@
       {
         "text": "Hvidvin 100ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -7980,38 +8105,38 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Gulerod 3 stk.",
         "store": null,
-        "price": null,
+        "price": "5 kr.",
         "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
         "text": "Hvidvin 1 dl",
         "store": null,
-        "price": null,
+        "price": "6 kr.",
         "isPantry": false
       },
       {
         "text": "Kødbouillon 5 dl",
         "store": null,
         "price": null,
-        "isPantry": false
+        "isPantry": true
       },
       {
         "text": "Smør 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8073,14 +8198,14 @@
       {
         "text": "Panko eller rasp",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "2 æg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel",
@@ -8147,14 +8272,14 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fedderkner",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Chili pulver 1 tsk.",
@@ -8165,8 +8290,8 @@
       {
         "text": "Krummin 1 tsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8177,20 +8302,20 @@
       {
         "text": "Tomat 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Ost, riven 100g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "14 kr.",
+        "isPantry": false
       },
       {
         "text": "Syrlig creme eller crème fraîche",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8239,32 +8364,32 @@
       {
         "text": "Rugbrød 400g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mayonnaise 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Kapers 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Citron 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber efter smag",
@@ -8275,8 +8400,8 @@
       {
         "text": "Dild 1 håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8326,20 +8451,20 @@
       {
         "text": "Majonnaise 400g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk dild",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citron",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8406,20 +8531,20 @@
       {
         "text": "Tomater 400g dåse",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Rødt løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Basilikum frisk håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -8436,8 +8561,8 @@
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8486,26 +8611,26 @@
       {
         "text": "Oksefars 200g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Æg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Pandebrød eller brødkrummer 100g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk 100ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8528,8 +8653,8 @@
       {
         "text": "Creme fraîche 100ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8579,20 +8704,20 @@
       {
         "text": "Nye kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Løg 1 stk",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel til drysse",
@@ -8609,8 +8734,8 @@
       {
         "text": "Citronsaft 1 tsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8620,7 +8745,7 @@
         "price": "45 kr."
       },
       {
-        "name": "Ærter frosne 750g",
+        "name": "Frosne ærter 750g",
         "store": "Føtex",
         "price": "10 kr."
       }
@@ -8660,14 +8785,14 @@
       {
         "text": "Fastkogende kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Gul løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt",
@@ -8684,8 +8809,8 @@
       {
         "text": "Frisk timian",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8735,26 +8860,26 @@
       {
         "text": "Kartofler 600g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Gulerod 300g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8777,8 +8902,8 @@
       {
         "text": "Frisk koriander efter behov",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8829,26 +8954,26 @@
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Rødløg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk dild 1 håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8859,8 +8984,8 @@
       {
         "text": "Citron ½ stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -8910,8 +9035,8 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -8922,8 +9047,8 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Sukker 2 spsk.",
@@ -8990,14 +9115,14 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillonterning 1 stk",
@@ -9065,8 +9190,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidvin eller bouillon",
@@ -9083,8 +9208,8 @@
       {
         "text": "Frisk timian eller oregano",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -9134,20 +9259,20 @@
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 2 spsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9158,8 +9283,8 @@
       {
         "text": "Frisk persille 1 håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillon 2 tsk",
@@ -9215,14 +9340,14 @@
       {
         "text": "Nye kartofler 600g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9233,8 +9358,8 @@
       {
         "text": "Citron 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -9283,19 +9408,19 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
@@ -9369,20 +9494,20 @@
       {
         "text": "Løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk 100ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9444,26 +9569,26 @@
       {
         "text": "Frisk spinat 200g",
         "store": null,
-        "price": null,
+        "price": "10 kr.",
         "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Parmesan 50g",
         "store": null,
-        "price": null,
+        "price": "15 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 25g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9474,7 +9599,7 @@
       {
         "text": "Citron ½",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       }
     ],
@@ -9536,26 +9661,26 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Majonnaise 4 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk dill 1 håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Citron 1/2",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Peber",
@@ -9616,8 +9741,8 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillon 500ml",
@@ -9634,8 +9759,8 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -9685,20 +9810,20 @@
       {
         "text": "Nye kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Frisk dild 1 bundtet",
         "store": null,
-        "price": null,
+        "price": "8 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9709,7 +9834,7 @@
       {
         "text": "Citron 1",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       }
     ],
@@ -9759,14 +9884,14 @@
       {
         "text": "Kartofler 1 kg",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9777,7 +9902,7 @@
       {
         "text": "Gule løg 2 stk",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       }
     ],
@@ -9827,26 +9952,26 @@
       {
         "text": "Løg 1 stk",
         "store": "SuperBrugsen / Kvickly",
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Tomater 3 stk",
         "store": "SuperBrugsen / Kvickly",
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Avokado 1 stk",
         "store": "SuperBrugsen / Kvickly",
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Chili pulver 1 tsk",
@@ -9869,14 +9994,14 @@
       {
         "text": "Limejuice 2 spsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk koriander håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -9889,6 +10014,21 @@
         "name": "Tortillas 8-pak",
         "store": "SuperBrugsen / Kvickly",
         "price": "13 kr."
+      },
+      {
+        "name": "Løg 1 stk",
+        "store": "SuperBrugsen / Kvickly",
+        "price": "4 kr."
+      },
+      {
+        "name": "Tomater 3 stk",
+        "store": "SuperBrugsen / Kvickly",
+        "price": "8 kr."
+      },
+      {
+        "name": "Avokado 1 stk",
+        "store": "SuperBrugsen / Kvickly",
+        "price": "6 kr."
       }
     ],
     "steps": [
@@ -9932,14 +10072,14 @@
       {
         "text": "Æg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Pandebrødskrummer",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -9950,20 +10090,20 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citroner",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk persille",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -10012,8 +10152,8 @@
       {
         "text": "Kartofler 600g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel 100g",
@@ -10024,20 +10164,20 @@
       {
         "text": "Æg 2 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Panko eller rasp 75g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvid eddike 2 spsk",
@@ -10105,20 +10245,20 @@
       {
         "text": "Kartofler 1 kg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Rødblødsløg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -10129,8 +10269,8 @@
       {
         "text": "Thymian eller persille",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -10179,20 +10319,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 2 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillon 3 dl",
@@ -10203,8 +10343,8 @@
       {
         "text": "Smør 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber efter smag",
@@ -10266,14 +10406,14 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -10334,38 +10474,38 @@
       {
         "text": "Hakkede tomater 400g dåse",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Ost 200g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "14 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 25g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt, peber og oregano",
@@ -10421,26 +10561,26 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Ferskdild",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citronsaft",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -10502,20 +10642,20 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Vand 500 ml",
@@ -10532,8 +10672,8 @@
       {
         "text": "Persille til garnering",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -10589,8 +10729,8 @@
       {
         "text": "Smør 25g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillon 2 dl",
@@ -10601,14 +10741,14 @@
       {
         "text": "Ris 150g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 1 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -10659,14 +10799,14 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Rødkål 400g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -10727,8 +10867,8 @@
       {
         "text": "Smør 100g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvedemel 2 spsk.",
@@ -10739,8 +10879,8 @@
       {
         "text": "Mælk 2 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -10751,8 +10891,8 @@
       {
         "text": "Citron 1/2",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -10801,20 +10941,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -10881,20 +11021,20 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvid løg 2 stykker",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidvin 1 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Buljonsalt og peber",
@@ -10905,14 +11045,14 @@
       {
         "text": "Friske grøntsager (broccoli og gulerod)",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Kogte kartofler 500g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -10986,14 +11126,14 @@
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Oksekraft 2 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -11006,6 +11146,16 @@
         "name": "Smør 200g",
         "store": "Meny",
         "price": "18 kr."
+      },
+      {
+        "name": "Gulerødder 300g",
+        "store": "Meny",
+        "price": "8 kr."
+      },
+      {
+        "name": "Pastinak 200g",
+        "store": "Meny",
+        "price": "6 kr."
       }
     ],
     "steps": [
@@ -11042,14 +11192,14 @@
       {
         "text": "Smør 100g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Citron 1 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -11060,8 +11210,8 @@
       {
         "text": "Frisk dild 1 bundtet",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -11117,14 +11267,14 @@
       {
         "text": "Smør 50 g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hønsefond 2 dl",
@@ -11135,8 +11285,8 @@
       {
         "text": "Fløde 1 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og hvid peber",
@@ -11147,8 +11297,8 @@
       {
         "text": "Citronsaft fra 1/2 citron",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -11158,7 +11308,7 @@
         "price": "68 kr."
       },
       {
-        "name": "Estragon frisk",
+        "name": "Estragon frisk 1 bund",
         "store": "Meny",
         "price": "14 kr."
       }
@@ -11210,20 +11360,20 @@
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk lime 1",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Fiskesauce 1 tsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie 2 spsk",
@@ -11248,6 +11398,16 @@
         "name": "Kokosmælk 400ml",
         "store": "Meny",
         "price": "12 kr."
+      },
+      {
+        "name": "Rødt chili 1 stk",
+        "store": "Meny",
+        "price": "8 kr."
+      },
+      {
+        "name": "Lemongrass 1 stang",
+        "store": "Meny",
+        "price": "6 kr."
       }
     ],
     "steps": [
@@ -11284,8 +11444,8 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -11296,8 +11456,8 @@
       {
         "text": "Kartofler 1 kg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel",
@@ -11308,8 +11468,8 @@
       {
         "text": "Æg",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Sukker",
@@ -11365,8 +11525,8 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvedemel 2 spsk.",
@@ -11389,8 +11549,8 @@
       {
         "text": "Citron",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -11440,20 +11600,20 @@
       {
         "text": "Gulerod 3 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Persillerod 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillonterning 2 stk.",
@@ -11464,8 +11624,8 @@
       {
         "text": "Smør 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel 2 spsk.",
@@ -11482,8 +11642,8 @@
       {
         "text": "Lagerblade 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -11533,20 +11693,20 @@
       {
         "text": "Sojasauce",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk ingefær 2 cm stykke",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -11563,14 +11723,14 @@
       {
         "text": "Lime 1 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk koriander til garnering",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -11620,20 +11780,20 @@
       {
         "text": "Kartofler 1 kg",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Løg 2 stk",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 2 spsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -11644,8 +11804,8 @@
       {
         "text": "Thymian 1 tsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Bouillon 2 terninger",
@@ -11700,20 +11860,20 @@
       {
         "text": "Nye kartofler 1 kg",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Ferskt dill 1 bundt",
         "store": null,
-        "price": null,
+        "price": "6 kr.",
         "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og hvid peber",
@@ -11775,14 +11935,14 @@
       {
         "text": "Smør",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -11850,38 +12010,38 @@
       {
         "text": "Løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 3 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Grønne chili 1-2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Fiskesauce 2 tsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Limesaft 1 lime",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Koriander frisk håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie 3 spsk.",
@@ -11943,20 +12103,20 @@
       {
         "text": "Dåse hakkede tomater 400g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie 2 spsk.",
@@ -11973,8 +12133,8 @@
       {
         "text": "Italienske urter 1 tsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -12025,8 +12185,8 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mel 2 spsk.",
@@ -12037,8 +12197,8 @@
       {
         "text": "Fløde 2 dl",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og hvid peber",
@@ -12049,8 +12209,8 @@
       {
         "text": "Citronsaft 1 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -12100,20 +12260,20 @@
       {
         "text": "Gul løg 2 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Æg 1",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Brødkrummer 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -12124,8 +12284,8 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvedemelis 2 spsk.",
@@ -12187,20 +12347,20 @@
       {
         "text": "BBQ-sauce 300ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Honning 2 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -12211,8 +12371,8 @@
       {
         "text": "Friske urter (persille/timian)",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -12263,8 +12423,8 @@
       {
         "text": "Sojasovs",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Riseolie eller neutral olie",
@@ -12275,13 +12435,13 @@
       {
         "text": "Frisk ingefær 1 stk.",
         "store": null,
-        "price": null,
+        "price": "5 kr.",
         "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
@@ -12293,8 +12453,8 @@
       {
         "text": "Ris eller nudler til servering",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -12345,20 +12505,20 @@
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Citron 1 stk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -12369,20 +12529,20 @@
       {
         "text": "Hvidkål 300g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Gulerod 100g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "5 kr.",
+        "isPantry": false
       },
       {
         "text": "Mayonnaise 3 spsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Olivenolie",
@@ -12438,32 +12598,32 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Dåse hakkede tomater 400g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Tomatketchup 3 spsk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Fløde 100 ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "12 kr.",
+        "isPantry": false
       },
       {
         "text": "Olie 2 spsk.",
@@ -12480,8 +12640,8 @@
       {
         "text": "Revet parmasan 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -12531,13 +12691,13 @@
       {
         "text": "Kartofler 800g",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Broccoli 300g",
         "store": null,
-        "price": null,
+        "price": "10 kr.",
         "isPantry": false
       },
       {
@@ -12555,7 +12715,7 @@
       {
         "text": "Citron",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       }
     ],
@@ -12606,38 +12766,38 @@
       {
         "text": "Blomkål 300g",
         "store": null,
-        "price": null,
+        "price": "10 kr.",
         "isPantry": false
       },
       {
         "text": "Rødt løg 1 stk",
         "store": null,
-        "price": null,
+        "price": "4 kr.",
         "isPantry": false
       },
       {
         "text": "Fløde 200ml",
         "store": null,
-        "price": null,
+        "price": "12 kr.",
         "isPantry": false
       },
       {
         "text": "Sojasauce 3 spsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "10 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 2 spsk",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -12648,8 +12808,8 @@
       {
         "text": "Lime",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [
@@ -12700,20 +12860,20 @@
       {
         "text": "Løg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Hvidløg 2 fed",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "4 kr.",
+        "isPantry": false
       },
       {
         "text": "Smør 50g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Salt og peber",
@@ -12793,8 +12953,8 @@
       {
         "text": "Æg 1 stk.",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "6 kr.",
+        "isPantry": false
       },
       {
         "text": "Pankomel 75g",
@@ -12817,20 +12977,20 @@
       {
         "text": "Smør 25g",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       },
       {
         "text": "Mælk 100ml",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "9 kr.",
+        "isPantry": false
       },
       {
         "text": "Frisk dild 1 håndfuld",
         "store": null,
-        "price": null,
-        "isPantry": true
+        "price": "8 kr.",
+        "isPantry": false
       }
     ],
     "dealItems": [

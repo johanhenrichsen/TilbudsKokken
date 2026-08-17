@@ -183,6 +183,8 @@ Returner KUN gyldig JSON (ingen markdown, ingen forklaring) med denne præcise s
   "description": "2-3 sætninger der beskriver retten appetitligt på dansk.",
   "ingredients": [
     { "text": "Kyllingefilet 600g", "store": "${chain}", "price": "XX kr.", "isPantry": false },
+    { "text": "1 løg", "store": null, "price": "4 kr.", "isPantry": false },
+    { "text": "2 fed hvidløg", "store": null, "price": "4 kr.", "isPantry": false },
     { "text": "Salt og peber", "store": null, "price": null, "isPantry": true }
   ],
   "dealItems": [
@@ -197,8 +199,12 @@ Returner KUN gyldig JSON (ingen markdown, ingen forklaring) med denne præcise s
 
 REGLER:
 - cuisine skal være en af: 🇩🇰 Nordisk, 🇮🇹 Italiensk, 🇯🇵 Asiatisk, 🇮🇳 Indisk, 🇬🇷 Middelhavet, 🇲🇦 Mellemøstlig, 🇲🇽 Mexicansk, 🇺🇸 Amerikansk
-- dealItems indeholder KUN tilbudsvarerne (ikke pantry-varer)
-- ingredients inkluderer ALLE varer (tilbud + pantry)
+- KUN ægte basisvarer må have isPantry:true — dvs. salt, peber, madolie/olivenolie, vand, sukker, mel, eddike, bouillon/fond og TØRREDE krydderier/urter. Disse har altid store:null og price:null.
+- ALT andet du skal købe (løg, hvidløg, citron, smør, fløde, mælk, æg, kartofler, gulerødder, ingefær, friske urter, dåsetomater, honning, sojasauce osv.) har isPantry:false.
+  - Er varen på tilbudslisten ovenfor: sæt store til butikken og price til tilbudsprisen, og medtag den i dealItems.
+  - Ellers (helt almindelig ikke-tilbudsvare): sæt store:null og price til et realistisk skøn i hele kroner (fx løg 4 kr., hvidløg 4 kr., citron 4 kr., smør 8 kr., fløde 12 kr., æg 6 kr., dåsetomater 6 kr.). Medtag den IKKE i dealItems.
+- dealItems indeholder KUN tilbudsvarerne (dem med en store)
+- ingredients inkluderer ALLE varer (tilbud + basisvarer uden tilbud + pantry)
 - Minimum 5 konkrete steps
 - Opskriften skal passe til en dansk familiemiddag`;
 

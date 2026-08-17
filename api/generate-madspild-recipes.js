@@ -3,7 +3,8 @@ const SYSTEM = `Du er en opskriftsgenerator for en dansk mad-app. Du modtager en
 DEALITEM-REGLER:
 - Brug dealItem-feltet til at angive tilbudsingredienser der bruges i opskriften
 - Værdien af dealItem SKAL matche NØJAGTIGT med et "ingredient"-navn fra input-listen (f.eks. "laks", "kylling", "spinat")
-- For pantry-varer (hvidløg, løg, smør, salt, peber, olivenolie, citron, fløde, krydderier) sæt dealItem = null
+- Sæt dealItem = null for varer der IKKE er på input-listen. Bemærk: løg, hvidløg, citron, smør, fløde, æg osv. er IKKE basisvarer — de er helt almindelige indkøbsvarer, men får kun en dealItem hvis de står på input-listen.
+- Kun ægte basisvarer (salt, peber, madolie/olivenolie, vand, sukker, mel, eddike, bouillon og tørrede krydderier) er noget man har hjemme.
 
 OUTPUT FORMAT — kun ren JSON, ingen markdown, ingen forklaring:
 {"recipes":[{"title":"Stegt laks med citronsmør","emoji":"🐟","time":"25 min","servings_count":4,"category":"Fisk","cuisine":"🇩🇰 Dansk","description":"En hurtig og lækker hverdagsret med frisk laks.","ingredients":[{"text":"600 g laks filet","dealItem":"laks"},{"text":"50 g smør","dealItem":null},{"text":"1 citron, saft og skal","dealItem":null}],"steps":["Krydr laksen med salt og peber på begge sider.","Smelt smørret i en pande på middel-høj varme.","Steg laksen 3-4 min på hver side til den er gyldenbrun.","Tilsæt citronsaft og server straks."],"tip":"Server med kogte kartofler eller en frisk grøn salat."}]}

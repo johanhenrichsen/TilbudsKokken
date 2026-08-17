@@ -219,10 +219,10 @@ const INGREDIENT_AUTOCOMPLETE = (() => {
     seen.add(key);
     out.push(name.trim());
   };
-  // Strip leading quantity from deal ingredient text for autocomplete
+  // Strip leading quantity from shoppable ingredient text for autocomplete
   for (const r of recipeBank) {
     for (const ing of (r.ingredients || [])) {
-      if (!ing.isPantry && ing.store) {
+      if (!ing.isPantry) {
         const clean = (ing.text || "").replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, "").trim();
         add(clean);
       }
@@ -343,8 +343,11 @@ function calcPricePerPerson(recipe) {
   const servings = recipe.servings_count || 4;
   let total = 0;
   let hasPrice = false;
-  for (const di of (recipe.dealItems || [])) {
-    const m = String(di.price || '').match(/(\d+(?:[.,]\d+)?)/);
+  // Sum every ingredient you actually buy — deal items AND non-deal basics
+  // (onion, garlic, butter, …). Pantry staples carry no price and are excluded.
+  for (const ing of (recipe.ingredients || [])) {
+    if (ing.isPantry) continue;
+    const m = String(ing.price || '').match(/(\d+(?:[.,]\d+)?)/);
     if (m) {
       const val = parseFloat(m[1].replace(',', '.'));
       if (val > 0) { total += val; hasPrice = true; }
@@ -1446,7 +1449,7 @@ export default function App() {
     const toAdd = [];
     for (const r of targetRecipes) {
       for (const ing of (r.ingredients || [])) {
-        if (ing.isPantry || !ing.store) continue;
+        if (ing.isPantry) continue;
         const text = ing.text || '';
         const norm = normCartText(text);
         if (norm && !existingNorm.has(norm)) {
@@ -1554,8 +1557,8 @@ export default function App() {
       if (!entry) continue;
       const { recipe, servings: sv } = entry;
       for (const ing of (recipe.ingredients || [])) {
-        if (ing.isPantry || !ing.store) continue;
-        const store  = ing.store;
+        if (ing.isPantry) continue;
+        const store  = ing.store || CART_STORE_FALLBACK;
         const scaled = scaleIngredient(ing.text, recipe.servings_count || 4, sv);
         if (!byStore[store]) byStore[store] = {};
         if (!byStore[store][ing.text]) byStore[store][ing.text] = [];
@@ -2548,14 +2551,18 @@ export default function App() {
             <ul className="ingredient-grid">
               {(selectedRecipe.ingredients || []).map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
-                const isDeal = !ing.isPantry && !!(ing.store);
+                // Anything that isn't a pantry staple is shoppable (added to the
+                // list + counted in the price). Only items with a store are an
+                // actual weekly deal and get the chain tag.
+                const isShoppable = !ing.isPantry;
+                const isDeal = isShoppable && !!(ing.store);
                 const inList = shoppingList.some(it => it.text === scaled);
                 return (
-                  <li key={i} className={`ingredient-item${isDeal ? " ingredient-deal" : " ingredient-pantry"}`}>
-                    {isDeal ? (
+                  <li key={i} className={`ingredient-item${isShoppable ? " ingredient-deal" : " ingredient-pantry"}`}>
+                    {isShoppable ? (
                       <button
                         className="ingredient-add-btn"
-                        onClick={() => addToShoppingList(scaled, ing.store)}
+                        onClick={() => addToShoppingList(scaled, ing.store || null)}
                         disabled={inList}
                         style={{ background: inList ? "#d4ead4" : "#4a7050", color: inList ? "#3a6040" : "white" }}
                       >
@@ -2564,7 +2571,7 @@ export default function App() {
                     ) : (
                       <span className="ingredient-pantry-dot" />
                     )}
-                    <span className={isDeal ? "ingredient-deal-text" : "ingredient-pantry-text"}>
+                    <span className={isShoppable ? "ingredient-deal-text" : "ingredient-pantry-text"}>
                       {scaled}{ing.price ? ` · ${ing.price}` : ""}
                     </span>
                     {isDeal && (
@@ -2576,8 +2583,8 @@ export default function App() {
             </ul>
 
             <div className="ingredient-legend">
-              <span><span className="legend-dot deal" />Tilbudsvare · klik + for indkøbsliste</span>
-              <span><span className="legend-dot pantry" />Pantry-vare · du har det hjemme</span>
+              <span><span className="legend-dot deal" />Købes · klik + for indkøbsliste (butiksmærke = på tilbud)</span>
+              <span><span className="legend-dot pantry" />Basisvare · salt, olie, krydderier m.m. du har hjemme</span>
             </div>
 
             <button className="section-label section-label-toggle" onClick={() => setStepsOpen(v => !v)} aria-expanded={stepsOpen}>

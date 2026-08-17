@@ -2,10 +2,12 @@
 // source of truth and can be unit-tested without rendering React.
 // See shoppingLogic.test.js for the regression checks tied to each QA bug.
 
-// The shoppable (deal) ingredient texts of a recipe — pantry staples excluded.
+// The shoppable ingredient texts of a recipe — everything you actually buy.
+// Pantry staples are excluded; non-deal basics (onion, garlic, …) are included
+// even though they have no store.
 export function recipeShoppables(recipe) {
   return (recipe?.ingredients || [])
-    .filter(ing => !ing.isPantry && ing.store)
+    .filter(ing => !ing.isPantry)
     .map(ing => ing.text);
 }
 

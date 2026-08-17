@@ -23,29 +23,30 @@ const recipe = {
   ingredients: [
     { text: "500 g hakket oksekød", store: "Netto" },
     { text: "1 dåse tomater", store: "Rema 1000" },
-    { text: "Salt", isPantry: true },        // pantry — not shoppable
-    { text: "Peber" },                        // no store — not shoppable
+    { text: "Salt", isPantry: true },        // pantry staple — not shoppable
+    { text: "Peber" },                        // non-deal basic (no store) — still shoppable
   ],
 };
 
+// Everything you actually buy: all non-pantry ingredients, whether or not they
+// carry a store tag. Store-tagged items are weekly deals; the rest are basics.
+const ALL_SHOPPABLE = ["500 g hakket oksekød", "1 dåse tomater", "Peber"];
+
 // ── QA #3: "Til indkøb" state reflects real list membership ───────────────
-test("#3 recipeShoppables returns only deal ingredients", () => {
-  assert.deepEqual(recipeShoppables(recipe), ["500 g hakket oksekød", "1 dåse tomater"]);
+test("#3 recipeShoppables returns every non-pantry ingredient", () => {
+  assert.deepEqual(recipeShoppables(recipe), ALL_SHOPPABLE);
 });
 
 test("#3 allShoppablesInList is false until every shoppable is present", () => {
   assert.equal(allShoppablesInList(recipe, []), false);
   assert.equal(allShoppablesInList(recipe, ["500 g hakket oksekød"]), false);
-  assert.equal(
-    allShoppablesInList(recipe, ["500 g hakket oksekød", "1 dåse tomater"]),
-    true,
-  );
+  assert.equal(allShoppablesInList(recipe, ["500 g hakket oksekød", "1 dåse tomater"]), false);
+  assert.equal(allShoppablesInList(recipe, ALL_SHOPPABLE), true);
 });
 
 test("#3 removing an item flips the state back to not-in-list", () => {
-  const full = ["500 g hakket oksekød", "1 dåse tomater"];
-  assert.equal(allShoppablesInList(recipe, full), true);
-  const afterRemoval = full.filter(t => t !== "1 dåse tomater");
+  assert.equal(allShoppablesInList(recipe, ALL_SHOPPABLE), true);
+  const afterRemoval = ALL_SHOPPABLE.filter(t => t !== "1 dåse tomater");
   assert.equal(allShoppablesInList(recipe, afterRemoval), false);
 });
 
@@ -60,9 +61,10 @@ test("#3 allShoppablesInList reads .text from object cart entries", () => {
   const cart = [
     { id: "a", text: "500 g hakket oksekød", store: "Netto", checked: false },
     { id: "b", text: "1 dåse tomater", store: "Rema 1000", checked: true },
+    { id: "c", text: "Peber", store: null, checked: false },
   ];
   assert.equal(allShoppablesInList(recipe, cart), true);
-  assert.equal(allShoppablesInList(recipe, cart.slice(0, 1)), false);
+  assert.equal(allShoppablesInList(recipe, cart.slice(0, 2)), false);
 });
 
 // ── QA #6: "Ryd afkrydsede" actually removes checked items ────────────────
