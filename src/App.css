@@ -1116,7 +1116,7 @@ html, body {
   bottom: 10px;
   left: 10px;
   z-index: 2;
-  background: rgba(27,22,19,0.55) !important;
+  background: rgba(27,22,19,0.68) !important;
   color: #F5EEE0 !important;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -6334,7 +6334,7 @@ html:not(.dark) .loading-dot { background: #5F7040; }
 
 /* ── Mobile bottom nav ── */
 html:not(.dark) .mobile-bottom-nav { background: #FBF6EC; border-top-color: #DED3C0; box-shadow: 0 -4px 16px rgba(80,60,20,0.08); }
-html:not(.dark) .bnav-item { color: rgba(34,28,23,0.38); }
+html:not(.dark) .bnav-item { color: rgba(27,22,19,0.65); }
 html:not(.dark) .bnav-item.active { color: #B93E29; }
 html:not(.dark) .bnav-badge { background: #B93E29; color: #FBF6EC; }
 
