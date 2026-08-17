@@ -978,6 +978,11 @@ export default function App() {
   const [priceMax, setPriceMax] = useState(null); // null = no upper limit
   const [planCopied, setPlanCopied] = useState(false);
   const [showMealPlanPanel, setShowMealPlanPanel] = useState(false);
+  // Desktop meal-plan rail can be collapsed so it stops eating screen width;
+  // preference persists so it stays hidden across reloads.
+  const [mpSidebarHidden, setMpSidebarHidden] = useState(() => {
+    try { return localStorage.getItem("mpSidebarHidden") === "1"; } catch { return false; }
+  });
   const [confirmClearPlan, setConfirmClearPlan] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState(() => {
     try {
@@ -1575,8 +1580,17 @@ export default function App() {
   const planCount = mealPlan.filter(Boolean).length;
 
   useEffect(() => {
-    document.body.classList.toggle("has-mp-sidebar", planCount > 0);
-  }, [planCount]);
+    // Only reserve the rail's width when it's actually shown.
+    document.body.classList.toggle("has-mp-sidebar", planCount > 0 && !mpSidebarHidden);
+  }, [planCount, mpSidebarHidden]);
+
+  function toggleMpSidebar() {
+    setMpSidebarHidden(prev => {
+      const next = !prev;
+      try { localStorage.setItem("mpSidebarHidden", next ? "1" : "0"); } catch {}
+      return next;
+    });
+  }
 
   function toggleQuickFilter(id) {
     setQuickFilters(prev => {
@@ -2919,9 +2933,17 @@ export default function App() {
       </button>
     )}
 
-    {/* Desktop sidebar */}
-    {planCount > 0 && <aside className="meal-plan-sidebar">
+    {/* Desktop sidebar — collapsed to an edge tab when hidden */}
+    {planCount > 0 && mpSidebarHidden && (
+      <button className="mp-sidebar-reveal" onClick={toggleMpSidebar} title="Vis madplan" aria-label="Vis madplan">
+        <span className="mp-sidebar-reveal-chevron">‹</span>
+        <span className="mp-sidebar-reveal-label">Madplan</span>
+        <span className="mp-sidebar-reveal-count">{planCount}</span>
+      </button>
+    )}
+    {planCount > 0 && !mpSidebarHidden && <aside className="meal-plan-sidebar">
       <div className="mp-sidebar-header">
+        <button className="mp-sidebar-hide" onClick={toggleMpSidebar} title="Skjul madplan" aria-label="Skjul madplan">›</button>
         <div className="mp-sidebar-title">Madplan</div>
         {planCount > 0 && <span className="mp-sidebar-count">{planCount}/7</span>}
       </div>
