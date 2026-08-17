@@ -7,6 +7,7 @@ const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticReci
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
+import { t, dietLabel, timeLabel, sortLabel, cuisineText, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -662,7 +663,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
         <div className="recipe-category-tag card-photo-tag">{r.category}</div>
         {isPopular && (
           <div className="card-photo-badge">
-            <span className="popular-badge-pill">Populær</span>
+            <span className="popular-badge-pill">{isEn() ? "Popular" : "Populær"}</span>
           </div>
         )}
       </div>
@@ -670,13 +671,13 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
         <div className="recipe-browse-title">{r.title}</div>
         {totalPrice != null && (
           <div className="card-price-line">
-            ca. {totalPrice} kr. til {cardServings} pers.
-            <span className="card-price-pp"> · {Math.round(basePp)} kr. pr. person</span>
+            {isEn() ? "approx." : "ca."} {totalPrice} kr. {isEn() ? "for" : "til"} {cardServings} {isEn() ? "ppl" : "pers."}
+            <span className="card-price-pp"> · {Math.round(basePp)} kr. {isEn() ? "per person" : "pr. person"}</span>
           </div>
         )}
         <div className="recipe-browse-meta">
           <span>{r.time}</span>
-          <span>{(r.ingredients || []).length} ing.</span>
+          <span>{(r.ingredients || []).length} {isEn() ? "ingr." : "ing."}</span>
         </div>
 
         {/* Ingredient-match indicator — only when the user has added ingredients */}
@@ -687,7 +688,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
             }${r.pantryMatchCount === 0 ? " none" : ""}`}
           >
             <span className="card-pantry-match-count">
-              {r.pantryMatchCount}/{pantryTotal} ingredienser
+              {r.pantryMatchCount}/{pantryTotal} {isEn() ? "ingredients" : "ingredienser"}
             </span>
             {r.pantryMatchCount > 0 && (
               <span className="card-pantry-match-items">
@@ -708,14 +709,14 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
           <button
             className={`add-to-plan-btn${inPlan ? " in-plan" : ""}`}
             onClick={e => { e.stopPropagation(); if (!inPlan) onAddToPlan(r); }}
-            title={inPlan ? "Allerede på ugen" : "Sæt på ugen"}
+            title={inPlan ? (isEn() ? "Already in the week" : "Allerede på ugen") : (isEn() ? "Add to the week" : "Sæt på ugen")}
           >
-            {inPlan ? "På ugen" : "Sæt på ugen"}
+            {inPlan ? (isEn() ? "In the week" : "På ugen") : (isEn() ? "Add to week" : "Sæt på ugen")}
           </button>
           <button
             className={`card-save-btn${isSaved ? " saved" : ""}`}
             onClick={e => { e.stopPropagation(); onToggleSave(r, cardServings); }}
-            title={isSaved ? "Fjern fra gemte" : "Gem"}
+            title={isSaved ? t("Fjern fra gemte") : t("Gem opskrift")}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
@@ -743,22 +744,24 @@ function RecipeCounter({ chains }) {
   if (chains.size === 0) {
     return (
       <div className="chain-recipe-counter chain-recipe-counter--zero">
-        Vælg butikker for at se opskrifter
+        {t("Vælg butikker for at se opskrifter")}
       </div>
     );
   }
   if (allSelected) {
     return (
       <div className="chain-recipe-counter chain-recipe-counter--all">
-        Du har adgang til alle <span className="chain-recipe-count" key={total}>{total}</span> opskrifter 🎉
+        {isEn() ? "You have access to all " : "Du har adgang til alle "}
+        <span className="chain-recipe-count" key={total}>{total}</span>
+        {isEn() ? " recipes 🎉" : " opskrifter 🎉"}
       </div>
     );
   }
   return (
     <div className="chain-recipe-counter">
-      Med disse butikker kan du lave{" "}
+      {isEn() ? "With these stores you can make " : "Med disse butikker kan du lave "}
       <span className="chain-recipe-count" key={count}>{count}</span>{" "}
-      opskrift{count !== 1 ? "er" : ""} denne uge
+      {isEn() ? `recipe${count !== 1 ? "s" : ""} this week` : `opskrift${count !== 1 ? "er" : ""} denne uge`}
     </div>
   );
 }
@@ -773,7 +776,7 @@ function StarRating({ value, onChange }) {
           type="button"
           className={`fb-star${n <= value ? " active" : ""}`}
           onClick={() => onChange(n)}
-          aria-label={`${n} stjerne${n !== 1 ? "r" : ""}`}
+          aria-label={isEn() ? `${n} star${n !== 1 ? "s" : ""}` : `${n} stjerne${n !== 1 ? "r" : ""}`}
         >★</button>
       ))}
     </div>
@@ -823,7 +826,7 @@ function FeedbackResults() {
   }
 
   function clearAll() {
-    if (!window.confirm("Slet alle svar?")) return;
+    if (!window.confirm(t("Slet alle svar?"))) return;
     localStorage.removeItem("feedbackResponses");
     setResponses([]);
   }
@@ -831,30 +834,30 @@ function FeedbackResults() {
   return (
     <div className="fb-results-page">
       <div className="fb-results-header">
-        <h1 className="fb-results-title">Feedback — Tilbudskokken</h1>
+        <h1 className="fb-results-title">{t("Feedback — Tilbudskokken")}</h1>
         <div className="fb-results-actions">
-          <span className="fb-results-count">{responses.length} svar</span>
+          <span className="fb-results-count">{responses.length} {isEn() ? "responses" : "svar"}</span>
           <button className="fb-results-export-btn" onClick={exportCSV} disabled={responses.length === 0}>
-            Eksporter CSV
+            {t("Eksporter CSV")}
           </button>
           <button className="fb-results-clear-btn" onClick={clearAll} disabled={responses.length === 0}>
-            Ryd alle
+            {t("Ryd alle")}
           </button>
-          <a className="fb-results-back" href="/">← Tilbage</a>
+          <a className="fb-results-back" href="/">{t("← Tilbage")}</a>
         </div>
       </div>
       {responses.length === 0 ? (
-        <div className="fb-results-empty">Ingen svar endnu.</div>
+        <div className="fb-results-empty">{t("Ingen svar endnu.")}</div>
       ) : (
         <div className="fb-results-table-wrap">
           <table className="fb-results-table">
             <thead>
               <tr>
-                <th>#</th><th>Tid</th>
-                <th>Find opskrift</th><th>Design</th><th>Brug sandsynlighed</th>
-                <th>Fejl?</th><th>Hvornår</th><th>Butik</th>
-                <th>Erstatter</th><th>Hyppighed</th>
-                <th>Brugte</th><th>Hvad mangler</th><th>Kommentarer</th>
+                <th>#</th><th>{t("Tid")}</th>
+                <th>{t("Find opskrift")}</th><th>{t("Design")}</th><th>{t("Brug sandsynlighed")}</th>
+                <th>{t("Fejl?")}</th><th>{t("Hvornår")}</th><th>{t("Butik")}</th>
+                <th>{t("Erstatter")}</th><th>{t("Hyppighed")}</th>
+                <th>{t("Brugte")}</th><th>{t("Hvad mangler")}</th><th>{t("Kommentarer")}</th>
               </tr>
             </thead>
             <tbody>
@@ -865,7 +868,7 @@ function FeedbackResults() {
                   <td className="fb-td-center">{r.findRecipe ? `${r.findRecipe}/5` : "—"}</td>
                   <td className="fb-td-center">{r.design ? `${r.design}/5` : "—"}</td>
                   <td className="fb-td-center">{r.likelihood ? `${r.likelihood}/5` : "—"}</td>
-                  <td className="fb-td-center">{r.hadBugs === true ? "Ja" : r.hadBugs === false ? "Nej" : "—"}</td>
+                  <td className="fb-td-center">{r.hadBugs === true ? t("Ja") : r.hadBugs === false ? t("Nej") : "—"}</td>
                   <td>{r.when || "—"}</td>
                   <td>{r.store || "—"}</td>
                   <td>{r.replace || "—"}</td>
@@ -898,6 +901,19 @@ export default function App() {
     document.documentElement.classList.toggle("dark", darkMode);
     try { localStorage.setItem("theme", darkMode ? "dark" : "light"); } catch {}
   }, [darkMode]);
+
+  // ── Language (Danish / English) ─────────────────────────────────
+  const [lang, setLang] = useState(getLang());
+  const en = lang === "en";
+  function changeLang(next) {
+    setLangGlobal(next);
+    setLang(next);
+    try { localStorage.setItem("lang", next); } catch {}
+    try { document.documentElement.lang = next; } catch {}
+  }
+  useEffect(() => {
+    try { document.documentElement.lang = lang; } catch {}
+  }, [lang]);
 
   const [localStores, setLocalStores] = useState(() => {
     try {
@@ -1746,10 +1762,11 @@ export default function App() {
   }
 
   function storeHeaderLabel(list) {
-    if (!list || list.length === 0) return "Ingen butik valgt";
+    if (!list || list.length === 0) return t("Ingen butik valgt");
     if (list.length === 1) return list[0].chain;
-    if (list.length === 2) return `${list[0].chain} og ${list[1].chain}`;
-    return `${list[0].chain} og ${list.length - 1} andre`;
+    const and = en ? "and" : "og";
+    if (list.length === 2) return `${list[0].chain} ${and} ${list[1].chain}`;
+    return `${list[0].chain} ${and} ${list.length - 1} ${en ? "others" : "andre"}`;
   }
 
   const isRecipeSaved = selectedRecipe && savedRecipes.some(r => r.id === selectedRecipe.id);
@@ -1758,7 +1775,7 @@ export default function App() {
   // shopping list. Drives the persistent "Til indkøb" → "Tilføjet ✓" state so it
   // reflects real list membership instead of a 2-second timer (QA bug #3).
   const detailInList = selectedRecipe ? allShoppablesInList(selectedRecipe, shoppingList) : false;
-  const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
+  const weekBadge = `${en ? "WEEK" : "UGE"} ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
 
   // ── Shared cart rendering (used by both the inline card and the modal sheet) ──
   const cartCheckedCount = shoppingList.filter(it => it.checked).length;
@@ -1786,7 +1803,7 @@ export default function App() {
               <button
                 className="cart-check-btn"
                 onClick={e => { e.stopPropagation(); toggleCheckedItem(it.id); }}
-                aria-label={it.checked ? "Fjern hak" : "Sæt hak"}
+                aria-label={it.checked ? t("Fjern hak") : t("Sæt hak")}
                 tabIndex={-1}
               >
                 {it.checked ? cartCheckIcon : null}
@@ -1795,7 +1812,7 @@ export default function App() {
               <button
                 className="cart-item-remove"
                 onClick={e => { e.stopPropagation(); removeFromShoppingList(it.id); }}
-                aria-label="Fjern vare"
+                aria-label={t("Fjern vare")}
               >×</button>
             </li>
           ))}
@@ -1808,23 +1825,23 @@ export default function App() {
     return (
       <div className="cart-actions">
         <button className={`cart-share-btn${cartCopied ? " copied" : ""}`} onClick={shareShoppingList}>
-          {cartCopied ? "✓ Kopieret!" : "Del / kopiér liste"}
+          {cartCopied ? t("✓ Kopieret!") : t("Del / kopiér liste")}
         </button>
         {cartCheckedCount > 0 && (
           <button className="cart-clear-btn cart-clear-btn--safe" onClick={clearCheckedItems}>
-            Ryd afkrydsede ({cartCheckedCount})
+            {en ? "Clear checked" : "Ryd afkrydsede"} ({cartCheckedCount})
           </button>
         )}
         {confirmClearCart ? (
           <div className="cart-clear-confirm">
-            <span>Tøm hele listen?</span>
+            <span>{t("Tøm hele listen?")}</span>
             <div className="cart-clear-confirm-btns">
-              <button className="cart-clear-yes" onClick={clearShoppingList}>Ja, tøm</button>
-              <button className="cart-clear-no" onClick={() => setConfirmClearCart(false)}>Annuller</button>
+              <button className="cart-clear-yes" onClick={clearShoppingList}>{t("Ja, tøm")}</button>
+              <button className="cart-clear-no" onClick={() => setConfirmClearCart(false)}>{t("Annuller")}</button>
             </div>
           </div>
         ) : (
-          <button className="cart-clear-btn" onClick={() => setConfirmClearCart(true)}>Start forfra</button>
+          <button className="cart-clear-btn" onClick={() => setConfirmClearCart(true)}>{t("Start forfra")}</button>
         )}
       </div>
     );
@@ -1841,8 +1858,8 @@ export default function App() {
       <button
         className={`share-btn share-btn--icon${copied ? " copied" : ""}`}
         onClick={() => shareRecipe(selectedRecipe)}
-        title="Del opskrift"
-        aria-label="Del opskrift"
+        title={t("Del opskrift")}
+        aria-label={t("Del opskrift")}
       >
         {copied ? (
           <span aria-hidden="true">✓</span>
@@ -1857,22 +1874,22 @@ export default function App() {
       <button
         className={`save-btn${isRecipeSaved ? " saved" : ""}`}
         onClick={() => toggleSaveRecipe(selectedRecipe, servings)}
-        title={isRecipeSaved ? "Fjern fra gemte" : "Gem opskrift"}
+        title={isRecipeSaved ? t("Fjern fra gemte") : t("Gem opskrift")}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
         </svg>
-        <span>{isRecipeSaved ? "Gemt" : "Gem opskrift"}</span>
+        <span>{isRecipeSaved ? t("Gemt") : t("Gem opskrift")}</span>
       </button>
       <button
         className={`save-btn detail-list-btn${detailInList ? " added" : ""}`}
         onClick={() => addAllSavedToShoppingList([selectedRecipe])}
-        title="Tilføj ingredienser til indkøbsliste"
+        title={t("Tilføj ingredienser til indkøbsliste")}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
         </svg>
-        <span>{detailInList ? "Tilføjet ✓" : "Til indkøb"}</span>
+        <span>{detailInList ? t("Tilføjet ✓") : t("Til indkøb")}</span>
       </button>
       {(() => {
         const inPlan = mealPlan.some(e => e?.recipe?.id === selectedRecipe.id);
@@ -1884,7 +1901,7 @@ export default function App() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            <span>{inPlan ? "I madplan" : "Tilføj til ugen"}</span>
+            <span>{inPlan ? t("I madplan") : t("Tilføj til ugen")}</span>
           </button>
         );
       })()}
@@ -1927,7 +1944,7 @@ export default function App() {
               <LogoIcon size={120} holeColor="#1B1613" />
             </div>
             <div className="splash-wordmark">Tilbudskokken</div>
-            <p className="splash-tagline">Bedre tilbud. Bedre mad.</p>
+            <p className="splash-tagline">{t("Bedre tilbud. Bedre mad.")}</p>
           </div>
         </div>
       )}
@@ -1946,11 +1963,23 @@ export default function App() {
               <div className="ob-welcome-deco-2" />
               <div className="ob-welcome-content">
                 <LogoIcon size={200} className="ob-welcome-logo" />
-                <p className="ob-welcome-tagline">Bedre tilbud. Bedre mad.</p>
-                <p className="ob-welcome-desc">Opskrifter bygget præcis på hvad der er på tilbud i dine butikker denne uge.</p>
+                <p className="ob-welcome-tagline">{t("Bedre tilbud. Bedre mad.")}</p>
+                <p className="ob-welcome-desc">{t("Opskrifter bygget præcis på hvad der er på tilbud i dine butikker denne uge.")}</p>
                 <button className="ob-cta-btn" onClick={() => { setObDir(1); setOnboardingStep(1); }}>
-                  Kom i gang →
+                  {t("Kom i gang →")}
                 </button>
+                <div className="ob-welcome-lang">
+                  {LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      type="button"
+                      className={`ob-welcome-lang-btn${lang === l.code ? " active" : ""}`}
+                      onClick={() => changeLang(l.code)}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -1960,7 +1989,7 @@ export default function App() {
             <div className="ob-step-layout">
               <div className="ob-topbar">
                 <button className="ob-back-btn" onClick={() => { setObDir(-1); setOnboardingStep(s => s - 1); }}>
-                  ← Tilbage
+                  {t("← Tilbage")}
                 </button>
                 <div className="ob-progress">
                   {[1, 2, 3].map(n => (
@@ -1973,8 +2002,8 @@ export default function App() {
               {/* Step 1 — Store selection */}
               {onboardingStep === 1 && (
                 <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s1">
-                  <h2 className="ob-title">Vælg dine butikker</h2>
-                  <p className="ob-desc">Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.</p>
+                  <h2 className="ob-title">{t("Vælg dine butikker")}</h2>
+                  <p className="ob-desc">{t("Vælg de kæder du handler i — vi finder de bedste tilbudsmiddag til dig.")}</p>
                   <button
                     className="ob-select-all-btn"
                     onClick={() => pendingChains.size === CHAIN_ORDER.length
@@ -1982,7 +2011,7 @@ export default function App() {
                       : setPendingChains(new Set(CHAIN_ORDER))
                     }
                   >
-                    {pendingChains.size === CHAIN_ORDER.length ? "Fravælg alle" : "Vælg alle"}
+                    {pendingChains.size === CHAIN_ORDER.length ? t("Fravælg alle") : t("Vælg alle")}
                   </button>
                   <div className="ob-chain-grid">
                     {CHAIN_ORDER.map(chain => {
@@ -2007,15 +2036,15 @@ export default function App() {
               {/* Step 2 — Dietary preference */}
               {onboardingStep === 2 && (
                 <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s3">
-                  <h2 className="ob-title">Kostpræferencer</h2>
-                  <p className="ob-desc">Vælg din kostpræference — vi tilpasser opskrifterne.</p>
+                  <h2 className="ob-title">{t("Kostpræferencer")}</h2>
+                  <p className="ob-desc">{t("Vælg din kostpræference — vi tilpasser opskrifterne.")}</p>
                   <div className="ob-diet-grid">
                     {[
-                      { label: "Ingen",    val: "Alle" },
-                      { label: "Vegetar",  val: "Vegetar" },
-                      { label: "Veganer",  val: "Veganer" },
-                      { label: "Glutenfri",val: "Glutenfri" },
-                      { label: "Mælkefri", val: "Mælkefri" },
+                      { label: t("Ingen"),        val: "Alle" },
+                      { label: dietLabel("Vegetar"),  val: "Vegetar" },
+                      { label: dietLabel("Veganer"),  val: "Veganer" },
+                      { label: dietLabel("Glutenfri"),val: "Glutenfri" },
+                      { label: dietLabel("Mælkefri"), val: "Mælkefri" },
                     ].map(({ label, val }) => {
                       const sel = pendingDiet === val;
                       return (
@@ -2036,13 +2065,13 @@ export default function App() {
               {/* Step 3 — Serving size */}
               {onboardingStep === 3 && (
                 <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s4">
-                  <h2 className="ob-title">Hvor mange personer?</h2>
-                  <p className="ob-desc">Vi tilpasser portionsstørrelserne til dit husstand.</p>
+                  <h2 className="ob-title">{t("Hvor mange personer?")}</h2>
+                  <p className="ob-desc">{t("Vi tilpasser portionsstørrelserne til dit husstand.")}</p>
                   <div className="ob-servings-picker">
                     <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.max(1, s - 1))}>−</button>
                     <div className="ob-sv-display">
                       <span className="ob-sv-number">{pendingServings}</span>
-                      <span className="ob-sv-label">person{pendingServings !== 1 ? "er" : ""}</span>
+                      <span className="ob-sv-label">{en ? (pendingServings !== 1 ? "people" : "person") : `person${pendingServings !== 1 ? "er" : ""}`}</span>
                     </div>
                     <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.min(10, s + 1))}>+</button>
                   </div>
@@ -2054,7 +2083,7 @@ export default function App() {
                 disabled={onboardingStep === 1 && pendingChains.size === 0}
                 onClick={handleOnboardingContinue}
               >
-                {onboardingStep === 3 ? "Gå til opskrifter →" : "Fortsæt →"}
+                {onboardingStep === 3 ? t("Gå til opskrifter →") : t("Fortsæt →")}
               </button>
             </div>
           )}
@@ -2067,20 +2096,20 @@ export default function App() {
           <div className="store-picker-card">
             <div className="sp-modal-header">
               <div>
-                <h2 className="sp-title">Dine butikker</h2>
+                <h2 className="sp-title">{t("Dine butikker")}</h2>
                 <div className="sp-chain-count-row">
-                  <span className="sp-chain-count-badge">{selectedChains.size}/{CHAIN_ORDER.length} valgt</span>
+                  <span className="sp-chain-count-badge">{selectedChains.size}/{CHAIN_ORDER.length} {en ? "selected" : "valgt"}</span>
                   {selectedChains.size < CHAIN_ORDER.length && (
-                    <button className="sp-select-all-btn" onClick={selectAllStores}>+ Vælg alle</button>
+                    <button className="sp-select-all-btn" onClick={selectAllStores}>{t("+ Vælg alle")}</button>
                   )}
                   {selectedChains.size > 0 && (
-                    <button className="sp-clear-btn" onClick={clearStores}>Ryd</button>
+                    <button className="sp-clear-btn" onClick={clearStores}>{t("Ryd")}</button>
                   )}
                 </div>
               </div>
               <button className="sp-close-btn" onClick={() => setShowStorePicker(false)}>×</button>
             </div>
-            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>Tryk på en kæde for at vælge eller fravælge den.</p>
+            <p className="sp-desc" style={{ margin: "0 0 1rem" }}>{t("Tryk på en kæde for at vælge eller fravælge den.")}</p>
             <div style={{ flex: 1, overflowY: "auto" }}>
               <div className="ob-chain-grid">
                 {CHAIN_ORDER.map(chain => {
@@ -2110,7 +2139,7 @@ export default function App() {
           <div className="day-picker-card">
             <div className="sp-modal-header">
               <div>
-                <h2 className="sp-title">Vælg dag</h2>
+                <h2 className="sp-title">{t("Vælg dag")}</h2>
                 <p style={{ margin: 0, fontSize: 13, color: "var(--text-dim)" }}>{addingToPlan.title}</p>
               </div>
               <button className="sp-close-btn" onClick={() => setAddingToPlan(null)}>×</button>
@@ -2127,7 +2156,7 @@ export default function App() {
                     <span className="day-picker-short">{DAY_SHORT[i]}</span>
                     <span className="day-picker-full">{day}</span>
                     {occupied && <span className="day-picker-recipe">{occupied.recipe.title}</span>}
-                    {!occupied && <span className="day-picker-empty-label">Ledig</span>}
+                    {!occupied && <span className="day-picker-empty-label">{t("Ledig")}</span>}
                   </button>
                 );
               })}
@@ -2145,36 +2174,36 @@ export default function App() {
             <LogoIcon size={40} />
             <div className="hero-brand-text">
               <span className="hero-brand-name">Tilbudskokken</span>
-              <span className="hero-brand-slogan">Bedre tilbud. Bedre mad.</span>
+              <span className="hero-brand-slogan">{t("Bedre tilbud. Bedre mad.")}</span>
             </div>
           </div>
           {setupComplete && (
-            <nav className="desktop-nav" aria-label="Hovednavigation">
+            <nav className="desktop-nav" aria-label={t("Hovednavigation")}>
               {[
                 {
                   id: "opskrifter",
-                  label: "Opskrifter",
+                  label: t("Opskrifter"),
                   active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet && !selectedRecipe,
                   badge: null,
                   onClick: () => { setSelectedRecipe(null); setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
                 },
                 {
                   id: "madplan",
-                  label: "Ugen",
+                  label: t("Ugen"),
                   active: showMealPlanPanel,
                   badge: planCount > 0 ? planCount : null,
                   onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowMealPlanPanel(v => !v); },
                 },
                 {
                   id: "gemt",
-                  label: "Gemte",
+                  label: t("Gemte"),
                   active: showSavedPanel,
                   badge: savedRecipes.length > 0 ? savedRecipes.length : null,
                   onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowSavedPanel(v => !v); },
                 },
                 {
                   id: "indkob",
-                  label: "Kurv",
+                  label: t("Kurv"),
                   active: showShoppingSheet,
                   badge: shoppingList.length > 0 ? shoppingList.length : null,
                   onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(v => !v); },
@@ -2190,12 +2219,12 @@ export default function App() {
           <div className="hero-topbar-right">
             <div className="week-badge">{weekBadge}</div>
             <div className="header-actions">
-              <button className="header-icon-btn header-overflow-btn" onClick={() => setShowOverflowMenu(true)} title="Menu" aria-label="Menu">
+              <button className="header-icon-btn header-overflow-btn" onClick={() => setShowOverflowMenu(true)} title={t("Menu")} aria-label={t("Menu")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
                   <circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>
                 </svg>
               </button>
-              <button className="header-icon-btn header-icon-btn--bookmark header-icon-btn--desktop" onClick={() => setShowSavedPanel(true)} title="Gemte opskrifter">
+              <button className="header-icon-btn header-icon-btn--bookmark header-icon-btn--desktop" onClick={() => setShowSavedPanel(true)} title={t("Gemte opskrifter")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                 </svg>
@@ -2203,7 +2232,15 @@ export default function App() {
                   <span className="header-badge">{savedRecipes.length}</span>
                 )}
               </button>
-              <button className="header-icon-btn header-icon-btn--desktop" onClick={() => setDarkMode(d => !d)} title={darkMode ? "Lys tilstand" : "Mørk tilstand"}>
+              <button
+                className="header-icon-btn header-lang-btn header-icon-btn--desktop"
+                onClick={() => changeLang(en ? "da" : "en")}
+                title={en ? "Skift til dansk" : "Switch to English"}
+                aria-label={en ? "Skift til dansk" : "Switch to English"}
+              >
+                {en ? "EN" : "DA"}
+              </button>
+              <button className="header-icon-btn header-icon-btn--desktop" onClick={() => setDarkMode(d => !d)} title={darkMode ? t("Lys tilstand") : t("Mørk tilstand")}>
                 {darkMode ? (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
@@ -2214,7 +2251,7 @@ export default function App() {
                   </svg>
                 )}
               </button>
-              <button className="header-icon-btn header-icon-btn--desktop" onClick={openSettings} title="Indstillinger">
+              <button className="header-icon-btn header-icon-btn--desktop" onClick={openSettings} title={t("Indstillinger")}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
@@ -2224,14 +2261,14 @@ export default function App() {
         </div>
 
         {setupComplete && (
-          <div className="local-store-badge" onClick={() => setShowStorePicker(true)} role="button" tabIndex={0} title="Administrer butikker">
+          <div className="local-store-badge" onClick={() => setShowStorePicker(true)} role="button" tabIndex={0} title={t("Administrer butikker")}>
             <span className="local-store-label">
               {localStores && localStores.length > 1
-                ? <><strong>{localStores.length} butikker</strong> valgt</>
+                ? <><strong>{localStores.length} {en ? "stores" : "butikker"}</strong> {en ? "selected" : "valgt"}</>
                 : <><strong>{storeHeaderLabel(localStores)}</strong></>
               }
             </span>
-            <button className="skift-btn" onClick={e => { e.stopPropagation(); setShowStorePicker(true); }}>Skift</button>
+            <button className="skift-btn" onClick={e => { e.stopPropagation(); setShowStorePicker(true); }}>{t("Skift")}</button>
           </div>
         )}
       </div>
@@ -2242,22 +2279,22 @@ export default function App() {
           {/* Step progress bar */}
           <div className="setup-flow-progress">
             <span className={`sfp-step${selectedChains.size > 0 ? " sfp-step--done" : " sfp-step--active"}`}>
-              {selectedChains.size > 0 ? "✓" : "1"} Vælg butikker
+              {selectedChains.size > 0 ? "✓" : "1"} {t("Vælg butikker")}
             </span>
             <span className="sfp-sep">→</span>
             <span className={`sfp-step${selectedChains.size > 0 ? " sfp-step--active" : ""}`}>
-              2 Tilpas
+              2 {t("Tilpas")}
             </span>
             <span className="sfp-sep">→</span>
             <span className={`sfp-step${selectedChains.size > 0 ? " sfp-step--active" : ""}`}>
-              3 Find opskrifter
+              3 {t("Find opskrifter")}
             </span>
           </div>
 
           {/* Step 1: inline store picker */}
           <div className="setup-invite-card">
-            <h2 className="setup-invite-title">Hvilke butikker handler du i?</h2>
-            <p className="setup-invite-sub">Vælg dine kæder — vi finder de bedste opskrifter baseret på netop dine tilbud denne uge</p>
+            <h2 className="setup-invite-title">{t("Hvilke butikker handler du i?")}</h2>
+            <p className="setup-invite-sub">{t("Vælg dine kæder — vi finder de bedste opskrifter baseret på netop dine tilbud denne uge")}</p>
             <div className="ob-chain-grid setup-chain-grid">
               {CHAIN_ORDER.map(chain => {
                 const sel = selectedChains.has(chain);
@@ -2285,7 +2322,7 @@ export default function App() {
           <input
             className="search-input"
             type="text"
-            placeholder="Søg opskrifter, ingredienser..."
+            placeholder={t("Søg opskrifter, ingredienser...")}
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
@@ -2302,11 +2339,13 @@ export default function App() {
                 <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
               </svg>
               <span className="prefs-trigger-text">
-                <span className="prefs-trigger-title">Tilpas dine opskrifter</span>
+                <span className="prefs-trigger-title">{t("Tilpas dine opskrifter")}</span>
                 <span className="prefs-trigger-sub">
                   {activeFilterCount > 0
-                    ? `${activeFilterCount} filter${activeFilterCount !== 1 ? "re" : ""} aktivt — tryk for at justere`
-                    : "Tilpas kostpræferencer, tid og budget"}
+                    ? (en
+                        ? `${activeFilterCount} filter${activeFilterCount !== 1 ? "s" : ""} active — tap to adjust`
+                        : `${activeFilterCount} filter${activeFilterCount !== 1 ? "re" : ""} aktivt — tryk for at justere`)
+                    : t("Tilpas kostpræferencer, tid og budget")}
                 </span>
               </span>
               {activeFilterCount > 0 && (
@@ -2320,10 +2359,10 @@ export default function App() {
             {prefsOpen && (
               <div className="prefs-body">
                 {/* Quick filters */}
-                <div className="prefs-group-label">Butikker</div>
+                <div className="prefs-group-label">{t("Butikker")}</div>
                 <div className="quick-filters prefs-filter-row">
                   {[
-                    { id: "enbutik", label: "Kun én butik" },
+                    { id: "enbutik", label: t("Kun én butik") },
                   ].map(f => (
                     <button
                       key={f.id}
@@ -2336,25 +2375,25 @@ export default function App() {
                 </div>
 
                 {/* Diet */}
-                <div className="prefs-group-label">Kost</div>
+                <div className="prefs-group-label">{t("Kost")}</div>
                 <div className="diet-filters prefs-filter-row">
                   {dietFilters.map(f => (
-                    <button key={f} onClick={() => changeDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{f}</button>
+                    <button key={f} onClick={() => changeDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{dietLabel(f)}</button>
                   ))}
                 </div>
 
                 {/* Time */}
-                <div className="prefs-group-label">Tid</div>
+                <div className="prefs-group-label">{t("Tid")}</div>
                 <div className="diet-filters time-filters prefs-filter-row">
                   {timeFilters.map(f => (
-                    <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{f}</button>
+                    <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{timeLabel(f)}</button>
                   ))}
                 </div>
 
                 {/* Cuisine */}
                 {CUISINE_ORDER.length > 2 && (
                   <>
-                    <div className="prefs-group-label">Køkken</div>
+                    <div className="prefs-group-label">{t("Køkken")}</div>
                     <div className="cuisine-filters prefs-filter-row">
                       {CUISINE_ORDER.map(c => (
                         <button
@@ -2362,7 +2401,7 @@ export default function App() {
                           onClick={() => setCuisineFilter(c)}
                           className={`diet-btn${cuisineFilter === c ? " active" : ""}`}
                         >
-                          {cuisineLabel(c)}
+                          {cuisineText(c)}
                         </button>
                       ))}
                     </div>
@@ -2372,7 +2411,7 @@ export default function App() {
                 {/* Price */}
                 {maxRecipePrice > 0 && (
                   <>
-                    <div className="prefs-group-label">Pris pr. person</div>
+                    <div className="prefs-group-label">{t("Pris pr. person")}</div>
                     <div className="price-range-wrap prefs-price-wrap">
                       <div className="price-range-header">
                         <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
@@ -2403,18 +2442,20 @@ export default function App() {
                 )}
 
                 {/* Pantry */}
-                <div className="prefs-group-label">Køleskab</div>
+                <div className="prefs-group-label">{t("Køleskab")}</div>
                 <div className={`pantry-inline${showPantry ? " open" : ""}${pantryItems.size > 0 ? " has-items" : ""} prefs-pantry`}>
                   <button className="pantry-trigger-btn" onClick={() => setShowPantry(v => !v)}>
                     <svg className="pantry-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
                     </svg>
                     <span className="pantry-trigger-text">
-                      <span className="pantry-trigger-title">Hvad har du derhjemme?</span>
+                      <span className="pantry-trigger-title">{t("Hvad har du derhjemme?")}</span>
                       <span className="pantry-trigger-sub">
                         {pantryItems.size > 0
-                          ? `${pantryMatchTotal} opskrifter matcher dine ingredienser — vist øverst`
-                          : "Tilføj ingredienser — vi rykker opskrifter du kan lave nu øverst"}
+                          ? (en
+                              ? `${pantryMatchTotal} recipes match your ingredients — shown first`
+                              : `${pantryMatchTotal} opskrifter matcher dine ingredienser — vist øverst`)
+                          : t("Tilføj ingredienser — vi rykker opskrifter du kan lave nu øverst")}
                       </span>
                     </span>
                     {pantryItems.size > 0 && (
@@ -2443,7 +2484,7 @@ export default function App() {
                               <input
                                 className="pantry-text-input"
                                 type="text"
-                                placeholder={pantryItems.size === 0 ? "Hvad har du i køleskabet i dag?" : "Tilføj flere ingredienser..."}
+                                placeholder={pantryItems.size === 0 ? t("Hvad har du i køleskabet i dag?") : t("Tilføj flere ingredienser...")}
                                 value={pantryInput}
                                 autoComplete="off"
                                 onChange={e => { setPantryInput(e.target.value); setPantryDropdownIdx(-1); }}
@@ -2455,7 +2496,7 @@ export default function App() {
                                 }}
                                 onBlur={() => setTimeout(() => setPantryDropdownIdx(-1), 150)}
                               />
-                              {query && <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>Tilføj</button>}
+                              {query && <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>}
                             </div>
                             {showDropdown && (
                               <div className="pantry-dropdown" style={{ position: "fixed", top: pantryDropdownPos.top, left: pantryDropdownPos.left, width: pantryDropdownPos.width, zIndex: 1000 }}>
@@ -2466,7 +2507,7 @@ export default function App() {
                                       {before}<span className="suggestion-highlight">{match}</span>{after}
                                     </button>
                                   );
-                                }) : <div className="pantry-dropdown-empty">Ingen forslag — tryk Enter for at tilføje alligevel</div>}
+                                }) : <div className="pantry-dropdown-empty">{t("Ingen forslag — tryk Enter for at tilføje alligevel")}</div>}
                               </div>
                             )}
                           </div>
@@ -2485,12 +2526,12 @@ export default function App() {
                               <button className="pantry-tag-remove" onClick={() => togglePantryItem(item)} aria-label={`Fjern ${item}`}>×</button>
                             </span>
                           ))}
-                          <button className="pantry-clear-all" onClick={clearPantry}>Ryd alle</button>
+                          <button className="pantry-clear-all" onClick={clearPantry}>{t("Ryd alle")}</button>
                         </div>
                       )}
                       {pantryItems.size > 0 && (
                         <button className="pantry-find-btn" onClick={() => { setShowPantry(false); setPrefsOpen(false); }}>
-                          Vis rangering
+                          {t("Vis rangering")}
                           <span className="pantry-find-count">{pantryMatchTotal}</span>
                         </button>
                       )}
@@ -2505,9 +2546,11 @@ export default function App() {
           {pantryItems.size > 0 && !showPantry && (
             <div className="pantry-filter-banner">
               <span className="pantry-filter-banner-text">
-                Sorteret efter dine ingredienser — <strong>{pantryMatchTotal} opskrifter</strong> matcher, vist øverst
+                {en ? "Sorted by your ingredients — " : "Sorteret efter dine ingredienser — "}
+                <strong>{pantryMatchTotal} {en ? "recipes" : "opskrifter"}</strong>
+                {en ? " match, shown first" : " matcher, vist øverst"}
               </span>
-              <button className="pantry-filter-banner-clear" onClick={clearPantry}>Ryd</button>
+              <button className="pantry-filter-banner-clear" onClick={clearPantry}>{t("Ryd")}</button>
             </div>
           )}
         </>
@@ -2517,7 +2560,7 @@ export default function App() {
       {selectedRecipe ? (
         <div className="recipe-detail-sheet">
           <button className="back-btn" onClick={() => setSelectedRecipe(null)}>
-            ← Tilbage til opskrifter
+            {t("← Tilbage til opskrifter")}
           </button>
 
           <div className="recipe-card">
@@ -2533,7 +2576,7 @@ export default function App() {
 
             <div className="recipe-meta-bar">
               <span>{selectedRecipe.time}</span>
-              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{cuisineLabel(selectedRecipe.cuisine)}</span>}
+              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{cuisineText(selectedRecipe.cuisine)}</span>}
               {selectedRecipe.difficulty && (
                 <span className={`difficulty-badge difficulty-${selectedRecipe.difficulty === "Nem" ? "nem" : selectedRecipe.difficulty === "Avanceret" ? "avanceret" : "mellem"}`}>
                   {selectedRecipe.difficulty}
@@ -2542,7 +2585,7 @@ export default function App() {
               {selectedRecipe.calories && <span className="calories-meta">{selectedRecipe.calories} kcal</span>}
               <span style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 <button className="btn-round" onClick={() => setServings(s => Math.max(1, s - 1))}>−</button>
-                {servings} personer
+                {servings} {en ? (servings !== 1 ? "people" : "person") : "personer"}
                 <button className="btn-round" onClick={() => setServings(s => Math.min(10, s + 1))}>+</button>
               </span>
             </div>
@@ -2551,8 +2594,8 @@ export default function App() {
               if (pp == null) return null;
               return (
                 <div className="recipe-detail-price">
-                  ca. {pp * servings} kr. i alt
-                  <span className="recipe-detail-price-pp"> · {pp} kr. pr. person</span>
+                  {en ? "approx." : "ca."} {pp * servings} kr. {en ? "total" : "i alt"}
+                  <span className="recipe-detail-price-pp"> · {pp} kr. {en ? "per person" : "pr. person"}</span>
                 </div>
               );
             })()}
@@ -2561,7 +2604,7 @@ export default function App() {
               <p className="recipe-description">{selectedRecipe.description}</p>
             )}
 
-            <div className="section-label">Ingredienser</div>
+            <div className="section-label">{t("Ingredienser")}</div>
             <ul className="ingredient-grid">
               {(selectedRecipe.ingredients || []).map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
@@ -2597,13 +2640,13 @@ export default function App() {
             </ul>
 
             <div className="ingredient-legend">
-              <span><span className="legend-dot deal" />Købes · klik + for indkøbsliste (butiksmærke = på tilbud)</span>
-              <span><span className="legend-dot pantry" />Basisvare · salt, olie, krydderier m.m. du har hjemme</span>
+              <span><span className="legend-dot deal" />{t("Købes · klik + for indkøbsliste (butiksmærke = på tilbud)")}</span>
+              <span><span className="legend-dot pantry" />{t("Basisvare · salt, olie, krydderier m.m. du har hjemme")}</span>
             </div>
 
             <button className="section-label section-label-toggle" onClick={() => setStepsOpen(v => !v)} aria-expanded={stepsOpen}>
-              <span>Fremgangsmåde</span>
-              <span className="section-label-count">{selectedRecipe.steps.length} trin</span>
+              <span>{t("Fremgangsmåde")}</span>
+              <span className="section-label-count">{selectedRecipe.steps.length} {en ? "steps" : "trin"}</span>
               <svg className={`section-chevron${stepsOpen ? " open" : ""}`} width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -2621,7 +2664,7 @@ export default function App() {
 
             {(selectedRecipe.tips || selectedRecipe.tip) && (
               <div className="recipe-tips-block">
-                <div className="recipe-tips-label">Tips</div>
+                <div className="recipe-tips-label">{t("Tips")}</div>
                 {selectedRecipe.tips
                   ? selectedRecipe.tips.map((t, i) => <p key={i} className="recipe-tip-item">{t}</p>)
                   : <p className="recipe-tip-item">{selectedRecipe.tip}</p>
@@ -2635,8 +2678,8 @@ export default function App() {
             <div className="shopping-list-card">
               <div className="shopping-list-header">
                 <div className="section-label" style={{ margin: 0 }}>
-                  {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
-                  {cartCheckedCount > 0 && <span className="cart-progress"> · {cartCheckedCount} klaret</span>}
+                  {shoppingList.length} {en ? (shoppingList.length === 1 ? "item" : "items") : (shoppingList.length === 1 ? "vare" : "varer")}
+                  {cartCheckedCount > 0 && <span className="cart-progress"> · {cartCheckedCount} {en ? "done" : "klaret"}</span>}
                 </div>
               </div>
               <div className="cart-groups">
@@ -2657,21 +2700,21 @@ export default function App() {
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
-                <span>{[...new Set((localStores || []).map(s => s.chain))].length} butikker</span>
+                <span>{[...new Set((localStores || []).map(s => s.chain))].length} {en ? "stores" : "butikker"}</span>
               </button>
               <div className="mfr-divider" />
               <button className="mfr-btn" onClick={() => setShowFilterSheet(true)}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
                 </svg>
-                <span>Filtre</span>
+                <span>{t("Filtre")}</span>
                 {(activeFilterCount + (sortOrder !== "anbefalet" ? 1 : 0)) > 0 && (
                   <span className="mfr-badge">{activeFilterCount + (sortOrder !== "anbefalet" ? 1 : 0)}</span>
                 )}
               </button>
               <div className="mfr-divider" />
               <button className="mfr-btn mfr-sort" onClick={() => setShowFilterSheet(true)}>
-                <span>{{ anbefalet: "Anbefalet", "pris-asc": "Billigst", hurtigst: "Hurtigst" }[sortOrder] || "Anbefalet"}</span>
+                <span>{sortLabel(sortOrder, { anbefalet: "Anbefalet", "pris-asc": "Billigst", hurtigst: "Hurtigst" }[sortOrder] || "Anbefalet")}</span>
                 <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M4 6 L8 10 L12 6"/>
                 </svg>
@@ -2681,13 +2724,13 @@ export default function App() {
             {/* ── Quick diet + sort strip ─────────────────── */}
             <div className="quick-strip-wrap">
               <div className="quick-strip">
-                <span className="quick-strip-sep">Kost</span>
+                <span className="quick-strip-sep">{t("Kost")}</span>
                 {[
-                  { val: "Alle", label: "Alle" },
-                  { val: "Vegetar", label: "Vegetar" },
-                  { val: "Veganer", label: "Veganer" },
-                  { val: "Glutenfri", label: "Glutenfri" },
-                  { val: "Mælkefri", label: "Mælkefri" },
+                  { val: "Alle", label: dietLabel("Alle") },
+                  { val: "Vegetar", label: dietLabel("Vegetar") },
+                  { val: "Veganer", label: dietLabel("Veganer") },
+                  { val: "Glutenfri", label: dietLabel("Glutenfri") },
+                  { val: "Mælkefri", label: dietLabel("Mælkefri") },
                 ].map(f => (
                   <button
                     key={f.val}
@@ -2699,11 +2742,11 @@ export default function App() {
                 ))}
               </div>
               <div className="quick-strip quick-strip-sort">
-                <span className="quick-strip-sep">Sorter</span>
+                <span className="quick-strip-sep">{t("Sorter")}</span>
                 {[
-                  { id: "anbefalet", label: "Anbefalet" },
-                  { id: "pris-asc",  label: "Billigst" },
-                  { id: "hurtigst", label: "Hurtigst" },
+                  { id: "anbefalet", label: sortLabel("anbefalet", "Anbefalet") },
+                  { id: "pris-asc",  label: sortLabel("pris-asc", "Billigst") },
+                  { id: "hurtigst", label: sortLabel("hurtigst", "Hurtigst") },
                 ].map(s => (
                   <button
                     key={s.id}
@@ -2716,27 +2759,27 @@ export default function App() {
               </div>
               {/* Tid / Køkken inline pills — formerly only in the filter sheet. */}
               <div className="quick-strip quick-strip-more">
-                <span className="quick-strip-sep">Tid</span>
+                <span className="quick-strip-sep">{t("Tid")}</span>
                 {timeFilters.map(f => (
                   <button
                     key={f}
                     className={`qs-pill${timeFilter === f ? " active" : ""}`}
                     onClick={() => setTimeFilter(f)}
                   >
-                    {f}
+                    {timeLabel(f)}
                   </button>
                 ))}
               </div>
               {CUISINE_ORDER.length > 2 && (
                 <div className="quick-strip quick-strip-more">
-                  <span className="quick-strip-sep">Køkken</span>
+                  <span className="quick-strip-sep">{t("Køkken")}</span>
                   {CUISINE_ORDER.map(c => (
                     <button
                       key={c}
                       className={`qs-pill${cuisineFilter === c ? " active" : ""}`}
                       onClick={() => setCuisineFilter(c)}
                     >
-                      {cuisineLabel(c)}
+                      {cuisineText(c)}
                     </button>
                   ))}
                 </div>
@@ -2745,12 +2788,12 @@ export default function App() {
                   Not a .quick-strip: its overflow must stay visible so the
                   dropdown panels aren't clipped by scroll/mask. */}
               <div className="quick-strip-more-row">
-                <span className="quick-strip-sep">Mere</span>
+                <span className="quick-strip-sep">{t("Mere")}</span>
                 <button
                   className={`qs-pill${quickFilters.has("enbutik") ? " active" : ""}`}
                   onClick={() => toggleQuickFilter("enbutik")}
                 >
-                  Kun én butik
+                  {t("Kun én butik")}
                 </button>
                 {maxRecipePrice > 0 && (
                   <div className="qs-dd-wrap">
@@ -2758,7 +2801,7 @@ export default function App() {
                       className={`qs-pill qs-dd-pill${priceFiltered ? " active" : ""}`}
                       onClick={() => setQuickPanel(p => (p === "pris" ? null : "pris"))}
                     >
-                      {priceFiltered ? `Pris: ${priceMin}–${priceMax ?? maxRecipePrice} kr.` : "Pris"} ▾
+                      {priceFiltered ? `${t("Pris")}: ${priceMin}–${priceMax ?? maxRecipePrice} kr.` : t("Pris")} ▾
                     </button>
                     {quickPanel === "pris" && (
                       <>
@@ -2792,7 +2835,7 @@ export default function App() {
                     className={`qs-pill qs-dd-pill${pantryItems.size > 0 ? " active" : ""}`}
                     onClick={() => setQuickPanel(p => (p === "koleskab" ? null : "koleskab"))}
                   >
-                    {pantryItems.size > 0 ? `Køleskab (${pantryItems.size})` : "Køleskab"} ▾
+                    {pantryItems.size > 0 ? `${t("Køleskab")} (${pantryItems.size})` : t("Køleskab")} ▾
                   </button>
                   {quickPanel === "koleskab" && (
                     <>
@@ -2802,12 +2845,12 @@ export default function App() {
                           <input
                             className="fs-pantry-input"
                             type="text"
-                            placeholder="Tilføj ingrediens du har..."
+                            placeholder={t("Tilføj ingrediens du har...")}
                             value={pantryInput}
                             onChange={e => setPantryInput(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(); } }}
                           />
-                          <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>Tilføj</button>
+                          <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>
                         </div>
                         {pantryItems.size > 0 && (
                           <div className="fs-pantry-chips">
@@ -2823,7 +2866,7 @@ export default function App() {
                   )}
                 </div>
                 {activeFilterCount > 0 && (
-                  <button className="qs-clear-btn" onClick={clearAllFilters}>Ryd filtre</button>
+                  <button className="qs-clear-btn" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
                 )}
               </div>
             </div>
@@ -2835,8 +2878,8 @@ export default function App() {
                   onClick={() => toggleSection("recommended")}
                   aria-expanded={!collapsedSections.recommended}
                 >
-                  <span className="section-toggle-label">{search.trim() ? "Søgeresultater" : "Ugens opskrifter"}</span>
-                  <span className="section-count-badge">{filteredRecommended.length} opskrifter</span>
+                  <span className="section-toggle-label">{search.trim() ? t("Søgeresultater") : t("Ugens opskrifter")}</span>
+                  <span className="section-count-badge">{filteredRecommended.length} {en ? "recipes" : "opskrifter"}</span>
                   <svg
                     className={`section-chevron${collapsedSections.recommended ? "" : " open"}`}
                     width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -2858,7 +2901,7 @@ export default function App() {
                           className="show-more-btn"
                           onClick={() => setVisibleCounts(c => ({ ...c, recommended: c.recommended + PAGE_SIZE }))}
                         >
-                          Vis flere ({filteredRecommended.length - visibleCounts.recommended})
+                          {en ? "Show more" : "Vis flere"} ({filteredRecommended.length - visibleCounts.recommended})
                         </button>
                       )}
                     </>
@@ -2866,20 +2909,20 @@ export default function App() {
                     <div className="section-empty-state">
                       {(search || activeFilterCount > 0) ? (
                         <>
-                          <span className="empty-state-label">Ingen opskrifter matcher.</span>
+                          <span className="empty-state-label">{t("Ingen opskrifter matcher.")}</span>
                           <span className="empty-state-hint">
                             {search
-                              ? "Prøv et kortere søgeord eller nulstil filtrene"
-                              : "Dine filtre er for snævre lige nu"}
+                              ? t("Prøv et kortere søgeord eller nulstil filtrene")
+                              : t("Dine filtre er for snævre lige nu")}
                           </span>
                           {activeFilterCount > 0 && (
-                            <button className="empty-state-reset" onClick={clearAllFilters}>Ryd filtre</button>
+                            <button className="empty-state-reset" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
                           )}
                         </>
                       ) : (
                         <>
-                          <span className="empty-state-label">Ingen opskrifter denne uge.</span>
-                          <span className="empty-state-hint">Tilføj en ekstra butik under filtre</span>
+                          <span className="empty-state-label">{t("Ingen opskrifter denne uge.")}</span>
+                          <span className="empty-state-hint">{t("Tilføj en ekstra butik under filtre")}</span>
                         </>
                       )}
                     </div>
@@ -2895,8 +2938,8 @@ export default function App() {
                   onClick={() => toggleSection("others")}
                   aria-expanded={!collapsedSections.others}
                 >
-                  <span className="section-toggle-label">Andre butikker</span>
-                  <span className="section-count-badge">{filteredOthers.length} opskrifter</span>
+                  <span className="section-toggle-label">{t("Andre butikker")}</span>
+                  <span className="section-count-badge">{filteredOthers.length} {en ? "recipes" : "opskrifter"}</span>
                   <svg
                     className={`section-chevron${collapsedSections.others ? "" : " open"}`}
                     width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -2918,13 +2961,13 @@ export default function App() {
                           className="show-more-btn"
                           onClick={() => setVisibleCounts(c => ({ ...c, others: c.others + PAGE_SIZE }))}
                         >
-                          Vis flere ({filteredOthers.length - visibleCounts.others})
+                          {en ? "Show more" : "Vis flere"} ({filteredOthers.length - visibleCounts.others})
                         </button>
                       )}
                     </>
                   ) : (
                     <div className="section-empty-state">
-                      <span className="empty-state-label">Alle opskrifter er fra dine butikker.</span>
+                      <span className="empty-state-label">{t("Alle opskrifter er fra dine butikker.")}</span>
                     </div>
                   )}
                 </div>
@@ -2952,7 +2995,7 @@ export default function App() {
       <div className="mp-sheet" onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="mp-sheet-header">
-          <div className="mp-sheet-title">Madplan</div>
+          <div className="mp-sheet-title">{t("Madplan")}</div>
           <button className="mp-sheet-close" onClick={() => setShowMealPlanPanel(false)}>×</button>
         </div>
         <div className="mp-days-list">
@@ -2964,12 +3007,12 @@ export default function App() {
                   <RecipeMonogram recipe={entry.recipe} className="mp-sheet-emoji" />
                   <div className="mp-sheet-recipe-info">
                     <div className="mp-sheet-recipe-title">{entry.recipe.title}</div>
-                    <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} pers.</div>
+                    <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} {en ? "ppl" : "pers."}</div>
                   </div>
                   <button className="mp-sheet-remove" onClick={() => removeFromPlan(i)}>×</button>
                 </div>
               ) : (
-                <div className="mp-sheet-empty">Ingen opskrift planlagt</div>
+                <div className="mp-sheet-empty">{t("Ingen opskrift planlagt")}</div>
               )}
             </div>
           ))}
@@ -2977,28 +3020,28 @@ export default function App() {
         {planCount > 0 && (
           <div className="mp-sheet-actions">
             <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan}>
-              {planCopied ? "✓ Kopieret!" : "Del madplan"}
+              {planCopied ? t("✓ Kopieret!") : t("Del madplan")}
             </button>
             <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)}>
-              {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
+              {showCombinedList ? t("Skjul indkøbsliste") : t("Vis indkøbsliste")}
             </button>
           </div>
         )}
         {confirmClearPlan ? (
           <div className="mp-clear-confirm">
-            <span>Ryd hele madplanen?</span>
+            <span>{t("Ryd hele madplanen?")}</span>
             <div className="mp-clear-confirm-btns">
-              <button className="mp-clear-yes" onClick={clearMealPlan}>Ja, ryd</button>
-              <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>Annuller</button>
+              <button className="mp-clear-yes" onClick={clearMealPlan}>{t("Ja, ryd")}</button>
+              <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>{t("Annuller")}</button>
             </div>
           </div>
         ) : (
-          <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)} style={{ marginTop: 8 }}>Ryd madplan</button>
+          <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)} style={{ marginTop: 8 }}>{t("Ryd madplan")}</button>
         )}
         {showCombinedList && planCount > 0 && (
           <div className="combined-list">
             {combinedList.length === 0 ? (
-              <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
+              <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>{t("Ingen tilbudsvarer i madplanen.")}</p>
             ) : (
               combinedList.map(group => (
                 <div key={group.store} className="combined-list-store">
@@ -3025,7 +3068,7 @@ export default function App() {
 
     {/* Mobile FAB */}
     {planCount > 0 && (
-      <button className="meal-plan-fab" onClick={() => setShowMealPlanPanel(true)} aria-label="Vis madplan">
+      <button className="meal-plan-fab" onClick={() => setShowMealPlanPanel(true)} aria-label={t("Vis madplan")}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
@@ -3035,16 +3078,16 @@ export default function App() {
 
     {/* Desktop sidebar — collapsed to an edge tab when hidden */}
     {planCount > 0 && mpSidebarHidden && (
-      <button className="mp-sidebar-reveal" onClick={toggleMpSidebar} title="Vis madplan" aria-label="Vis madplan">
+      <button className="mp-sidebar-reveal" onClick={toggleMpSidebar} title={t("Vis madplan")} aria-label={t("Vis madplan")}>
         <span className="mp-sidebar-reveal-chevron">‹</span>
-        <span className="mp-sidebar-reveal-label">Madplan</span>
+        <span className="mp-sidebar-reveal-label">{t("Madplan")}</span>
         <span className="mp-sidebar-reveal-count">{planCount}</span>
       </button>
     )}
     {planCount > 0 && !mpSidebarHidden && <aside className="meal-plan-sidebar">
       <div className="mp-sidebar-header">
-        <button className="mp-sidebar-hide" onClick={toggleMpSidebar} title="Skjul madplan" aria-label="Skjul madplan">›</button>
-        <div className="mp-sidebar-title">Madplan</div>
+        <button className="mp-sidebar-hide" onClick={toggleMpSidebar} title={t("Skjul madplan")} aria-label={t("Skjul madplan")}>›</button>
+        <div className="mp-sidebar-title">{t("Madplan")}</div>
         {planCount > 0 && <span className="mp-sidebar-count">{planCount}/7</span>}
       </div>
       <div className="mp-sidebar-days">
@@ -3069,12 +3112,12 @@ export default function App() {
                     <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.min(10, entry.servings + 1))}>+</button>
                   </div>
                 </div>
-                <button className="mp-sidebar-remove" onClick={() => removeFromPlan(i)} title="Fjern">×</button>
+                <button className="mp-sidebar-remove" onClick={() => removeFromPlan(i)} title={t("Fjern")}>×</button>
               </div>
             ) : (
               <div className="mp-sidebar-empty">
                 <span className="mp-sidebar-plus">+</span>
-                <span className="mp-sidebar-empty-text">Ledig</span>
+                <span className="mp-sidebar-empty-text">{t("Ledig")}</span>
               </div>
             )}
           </div>
@@ -3082,27 +3125,27 @@ export default function App() {
       </div>
       <div className="mp-sidebar-footer">
         <button className={`share-plan-btn${planCopied ? " copied" : ""}`} onClick={shareMealPlan} style={{ width: "100%" }}>
-          {planCopied ? "✓ Kopieret!" : "Del madplan"}
+          {planCopied ? t("✓ Kopieret!") : t("Del madplan")}
         </button>
         <button className="combined-list-btn" onClick={() => setShowCombinedList(v => !v)} style={{ width: "100%" }}>
-          {showCombinedList ? "Skjul indkøbsliste" : "Vis indkøbsliste"}
+          {showCombinedList ? t("Skjul indkøbsliste") : t("Vis indkøbsliste")}
         </button>
         {confirmClearPlan ? (
           <div className="mp-clear-confirm">
-            <span>Ryd hele madplanen?</span>
+            <span>{t("Ryd hele madplanen?")}</span>
             <div className="mp-clear-confirm-btns">
-              <button className="mp-clear-yes" onClick={clearMealPlan}>Ja, ryd</button>
-              <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>Annuller</button>
+              <button className="mp-clear-yes" onClick={clearMealPlan}>{t("Ja, ryd")}</button>
+              <button className="mp-clear-no" onClick={() => setConfirmClearPlan(false)}>{t("Annuller")}</button>
             </div>
           </div>
         ) : (
-          <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)}>Ryd madplan</button>
+          <button className="mp-clear-btn" onClick={() => setConfirmClearPlan(true)}>{t("Ryd madplan")}</button>
         )}
       </div>
       {showCombinedList && planCount > 0 && (
         <div className="combined-list" style={{ marginTop: 12 }}>
           {combinedList.length === 0 ? (
-            <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>Ingen tilbudsvarer i madplanen.</p>
+            <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>{t("Ingen tilbudsvarer i madplanen.")}</p>
           ) : (
             combinedList.map(group => (
               <div key={group.store} className="combined-list-store">
@@ -3128,7 +3171,7 @@ export default function App() {
   {/* Shopping cart FAB — hidden whenever meal plan is active (sidebar or panel)
       or any sheet/modal is open (so it can't overlap sheet content). */}
   {shoppingList.length > 0 && planCount === 0 && !anyModalOpen && (
-    <button className="shopping-cart-fab" onClick={() => setShowShoppingSheet(true)} aria-label="Indkøbsliste">
+    <button className="shopping-cart-fab" onClick={() => setShowShoppingSheet(true)} aria-label={t("Indkøbsliste")}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
@@ -3143,12 +3186,12 @@ export default function App() {
       <div className="saved-sheet" ref={setSavedPanelEl} onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="shopping-sheet-header">
-          <div className="shopping-sheet-title">Gemte opskrifter</div>
+          <div className="shopping-sheet-title">{t("Gemte opskrifter")}</div>
           <button className="mp-sheet-close" onClick={() => setShowSavedPanel(false)}>×</button>
         </div>
         {savedRecipes.length === 0 ? (
           <div className="saved-sheet-empty">
-            Du har ikke gemt nogen opskrifter endnu — tryk på bogmærke-ikonet på en opskrift for at gemme den
+            {t("Du har ikke gemt nogen opskrifter endnu — tryk på bogmærke-ikonet på en opskrift for at gemme den")}
           </div>
         ) : (
           <>
@@ -3161,12 +3204,12 @@ export default function App() {
                 >
                   <div className="saved-sheet-card-info">
                     <div className="saved-sheet-card-title"><RecipeMonogram recipe={r} className="saved-sheet-mono" /><span className="saved-sheet-title-text">{r.title}</span></div>
-                    <div className="saved-sheet-card-meta">{r.time} · {r.savedServings || r.servings_count || 4} pers.</div>
+                    <div className="saved-sheet-card-meta">{r.time} · {r.savedServings || r.servings_count || 4} {en ? "ppl" : "pers."}</div>
                   </div>
                   <button
                     className="saved-sheet-unsave"
                     onClick={e => { e.stopPropagation(); deleteSavedRecipe(r.savedAt); }}
-                    title="Fjern fra gemte"
+                    title={t("Fjern fra gemte")}
                   >×</button>
                 </div>
               ))}
@@ -3186,7 +3229,7 @@ export default function App() {
                   <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                 </svg>
-                Tilføj alle til indkøbsliste
+                {t("Tilføj alle til indkøbsliste")}
               </button>
             </div>
           </>
@@ -3202,11 +3245,11 @@ export default function App() {
         <div className="mp-sheet-drag-handle" />
         <div className="shopping-sheet-header">
           <div className="shopping-sheet-title">
-            Indkøbsliste
+            {t("Indkøbsliste")}
             {shoppingList.length > 0 && (
               <span className="shopping-sheet-sub">
-                {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
-                {cartCheckedCount > 0 && ` · ${cartCheckedCount} klaret`}
+                {shoppingList.length} {en ? (shoppingList.length === 1 ? "item" : "items") : (shoppingList.length === 1 ? "vare" : "varer")}
+                {cartCheckedCount > 0 && ` · ${cartCheckedCount} ${en ? "done" : "klaret"}`}
               </span>
             )}
           </div>
@@ -3214,7 +3257,7 @@ export default function App() {
         </div>
         {shoppingList.length === 0 ? (
           <div className="saved-sheet-empty">
-            Din indkøbsliste er tom endnu — åbn en opskrift og tryk “Til indkøb” for at samle ingredienserne her.
+            {t("Din indkøbsliste er tom endnu — åbn en opskrift og tryk “Til indkøb” for at samle ingredienserne her.")}
           </div>
         ) : (
           <>
@@ -3230,11 +3273,11 @@ export default function App() {
 
   {/* ── Mobile bottom navigation ─────────────────────────────────── */}
   {setupComplete && onboardingStep === null && (
-    <nav className="mobile-bottom-nav" aria-label="Navigation">
+    <nav className="mobile-bottom-nav" aria-label={t("Navigation")}>
       {[
         {
           id: "opskrifter",
-          label: "Opskrifter",
+          label: t("Opskrifter"),
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 6h18M3 12h18M3 18h11"/>
@@ -3246,7 +3289,7 @@ export default function App() {
         },
         {
           id: "madplan",
-          label: "Ugen",
+          label: t("Ugen"),
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
@@ -3258,7 +3301,7 @@ export default function App() {
         },
         {
           id: "gemt",
-          label: "Gemt",
+          label: t("Gemt"),
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
@@ -3270,7 +3313,7 @@ export default function App() {
         },
         {
           id: "indkob",
-          label: "Kurv",
+          label: t("Kurv"),
           icon: (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
@@ -3302,13 +3345,13 @@ export default function App() {
   <button
     className={`fb-fab${(shoppingList.length > 0 && planCount === 0) ? " fb-fab--raised" : ""}`}
     onClick={openFeedback}
-    aria-label="Giv feedback"
-    title="Giv feedback"
+    aria-label={t("Giv feedback")}
+    title={t("Giv feedback")}
   >
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
-    <span className="fb-fab-label">Feedback</span>
+    <span className="fb-fab-label">{t("Feedback")}</span>
   </button>
   )}
 
@@ -3318,34 +3361,34 @@ export default function App() {
       <div className="fb-panel" onClick={e => e.stopPropagation()}>
         <div className="fb-panel-drag-handle" />
         <div className="fb-panel-header">
-          <span className="fb-panel-title">Din mening tæller</span>
-          <button className="fb-panel-close" onClick={() => setShowFeedbackPanel(false)} aria-label="Luk">×</button>
+          <span className="fb-panel-title">{t("Din mening tæller")}</span>
+          <button className="fb-panel-close" onClick={() => setShowFeedbackPanel(false)} aria-label={t("Luk")}>×</button>
         </div>
 
         {feedbackSubmitted ? (
           <div className="fb-submitted">
             <div className="fb-submitted-icon">✓</div>
-            <div className="fb-submitted-text">Tak for din feedback!</div>
+            <div className="fb-submitted-text">{t("Tak for din feedback!")}</div>
           </div>
         ) : (
           <div className="fb-form">
             {/* ─ Ratings ─ */}
             <div className="fb-field">
-              <label className="fb-label">Hvor let var det at finde en opskrift?</label>
+              <label className="fb-label">{t("Hvor let var det at finde en opskrift?")}</label>
               <StarRating value={feedbackForm.findRecipe} onChange={v => setFeedbackForm(f => ({...f, findRecipe: v}))} />
             </div>
             <div className="fb-field">
-              <label className="fb-label">Hvordan vil du vurdere det overordnede design?</label>
+              <label className="fb-label">{t("Hvordan vil du vurdere det overordnede design?")}</label>
               <StarRating value={feedbackForm.design} onChange={v => setFeedbackForm(f => ({...f, design: v}))} />
             </div>
             <div className="fb-field">
-              <label className="fb-label">Hvor sandsynligt er det at du bruger appen til din ugentlige indkøbstur?</label>
+              <label className="fb-label">{t("Hvor sandsynligt er det at du bruger appen til din ugentlige indkøbstur?")}</label>
               <StarRating value={feedbackForm.likelihood} onChange={v => setFeedbackForm(f => ({...f, likelihood: v}))} />
             </div>
 
             {/* ─ Bug toggle ─ */}
             <div className="fb-field fb-field-row">
-              <label className="fb-label">Stødte du på fejl eller forvirrende øjeblikke?</label>
+              <label className="fb-label">{t("Stødte du på fejl eller forvirrende øjeblikke?")}</label>
               <div className="fb-toggle-row">
                 {["Ja", "Nej"].map(opt => (
                   <button
@@ -3353,7 +3396,7 @@ export default function App() {
                     type="button"
                     className={`fb-toggle-btn${feedbackForm.hadBugs === (opt === "Ja") ? " active" : ""}`}
                     onClick={() => setFeedbackForm(f => ({...f, hadBugs: opt === "Ja"}))}
-                  >{opt}</button>
+                  >{t(opt)}</button>
                 ))}
               </div>
             </div>
@@ -3362,55 +3405,55 @@ export default function App() {
 
             {/* ─ Usage questions ─ */}
             <div className="fb-field">
-              <label className="fb-label">Hvornår ville du oftest bruge appen?</label>
+              <label className="fb-label">{t("Hvornår ville du oftest bruge appen?")}</label>
               <div className="fb-chips">
                 {["Inden indkøb", "Ugentlig madplan", "Inspiration", "Andet"].map(opt => (
                   <button key={opt} type="button"
                     className={`fb-chip${feedbackForm.when === opt ? " active" : ""}`}
                     onClick={() => setFeedbackForm(f => ({...f, when: f.when === opt ? "" : opt}))}
-                  >{opt}</button>
+                  >{t(opt)}</button>
                 ))}
               </div>
             </div>
 
             <div className="fb-field">
-              <label className="fb-label">Hvilken butik handler du normalt i?</label>
+              <label className="fb-label">{t("Hvilken butik handler du normalt i?")}</label>
               <div className="fb-chips">
                 {["Rema 1000", "Netto", "Coop 365", "En blanding", "Andet"].map(opt => (
                   <button key={opt} type="button"
                     className={`fb-chip${feedbackForm.store === opt ? " active" : ""}`}
                     onClick={() => setFeedbackForm(f => ({...f, store: f.store === opt ? "" : opt}))}
-                  >{opt}</button>
+                  >{t(opt)}</button>
                 ))}
               </div>
             </div>
 
             <div className="fb-field">
-              <label className="fb-label">Ville du bruge denne i stedet for — eller sideløbende med — din normale metode?</label>
+              <label className="fb-label">{t("Ville du bruge denne i stedet for — eller sideløbende med — din normale metode?")}</label>
               <div className="fb-chips">
                 {["I stedet for", "Sideløbende", "Ville nok ikke bruge den"].map(opt => (
                   <button key={opt} type="button"
                     className={`fb-chip${feedbackForm.replace === opt ? " active" : ""}`}
                     onClick={() => setFeedbackForm(f => ({...f, replace: f.replace === opt ? "" : opt}))}
-                  >{opt}</button>
+                  >{t(opt)}</button>
                 ))}
               </div>
             </div>
 
             <div className="fb-field">
-              <label className="fb-label">Hvor tit tror du, du ville bruge appen?</label>
+              <label className="fb-label">{t("Hvor tit tror du, du ville bruge appen?")}</label>
               <div className="fb-chips">
                 {["Dagligt", "Ugentligt", "Et par gange om måneden", "Sjældent"].map(opt => (
                   <button key={opt} type="button"
                     className={`fb-chip${feedbackForm.frequency === opt ? " active" : ""}`}
                     onClick={() => setFeedbackForm(f => ({...f, frequency: f.frequency === opt ? "" : opt}))}
-                  >{opt}</button>
+                  >{t(opt)}</button>
                 ))}
               </div>
             </div>
 
             <div className="fb-field">
-              <label className="fb-label">Hvilke af disse lagde du mærke til eller brugte? <span className="fb-label-sub">(vælg alle der passer)</span></label>
+              <label className="fb-label">{t("Hvilke af disse lagde du mærke til eller brugte?")} <span className="fb-label-sub">{t("(vælg alle der passer)")}</span></label>
               <div className="fb-chips">
                 {["Butikfiltrering", "Pris per person", "Indkøbsliste", "Gemte opskrifter", "Ingen af disse"].map(opt => {
                   const checked = feedbackForm.noticed.includes(opt);
@@ -3423,7 +3466,7 @@ export default function App() {
                           ? f.noticed.filter(x => x !== opt)
                           : [...f.noticed, opt],
                       }))}
-                    >{opt}</button>
+                    >{t(opt)}</button>
                   );
                 })}
               </div>
@@ -3433,22 +3476,22 @@ export default function App() {
 
             {/* ─ Open text ─ */}
             <div className="fb-field">
-              <label className="fb-label">Hvad mangler der for at du ville bruge den regelmæssigt?</label>
+              <label className="fb-label">{t("Hvad mangler der for at du ville bruge den regelmæssigt?")}</label>
               <textarea
                 className="fb-textarea"
                 rows={2}
-                placeholder="Fx en funktion, integration, noget der mangler…"
+                placeholder={t("Fx en funktion, integration, noget der mangler…")}
                 value={feedbackForm.whatsMissing}
                 onChange={e => setFeedbackForm(f => ({...f, whatsMissing: e.target.value}))}
               />
             </div>
 
             <div className="fb-field">
-              <label className="fb-label">Kommentarer eller fejl du stødte på</label>
+              <label className="fb-label">{t("Kommentarer eller fejl du stødte på")}</label>
               <textarea
                 className="fb-textarea"
                 rows={2}
-                placeholder="Beskriv hvad der skete og hvornår…"
+                placeholder={t("Beskriv hvad der skete og hvornår…")}
                 value={feedbackForm.comments}
                 onChange={e => setFeedbackForm(f => ({...f, comments: e.target.value}))}
               />
@@ -3459,9 +3502,9 @@ export default function App() {
               onClick={submitFeedback}
               disabled={!feedbackForm.findRecipe && !feedbackForm.design && !feedbackForm.likelihood}
             >
-              Send feedback
+              {t("Send feedback")}
             </button>
-            <p className="fb-anon-note">Anonym — ingen persondata gemmes</p>
+            <p className="fb-anon-note">{t("Anonym — ingen persondata gemmes")}</p>
           </div>
         )}
       </div>
@@ -3473,6 +3516,27 @@ export default function App() {
     <div className="mp-sheet-overlay" onClick={() => setShowOverflowMenu(false)}>
       <div className="overflow-menu-sheet" onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
+        <div className="overflow-menu-lang">
+          <span className="overflow-menu-lang-label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            {t("Sprog")}
+          </span>
+          <div className="overflow-menu-lang-toggle" role="group" aria-label={t("Sprog")}>
+            {LANGUAGES.map(l => (
+              <button
+                key={l.code}
+                type="button"
+                className={`ovm-lang-btn${lang === l.code ? " active" : ""}`}
+                aria-pressed={lang === l.code}
+                onClick={() => changeLang(l.code)}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <button className="overflow-menu-item" onClick={() => { setDarkMode(d => !d); setShowOverflowMenu(false); }}>
           {darkMode ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -3483,13 +3547,13 @@ export default function App() {
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
             </svg>
           )}
-          <span>{darkMode ? "Lys tilstand" : "Mørk tilstand"}</span>
+          <span>{darkMode ? t("Lys tilstand") : t("Mørk tilstand")}</span>
         </button>
         <button className="overflow-menu-item" onClick={() => { openSettings(); setShowOverflowMenu(false); }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
-          <span>Indstillinger</span>
+          <span>{t("Indstillinger")}</span>
         </button>
       </div>
     </div>
@@ -3501,19 +3565,19 @@ export default function App() {
       <div className="filter-sheet" onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="filter-sheet-header">
-          <span className="filter-sheet-title">Filtre</span>
-          <button className="mp-sheet-close" onClick={() => setShowFilterSheet(false)} aria-label="Luk">×</button>
+          <span className="filter-sheet-title">{t("Filtre")}</span>
+          <button className="mp-sheet-close" onClick={() => setShowFilterSheet(false)} aria-label={t("Luk")}>×</button>
         </div>
         <div className="filter-sheet-body">
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">Kosttype</div>
+            <div className="filter-sheet-label">{t("Kosttype")}</div>
             <div className="filter-chip-row">
               {[
-                { val: "Alle", label: "Alle" },
-                { val: "Vegetar", label: "Vegetar" },
-                { val: "Veganer", label: "Veganer" },
-                { val: "Glutenfri", label: "Glutenfri" },
-                { val: "Mælkefri", label: "Mælkefri" },
+                { val: "Alle", label: dietLabel("Alle") },
+                { val: "Vegetar", label: dietLabel("Vegetar") },
+                { val: "Veganer", label: dietLabel("Veganer") },
+                { val: "Glutenfri", label: dietLabel("Glutenfri") },
+                { val: "Mælkefri", label: dietLabel("Mælkefri") },
               ].map(f => (
                 <button key={f.val} className={`filter-chip${diet === f.val ? " active" : ""}`} onClick={() => changeDiet(f.val)}>
                   {f.label}
@@ -3522,10 +3586,10 @@ export default function App() {
             </div>
           </div>
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">Butikker</div>
+            <div className="filter-sheet-label">{t("Butikker")}</div>
             <div className="filter-chip-row">
               {[
-                { id: "enbutik", label: "Kun én butik" },
+                { id: "enbutik", label: t("Kun én butik") },
               ].map(f => (
                 <button key={f.id} className={`filter-chip${quickFilters.has(f.id) ? " active" : ""}`} onClick={() => toggleQuickFilter(f.id)}>
                   {f.label}
@@ -3534,26 +3598,26 @@ export default function App() {
             </div>
           </div>
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">Tid</div>
+            <div className="filter-sheet-label">{t("Tid")}</div>
             <div className="filter-chip-row">
               {timeFilters.map(f => (
-                <button key={f} className={`filter-chip${timeFilter === f ? " active" : ""}`} onClick={() => setTimeFilter(f)}>{f}</button>
+                <button key={f} className={`filter-chip${timeFilter === f ? " active" : ""}`} onClick={() => setTimeFilter(f)}>{timeLabel(f)}</button>
               ))}
             </div>
           </div>
           {CUISINE_ORDER.length > 2 && (
             <div className="filter-sheet-group">
-              <div className="filter-sheet-label">Køkken</div>
+              <div className="filter-sheet-label">{t("Køkken")}</div>
               <div className="filter-chip-row">
                 {CUISINE_ORDER.map(c => (
-                  <button key={c} className={`filter-chip${cuisineFilter === c ? " active" : ""}`} onClick={() => setCuisineFilter(c)}>{cuisineLabel(c)}</button>
+                  <button key={c} className={`filter-chip${cuisineFilter === c ? " active" : ""}`} onClick={() => setCuisineFilter(c)}>{cuisineText(c)}</button>
                 ))}
               </div>
             </div>
           )}
           {maxRecipePrice > 0 && (
             <div className="filter-sheet-group">
-              <div className="filter-sheet-label">Pris pr. person</div>
+              <div className="filter-sheet-label">{t("Pris pr. person")}</div>
               <div className="price-range-wrap prefs-price-wrap">
                 <div className="price-range-header">
                   <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
@@ -3575,17 +3639,17 @@ export default function App() {
             </div>
           )}
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">Køleskab</div>
+            <div className="filter-sheet-label">{t("Køleskab")}</div>
             <div className="fs-pantry-input-row">
               <input
                 className="fs-pantry-input"
                 type="text"
-                placeholder="Tilføj ingrediens du har..."
+                placeholder={t("Tilføj ingrediens du har...")}
                 value={pantryInput}
                 onChange={e => setPantryInput(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(); } }}
               />
-              <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>Tilføj</button>
+              <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>
             </div>
             {pantryItems.size > 0 && (
               <div className="fs-pantry-chips">
@@ -3598,12 +3662,12 @@ export default function App() {
             )}
           </div>
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">Sorter efter</div>
+            <div className="filter-sheet-label">{t("Sorter efter")}</div>
             <div className="filter-chip-row">
               {[
-                { id: "anbefalet", label: "Anbefalet" },
-                { id: "pris-asc",  label: "Billigst" },
-                { id: "hurtigst", label: "Hurtigst" },
+                { id: "anbefalet", label: sortLabel("anbefalet", "Anbefalet") },
+                { id: "pris-asc",  label: sortLabel("pris-asc", "Billigst") },
+                { id: "hurtigst", label: sortLabel("hurtigst", "Hurtigst") },
               ].map(s => (
                 <button key={s.id} className={`filter-chip${sortOrder === s.id ? " active" : ""}`} onClick={() => setSortOrder(s.id)}>
                   {s.label}
@@ -3614,10 +3678,10 @@ export default function App() {
         </div>
         <div className="filter-sheet-footer">
           {activeFilterCount > 0 && (
-            <button className="filter-sheet-clear" onClick={clearAllFilters}>Ryd filtre</button>
+            <button className="filter-sheet-clear" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
           )}
           <button className="filter-sheet-apply" onClick={() => setShowFilterSheet(false)}>
-            Vis {(filteredRecommended.length + filteredOthers.length)} opskrifter
+            {en ? "Show" : "Vis"} {(filteredRecommended.length + filteredOthers.length)} {en ? "recipes" : "opskrifter"}
           </button>
         </div>
       </div>
@@ -3632,11 +3696,11 @@ export default function App() {
         </svg>
       </div>
       <div className="install-banner-text">
-        <strong>Tilføj til hjemmeskærm</strong>
-        <span>Åbn Tilbudskokken som en app</span>
+        <strong>{t("Tilføj til hjemmeskærm")}</strong>
+        <span>{t("Åbn Tilbudskokken som en app")}</span>
       </div>
-      <button className="install-banner-cta" onClick={triggerInstall}>Tilføj</button>
-      <button className="install-banner-dismiss" onClick={dismissInstall} aria-label="Luk">×</button>
+      <button className="install-banner-cta" onClick={triggerInstall}>{t("Tilføj")}</button>
+      <button className="install-banner-dismiss" onClick={dismissInstall} aria-label={t("Luk")}>×</button>
     </div>
   )}
 

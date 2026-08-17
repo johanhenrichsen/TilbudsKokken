@@ -6709,6 +6709,93 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
   border-radius: 4px;
 }
 
+/* ── Language switcher (overflow menu) ── */
+.overflow-menu-lang {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px 14px;
+  border-bottom: 1px solid var(--border, rgba(238,230,216,0.1));
+  margin-bottom: 4px;
+}
+.overflow-menu-lang-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text, #EEE6D8);
+}
+.overflow-menu-lang-toggle {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(238,230,216,0.08);
+  border: 1px solid var(--border, rgba(238,230,216,0.12));
+}
+.ovm-lang-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim, rgba(238,230,216,0.75));
+  padding: 5px 14px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+.ovm-lang-btn.active {
+  background: var(--accent, #CE9F3E);
+  color: #1B1613;
+}
+html:not(.dark) .overflow-menu-lang { border-bottom-color: #DED3C0; }
+html:not(.dark) .overflow-menu-lang-label { color: #221C17; }
+html:not(.dark) .overflow-menu-lang-toggle { background: #EFE4D2; border-color: #DED3C0; }
+html:not(.dark) .ovm-lang-btn { color: #6F665A; }
+html:not(.dark) .ovm-lang-btn.active { background: #7E5A0E; color: #FBF6EC; }
+
+/* ── Language switcher (desktop header text button) ── */
+.header-lang-btn {
+  font-family: var(--font-sans, 'DM Sans', ui-sans-serif, sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ── Language switcher (onboarding welcome) ── */
+.ob-welcome-lang {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 20px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(238,230,216,0.08);
+  border: 1px solid var(--border, rgba(238,230,216,0.12));
+}
+.ob-welcome-lang-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim, rgba(238,230,216,0.75));
+  padding: 6px 16px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+.ob-welcome-lang-btn.active {
+  background: var(--accent, #CE9F3E);
+  color: #1B1613;
+}
+html:not(.dark) .ob-welcome-lang { background: #EFE4D2; border-color: #DED3C0; }
+html:not(.dark) .ob-welcome-lang-btn { color: #6F665A; }
+html:not(.dark) .ob-welcome-lang-btn.active { background: #7E5A0E; color: #FBF6EC; }
+
 /* ── Filter & sort sheet ── */
 .filter-sheet {
   position: fixed;
