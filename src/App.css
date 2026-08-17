@@ -1439,7 +1439,7 @@ html, body {
 .ingredient-pantry-dot {
   width: 5px;
   height: 5px;
-  background: rgba(238,230,216,0.1);
+  background: var(--text-faint);
   border-radius: 50%;
   flex-shrink: 0;
   display: inline-block;
@@ -1470,7 +1470,7 @@ html, body {
   display: inline-block;
 }
 .legend-dot.deal { background: #B83A24; }
-.legend-dot.pantry { background: rgba(238,230,216,0.1); }
+.legend-dot.pantry { background: var(--text-faint); }
 
 /* ─── Local store badge ──────────────────────── */
 .local-store-badge {
@@ -2977,7 +2977,7 @@ html.dark .ingredient-item { color: rgba(238,230,216,0.6); }
 html.dark .ingredient-item.ingredient-deal { background: #352F2B; }
 html.dark .ingredient-deal-text { color: var(--text-faint); }
 html.dark .ingredient-pantry-text { color: var(--text-faint); }
-html.dark .ingredient-pantry-dot { background: rgba(238,230,216,0.1); }
+html.dark .ingredient-pantry-dot { background: var(--text-faint); }
 html.dark .step-item { color: rgba(238,230,216,0.6); }
 html.dark .step-item:not(:last-child) { border-color: rgba(238,230,216,0.1); }
 html.dark .recipe-tip { background: linear-gradient(135deg, #2B2620 0%, #352F2B 100%); color: var(--text-faint); }
