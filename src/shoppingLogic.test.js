@@ -13,6 +13,7 @@ import {
   recipeShoppables,
   allShoppablesInList,
   removeCheckedItems,
+  removeCheckedEntries,
   savedServingsFor,
 } from "./shoppingLogic.js";
 
@@ -53,6 +54,17 @@ test("#3 a recipe with no shoppable ingredients is never 'in list'", () => {
   assert.equal(allShoppablesInList(pantryOnly, ["Salt"]), false);
 });
 
+// The cart moved from string[] to {id,text,store,checked}[]. allShoppablesInList
+// must read the .text of each object entry, while still accepting legacy strings.
+test("#3 allShoppablesInList reads .text from object cart entries", () => {
+  const cart = [
+    { id: "a", text: "500 g hakket oksekød", store: "Netto", checked: false },
+    { id: "b", text: "1 dåse tomater", store: "Rema 1000", checked: true },
+  ];
+  assert.equal(allShoppablesInList(recipe, cart), true);
+  assert.equal(allShoppablesInList(recipe, cart.slice(0, 1)), false);
+});
+
 // ── QA #6: "Ryd afkrydsede" actually removes checked items ────────────────
 test("#6 removeCheckedItems drops exactly the checked entries", () => {
   const list = ["Mælk", "Æg", "Smør"];
@@ -68,6 +80,28 @@ test("#6 removeCheckedItems with nothing checked leaves the list intact", () => 
 test("#6 removeCheckedItems can clear the whole list", () => {
   const list = ["Mælk", "Æg"];
   assert.deepEqual(removeCheckedItems(list, new Set(list)), []);
+});
+
+// Object cart: "Ryd afkrydsede" drops entries whose .checked is true, keeping
+// identity stable via id (no reliance on text equality).
+test("#6 removeCheckedEntries drops exactly the checked object entries", () => {
+  const cart = [
+    { id: "a", text: "Mælk", checked: false },
+    { id: "b", text: "Æg", checked: true },
+    { id: "c", text: "Smør", checked: false },
+  ];
+  assert.deepEqual(
+    removeCheckedEntries(cart).map(i => i.id),
+    ["a", "c"],
+  );
+});
+
+test("#6 removeCheckedEntries with two identical texts only drops the checked one", () => {
+  const cart = [
+    { id: "a", text: "Tomat", checked: true },
+    { id: "b", text: "Tomat", checked: false },
+  ];
+  assert.deepEqual(removeCheckedEntries(cart).map(i => i.id), ["b"]);
 });
 
 // ── QA #4: saved recipe stores the selected serving size ──────────────────

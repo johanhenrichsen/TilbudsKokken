@@ -9,16 +9,29 @@ export function recipeShoppables(recipe) {
     .map(ing => ing.text);
 }
 
+// The cart holds {id,text,store,checked} objects; legacy persisted carts (and the
+// unit tests) may still pass plain strings, so read text tolerantly.
+export function entryText(entry) {
+  return typeof entry === "string" ? entry : entry?.text;
+}
+
 // QA #3: whether every shoppable ingredient of a recipe is already on the list.
 // Empty (no shoppable ingredients) counts as "not in list" so the button stays actionable.
 export function allShoppablesInList(recipe, shoppingList) {
   const texts = recipeShoppables(recipe);
-  return texts.length > 0 && texts.every(t => shoppingList.includes(t));
+  const listTexts = new Set((shoppingList || []).map(entryText));
+  return texts.length > 0 && texts.every(t => listTexts.has(t));
 }
 
-// QA #6: remove the checked items from the shopping list.
+// QA #6 (legacy string cart): remove the checked items from the shopping list.
 export function removeCheckedItems(shoppingList, checkedSet) {
   return shoppingList.filter(item => !checkedSet.has(item));
+}
+
+// QA #6 (object cart): drop the entries the user has checked off. Identity is the
+// item's own .checked flag, so duplicate texts are handled independently.
+export function removeCheckedEntries(cart) {
+  return (cart || []).filter(it => !it.checked);
 }
 
 // QA #4: the serving count to store with a saved recipe — the user's current

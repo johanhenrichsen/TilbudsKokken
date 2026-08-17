@@ -6,7 +6,7 @@ import weeklyRecipesJson from "./data/weeklyRecipes.json";
 const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticRecipes;
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
-import { allShoppablesInList, removeCheckedItems, savedServingsFor } from "./shoppingLogic";
+import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -34,6 +34,21 @@ const _CHAIN_COLORS_NORM = new Map(
 function getChainColor(store) {
   if (!store) return undefined;
   return _CHAIN_COLORS_NORM.get(store.toLowerCase().trim());
+}
+
+// Stable, collision-free ids for cart line items so React keys, checked-state and
+// removal never rely on the (possibly duplicated) item text. See cart rebuild.
+let _cartSeq = 0;
+function cartUid() { return `c${Date.now().toString(36)}_${(_cartSeq++).toString(36)}`; }
+const CART_STORE_FALLBACK = "Øvrige varer";
+
+// Normalise an item text for dedup: strip a leading quantity + unit so
+// "500 g hakket oksekød" and "hakket oksekød" collapse to one entry.
+function normCartText(text) {
+  return (text || "")
+    .toLowerCase()
+    .replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, "")
+    .trim();
 }
 
 // Short monograms for compact chain badges
@@ -85,6 +100,25 @@ const CHAIN_CANONICAL = {
   "Kvickly":                "SuperBrugsen",
 };
 function canonicalChain(name) { return CHAIN_CANONICAL[name] || name; }
+
+// Group cart entries by store for the aisle-by-aisle shopping view. Groups follow
+// CHAIN_ORDER; items without a store fall into a trailing "Øvrige varer" group.
+function groupCartByStore(cart) {
+  const byStore = new Map();
+  for (const it of cart || []) {
+    const key = it.store ? canonicalChain(it.store) : CART_STORE_FALLBACK;
+    if (!byStore.has(key)) byStore.set(key, []);
+    byStore.get(key).push(it);
+  }
+  const rank = s => {
+    if (s === CART_STORE_FALLBACK) return CHAIN_ORDER.length + 1;
+    const i = CHAIN_ORDER.indexOf(s);
+    return i < 0 ? CHAIN_ORDER.length : i;
+  };
+  return [...byStore.entries()]
+    .sort((a, b) => rank(a[0]) - rank(b[0]))
+    .map(([store, items]) => ({ store, items }));
+}
 
 const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
 const CUISINE_SEARCH_MAP = {
@@ -888,14 +922,29 @@ export default function App() {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
   const [shoppingList, setShoppingList] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("shoppingList") || "[]"); } catch { return []; }
-  });
-  const [checkedItems, setCheckedItems] = useState(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem("checkedItems") || "[]");
-      return new Set(Array.isArray(saved) ? saved : []);
-    } catch { return new Set(); }
+      const raw = JSON.parse(localStorage.getItem("shoppingList") || "[]");
+      if (!Array.isArray(raw)) return [];
+      // Migrate legacy carts: string[] items + a separate `checkedItems` string[].
+      if (raw.length > 0 && typeof raw[0] === "string") {
+        let legacyChecked = [];
+        try { legacyChecked = JSON.parse(localStorage.getItem("checkedItems") || "[]"); } catch {}
+        const checkedSet = new Set(Array.isArray(legacyChecked) ? legacyChecked : []);
+        const migrated = raw.map(text => ({
+          id: cartUid(), text, store: null, checked: checkedSet.has(text),
+        }));
+        try { localStorage.setItem("shoppingList", JSON.stringify(migrated)); } catch {}
+        try { localStorage.removeItem("checkedItems"); } catch {}
+        return migrated;
+      }
+      // Already object model — normalise defensively so every entry has all fields.
+      return raw
+        .map(it => ({ id: it.id || cartUid(), text: it.text || "", store: it.store ?? null, checked: !!it.checked }))
+        .filter(it => it.text);
+    } catch { return []; }
   });
+  const [confirmClearCart, setConfirmClearCart] = useState(false);
+  const [cartCopied, setCartCopied] = useState(false);
   const [showShoppingSheet, setShowShoppingSheet] = useState(false);
   const [diet, setDiet] = useState(() => {
     try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
@@ -1161,11 +1210,6 @@ export default function App() {
     const m = timeStr.match(/(\d+)\s*min/);
     return (h ? parseInt(h[1]) * 60 : 0) + (m ? parseInt(m[1]) : 0);
   }
-  const popScores = Object.values(popularityMap).sort((a, b) => b - a);
-  const popThreshold = popScores.length > 0
-    ? (popScores[Math.max(0, Math.floor(popScores.length * 0.2) - 1)] ?? 1)
-    : Infinity;
-
   const searchQ = search.toLowerCase();
   function matchRecipe(r) {
     // Chain split is handled by fullyMatched in getScoredRecipes.
@@ -1197,12 +1241,8 @@ export default function App() {
       }
       // unpriced recipes always pass the slider filter
     }
-    if (quickFilters.has("under20kr")) {
-      const pp = calcPricePerPerson(r);
-      if (pp === null || pp > 20) return false;
-    }
-    if (quickFilters.has("under20min") && parseMinutes(r.time) >= 20) return false;
-    if (quickFilters.has("populaere") && (popularityMap[r.id] || 0) < popThreshold) return false;
+    // "Én butik" is the one quick-filter left; time/price/popularity now live in
+    // their own dedicated controls (Tid, Pris, and the merged Anbefalet sort).
     if (quickFilters.has("enbutik")) {
       const storeSet = new Set((r.dealItems || []).map(di => di.store));
       if (storeSet.size > 1) return false;
@@ -1217,9 +1257,10 @@ export default function App() {
       case "pris-asc":  return (calcPricePerPerson(a) ?? Infinity) - (calcPricePerPerson(b) ?? Infinity);
       case "pris-desc": return (calcPricePerPerson(b) ?? -Infinity) - (calcPricePerPerson(a) ?? -Infinity);
       case "hurtigst":  return parseMinutes(a.time) - parseMinutes(b.time);
-      case "populaer":  return (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0);
       case "nyeste":    return (recipeIndexMap.get(b.id) ?? 0) - (recipeIndexMap.get(a.id) ?? 0);
-      default:          return 0; // "anbefalet" — keep input order
+      // "anbefalet" folds in popularity: recommended order first (kept stable by
+      // returning 0 elsewhere), so the old separate "Populær" sort is redundant.
+      default:          return 0;
     }
   }
 
@@ -1299,50 +1340,47 @@ export default function App() {
   }
 
   // ── Shopping list ───────────────────────────────────────────────
-  function addToShoppingList(text) {
+  // Cart entries are { id, text, store, checked }. `checked` lives on the item so
+  // there is one source of truth — keys, checking and removal are all id-based.
+  function persistCart(next) {
+    try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
+    return next;
+  }
+  function addToShoppingList(text, store = null) {
+    const norm = normCartText(text);
     setShoppingList(prev => {
-      if (prev.includes(text)) return prev;
-      const next = [...prev, text];
-      try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
-      return next;
+      if (prev.some(it => normCartText(it.text) === norm)) return prev;
+      return persistCart([...prev, { id: cartUid(), text, store: store || null, checked: false }]);
     });
   }
-  function removeFromShoppingList(i) {
-    setShoppingList(prev => {
-      const removed = prev[i];
-      const next = prev.filter((_, idx) => idx !== i);
-      setCheckedItems(c => {
-        const s = new Set(c);
-        s.delete(removed);
-        try { localStorage.setItem("checkedItems", JSON.stringify([...s])); } catch {}
-        return s;
-      });
-      try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
-      return next;
-    });
+  function removeFromShoppingList(id) {
+    setShoppingList(prev => persistCart(prev.filter(it => it.id !== id)));
   }
   function clearShoppingList() {
+    setConfirmClearCart(false);
     setShoppingList([]);
-    setCheckedItems(new Set());
     try { localStorage.removeItem("shoppingList"); } catch {}
-    try { localStorage.removeItem("checkedItems"); } catch {}
   }
-  function toggleCheckedItem(item) {
-    setCheckedItems(prev => {
-      const next = new Set(prev);
-      if (next.has(item)) next.delete(item); else next.add(item);
-      try { localStorage.setItem("checkedItems", JSON.stringify([...next])); } catch {}
-      return next;
-    });
+  function toggleCheckedItem(id) {
+    setShoppingList(prev =>
+      persistCart(prev.map(it => (it.id === id ? { ...it, checked: !it.checked } : it))));
   }
   function clearCheckedItems() {
-    setShoppingList(prev => {
-      const next = removeCheckedItems(prev, checkedItems);
-      try { localStorage.setItem("shoppingList", JSON.stringify(next)); } catch {}
-      return next;
-    });
-    setCheckedItems(new Set());
-    try { localStorage.removeItem("checkedItems"); } catch {}
+    setShoppingList(prev => persistCart(removeCheckedEntries(prev)));
+  }
+  // Plain-text export grouped by store, for the copy / native-share button.
+  async function shareShoppingList() {
+    const groups = groupCartByStore(shoppingList);
+    const body = groups
+      .map(g => `${g.store}:\n` + g.items.map(it => `  - ${it.text}`).join("\n"))
+      .join("\n\n");
+    const text = `Min indkøbsliste (Spotkokken)\n\n${body}`;
+    try {
+      if (navigator.share) { await navigator.share({ title: "Indkøbsliste", text }); return; }
+      await navigator.clipboard.writeText(text);
+      setCartCopied(true);
+      setTimeout(() => setCartCopied(false), 1800);
+    } catch { /* user cancelled share — ignore */ }
   }
 
   // ── Feedback ─────────────────────────────────────────────────────
@@ -1404,27 +1442,21 @@ export default function App() {
 
   function addAllSavedToShoppingList(recipes) {
     const targetRecipes = recipes || savedRecipes;
-    const existingNorm = new Set(shoppingList.map(s =>
-      s.toLowerCase().replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, '').trim()
-    ));
+    const existingNorm = new Set(shoppingList.map(it => normCartText(it.text)));
     const toAdd = [];
     for (const r of targetRecipes) {
       for (const ing of (r.ingredients || [])) {
         if (ing.isPantry || !ing.store) continue;
         const text = ing.text || '';
-        const norm = text.toLowerCase().replace(/^\s*\d+[\d.,]*\s*(?:g|kg|l|dl|cl|ml|stk\.?|pk\.?|pose|karton|dåse|potte|bakke)?\.?\s*/i, '').trim();
+        const norm = normCartText(text);
         if (norm && !existingNorm.has(norm)) {
           existingNorm.add(norm);
-          toAdd.push(text);
+          toAdd.push({ id: cartUid(), text, store: ing.store || null, checked: false });
         }
       }
     }
     if (toAdd.length === 0) return 0;
-    setShoppingList(prev => {
-      const next = [...prev, ...toAdd];
-      try { localStorage.setItem('shoppingList', JSON.stringify(next)); } catch {}
-      return next;
-    });
+    setShoppingList(prev => persistCart([...prev, ...toAdd]));
     return toAdd.length;
   }
 
@@ -1556,6 +1588,17 @@ export default function App() {
   function changeDiet(val) {
     setDiet(val);
     try { localStorage.setItem("defaultDiet", val); } catch {}
+  }
+
+  // Reset every result-narrowing filter in one action. Leaves search (it has its
+  // own clear) and the pantry/sort defaults handled by their own controls.
+  function clearAllFilters() {
+    changeDiet("Alle");
+    setTimeFilter("Alle tider");
+    setCuisineFilter("Alle");
+    setPriceMin(0);
+    setPriceMax(null);
+    setQuickFilters(new Set());
   }
 
   function toggleSection(key) {
@@ -1699,6 +1742,76 @@ export default function App() {
   // reflects real list membership instead of a 2-second timer (QA bug #3).
   const detailInList = selectedRecipe ? allShoppablesInList(selectedRecipe, shoppingList) : false;
   const weekBadge = `UGE ${getISOWeek(new Date()).week} · ${new Date().getFullYear()}`;
+
+  // ── Shared cart rendering (used by both the inline card and the modal sheet) ──
+  const cartCheckedCount = shoppingList.filter(it => it.checked).length;
+  const cartCheckIcon = (
+    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="2,7 6,11 12,3" />
+    </svg>
+  );
+  // Store-grouped item list. One markup for every cart surface so they can't drift.
+  function renderCartGroups() {
+    return groupCartByStore(shoppingList).map(group => (
+      <div key={group.store} className="cart-group">
+        <div className="cart-group-label">
+          <span className="chain-badge" style={getChainColor(group.store) ? { "--chain-color": getChainColor(group.store) } : undefined} />
+          <span className="cart-group-name">{group.store}</span>
+          <span className="cart-group-count">{group.items.length}</span>
+        </div>
+        <ul className="cart-item-list">
+          {group.items.map(it => (
+            <li
+              key={it.id}
+              className={`cart-item${it.checked ? " checked" : ""}`}
+              onClick={() => toggleCheckedItem(it.id)}
+            >
+              <button
+                className="cart-check-btn"
+                onClick={e => { e.stopPropagation(); toggleCheckedItem(it.id); }}
+                aria-label={it.checked ? "Fjern hak" : "Sæt hak"}
+                tabIndex={-1}
+              >
+                {it.checked ? cartCheckIcon : null}
+              </button>
+              <span className="cart-item-text">{it.text}</span>
+              <button
+                className="cart-item-remove"
+                onClick={e => { e.stopPropagation(); removeFromShoppingList(it.id); }}
+                aria-label="Fjern vare"
+              >×</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ));
+  }
+  // Footer action row: share, clear-checked, and clear-all with a two-step confirm.
+  function renderCartActions() {
+    return (
+      <div className="cart-actions">
+        <button className={`cart-share-btn${cartCopied ? " copied" : ""}`} onClick={shareShoppingList}>
+          {cartCopied ? "✓ Kopieret!" : "Del / kopiér liste"}
+        </button>
+        {cartCheckedCount > 0 && (
+          <button className="cart-clear-btn cart-clear-btn--safe" onClick={clearCheckedItems}>
+            Ryd afkrydsede ({cartCheckedCount})
+          </button>
+        )}
+        {confirmClearCart ? (
+          <div className="cart-clear-confirm">
+            <span>Tøm hele listen?</span>
+            <div className="cart-clear-confirm-btns">
+              <button className="cart-clear-yes" onClick={clearShoppingList}>Ja, tøm</button>
+              <button className="cart-clear-no" onClick={() => setConfirmClearCart(false)}>Annuller</button>
+            </div>
+          </div>
+        ) : (
+          <button className="cart-clear-btn" onClick={() => setConfirmClearCart(true)}>Start forfra</button>
+        )}
+      </div>
+    );
+  }
 
   // The recipe-detail action buttons, shared between the desktop inline bar
   // (in the recipe header) and the mobile docked bar. On mobile the docked bar
@@ -2018,6 +2131,45 @@ export default function App() {
               <span className="hero-brand-slogan">Bedre tilbud. Bedre mad.</span>
             </div>
           </div>
+          {setupComplete && (
+            <nav className="desktop-nav" aria-label="Hovednavigation">
+              {[
+                {
+                  id: "opskrifter",
+                  label: "Opskrifter",
+                  active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet && !selectedRecipe,
+                  badge: null,
+                  onClick: () => { setSelectedRecipe(null); setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
+                },
+                {
+                  id: "madplan",
+                  label: "Ugen",
+                  active: showMealPlanPanel,
+                  badge: planCount > 0 ? planCount : null,
+                  onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowMealPlanPanel(v => !v); },
+                },
+                {
+                  id: "gemt",
+                  label: "Gemte",
+                  active: showSavedPanel,
+                  badge: savedRecipes.length > 0 ? savedRecipes.length : null,
+                  onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowSavedPanel(v => !v); },
+                },
+                {
+                  id: "indkob",
+                  label: "Kurv",
+                  active: showShoppingSheet,
+                  badge: shoppingList.length > 0 ? shoppingList.length : null,
+                  onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(v => !v); },
+                },
+              ].map(t => (
+                <button key={t.id} className={`dnav-item${t.active ? " active" : ""}`} onClick={t.onClick}>
+                  {t.label}
+                  {t.badge != null && <span className="dnav-badge">{t.badge}</span>}
+                </button>
+              ))}
+            </nav>
+          )}
           <div className="hero-topbar-right">
             <div className="week-badge">{weekBadge}</div>
             <div className="header-actions">
@@ -2151,13 +2303,10 @@ export default function App() {
             {prefsOpen && (
               <div className="prefs-body">
                 {/* Quick filters */}
-                <div className="prefs-group-label">Hurtigfiltre</div>
+                <div className="prefs-group-label">Butikker</div>
                 <div className="quick-filters prefs-filter-row">
                   {[
-                    { id: "under20kr",  label: "Under 20 kr." },
-                    { id: "under20min", label: "Under 20 min" },
-                    { id: "populaere",  label: "Populære" },
-                    { id: "enbutik",    label: "Én butik" },
+                    { id: "enbutik", label: "Kun én butik" },
                   ].map(f => (
                     <button
                       key={f.id}
@@ -2400,13 +2549,13 @@ export default function App() {
               {(selectedRecipe.ingredients || []).map((ing, i) => {
                 const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
                 const isDeal = !ing.isPantry && !!(ing.store);
-                const inList = shoppingList.includes(scaled);
+                const inList = shoppingList.some(it => it.text === scaled);
                 return (
                   <li key={i} className={`ingredient-item${isDeal ? " ingredient-deal" : " ingredient-pantry"}`}>
                     {isDeal ? (
                       <button
                         className="ingredient-add-btn"
-                        onClick={() => addToShoppingList(scaled)}
+                        onClick={() => addToShoppingList(scaled, ing.store)}
                         disabled={inList}
                         style={{ background: inList ? "#d4ead4" : "#4a7050", color: inList ? "#3a6040" : "white" }}
                       >
@@ -2466,32 +2615,13 @@ export default function App() {
               <div className="shopping-list-header">
                 <div className="section-label" style={{ margin: 0 }}>
                   {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
-                </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {checkedItems.size > 0 && (
-                    <button className="btn-outline btn-outline--safe" onClick={clearCheckedItems}>Ryd afkrydsede</button>
-                  )}
-                  <button className="btn-outline" onClick={clearShoppingList}>Start forfra</button>
+                  {cartCheckedCount > 0 && <span className="cart-progress"> · {cartCheckedCount} klaret</span>}
                 </div>
               </div>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {shoppingList.map((item, i) => {
-                  const checked = checkedItems.has(item);
-                  return (
-                    <li key={i} className={`shopping-item${checked ? " checked" : ""}`}>
-                      <button className="shopping-check-btn" onClick={() => toggleCheckedItem(item)} aria-label={checked ? "Fjern hak" : "Sæt hak"}>
-                        {checked ? (
-                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="2,7 6,11 12,3"/>
-                          </svg>
-                        ) : null}
-                      </button>
-                      <span className="shopping-item-label">{item}</span>
-                      <button className="shopping-item-remove" onClick={() => removeFromShoppingList(i)}>×</button>
-                    </li>
-                  );
-                })}
-              </ul>
+              <div className="cart-groups">
+                {renderCartGroups()}
+              </div>
+              {renderCartActions()}
             </div>
           )}
         </div>
@@ -2520,7 +2650,7 @@ export default function App() {
               </button>
               <div className="mfr-divider" />
               <button className="mfr-btn mfr-sort" onClick={() => setShowFilterSheet(true)}>
-                <span>{{ anbefalet: "Anbefalet", "pris-asc": "Billigst", hurtigst: "Hurtigst", populaer: "Populær" }[sortOrder]}</span>
+                <span>{{ anbefalet: "Anbefalet", "pris-asc": "Billigst", hurtigst: "Hurtigst" }[sortOrder] || "Anbefalet"}</span>
                 <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M4 6 L8 10 L12 6"/>
                 </svg>
@@ -2553,7 +2683,6 @@ export default function App() {
                   { id: "anbefalet", label: "Anbefalet" },
                   { id: "pris-asc",  label: "Billigst" },
                   { id: "hurtigst", label: "Hurtigst" },
-                  { id: "populaer", label: "Populær" },
                 ].map(s => (
                   <button
                     key={s.id}
@@ -2563,6 +2692,20 @@ export default function App() {
                     {s.label}
                   </button>
                 ))}
+              </div>
+              {/* Desktop entry to the full filter sheet (Tid/Køkken/Pris/Køleskab)
+                  which is otherwise only reachable from the mobile filter row. */}
+              <div className="quick-strip quick-strip-more">
+                <button className="qs-filter-btn" onClick={() => setShowFilterSheet(true)}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+                  </svg>
+                  Flere filtre
+                  {activeFilterCount > 0 && <span className="qs-filter-badge">{activeFilterCount}</span>}
+                </button>
+                {activeFilterCount > 0 && (
+                  <button className="qs-clear-btn" onClick={clearAllFilters}>Ryd filtre</button>
+                )}
               </div>
             </div>
 
@@ -2602,10 +2745,17 @@ export default function App() {
                     </>
                   ) : (
                     <div className="section-empty-state">
-                      {search ? (
+                      {(search || activeFilterCount > 0) ? (
                         <>
-                          <span className="empty-state-label">Ingen match.</span>
-                          <span className="empty-state-hint">Prøv et kortere søgeord eller juster filtrene</span>
+                          <span className="empty-state-label">Ingen opskrifter matcher.</span>
+                          <span className="empty-state-hint">
+                            {search
+                              ? "Prøv et kortere søgeord eller nulstil filtrene"
+                              : "Dine filtre er for snævre lige nu"}
+                          </span>
+                          {activeFilterCount > 0 && (
+                            <button className="empty-state-reset" onClick={clearAllFilters}>Ryd filtre</button>
+                          )}
                         </>
                       ) : (
                         <>
@@ -2924,7 +3074,15 @@ export default function App() {
       <div className="shopping-sheet" ref={setShoppingSheetEl} onClick={e => e.stopPropagation()}>
         <div className="mp-sheet-drag-handle" />
         <div className="shopping-sheet-header">
-          <div className="shopping-sheet-title">Indkøbsliste</div>
+          <div className="shopping-sheet-title">
+            Indkøbsliste
+            {shoppingList.length > 0 && (
+              <span className="shopping-sheet-sub">
+                {shoppingList.length} {shoppingList.length === 1 ? "vare" : "varer"}
+                {cartCheckedCount > 0 && ` · ${cartCheckedCount} klaret`}
+              </span>
+            )}
+          </div>
           <button className="mp-sheet-close" onClick={() => setShowShoppingSheet(false)}>×</button>
         </div>
         {shoppingList.length === 0 ? (
@@ -2933,30 +3091,10 @@ export default function App() {
           </div>
         ) : (
           <>
-            <ul className="shopping-sheet-list">
-              {shoppingList.map((item, i) => {
-                const checked = checkedItems.has(item);
-                return (
-                  <li key={i} className={`shopping-sheet-item${checked ? " checked" : ""}`} onClick={() => toggleCheckedItem(item)}>
-                    <button className="shopping-check-btn" onClick={e => { e.stopPropagation(); toggleCheckedItem(item); }} aria-label={checked ? "Fjern hak" : "Sæt hak"} tabIndex={-1}>
-                      {checked ? (
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="2,7 6,11 12,3"/>
-                        </svg>
-                      ) : null}
-                    </button>
-                    <span className="shopping-sheet-text">{item}</span>
-                    <button className="shopping-item-remove" onClick={e => { e.stopPropagation(); removeFromShoppingList(i); }}>×</button>
-                  </li>
-                );
-              })}
-            </ul>
-            <div className="shopping-sheet-footer">
-              {checkedItems.size > 0 && (
-                <button className="mp-clear-btn mp-clear-btn--safe" onClick={clearCheckedItems}>Ryd afkrydsede</button>
-              )}
-              <button className="mp-clear-btn" onClick={clearShoppingList}>Start forfra</button>
+            <div className="cart-groups shopping-sheet-groups">
+              {renderCartGroups()}
             </div>
+            {renderCartActions()}
           </>
         )}
       </div>
@@ -3257,13 +3395,10 @@ export default function App() {
             </div>
           </div>
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">Hurtigfiltre</div>
+            <div className="filter-sheet-label">Butikker</div>
             <div className="filter-chip-row">
               {[
-                { id: "under20kr",  label: "Under 20 kr." },
-                { id: "under20min", label: "Under 20 min" },
-                { id: "populaere",  label: "Populære" },
-                { id: "enbutik",    label: "Én butik" },
+                { id: "enbutik", label: "Kun én butik" },
               ].map(f => (
                 <button key={f.id} className={`filter-chip${quickFilters.has(f.id) ? " active" : ""}`} onClick={() => toggleQuickFilter(f.id)}>
                   {f.label}
@@ -3342,7 +3477,6 @@ export default function App() {
                 { id: "anbefalet", label: "Anbefalet" },
                 { id: "pris-asc",  label: "Billigst" },
                 { id: "hurtigst", label: "Hurtigst" },
-                { id: "populaer", label: "Populær" },
               ].map(s => (
                 <button key={s.id} className={`filter-chip${sortOrder === s.id ? " active" : ""}`} onClick={() => setSortOrder(s.id)}>
                   {s.label}
@@ -3352,6 +3486,9 @@ export default function App() {
           </div>
         </div>
         <div className="filter-sheet-footer">
+          {activeFilterCount > 0 && (
+            <button className="filter-sheet-clear" onClick={clearAllFilters}>Ryd filtre</button>
+          )}
           <button className="filter-sheet-apply" onClick={() => setShowFilterSheet(false)}>
             Vis {(filteredRecommended.length + filteredOthers.length)} opskrifter
           </button>
