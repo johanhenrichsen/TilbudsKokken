@@ -1091,14 +1091,11 @@ export default function App() {
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
-  const [prefsOpen, setPrefsOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState("anbefalet");
   const [visibleCounts, setVisibleCounts] = useState({ recommended: PAGE_SIZE, others: PAGE_SIZE });
   const [quickFilters, setQuickFilters] = useState(new Set());
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
-  // Which desktop quick-strip dropdown is open ("pris" | null).
-  const [quickPanel, setQuickPanel] = useState(null);
 
   // Collapse the sticky search when scrolling down; reveal on scroll up / near top
   useEffect(() => {
@@ -2484,108 +2481,6 @@ export default function App() {
         </div>
       )}
 
-      {/* ── Step 2: Collapsible preferences ─────────────────────── */}
-      {!selectedRecipe && (
-        <>
-          <div className={`prefs-section${prefsOpen ? " open" : ""}${activeFilterCount > 0 ? " has-active" : ""}`}>
-            <button className="prefs-trigger" onClick={() => setPrefsOpen(v => !v)}>
-              <svg className="prefs-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-              </svg>
-              <span className="prefs-trigger-text">
-                <span className="prefs-trigger-title">{t("Tilpas dine opskrifter")}</span>
-                <span className="prefs-trigger-sub">
-                  {activeFilterCount > 0
-                    ? (en
-                        ? `${activeFilterCount} filter${activeFilterCount !== 1 ? "s" : ""} active — tap to adjust`
-                        : `${activeFilterCount} filter${activeFilterCount !== 1 ? "re" : ""} aktivt — tryk for at justere`)
-                    : t("Tilpas kostpræferencer, tid og budget")}
-                </span>
-              </span>
-              {activeFilterCount > 0 && (
-                <span className="prefs-active-badge">{activeFilterCount}</span>
-              )}
-              <svg className={`pantry-chevron${prefsOpen ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-
-            {prefsOpen && (
-              <div className="prefs-body">
-                {/* Diet */}
-                <div className="prefs-group-label">{t("Kost")}</div>
-                <div className="diet-filters prefs-filter-row">
-                  {dietFilters.map(f => (
-                    <button key={f} onClick={() => changeDiet(f)} className={`diet-btn${diet === f ? " active" : ""}`}>{dietLabel(f)}</button>
-                  ))}
-                </div>
-
-                {/* Time */}
-                <div className="prefs-group-label">{t("Tid")}</div>
-                <div className="diet-filters time-filters prefs-filter-row">
-                  {timeFilters.map(f => (
-                    <button key={f} onClick={() => setTimeFilter(f)} className={`diet-btn${timeFilter === f ? " active" : ""}`}>{timeLabel(f)}</button>
-                  ))}
-                </div>
-
-                {/* Cuisine */}
-                {CUISINE_ORDER.length > 2 && (
-                  <>
-                    <div className="prefs-group-label">{t("Køkken")}</div>
-                    <div className="cuisine-filters prefs-filter-row">
-                      {CUISINE_ORDER.map(c => (
-                        <button
-                          key={c}
-                          onClick={() => setCuisineFilter(c)}
-                          className={`diet-btn${cuisineFilter === c ? " active" : ""}`}
-                        >
-                          {cuisineText(c)}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-
-                {/* Price */}
-                {maxRecipePrice > 0 && (
-                  <>
-                    <div className="prefs-group-label">{t("Pris pr. person")}</div>
-                    <div className="price-range-wrap prefs-price-wrap">
-                      <div className="price-range-header">
-                        <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
-                          {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
-                          {priceFiltered && (
-                            <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
-                          )}
-                        </span>
-                      </div>
-                      <div className="price-range-track-wrap">
-                        <div className="price-range-track-bg" />
-                        <div
-                          className="price-range-fill"
-                          style={{
-                            left: `${(priceMin / maxRecipePrice) * 100}%`,
-                            right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%`,
-                          }}
-                        />
-                        <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
-                          onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }}
-                        />
-                        <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
-                          onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }}
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-
-              </div>
-            )}
-          </div>
-
-        </>
-      )}
-
       {/* Detail view */}
       {selectedRecipe ? (
         <div className="recipe-detail-sheet">
@@ -2820,38 +2715,21 @@ export default function App() {
               <div className="quick-strip-more-row">
                 <span className="quick-strip-sep">{t("Pris")}</span>
                 {maxRecipePrice > 0 && (
-                  <div className="qs-dd-wrap">
-                    <button
-                      className={`qs-pill qs-dd-pill${priceFiltered ? " active" : ""}`}
-                      onClick={() => setQuickPanel(p => (p === "pris" ? null : "pris"))}
-                    >
-                      {priceFiltered ? `${t("Pris")}: ${priceMin}–${priceMax ?? maxRecipePrice} kr.` : t("Pris")} ▾
-                    </button>
-                    {quickPanel === "pris" && (
-                      <>
-                        <div className="qs-dd-backdrop" onClick={() => setQuickPanel(null)} />
-                        <div className="qs-dd-panel">
-                          <div className="price-range-wrap prefs-price-wrap">
-                            <div className="price-range-header">
-                              <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
-                                {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
-                                {priceFiltered && (
-                                  <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
-                                )}
-                              </span>
-                            </div>
-                            <div className="price-range-track-wrap">
-                              <div className="price-range-track-bg" />
-                              <div className="price-range-fill" style={{ left: `${(priceMin / maxRecipePrice) * 100}%`, right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%` }} />
-                              <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
-                                onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }} />
-                              <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
-                                onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }} />
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
+                  <div className="qs-price-inline">
+                    <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
+                      {priceMin}–{priceMax ?? maxRecipePrice} kr.
+                      {priceFiltered && (
+                        <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
+                      )}
+                    </span>
+                    <div className="price-range-track-wrap qs-price-track">
+                      <div className="price-range-track-bg" />
+                      <div className="price-range-fill" style={{ left: `${(priceMin / maxRecipePrice) * 100}%`, right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%` }} />
+                      <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
+                        onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }} />
+                      <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
+                        onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }} />
+                    </div>
                   </div>
                 )}
                 {activeFilterCount > 0 && (

@@ -5261,6 +5261,11 @@ html.dark .quick-strip-more { border-top-color: rgba(255,255,255,0.06); }
 }
 html.dark .quick-strip-more-row { border-top-color: rgba(255,255,255,0.06); }
 
+/* Inline price slider in the quick strip (replaces the old dropdown pill) */
+.qs-price-inline { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.qs-price-track { width: 150px; height: 28px; flex-shrink: 0; }
+.qs-price-inline .price-range-display { white-space: nowrap; font-size: 13px; }
+
 /* Dropdown pills (Pris / Køleskab) — rich controls that don't fit as plain pills */
 .qs-dd-wrap { position: relative; display: inline-flex; flex-shrink: 0; }
 .qs-dd-backdrop { position: fixed; inset: 0; z-index: 200; }
