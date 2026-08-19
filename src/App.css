@@ -6179,6 +6179,34 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 }
 .mfr-btn:active { opacity: 0.7; }
 
+/* Filtre toggle: pushed to the right of the store button */
+.mfr-filter-btn { margin-left: auto; gap: 6px; }
+.mfr-filter-btn.open { color: var(--accent, #CE9F3E); }
+.mfr-filter-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 17px; height: 17px; padding: 0 5px;
+  border-radius: 9px; background: #B83A24; color: var(--text, #EEE6D8);
+  font-size: 11px; font-weight: 700; line-height: 1;
+}
+.mfr-chevron { transition: transform 0.22s ease; }
+.mfr-chevron.open { transform: rotate(180deg); }
+
+/* Mobile-only apply row that closes the dropdown; hidden on desktop */
+.qs-mobile-apply { display: none; }
+.qs-apply-btn {
+  width: 100%; min-height: 46px; border: none; border-radius: 8px;
+  background: #B83A24; color: var(--text, #EEE6D8);
+  font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer;
+}
+.qs-apply-btn:active { opacity: 0.85; }
+
+/* Collapse the filter strips behind the Filtre button on mobile */
+@media (max-width: 600px) {
+  .quick-strip-wrap { display: none; }
+  .quick-strip-wrap.mobile-open { display: block; padding-bottom: 10px; }
+  .qs-mobile-apply { display: flex; padding: 6px 0 2px; }
+}
+
 /* ── Overflow menu sheet ── */
 .overflow-menu-sheet {
   position: fixed;

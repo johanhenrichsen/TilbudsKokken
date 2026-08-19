@@ -1092,6 +1092,8 @@ export default function App() {
   // Opt-in filter: show only the week's popular recipes (was a card badge before).
   const [popularOnly, setPopularOnly] = useState(false);
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
+  // Mobile-only: the filter strips are collapsed behind a "Filtre" button.
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Collapse the sticky search when scrolling down; reveal on scroll up / near top
   useEffect(() => {
@@ -2617,10 +2619,24 @@ export default function App() {
                 </svg>
                 <span>{[...new Set((localStores || []).map(s => s.chain))].length} {en ? "stores" : "butikker"}</span>
               </button>
+              <button
+                className={`mfr-btn mfr-filter-btn${showMobileFilters ? " open" : ""}`}
+                onClick={() => setShowMobileFilters(v => !v)}
+                aria-expanded={showMobileFilters}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
+                </svg>
+                <span>{en ? "Filters" : "Filtre"}</span>
+                {activeFilterCount > 0 && <span className="mfr-filter-count">{activeFilterCount}</span>}
+                <svg className={`mfr-chevron${showMobileFilters ? " open" : ""}`} width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </div>
 
             {/* ── Quick diet + sort strip ─────────────────── */}
-            <div className="quick-strip-wrap">
+            <div className={`quick-strip-wrap${showMobileFilters ? " mobile-open" : ""}`}>
               <div className="quick-strip">
                 <span className="quick-strip-sep">{t("Kost")}</span>
                 {[
@@ -2719,6 +2735,15 @@ export default function App() {
                 {activeFilterCount > 0 && (
                   <button className="qs-clear-btn" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
                 )}
+              </div>
+              {/* Mobile-only: close the dropdown after choosing filters. */}
+              <div className="qs-mobile-apply">
+                <button className="qs-apply-btn" onClick={() => setShowMobileFilters(false)}>
+                  {(() => {
+                    const n = filteredRecommended.length + filteredOthers.length;
+                    return en ? `Show ${n} recipe${n === 1 ? "" : "s"}` : `Vis ${n} opskrift${n === 1 ? "" : "er"}`;
+                  })()}
+                </button>
               </div>
             </div>
 
