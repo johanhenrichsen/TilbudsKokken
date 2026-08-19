@@ -1086,11 +1086,9 @@ export default function App() {
   const [pendingChains, setPendingChains] = useState(new Set());
   const [pendingDiet, setPendingDiet] = useState("Alle");
   const [pendingServings, setPendingServings] = useState(4);
-  const [sortOrder, setSortOrder] = useState("anbefalet");
+  const [sortOrder, setSortOrder] = useState("populaer");
   const [visibleCounts, setVisibleCounts] = useState({ recommended: PAGE_SIZE, others: PAGE_SIZE });
   const [quickFilters, setQuickFilters] = useState(new Set());
-  // Opt-in filter: show only the week's popular recipes (was a card badge before).
-  const [popularOnly, setPopularOnly] = useState(false);
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
   // Mobile-only: the filter strips are collapsed behind a "Filtre" button.
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -1259,7 +1257,6 @@ export default function App() {
     pantryItems.size > 0,
     priceMin > 0 || priceMax !== null,
     quickFilters.size > 0,
-    popularOnly,
   ].filter(Boolean).length;
 
   const maxRecipePrice = (() => {
@@ -1282,7 +1279,6 @@ export default function App() {
     // relevance sort (see applySort) so all recipes stay visible, just reordered.
     // matchRecipe only applies search / time / cuisine / price.
     if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
-    if (popularOnly && !popularityMap[r.id]) return false;
     if (search) {
       const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
       if (cuisineFromKeyword) {
@@ -1310,24 +1306,22 @@ export default function App() {
     return true;
   }
 
-  // Comparator for the user's chosen "Sorter" option. Returns 0 for "anbefalet"
-  // so a stable sort preserves the incoming (recommended) order.
+  // Comparator for the user's chosen "Sorter" option. "populaer" (the default)
+  // ranks by tracked popularity; recipes with no signal share key 0, so a stable
+  // sort keeps them in the incoming (recommended) order.
   function sortComparator(a, b) {
     switch (sortOrder) {
       case "pris-asc":  return (calcPricePerPerson(a) ?? Infinity) - (calcPricePerPerson(b) ?? Infinity);
       case "pris-desc": return (calcPricePerPerson(b) ?? -Infinity) - (calcPricePerPerson(a) ?? -Infinity);
       case "hurtigst":  return parseMinutes(a.time) - parseMinutes(b.time);
       case "nyeste":    return (recipeIndexMap.get(b.id) ?? 0) - (recipeIndexMap.get(a.id) ?? 0);
-      // "anbefalet" folds in popularity: recommended order first (kept stable by
-      // returning 0 elsewhere), so the old separate "Populær" sort is redundant.
+      case "populaer":  return (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0);
       default:          return 0;
     }
   }
 
   function applySort(recipes) {
     const pantryActive = pantryItems.size > 0;
-    // No added ingredients + "anbefalet" → nothing to reorder.
-    if (!pantryActive && sortOrder === "anbefalet") return recipes;
     // Array.prototype.sort is stable, so equal keys keep their incoming order.
     return [...recipes].sort((a, b) => {
       if (pantryActive) {
@@ -1354,7 +1348,7 @@ export default function App() {
       + filteredOthers.filter(r => r.pantryMatchCount > 0).length
     : 0;
   const priceFiltered = priceMin > 0 || priceMax !== null;
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered || popularOnly) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   // Collect the recipe strings currently on screen and translate any that aren't
   // cached yet. Titles/categories for visible cards, plus the full content of an
@@ -2655,21 +2649,10 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              {Object.keys(popularityMap).length > 0 && (
-                <div className="quick-strip quick-strip-more">
-                  <button
-                    className={`qs-pill qs-popular-pill${popularOnly ? " active" : ""}`}
-                    onClick={() => setPopularOnly(v => !v)}
-                    aria-pressed={popularOnly}
-                  >
-                    <span aria-hidden="true">★</span> {t("Populær")}
-                  </button>
-                </div>
-              )}
               <div className="quick-strip quick-strip-sort">
                 <span className="quick-strip-sep">{t("Sorter")}</span>
                 {[
-                  { id: "anbefalet", label: sortLabel("anbefalet", "Anbefalet") },
+                  { id: "populaer", label: sortLabel("populaer", "Populær") },
                   { id: "pris-asc",  label: sortLabel("pris-asc", "Billigst") },
                   { id: "hurtigst", label: sortLabel("hurtigst", "Hurtigst") },
                 ].map(s => (

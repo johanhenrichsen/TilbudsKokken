@@ -4878,10 +4878,6 @@ html.dark .quick-strip-more { border-top-color: rgba(255,255,255,0.06); }
 }
 html.dark .quick-strip-more-row { border-top-color: rgba(255,255,255,0.06); }
 
-/* Popular-only toggle pill in the quick strip (replaces the old card badge) */
-.qs-popular-pill.active { background: #CE9F3E; color: #221C17; border-color: #CE9F3E; }
-html.dark .qs-popular-pill.active { background: #CE9F3E; color: #1B1613; border-color: #CE9F3E; }
-
 /* Inline price slider in the quick strip (replaces the old dropdown pill) */
 .qs-price-inline { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .qs-price-track { width: 240px; height: 28px; flex-shrink: 0; }
