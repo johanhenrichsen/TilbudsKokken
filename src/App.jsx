@@ -2529,7 +2529,15 @@ export default function App() {
                 // actual weekly deal and get the chain tag.
                 const isShoppable = !ing.isPantry;
                 const isDeal = isShoppable && !!(ing.store);
-                const inList = shoppingList.some(it => it.text === scaled);
+                // Match normalized so the "+" flips to "✓" whether the item was
+                // added via this button (stores the scaled/translated text) or via
+                // the bulk "Til indkøb" button (stores the raw ingredient text).
+                const scaledNorm = normCartText(scaled);
+                const rawNorm = normCartText(ing.text || ing);
+                const inList = shoppingList.some(it => {
+                  const n = normCartText(it.text);
+                  return n === scaledNorm || n === rawNorm;
+                });
                 return (
                   <li key={i} className={`ingredient-item${isShoppable ? " ingredient-deal" : " ingredient-pantry"}`}>
                     {isShoppable ? (

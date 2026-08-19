@@ -182,38 +182,6 @@ html, body {
   font-family: var(--font-sans);
 }
 
-/* ─── Diet filters ───────────────────────────── */
-.diet-filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-}
-.diet-btn {
-  background: #2B2620;
-  color: var(--cream-dim);
-  border: 1.5px solid rgba(238,230,216,0.12);
-  border-radius: 4px;
-  padding: 6px 16px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: inherit;
-}
-.diet-btn:hover {
-  border-color: rgba(206,159,62,0.45);
-  background: rgba(206,159,62,0.08);
-  color: #CE9F3E;
-}
-.diet-btn:active { transform: scale(0.94); opacity: 0.8; }
-.diet-btn.active {
-  background: rgba(206,159,62,0.15);
-  color: #CE9F3E;
-  border-color: #CE9F3E;
-  animation: chipSelect 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
 /* ─── Store cards ────────────────────────────── */
 .store-card {
   background: #2B2620;
@@ -2039,44 +2007,7 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .ob-welcome-logo { height: auto !important; }
   .ob-welcome-content { max-width: calc(100vw - 2rem); }
 
-  /* ── Filter chips — tappable, horizontal scroll with fade ── */
-  .diet-btn {
-    min-height: 44px;
-    padding: 8px 14px;
-    font-size: 13px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .diet-filters,
-  .time-filters,
-  .cuisine-filters,
-  .quick-filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-    gap: 6px;
-    /* bleed left so chips start at screen edge */
-    margin-left: -0.75rem;
-    margin-right: -0.75rem;
-    padding-left: 0.75rem;
-    padding-right: 2rem; /* room for content before fade */
-    /* subtle right-edge fade to hint scrollability */
-    -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
-    mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
-  }
-  .diet-filters::-webkit-scrollbar,
-  .time-filters::-webkit-scrollbar,
-  .cuisine-filters::-webkit-scrollbar,
-  .quick-filters::-webkit-scrollbar { display: none; }
-
-  /* ── Price range — generous padding + large thumbs for one-thumb use ── */
-  .price-range-wrap {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
+  /* ── Price range — large thumbs for one-thumb use ── */
   .price-range-input::-webkit-slider-thumb {
     width: 30px;
     height: 30px;
@@ -2125,7 +2056,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .day-picker-btn { min-height: 60px; }
   .plan-sv-btn { width: 32px; height: 32px; font-size: 14px; }
   .ingredient-add-btn { width: 34px; height: 34px; font-size: 14px; }
-  .pantry-trigger-btn { min-height: 52px; }
   .shopping-check-btn { width: 28px; height: 28px; }
   .shopping-item .shopping-check-btn { width: 24px; height: 24px; }
   .shopping-item-remove {
@@ -2215,17 +2145,12 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   .shopping-sheet-item { cursor: pointer; padding: 14px 20px; }
   .shopping-check-btn { width: 34px; height: 34px; }
 
-  /* ── Prefs section — compact on mobile ── */
-  .prefs-body { padding: 0 12px 12px; }
-  .prefs-group-label { margin: 10px 0 5px; font-size: 11px; }
-
   /* ── Setup invite card — breathing room ── */
   .setup-invite-card { padding: 16px 14px 12px; }
   .setup-invite-title { font-size: 18px; }
   .setup-invite-sub { font-size: 13px; }
 
   /* ── No horizontal overflow ── */
-  .prefs-section { max-width: 100%; }
   .recipe-card { box-sizing: border-box; max-width: 100%; }
   .section-header-row { overflow: hidden; }
 
@@ -2236,10 +2161,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     bottom: max(20px, calc(16px + env(safe-area-inset-bottom, 0px)));
     right: max(16px, calc(12px + env(safe-area-inset-right, 0px)));
   }
-
-  /* ── Prefs trigger — comfortably tappable ── */
-  .prefs-trigger { min-height: 52px; padding: 10px 14px; }
-  .prefs-trigger-title { font-size: 14px; }
 
   /* ── Card action row — full-width plan button ── */
   .card-action-row { gap: 6px; }
@@ -2265,10 +2186,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
   /* ── Saved recipes sheet ── */
   .saved-sheet-card { padding: 14px 16px; min-height: 56px; }
 
-  /* ── Pantry filter banner — readable ── */
-  .pantry-filter-banner { padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
-  .pantry-filter-banner-clear { min-height: 36px; }
-
   /* ── Day picker in meal plan ── */
   .day-picker-btn { min-height: 64px; font-size: 14px; }
 }
@@ -2293,11 +2210,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     transform: none;
     box-shadow: 0 4px 16px rgba(206,159,62,0.45);
   }
-  .diet-btn:hover {
-    border-color: rgba(206,159,62,0.45);
-    background: rgba(206,159,62,0.08);
-    color: #CE9F3E;
-  }
   .add-to-plan-btn:hover:not(.in-plan) { background: #B83A24; }
   .store-toggle:hover { border-color: rgba(206,159,62,0.45); color: #CE9F3E; }
 
@@ -2307,7 +2219,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
     transition: transform 0.08s ease;
     opacity: 0.93;
   }
-  .diet-btn:active { opacity: 0.65; transform: scale(0.96); }
   .header-icon-btn:active { opacity: 0.55; }
   .shopping-cart-fab:active { transform: scale(0.93); }
   .shopping-sheet-item:active { background: rgba(0,0,0,0.05); }
@@ -2358,7 +2269,6 @@ html.dark .sp-clear-btn:hover { background: #2a1010; border-color: #7a3a3a; }
 .search-clear:hover { color: var(--text); background: rgba(238,230,216,0.06); }
 
 /* ─── Time filters ───────────────────────────── */
-.time-filters { margin-top: -6px; }
 
 /* ─── Share meal plan button ─────────────────── */
 .meal-plan-header-btns {
@@ -4017,47 +3927,7 @@ html.dark .cuisine-badge {
   white-space: nowrap;
 }
 
-/* ─── Cuisine filter chips ───────────────────── */
-.cuisine-filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-  margin-top: -6px;
-}
-@media (max-width: 600px) {
-  .cuisine-filters {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .cuisine-filters::-webkit-scrollbar { display: none; }
-}
-
 /* ─── Price range slider ─────────────────────── */
-.price-range-wrap {
-  margin-bottom: 1.25rem;
-  padding: 12px 14px;
-  background: var(--surface, #352F2B);
-  border: 1.5px solid var(--border-dark, rgba(238,230,216,0.1));
-  border-radius: 4px;
-}
-html.dark .price-range-wrap { background: var(--surface); }
-.price-range-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.price-range-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-dim);
-}
-html.dark .price-range-label { color: var(--muted); }
 .price-range-display {
   font-family: var(--font-mono);
   font-size: 13px;
@@ -5319,12 +5189,6 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
   /* ── Slimmer cards on mobile ── */
   .card-photo-wrap { height: 148px; }
 
-  /* ── Hide redundant sort dropdown in section headers ── */
-
-  /* ── Compact "Tilpas" row ── */
-  .prefs-trigger { padding: 8px 12px; }
-  .prefs-trigger-title { font-size: 13px; }
-  .prefs-trigger-sub { display: none; }
 }
 
 /* No light mode — always dark, block stale overrides */
@@ -5752,9 +5616,6 @@ html:not(.dark) .header-icon-btn {
 html:not(.dark) .header-icon-btn:hover { background: rgba(34,28,23,0.10); color: #221C17; }
 
 /* ── Diet filter chips ── */
-html:not(.dark) .diet-btn { background: #FBF6EC; color: #5C5245; border-color: #DED3C0; }
-html:not(.dark) .diet-btn:hover { border-color: #CE9F3E; background: rgba(206,159,62,0.08); color: #7E5A0E; }
-html:not(.dark) .diet-btn.active { background: rgba(168,122,30,0.12); color: #7E5A0E; border-color: #CE9F3E; }
 
 /* ── Store cards ── */
 html:not(.dark) .store-card { background: #FBF6EC; border-color: #DED3C0; }
@@ -5927,10 +5788,6 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   .qs-pill { min-height: 40px; padding: 9px 15px; font-size: 14px; }
   .quick-strip-sep { font-size: 11px; }
 
-  /* ── Tilpas — compact accordion (collapsed by default) ── */
-  .prefs-trigger { min-height: 50px; padding: 12px 14px; }
-  .prefs-trigger-sub { display: none; }
-
   /* ── Recipe grid — single column, big tappable cards ── */
   .recipe-browse-grid { grid-template-columns: 1fr; gap: 16px; }
   .card-photo-wrap { height: 210px; }
@@ -6011,10 +5868,7 @@ html:not(.dark) .save-btn { background: #FBF6EC; border-color: #DED3C0; color: #
   .hero-brand svg { width: 28px !important; height: 28px !important; }
   .header-icon-btn { width: 34px; height: 34px; }
   .section-toggle-label { font-size: 14px; letter-spacing: 0; font-style: italic; }
-  .diet-btn { padding: 5px 10px; font-size: 11px; }
   .qs-pill { padding: 8px 10px; font-size: 13px; }
-  .prefs-trigger { padding: 8px 10px; }
-  .prefs-trigger-title { font-size: 13px; }
   .card-body { padding: 10px 12px 14px; }
   .recipe-browse-title { font-size: 16px; }
 }
@@ -6038,8 +5892,6 @@ html:not(.dark) .qs-pill.active { background: rgba(168,122,30,0.12); border-colo
 html:not(.dark) .quick-strip-wrap { background: #F1E9DB; border-color: #DED3C0; }
 
 /* ── Price range ── */
-html:not(.dark) .price-range-wrap { background: #FBF6EC; border-color: #DED3C0; }
-html:not(.dark) .price-range-label { color: #6F665A; }
 html:not(.dark) .price-range-display { color: #5C5245; }
 html:not(.dark) .price-range-display.active { color: #7E5A0E; }
 html:not(.dark) .price-range-track-bg { background: #DED3C0; }
@@ -6165,20 +6017,8 @@ html:not(.dark) .setup-invite-count { color: #7E5A0E; }
 html:not(.dark) .sfp-step--done { background: rgba(95,112,64,0.10); color: #5F7040; }
 
 /* ── Prefs / pantry ── */
-html:not(.dark) .prefs-trigger { background: #FBF6EC; border-color: #DED3C0; }
-html:not(.dark) .prefs-trigger-title { color: #221C17; }
-html:not(.dark) .prefs-trigger-sub { color: #6F665A; }
-html:not(.dark) .prefs-panel { background: #FBF6EC; border-color: #DED3C0; }
-html:not(.dark) .prefs-panel-close { color: #6F665A; }
-html:not(.dark) .pantry-trigger-btn { background: #FBF6EC; }
-html:not(.dark) .pantry-trigger-title { color: #221C17; }
-html:not(.dark) .pantry-trigger-sub { color: #6F665A; }
-html:not(.dark) .pantry-inline { border-color: #DED3C0; }
-html:not(.dark) .pantry-inline-header { color: #221C17; background: #FBF6EC; border-color: #DED3C0; }
 html:not(.dark) .pantry-suggest-chip { background: #FBF6EC; border-color: #DED3C0; color: #5C5245; }
 html:not(.dark) .pantry-suggest-chip:hover { border-color: #B93E29; background: rgba(185,62,41,0.06); color: #B93E29; }
-html:not(.dark) .pantry-filter-banner { background: rgba(168,122,30,0.08); border-color: rgba(168,122,30,0.2); }
-html:not(.dark) .pantry-filter-banner-text { color: #7E5A0E; }
 
 /* ── Price tag / tilbud badge ── */
 html:not(.dark) .tilbud-maerke { background: #CE9F3E; color: #221C17; }
@@ -6213,9 +6053,7 @@ html:not(.dark) .fb-star.active { color: var(--accent); }
    would be low-contrast). */
 html:not(.dark) .mp-sidebar-count,
 html:not(.dark) .ob-cta-btn,
-html:not(.dark) .pantry-count-badge,
 html:not(.dark) .header-badge,
-html:not(.dark) .prefs-active-badge,
 html:not(.dark) .bnav-badge,
 html:not(.dark) .fb-submit-btn,
 html:not(.dark) .fb-results-export-btn { color: #FBF6EC; }
@@ -6518,13 +6356,6 @@ html:not(.dark) .overflow-menu-sheet { background: #FBF6EC; }
 html:not(.dark) .overflow-menu-item { color: #221C17; }
 html:not(.dark) .overflow-menu-item:active { background: rgba(34,28,23,0.06); }
 html:not(.dark) .overflow-menu-badge { background: #7E5A0E; }
-html:not(.dark) .filter-sheet { background: #FBF6EC; }
-html:not(.dark) .filter-sheet-title { color: #221C17; }
-html:not(.dark) .filter-sheet-label { color: #6F665A; }
-html:not(.dark) .filter-chip { background: #EFE4D2; border-color: #DED3C0; color: #221C17; }
-html:not(.dark) .filter-chip.active { background: rgba(168,122,30,0.12); border-color: #CE9F3E; color: #7E5A0E; }
-html:not(.dark) .filter-sheet-apply { background: #7E5A0E; color: #FBF6EC; }
-html:not(.dark) .mfr-badge { background: #7E5A0E; }
 
 /* Light mode fixes for mobile-first redesign hardcoded colors */
 @media (max-width: 600px) {
