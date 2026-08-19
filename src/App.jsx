@@ -1071,7 +1071,6 @@ export default function App() {
       return stored ? new Set(stored) : new Set();
     } catch { return new Set(); }
   });
-  const [showPantry, setShowPantry] = useState(false);
   const [pantryInput, setPantryInput] = useState("");
   const [pantryDropdownIdx, setPantryDropdownIdx] = useState(-1);
   const [pantryDropdownPos, setPantryDropdownPos] = useState({ top: 0, left: 0, width: 0 });
@@ -1751,7 +1750,7 @@ export default function App() {
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, [pantryInput, showPantry]);
+  }, [pantryInput, showPantryPanel]);
 
   function addPantryFromInput(explicitItem) {
     const val = (explicitItem ?? pantryInput).trim();
@@ -2584,17 +2583,6 @@ export default function App() {
             )}
           </div>
 
-          {/* Active filter banners */}
-          {pantryItems.size > 0 && !showPantry && (
-            <div className="pantry-filter-banner">
-              <span className="pantry-filter-banner-text">
-                {en ? "Sorted by your ingredients — " : "Sorteret efter dine ingredienser — "}
-                <strong>{pantryMatchTotal} {en ? "recipes" : "opskrifter"}</strong>
-                {en ? " match, shown first" : " matcher, vist øverst"}
-              </span>
-              <button className="pantry-filter-banner-clear" onClick={clearPantry}>{t("Ryd")}</button>
-            </div>
-          )}
         </>
       )}
 
