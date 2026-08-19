@@ -1095,7 +1095,6 @@ export default function App() {
   const [visibleCounts, setVisibleCounts] = useState({ recommended: PAGE_SIZE, others: PAGE_SIZE });
   const [quickFilters, setQuickFilters] = useState(new Set());
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
-  const [showFilterSheet, setShowFilterSheet] = useState(false);
 
   // Collapse the sticky search when scrolling down; reveal on scroll up / near top
   useEffect(() => {
@@ -1187,7 +1186,7 @@ export default function App() {
   // True whenever any bottom sheet / modal / overlay is open. Used both to lock
   // scrolling and to hide the floating action buttons so they can't intercept
   // clicks meant for an open sheet (QA bugs #6 / #7).
-  const anyModalOpen = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showPantryPanel || showStorePicker || showFeedbackPanel || addingToPlan != null;
+  const anyModalOpen = showSavedPanel || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showPantryPanel || showStorePicker || showFeedbackPanel || addingToPlan != null;
 
   // Lock page scroll while any bottom sheet / modal is open. The document scrolls
   // on the root <html> element (body has default overflow), so locking body alone
@@ -1481,7 +1480,7 @@ export default function App() {
     setShowSavedPanel(false);
     setShowMealPlanPanel(false);
     setShowShoppingSheet(false);
-    setShowFilterSheet(false);
+    setShowPantryPanel(false);
     setShowOverflowMenu(false);
     setShowStorePicker(false);
     setFeedbackSubmitted(false);
@@ -2627,23 +2626,6 @@ export default function App() {
                 </svg>
                 <span>{[...new Set((localStores || []).map(s => s.chain))].length} {en ? "stores" : "butikker"}</span>
               </button>
-              <div className="mfr-divider" />
-              <button className="mfr-btn" onClick={() => setShowFilterSheet(true)}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
-                </svg>
-                <span>{t("Filtre")}</span>
-                {(activeFilterCount + (sortOrder !== "anbefalet" ? 1 : 0)) > 0 && (
-                  <span className="mfr-badge">{activeFilterCount + (sortOrder !== "anbefalet" ? 1 : 0)}</span>
-                )}
-              </button>
-              <div className="mfr-divider" />
-              <button className="mfr-btn mfr-sort" onClick={() => setShowFilterSheet(true)}>
-                <span>{sortLabel(sortOrder, { anbefalet: "Anbefalet", "pris-asc": "Billigst", hurtigst: "Hurtigst" }[sortOrder] || "Anbefalet")}</span>
-                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M4 6 L8 10 L12 6"/>
-                </svg>
-              </button>
             </div>
 
             {/* ── Quick diet + sort strip ─────────────────── */}
@@ -3463,99 +3445,6 @@ export default function App() {
     </div>
   )}
 
-  {/* ── Filter & sort bottom sheet (mobile) ──────────────────────── */}
-  {showFilterSheet && (
-    <div className="mp-sheet-overlay" onClick={() => setShowFilterSheet(false)}>
-      <div className="filter-sheet" onClick={e => e.stopPropagation()}>
-        <div className="mp-sheet-drag-handle" />
-        <div className="filter-sheet-header">
-          <span className="filter-sheet-title">{t("Filtre")}</span>
-          <button className="mp-sheet-close" onClick={() => setShowFilterSheet(false)} aria-label={t("Luk")}>×</button>
-        </div>
-        <div className="filter-sheet-body">
-          <div className="filter-sheet-group">
-            <div className="filter-sheet-label">{t("Kosttype")}</div>
-            <div className="filter-chip-row">
-              {[
-                { val: "Alle", label: dietLabel("Alle") },
-                { val: "Vegetar", label: dietLabel("Vegetar") },
-                { val: "Veganer", label: dietLabel("Veganer") },
-                { val: "Glutenfri", label: dietLabel("Glutenfri") },
-                { val: "Mælkefri", label: dietLabel("Mælkefri") },
-              ].map(f => (
-                <button key={f.val} className={`filter-chip${diet === f.val ? " active" : ""}`} onClick={() => changeDiet(f.val)}>
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="filter-sheet-group">
-            <div className="filter-sheet-label">{t("Tid")}</div>
-            <div className="filter-chip-row">
-              {timeFilters.map(f => (
-                <button key={f} className={`filter-chip${timeFilter === f ? " active" : ""}`} onClick={() => setTimeFilter(f)}>{timeLabel(f)}</button>
-              ))}
-            </div>
-          </div>
-          {CUISINE_ORDER.length > 2 && (
-            <div className="filter-sheet-group">
-              <div className="filter-sheet-label">{t("Køkken")}</div>
-              <div className="filter-chip-row">
-                {CUISINE_ORDER.map(c => (
-                  <button key={c} className={`filter-chip${cuisineFilter === c ? " active" : ""}`} onClick={() => setCuisineFilter(c)}>{cuisineText(c)}</button>
-                ))}
-              </div>
-            </div>
-          )}
-          {maxRecipePrice > 0 && (
-            <div className="filter-sheet-group">
-              <div className="filter-sheet-label">{t("Pris pr. person")}</div>
-              <div className="price-range-wrap prefs-price-wrap">
-                <div className="price-range-header">
-                  <span className={`price-range-display${priceFiltered ? " active" : ""}`}>
-                    {priceMin} kr. — {priceMax ?? maxRecipePrice} kr.
-                    {priceFiltered && (
-                      <button className="price-range-reset" onClick={() => { setPriceMin(0); setPriceMax(null); }}>×</button>
-                    )}
-                  </span>
-                </div>
-                <div className="price-range-track-wrap">
-                  <div className="price-range-track-bg" />
-                  <div className="price-range-fill" style={{ left: `${(priceMin / maxRecipePrice) * 100}%`, right: `${100 - ((priceMax ?? maxRecipePrice) / maxRecipePrice) * 100}%` }} />
-                  <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMin}
-                    onChange={e => { const val = Math.min(Number(e.target.value), (priceMax ?? maxRecipePrice) - 10); setPriceMin(Math.max(0, val)); }} />
-                  <input type="range" className="price-range-input" min={0} max={maxRecipePrice} step={5} value={priceMax ?? maxRecipePrice}
-                    onChange={e => { const val = Math.max(Number(e.target.value), priceMin + 10); setPriceMax(val >= maxRecipePrice ? null : val); }} />
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="filter-sheet-group">
-            <div className="filter-sheet-label">{t("Sorter efter")}</div>
-            <div className="filter-chip-row">
-              {[
-                { id: "anbefalet", label: sortLabel("anbefalet", "Anbefalet") },
-                { id: "pris-asc",  label: sortLabel("pris-asc", "Billigst") },
-                { id: "hurtigst", label: sortLabel("hurtigst", "Hurtigst") },
-              ].map(s => (
-                <button key={s.id} className={`filter-chip${sortOrder === s.id ? " active" : ""}`} onClick={() => setSortOrder(s.id)}>
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="filter-sheet-footer">
-          {activeFilterCount > 0 && (
-            <button className="filter-sheet-clear" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
-          )}
-          <button className="filter-sheet-apply" onClick={() => setShowFilterSheet(false)}>
-            {en ? "Show" : "Vis"} {(filteredRecommended.length + filteredOthers.length)} {en ? "recipes" : "opskrifter"}
-          </button>
-        </div>
-      </div>
-    </div>
-  )}
 
   {showInstallBanner && (
     <div className="install-banner">
