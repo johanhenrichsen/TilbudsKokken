@@ -6200,11 +6200,39 @@ body.search-collapsed .mobile-filter-row { top: 0 !important; }
 }
 .qs-apply-btn:active { opacity: 0.85; }
 
-/* Collapse the filter strips behind the Filtre button on mobile */
+/* Collapse the filter strips behind the Filtre button on mobile. When open,
+   the strips become a contained dropdown card, capped in height with an
+   internal scroll, and the "Vis N" button is pinned as a sticky footer. */
 @media (max-width: 600px) {
   .quick-strip-wrap { display: none; }
-  .quick-strip-wrap.mobile-open { display: block; padding-bottom: 10px; }
-  .qs-mobile-apply { display: flex; padding: 6px 0 2px; }
+  .quick-strip-wrap.mobile-open {
+    display: block;
+    max-height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 0 10px;
+    padding: 4px 12px 0;
+    background: var(--surface, #2B2620);
+    border: 1px solid var(--border, rgba(238,230,216,0.1));
+    border-radius: 10px;
+  }
+  html:not(.dark) .quick-strip-wrap.mobile-open {
+    background: #F1E9DB;
+    border-color: #DED3C0;
+  }
+  .qs-mobile-apply {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    margin: 0 -12px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--surface, #2B2620);
+    border-top: 1px solid var(--border, rgba(238,230,216,0.1));
+  }
+  html:not(.dark) .qs-mobile-apply {
+    background: #F1E9DB;
+    border-top-color: #DED3C0;
+  }
 }
 
 /* ── Overflow menu sheet ── */
