@@ -284,6 +284,13 @@ const SORT_EN = {
   hurtigst: "Fastest",
 };
 
+// Recipe difficulty values → display label. Underlying value stays Danish.
+const DIFFICULTY_EN = {
+  "Nem": "Easy",
+  "Mellem": "Medium",
+  "Avanceret": "Advanced",
+};
+
 // Cuisine display names (after the flag emoji is stripped).
 const CUISINE_EN = {
   "Nordisk": "Nordic",
@@ -308,6 +315,21 @@ export function dietLabel(v) {
 
 export function timeLabel(v) {
   return _lang === "en" ? (TIME_EN[v] ?? v) : v;
+}
+
+export function difficultyLabel(v) {
+  return _lang === "en" ? (DIFFICULTY_EN[v] ?? v) : v;
+}
+
+// Translate a recipe time string like "40 minutter" → "40 minutes" without an
+// API call (the Danish words are a small fixed set). Numbers are preserved.
+export function timeText(s) {
+  if (_lang !== "en" || !s) return s;
+  return String(s)
+    .replace(/minutter/gi, "minutes")
+    .replace(/minut\b/gi, "minute")
+    .replace(/timer/gi, "hours")
+    .replace(/\btime\b/gi, "hour");
 }
 
 export function sortLabel(id, fallback) {

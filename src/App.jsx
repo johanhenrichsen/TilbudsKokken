@@ -7,7 +7,7 @@ const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticReci
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
-import { t, dietLabel, timeLabel, sortLabel, cuisineText, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
+import { t, dietLabel, timeLabel, difficultyLabel, timeText, sortLabel, cuisineText, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -609,7 +609,7 @@ function buildPhotoQuery(r) {
   return `${q} food`.trim();
 }
 
-function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave }) {
+function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave, displayTitle, displayCategory, displayTime }) {
   const photoKey = `photo_${PHOTO_CACHE_VER}_${r.id}`;
   const photoFailKey = `photo_fail_${PHOTO_CACHE_VER}_${r.id}`;
   const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(photoKey) || null);
@@ -660,7 +660,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
             : <div className="card-photo-placeholder"><LogoIcon size={48} style={{ opacity: 0.18 }} /></div>
         }
         <div className="card-photo-gradient" />
-        <div className="recipe-category-tag card-photo-tag">{r.category}</div>
+        <div className="recipe-category-tag card-photo-tag">{displayCategory ?? r.category}</div>
         {isPopular && (
           <div className="card-photo-badge">
             <span className="popular-badge-pill">{isEn() ? "Popular" : "Populær"}</span>
@@ -668,7 +668,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
         )}
       </div>
       <div className="card-body">
-        <div className="recipe-browse-title">{r.title}</div>
+        <div className="recipe-browse-title">{displayTitle ?? r.title}</div>
         {totalPrice != null && (
           <div className="card-price-line">
             {isEn() ? "approx." : "ca."} {totalPrice} kr. {isEn() ? "for" : "til"} {cardServings} {isEn() ? "ppl" : "pers."}
@@ -676,7 +676,7 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
           </div>
         )}
         <div className="recipe-browse-meta">
-          <span>{r.time}</span>
+          <span>{displayTime ?? r.time}</span>
           <span>{(r.ingredients || []).length} {isEn() ? "ingr." : "ing."}</span>
         </div>
 
@@ -915,6 +915,51 @@ export default function App() {
     try { document.documentElement.lang = lang; } catch {}
   }, [lang]);
 
+  // ── Recipe content translation (Danish → English, on demand + cached) ──
+  // Recipe text (titles, ingredients, steps…) is Danish data. When English is
+  // active we translate the *visible* strings via /api/translate and cache them
+  // in localStorage, keyed by the Danish source string, so each is translated
+  // only once. The underlying Danish data is untouched, so all matching/filter
+  // logic keeps working. Bump TX_VER to invalidate the cache if quality changes.
+  const TX_VER = "v1";
+  const [txCache, setTxCache] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(`txCache_en_${TX_VER}`) || "{}"); }
+    catch { return {}; }
+  });
+  const txPending = useRef(new Set());
+  // Translate one Danish string for display (falls back to Danish until cached).
+  const tr = (s) => (en && s && txCache[s] != null ? txCache[s] : s);
+  function mergeTx(map) {
+    if (!map || Object.keys(map).length === 0) return;
+    setTxCache(prev => {
+      const next = { ...prev, ...map };
+      try { localStorage.setItem(`txCache_en_${TX_VER}`, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }
+  async function translateStrings(strings) {
+    const unique = [...new Set(strings.filter(
+      s => s && typeof s === "string" && txCache[s] == null && !txPending.current.has(s)
+    ))];
+    if (unique.length === 0) return;
+    unique.forEach(s => txPending.current.add(s));
+    for (let i = 0; i < unique.length; i += 40) {
+      const chunk = unique.slice(i, i + 40);
+      try {
+        const res = await fetch("/api/translate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ texts: chunk }),
+        });
+        const data = await res.json();
+        const map = {};
+        (data.translations || []).forEach((val, idx) => { if (val) map[chunk[idx]] = val; });
+        mergeTx(map);
+      } catch { /* leave untranslated — shows Danish */ }
+      finally { chunk.forEach(s => txPending.current.delete(s)); }
+    }
+  }
+
   const [localStores, setLocalStores] = useState(() => {
     try {
       const v = localStorage.getItem("localStores");
@@ -994,6 +1039,7 @@ export default function App() {
   const [priceMax, setPriceMax] = useState(null); // null = no upper limit
   const [planCopied, setPlanCopied] = useState(false);
   const [showMealPlanPanel, setShowMealPlanPanel] = useState(false);
+  const [showPantryPanel, setShowPantryPanel] = useState(false);
   // Desktop meal-plan rail can be collapsed so it stops eating screen width;
   // preference persists so it stays hidden across reloads.
   const [mpSidebarHidden, setMpSidebarHidden] = useState(() => {
@@ -1319,6 +1365,37 @@ export default function App() {
     : 0;
   const priceFiltered = priceMin > 0 || priceMax !== null;
   const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+
+  // Collect the recipe strings currently on screen and translate any that aren't
+  // cached yet. Titles/categories for visible cards, plus the full content of an
+  // open recipe. Runs only in English; re-runs when the visible set changes.
+  const txSig = en ? [
+    selectedRecipe?.id ?? "",
+    filteredRecommended.slice(0, visibleCounts.recommended).map(r => r.id).join(","),
+    filteredOthers.slice(0, visibleCounts.others).map(r => r.id).join(","),
+    mealPlan.map(e => e?.recipe?.id ?? "").join(","),
+    savedRecipes.map(r => r.id).join(","),
+  ].join("|") : "";
+  useEffect(() => {
+    if (!en) return;
+    const needed = [];
+    const addRecipeTitle = r => { if (r) { if (r.title) needed.push(r.title); if (r.category) needed.push(r.category); } };
+    filteredRecommended.slice(0, visibleCounts.recommended).forEach(addRecipeTitle);
+    filteredOthers.slice(0, visibleCounts.others).forEach(addRecipeTitle);
+    mealPlan.forEach(e => e?.recipe && needed.push(e.recipe.title));
+    savedRecipes.forEach(r => needed.push(r.title));
+    if (selectedRecipe) {
+      const r = selectedRecipe;
+      if (r.title) needed.push(r.title);
+      if (r.subtitle) needed.push(r.subtitle);
+      if (r.description) needed.push(r.description);
+      (r.ingredients || []).forEach(ing => { if (ing.text) needed.push(ing.text); });
+      (r.steps || []).forEach(s => needed.push(s));
+      if (r.tip) needed.push(r.tip);
+      if (Array.isArray(r.tips)) r.tips.forEach(tp => needed.push(tp));
+    }
+    translateStrings(needed);
+  }, [txSig]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Scroll-triggered reveals (viewport-based, respects reduced-motion) ──
   const revealSig =
@@ -1925,6 +2002,9 @@ export default function App() {
         onSelect={selectRecipe}
         onAddToPlan={setAddingToPlan}
         onToggleSave={toggleSaveRecipe}
+        displayTitle={tr(r.title)}
+        displayCategory={en ? tr(r.category) : r.category}
+        displayTime={timeText(r.time)}
       />
     ));
   }
@@ -2140,7 +2220,7 @@ export default function App() {
             <div className="sp-modal-header">
               <div>
                 <h2 className="sp-title">{t("Vælg dag")}</h2>
-                <p style={{ margin: 0, fontSize: 13, color: "var(--text-dim)" }}>{addingToPlan.title}</p>
+                <p style={{ margin: 0, fontSize: 13, color: "var(--text-dim)" }}>{tr(addingToPlan.title)}</p>
               </div>
               <button className="sp-close-btn" onClick={() => setAddingToPlan(null)}>×</button>
             </div>
@@ -2155,7 +2235,7 @@ export default function App() {
                   >
                     <span className="day-picker-short">{DAY_SHORT[i]}</span>
                     <span className="day-picker-full">{day}</span>
-                    {occupied && <span className="day-picker-recipe">{occupied.recipe.title}</span>}
+                    {occupied && <span className="day-picker-recipe">{tr(occupied.recipe.title)}</span>}
                     {!occupied && <span className="day-picker-empty-label">{t("Ledig")}</span>}
                   </button>
                 );
@@ -2358,22 +2438,6 @@ export default function App() {
 
             {prefsOpen && (
               <div className="prefs-body">
-                {/* Quick filters */}
-                <div className="prefs-group-label">{t("Butikker")}</div>
-                <div className="quick-filters prefs-filter-row">
-                  {[
-                    { id: "enbutik", label: t("Kun én butik") },
-                  ].map(f => (
-                    <button
-                      key={f.id}
-                      className={`diet-btn${quickFilters.has(f.id) ? " active" : ""}`}
-                      onClick={() => toggleQuickFilter(f.id)}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
-
                 {/* Diet */}
                 <div className="prefs-group-label">{t("Kost")}</div>
                 <div className="diet-filters prefs-filter-row">
@@ -2566,8 +2630,8 @@ export default function App() {
           <div className="recipe-card">
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
               <div style={{ minWidth: 0, flex: 1 }}>
-                <h2 className="recipe-title" style={{ margin: 0 }}>{selectedRecipe.title}</h2>
-                {selectedRecipe.subtitle && <p className="recipe-subtitle">{selectedRecipe.subtitle}</p>}
+                <h2 className="recipe-title" style={{ margin: 0 }}>{tr(selectedRecipe.title)}</h2>
+                {selectedRecipe.subtitle && <p className="recipe-subtitle">{tr(selectedRecipe.subtitle)}</p>}
               </div>
               <div className="detail-actions detail-actions--inline" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {detailActionButtons}
@@ -2575,11 +2639,11 @@ export default function App() {
             </div>
 
             <div className="recipe-meta-bar">
-              <span>{selectedRecipe.time}</span>
+              <span>{timeText(selectedRecipe.time)}</span>
               {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{cuisineText(selectedRecipe.cuisine)}</span>}
               {selectedRecipe.difficulty && (
                 <span className={`difficulty-badge difficulty-${selectedRecipe.difficulty === "Nem" ? "nem" : selectedRecipe.difficulty === "Avanceret" ? "avanceret" : "mellem"}`}>
-                  {selectedRecipe.difficulty}
+                  {difficultyLabel(selectedRecipe.difficulty)}
                 </span>
               )}
               {selectedRecipe.calories && <span className="calories-meta">{selectedRecipe.calories} kcal</span>}
@@ -2601,13 +2665,13 @@ export default function App() {
             })()}
 
             {selectedRecipe.description && (
-              <p className="recipe-description">{selectedRecipe.description}</p>
+              <p className="recipe-description">{tr(selectedRecipe.description)}</p>
             )}
 
             <div className="section-label">{t("Ingredienser")}</div>
             <ul className="ingredient-grid">
               {(selectedRecipe.ingredients || []).map((ing, i) => {
-                const scaled = scaleIngredient(ing.text || ing, selectedRecipe.servings_count || 4, servings);
+                const scaled = scaleIngredient(tr(ing.text || ing), selectedRecipe.servings_count || 4, servings);
                 // Anything that isn't a pantry staple is shoppable (added to the
                 // list + counted in the price). Only items with a store are an
                 // actual weekly deal and get the chain tag.
@@ -2656,7 +2720,7 @@ export default function App() {
                 {selectedRecipe.steps.map((step, i) => (
                   <li key={i} className="step-item">
                     <span className="step-number">{i + 1}</span>
-                    {step}
+                    {tr(step)}
                   </li>
                 ))}
               </ol>
@@ -2666,8 +2730,8 @@ export default function App() {
               <div className="recipe-tips-block">
                 <div className="recipe-tips-label">{t("Tips")}</div>
                 {selectedRecipe.tips
-                  ? selectedRecipe.tips.map((t, i) => <p key={i} className="recipe-tip-item">{t}</p>)
-                  : <p className="recipe-tip-item">{selectedRecipe.tip}</p>
+                  ? selectedRecipe.tips.map((tp, i) => <p key={i} className="recipe-tip-item">{tr(tp)}</p>)
+                  : <p className="recipe-tip-item">{tr(selectedRecipe.tip)}</p>
                 }
               </div>
             )}
@@ -2788,13 +2852,7 @@ export default function App() {
                   Not a .quick-strip: its overflow must stay visible so the
                   dropdown panels aren't clipped by scroll/mask. */}
               <div className="quick-strip-more-row">
-                <span className="quick-strip-sep">{t("Mere")}</span>
-                <button
-                  className={`qs-pill${quickFilters.has("enbutik") ? " active" : ""}`}
-                  onClick={() => toggleQuickFilter("enbutik")}
-                >
-                  {t("Kun én butik")}
-                </button>
+                <span className="quick-strip-sep">{t("Pris")}</span>
                 {maxRecipePrice > 0 && (
                   <div className="qs-dd-wrap">
                     <button
@@ -2830,41 +2888,6 @@ export default function App() {
                     )}
                   </div>
                 )}
-                <div className="qs-dd-wrap">
-                  <button
-                    className={`qs-pill qs-dd-pill${pantryItems.size > 0 ? " active" : ""}`}
-                    onClick={() => setQuickPanel(p => (p === "koleskab" ? null : "koleskab"))}
-                  >
-                    {pantryItems.size > 0 ? `${t("Køleskab")} (${pantryItems.size})` : t("Køleskab")} ▾
-                  </button>
-                  {quickPanel === "koleskab" && (
-                    <>
-                      <div className="qs-dd-backdrop" onClick={() => setQuickPanel(null)} />
-                      <div className="qs-dd-panel">
-                        <div className="fs-pantry-input-row">
-                          <input
-                            className="fs-pantry-input"
-                            type="text"
-                            placeholder={t("Tilføj ingrediens du har...")}
-                            value={pantryInput}
-                            onChange={e => setPantryInput(e.target.value)}
-                            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(); } }}
-                          />
-                          <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>
-                        </div>
-                        {pantryItems.size > 0 && (
-                          <div className="fs-pantry-chips">
-                            {[...pantryItems].map(item => (
-                              <button key={item} className="fs-pantry-chip" onClick={() => togglePantryItem(item)}>
-                                {item} <span aria-hidden="true">×</span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
                 {activeFilterCount > 0 && (
                   <button className="qs-clear-btn" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
                 )}
@@ -3006,8 +3029,8 @@ export default function App() {
                 <div className="mp-sheet-day-content">
                   <RecipeMonogram recipe={entry.recipe} className="mp-sheet-emoji" />
                   <div className="mp-sheet-recipe-info">
-                    <div className="mp-sheet-recipe-title">{entry.recipe.title}</div>
-                    <div className="mp-sheet-recipe-meta">⏱ {entry.recipe.time} · {entry.servings} {en ? "ppl" : "pers."}</div>
+                    <div className="mp-sheet-recipe-title">{tr(entry.recipe.title)}</div>
+                    <div className="mp-sheet-recipe-meta">⏱ {timeText(entry.recipe.time)} · {entry.servings} {en ? "ppl" : "pers."}</div>
                   </div>
                   <button className="mp-sheet-remove" onClick={() => removeFromPlan(i)}>×</button>
                 </div>
@@ -3105,7 +3128,7 @@ export default function App() {
               <div className="mp-sidebar-day-content">
                 <RecipeMonogram recipe={entry.recipe} className="mp-sidebar-emoji" />
                 <div className="mp-sidebar-recipe-info">
-                  <div className="mp-sidebar-recipe-title">{entry.recipe.title}</div>
+                  <div className="mp-sidebar-recipe-title">{tr(entry.recipe.title)}</div>
                   <div className="mp-sidebar-servings">
                     <button className="plan-sv-btn" onClick={() => setPlanServings(i, Math.max(1, entry.servings - 1))}>−</button>
                     <span>{entry.servings}p</span>
@@ -3203,8 +3226,8 @@ export default function App() {
                   onClick={() => { setShowSavedPanel(false); selectRecipe(r); }}
                 >
                   <div className="saved-sheet-card-info">
-                    <div className="saved-sheet-card-title"><RecipeMonogram recipe={r} className="saved-sheet-mono" /><span className="saved-sheet-title-text">{r.title}</span></div>
-                    <div className="saved-sheet-card-meta">{r.time} · {r.savedServings || r.servings_count || 4} {en ? "ppl" : "pers."}</div>
+                    <div className="saved-sheet-card-title"><RecipeMonogram recipe={r} className="saved-sheet-mono" /><span className="saved-sheet-title-text">{tr(r.title)}</span></div>
+                    <div className="saved-sheet-card-meta">{timeText(r.time)} · {r.savedServings || r.servings_count || 4} {en ? "ppl" : "pers."}</div>
                   </div>
                   <button
                     className="saved-sheet-unsave"
