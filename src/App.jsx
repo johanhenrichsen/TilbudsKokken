@@ -1098,7 +1098,7 @@ export default function App() {
   const [quickFilters, setQuickFilters] = useState(new Set());
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
   const [showFilterSheet, setShowFilterSheet] = useState(false);
-  // Which desktop quick-strip dropdown is open ("pris" | "koleskab" | null).
+  // Which desktop quick-strip dropdown is open ("pris" | null).
   const [quickPanel, setQuickPanel] = useState(null);
 
   // Collapse the sticky search when scrolling down; reveal on scroll up / near top
@@ -1191,7 +1191,7 @@ export default function App() {
   // True whenever any bottom sheet / modal / overlay is open. Used both to lock
   // scrolling and to hide the floating action buttons so they can't intercept
   // clicks meant for an open sheet (QA bugs #6 / #7).
-  const anyModalOpen = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showStorePicker || showFeedbackPanel || addingToPlan != null;
+  const anyModalOpen = showSavedPanel || showFilterSheet || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showPantryPanel || showStorePicker || showFeedbackPanel || addingToPlan != null;
 
   // Lock page scroll while any bottom sheet / modal is open. The document scrolls
   // on the root <html> element (body has default overflow), so locking body alone
@@ -1310,12 +1310,6 @@ export default function App() {
         if (priceMax !== null && pp > priceMax) return false;
       }
       // unpriced recipes always pass the slider filter
-    }
-    // "Én butik" is the one quick-filter left; time/price/popularity now live in
-    // their own dedicated controls (Tid, Pris, and the merged Anbefalet sort).
-    if (quickFilters.has("enbutik")) {
-      const storeSet = new Set((r.dealItems || []).map(di => di.store));
-      if (storeSet.size > 1) return false;
     }
     return true;
   }
@@ -1924,6 +1918,80 @@ export default function App() {
     );
   }
 
+  // Pantry (Køleskab) controls — input + autocomplete + suggestions + tags.
+  // Extracted so the Køleskab nav destination reuses the exact same rich UI that
+  // used to live inline in the filter panel.
+  function renderPantryBody() {
+    const query = pantryInput.trim();
+    const dropdownItems = (() => {
+      if (query.length < 2) return [];
+      const q = query.toLowerCase();
+      const available = INGREDIENT_AUTOCOMPLETE.filter(s => !pantryItems.has(s));
+      const starts = available.filter(s => s.toLowerCase().startsWith(q));
+      const partials = available.filter(s => !s.toLowerCase().startsWith(q) && s.toLowerCase().includes(q));
+      return [...starts, ...partials].slice(0, 5);
+    })();
+    const showDropdown = query.length >= 2;
+    return (
+      <div className="pantry-body-inline">
+        <div className="pantry-input-wrap" ref={pantryInputWrapRef}>
+          <div className="pantry-input-row">
+            <input
+              className="pantry-text-input"
+              type="text"
+              placeholder={pantryItems.size === 0 ? t("Hvad har du i køleskabet i dag?") : t("Tilføj flere ingredienser...")}
+              value={pantryInput}
+              autoComplete="off"
+              onChange={e => { setPantryInput(e.target.value); setPantryDropdownIdx(-1); }}
+              onKeyDown={e => {
+                if (e.key === "ArrowDown") { e.preventDefault(); setPantryDropdownIdx(i => Math.min(i + 1, dropdownItems.length - 1)); }
+                else if (e.key === "ArrowUp") { e.preventDefault(); setPantryDropdownIdx(i => Math.max(i - 1, -1)); }
+                else if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(dropdownItems[pantryDropdownIdx] ?? undefined); }
+                else if (e.key === "Escape") { setPantryInput(""); setPantryDropdownIdx(-1); }
+              }}
+              onBlur={() => setTimeout(() => setPantryDropdownIdx(-1), 150)}
+            />
+            {query && <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>}
+          </div>
+          {showDropdown && (
+            <div className="pantry-dropdown" style={{ position: "fixed", top: pantryDropdownPos.top, left: pantryDropdownPos.left, width: pantryDropdownPos.width, zIndex: 1000 }}>
+              {dropdownItems.length > 0 ? dropdownItems.map((s, i) => {
+                const [before, match, after] = highlightSuggestion(s, query);
+                return (
+                  <button key={s} className={`pantry-dropdown-item${i === pantryDropdownIdx ? " active" : ""}`} onMouseDown={e => { e.preventDefault(); addPantryFromInput(s); }}>
+                    {before}<span className="suggestion-highlight">{match}</span>{after}
+                  </button>
+                );
+              }) : <div className="pantry-dropdown-empty">{t("Ingen forslag — tryk Enter for at tilføje alligevel")}</div>}
+            </div>
+          )}
+        </div>
+        <div className="pantry-suggestions">
+          {PANTRY_SUGGESTIONS.filter(s => !pantryItems.has(s)).map(s => (
+            <button key={s} className="pantry-suggest-chip" onClick={() => togglePantryItem(s)}>+ {s}</button>
+          ))}
+        </div>
+        {pantryItems.size > 0 && (
+          <div className="pantry-tags">
+            {[...pantryItems].map(item => (
+              <span key={item} className="pantry-tag">
+                {item}
+                <button className="pantry-tag-remove" onClick={() => togglePantryItem(item)} aria-label={`Fjern ${item}`}>×</button>
+              </span>
+            ))}
+            <button className="pantry-clear-all" onClick={clearPantry}>{t("Ryd alle")}</button>
+          </div>
+        )}
+        {pantryItems.size > 0 && (
+          <button className="pantry-find-btn" onClick={() => setShowPantryPanel(false)}>
+            {t("Vis rangering")}
+            <span className="pantry-find-count">{pantryMatchTotal}</span>
+          </button>
+        )}
+      </div>
+    );
+  }
+
   // The recipe-detail action buttons, shared between the desktop inline bar
   // (in the recipe header) and the mobile docked bar. On mobile the docked bar
   // is portaled to <body> (see below) so its position:fixed is relative to the
@@ -2263,30 +2331,37 @@ export default function App() {
                 {
                   id: "opskrifter",
                   label: t("Opskrifter"),
-                  active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet && !selectedRecipe,
+                  active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet && !showPantryPanel && !selectedRecipe,
                   badge: null,
-                  onClick: () => { setSelectedRecipe(null); setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
+                  onClick: () => { setSelectedRecipe(null); setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); setShowPantryPanel(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
+                },
+                {
+                  id: "koleskab",
+                  label: t("Køleskab"),
+                  active: showPantryPanel,
+                  badge: pantryItems.size > 0 ? pantryItems.size : null,
+                  onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); setShowPantryPanel(v => !v); },
                 },
                 {
                   id: "madplan",
                   label: t("Ugen"),
                   active: showMealPlanPanel,
                   badge: planCount > 0 ? planCount : null,
-                  onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowMealPlanPanel(v => !v); },
+                  onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowPantryPanel(false); setShowMealPlanPanel(v => !v); },
                 },
                 {
                   id: "gemt",
                   label: t("Gemte"),
                   active: showSavedPanel,
                   badge: savedRecipes.length > 0 ? savedRecipes.length : null,
-                  onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowSavedPanel(v => !v); },
+                  onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowPantryPanel(false); setShowSavedPanel(v => !v); },
                 },
                 {
                   id: "indkob",
                   label: t("Kurv"),
                   active: showShoppingSheet,
                   badge: shoppingList.length > 0 ? shoppingList.length : null,
-                  onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(v => !v); },
+                  onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowPantryPanel(false); setShowShoppingSheet(v => !v); },
                 },
               ].map(t => (
                 <button key={t.id} className={`dnav-item${t.active ? " active" : ""}`} onClick={t.onClick}>
@@ -2505,103 +2580,6 @@ export default function App() {
                   </>
                 )}
 
-                {/* Pantry */}
-                <div className="prefs-group-label">{t("Køleskab")}</div>
-                <div className={`pantry-inline${showPantry ? " open" : ""}${pantryItems.size > 0 ? " has-items" : ""} prefs-pantry`}>
-                  <button className="pantry-trigger-btn" onClick={() => setShowPantry(v => !v)}>
-                    <svg className="pantry-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-                    </svg>
-                    <span className="pantry-trigger-text">
-                      <span className="pantry-trigger-title">{t("Hvad har du derhjemme?")}</span>
-                      <span className="pantry-trigger-sub">
-                        {pantryItems.size > 0
-                          ? (en
-                              ? `${pantryMatchTotal} recipes match your ingredients — shown first`
-                              : `${pantryMatchTotal} opskrifter matcher dine ingredienser — vist øverst`)
-                          : t("Tilføj ingredienser — vi rykker opskrifter du kan lave nu øverst")}
-                      </span>
-                    </span>
-                    {pantryItems.size > 0 && (
-                      <span className="pantry-count-badge">{pantryItems.size}</span>
-                    )}
-                    <svg className={`pantry-chevron${showPantry ? " open" : ""}`} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M4 6 L8 10 L12 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  {showPantry && (
-                    <div className="pantry-body-inline">
-                      {(() => {
-                        const query = pantryInput.trim();
-                        const dropdownItems = (() => {
-                          if (query.length < 2) return [];
-                          const q = query.toLowerCase();
-                          const available = INGREDIENT_AUTOCOMPLETE.filter(s => !pantryItems.has(s));
-                          const starts = available.filter(s => s.toLowerCase().startsWith(q));
-                          const partials = available.filter(s => !s.toLowerCase().startsWith(q) && s.toLowerCase().includes(q));
-                          return [...starts, ...partials].slice(0, 5);
-                        })();
-                        const showDropdown = query.length >= 2;
-                        return (
-                          <div className="pantry-input-wrap" ref={pantryInputWrapRef}>
-                            <div className="pantry-input-row">
-                              <input
-                                className="pantry-text-input"
-                                type="text"
-                                placeholder={pantryItems.size === 0 ? t("Hvad har du i køleskabet i dag?") : t("Tilføj flere ingredienser...")}
-                                value={pantryInput}
-                                autoComplete="off"
-                                onChange={e => { setPantryInput(e.target.value); setPantryDropdownIdx(-1); }}
-                                onKeyDown={e => {
-                                  if (e.key === "ArrowDown") { e.preventDefault(); setPantryDropdownIdx(i => Math.min(i + 1, dropdownItems.length - 1)); }
-                                  else if (e.key === "ArrowUp") { e.preventDefault(); setPantryDropdownIdx(i => Math.max(i - 1, -1)); }
-                                  else if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(dropdownItems[pantryDropdownIdx] ?? undefined); }
-                                  else if (e.key === "Escape") { setPantryInput(""); setPantryDropdownIdx(-1); }
-                                }}
-                                onBlur={() => setTimeout(() => setPantryDropdownIdx(-1), 150)}
-                              />
-                              {query && <button className="pantry-add-btn" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>}
-                            </div>
-                            {showDropdown && (
-                              <div className="pantry-dropdown" style={{ position: "fixed", top: pantryDropdownPos.top, left: pantryDropdownPos.left, width: pantryDropdownPos.width, zIndex: 1000 }}>
-                                {dropdownItems.length > 0 ? dropdownItems.map((s, i) => {
-                                  const [before, match, after] = highlightSuggestion(s, query);
-                                  return (
-                                    <button key={s} className={`pantry-dropdown-item${i === pantryDropdownIdx ? " active" : ""}`} onMouseDown={e => { e.preventDefault(); addPantryFromInput(s); }}>
-                                      {before}<span className="suggestion-highlight">{match}</span>{after}
-                                    </button>
-                                  );
-                                }) : <div className="pantry-dropdown-empty">{t("Ingen forslag — tryk Enter for at tilføje alligevel")}</div>}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })()}
-                      <div className="pantry-suggestions">
-                        {PANTRY_SUGGESTIONS.filter(s => !pantryItems.has(s)).map(s => (
-                          <button key={s} className="pantry-suggest-chip" onClick={() => togglePantryItem(s)}>+ {s}</button>
-                        ))}
-                      </div>
-                      {pantryItems.size > 0 && (
-                        <div className="pantry-tags">
-                          {[...pantryItems].map(item => (
-                            <span key={item} className="pantry-tag">
-                              {item}
-                              <button className="pantry-tag-remove" onClick={() => togglePantryItem(item)} aria-label={`Fjern ${item}`}>×</button>
-                            </span>
-                          ))}
-                          <button className="pantry-clear-all" onClick={clearPantry}>{t("Ryd alle")}</button>
-                        </div>
-                      )}
-                      {pantryItems.size > 0 && (
-                        <button className="pantry-find-btn" onClick={() => { setShowPantry(false); setPrefsOpen(false); }}>
-                          {t("Vis rangering")}
-                          <span className="pantry-find-count">{pantryMatchTotal}</span>
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
               </div>
             )}
           </div>
@@ -3261,6 +3239,31 @@ export default function App() {
     </div>
   )}
 
+  {/* Køleskab (pantry) bottom sheet — a first-class nav destination like the cart
+      and meal plan, not a filter. Adding ingredients re-ranks the recipe list so
+      recipes you can cook now float to the top. */}
+  {showPantryPanel && (
+    <div className="mp-sheet-overlay" onClick={() => setShowPantryPanel(false)}>
+      <div className="shopping-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <div className="shopping-sheet-header">
+          <div className="shopping-sheet-title">
+            {t("Køleskab")}
+            <span className="shopping-sheet-sub">
+              {pantryItems.size > 0
+                ? (en ? `${pantryMatchTotal} recipes match — shown first` : `${pantryMatchTotal} opskrifter matcher — vist øverst`)
+                : t("Tilføj ingredienser du har — vi rykker opskrifter du kan lave nu øverst")}
+            </span>
+          </div>
+          <button className="mp-sheet-close" onClick={() => setShowPantryPanel(false)} aria-label={t("Luk")}>×</button>
+        </div>
+        <div className="pantry-sheet-body">
+          {renderPantryBody()}
+        </div>
+      </div>
+    </div>
+  )}
+
   {/* Shopping list bottom sheet */}
   {showShoppingSheet && (
     <div className="mp-sheet-overlay" onClick={() => setShowShoppingSheet(false)}>
@@ -3306,9 +3309,21 @@ export default function App() {
               <path d="M3 6h18M3 12h18M3 18h11"/>
             </svg>
           ),
-          active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet,
+          active: !showMealPlanPanel && !showSavedPanel && !showShoppingSheet && !showPantryPanel,
           badge: null,
-          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
+          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); setShowPantryPanel(false); window.scrollTo({ top: 0, behavior: "smooth" }); },
+        },
+        {
+          id: "koleskab",
+          label: t("Køleskab"),
+          icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          ),
+          active: showPantryPanel,
+          badge: pantryItems.size > 0 ? pantryItems.size : null,
+          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(false); setShowPantryPanel(v => !v); },
         },
         {
           id: "madplan",
@@ -3320,7 +3335,7 @@ export default function App() {
           ),
           active: showMealPlanPanel,
           badge: planCount > 0 ? planCount : null,
-          onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowMealPlanPanel(v => !v); },
+          onClick: () => { setShowSavedPanel(false); setShowShoppingSheet(false); setShowPantryPanel(false); setShowMealPlanPanel(v => !v); },
         },
         {
           id: "gemt",
@@ -3332,7 +3347,7 @@ export default function App() {
           ),
           active: showSavedPanel,
           badge: savedRecipes.length > 0 ? savedRecipes.length : null,
-          onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowSavedPanel(v => !v); },
+          onClick: () => { setShowMealPlanPanel(false); setShowShoppingSheet(false); setShowPantryPanel(false); setShowSavedPanel(v => !v); },
         },
         {
           id: "indkob",
@@ -3345,7 +3360,7 @@ export default function App() {
           ),
           active: showShoppingSheet,
           badge: shoppingList.length > 0 ? shoppingList.length : null,
-          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowShoppingSheet(v => !v); },
+          onClick: () => { setShowMealPlanPanel(false); setShowSavedPanel(false); setShowPantryPanel(false); setShowShoppingSheet(v => !v); },
         },
       ].map(tab => (
         <button key={tab.id} className={`bnav-item${tab.active ? " active" : ""}`} onClick={tab.onClick} aria-label={tab.label}>
@@ -3609,18 +3624,6 @@ export default function App() {
             </div>
           </div>
           <div className="filter-sheet-group">
-            <div className="filter-sheet-label">{t("Butikker")}</div>
-            <div className="filter-chip-row">
-              {[
-                { id: "enbutik", label: t("Kun én butik") },
-              ].map(f => (
-                <button key={f.id} className={`filter-chip${quickFilters.has(f.id) ? " active" : ""}`} onClick={() => toggleQuickFilter(f.id)}>
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="filter-sheet-group">
             <div className="filter-sheet-label">{t("Tid")}</div>
             <div className="filter-chip-row">
               {timeFilters.map(f => (
@@ -3661,29 +3664,6 @@ export default function App() {
               </div>
             </div>
           )}
-          <div className="filter-sheet-group">
-            <div className="filter-sheet-label">{t("Køleskab")}</div>
-            <div className="fs-pantry-input-row">
-              <input
-                className="fs-pantry-input"
-                type="text"
-                placeholder={t("Tilføj ingrediens du har...")}
-                value={pantryInput}
-                onChange={e => setPantryInput(e.target.value)}
-                onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addPantryFromInput(); } }}
-              />
-              <button className="fs-pantry-add" onClick={() => addPantryFromInput()}>{t("Tilføj")}</button>
-            </div>
-            {pantryItems.size > 0 && (
-              <div className="fs-pantry-chips">
-                {[...pantryItems].map(item => (
-                  <button key={item} className="fs-pantry-chip" onClick={() => togglePantryItem(item)}>
-                    {item} <span aria-hidden="true">×</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
           <div className="filter-sheet-group">
             <div className="filter-sheet-label">{t("Sorter efter")}</div>
             <div className="filter-chip-row">

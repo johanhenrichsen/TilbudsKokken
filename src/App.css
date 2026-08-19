@@ -4672,6 +4672,9 @@ html.dark .shopping-sheet-item.checked .shopping-sheet-text { color: var(--text-
   border-radius: 4px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
 }
 
+/* Køleskab (pantry) bottom-sheet body — reuses .pantry-body-inline controls */
+.pantry-sheet-body { padding: 8px 20px 20px; overflow-y: auto; flex: 1; }
+
 /* ─── Header bookmark badge ──────────────────── */
 .header-icon-btn--bookmark {
   position: relative;
@@ -5504,12 +5507,17 @@ html.dark .saved-shoplist-btn:hover { background: #B83A24; }
     line-height: 1;
   }
 
+  .bnav-item { padding-left: 2px; padding-right: 2px; }
   .bnav-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.01em;
     line-height: 1;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Hide FABs on mobile — bottom nav replaces them */
