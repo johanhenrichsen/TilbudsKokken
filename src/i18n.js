@@ -242,6 +242,27 @@ const EN = {
   "Hovednavigation": "Main navigation",
   "Navigation": "Navigation",
 
+  // ── Account / profile ────────────────────────────────────────────
+  "Konto": "Account",
+  "Log ind eller opret konto": "Log in or create account",
+  "Din konto": "Your account",
+  "Email": "Email",
+  "Adgangskode": "Password",
+  "Log ind": "Log in",
+  "Opret konto": "Create account",
+  "Har du ikke en konto? Opret én": "No account? Create one",
+  "Har du allerede en konto? Log ind": "Already have an account? Log in",
+  "Log ud": "Log out",
+  "Logget ind som": "Logged in as",
+  "Dine opskrifter og madplan synkroniseres på tværs af dine enheder.":
+    "Your recipes and meal plan sync across your devices.",
+  "Du kan også gemme opskrifter uden en konto — en konto gemmer dem bare på tværs af enheder.":
+    "You can save recipes without an account — an account just keeps them across your devices.",
+  "Tjek din email for at bekræfte din konto.": "Check your email to confirm your account.",
+  "Konti er ikke sat op endnu.": "Accounts aren't set up yet.",
+  "Indtast email og adgangskode.": "Enter email and password.",
+  "Synkroniseret": "Synced",
+
   // ── Feedback results (admin page) ────────────────────────────────
   "Slet alle svar?": "Delete all responses?",
   "Feedback — Tilbudskokken": "Feedback — Tilbudskokken",

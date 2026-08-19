@@ -8,6 +8,7 @@ const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
 import { t, dietLabel, timeLabel, difficultyLabel, timeText, sortLabel, cuisineText, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
+import { supabase, isCloudConfigured, loadUserData, saveUserData, friendlyAuthError } from "./cloud";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -910,6 +911,51 @@ export default function App() {
     try { document.documentElement.lang = lang; } catch {}
   }, [lang]);
 
+  // ── Account / auth state ────────────────────────────────────────
+  const [session, setSession] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [authMode, setAuthMode] = useState("login"); // "login" | "signup"
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+  const [authNotice, setAuthNotice] = useState("");
+  const [authBusy, setAuthBusy] = useState(false);
+  const user = session?.user ?? null;
+  const cloudLoadedRef = useRef(null);
+
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  async function submitAuth() {
+    setAuthError(""); setAuthNotice("");
+    if (!authEmail.trim() || !authPassword) { setAuthError(t("Indtast email og adgangskode.")); return; }
+    setAuthBusy(true);
+    try {
+      if (authMode === "signup") {
+        const { data, error } = await supabase.auth.signUp({ email: authEmail.trim(), password: authPassword });
+        if (error) throw error;
+        if (!data.session) setAuthNotice(t("Tjek din email for at bekræfte din konto."));
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email: authEmail.trim(), password: authPassword });
+        if (error) throw error;
+      }
+      setAuthPassword("");
+    } catch (err) {
+      setAuthError(friendlyAuthError(err));
+    } finally {
+      setAuthBusy(false);
+    }
+  }
+  async function signOut() {
+    try { await supabase?.auth.signOut(); } catch {}
+    cloudLoadedRef.current = null;
+    setShowProfile(false);
+  }
+
   // ── Recipe content translation (Danish → English, on demand + cached) ──
   // Recipe text (titles, ingredients, steps…) is Danish data. When English is
   // active we translate the *visible* strings via /api/translate and cache them
@@ -1183,7 +1229,7 @@ export default function App() {
   // True whenever any bottom sheet / modal / overlay is open. Used both to lock
   // scrolling and to hide the floating action buttons so they can't intercept
   // clicks meant for an open sheet (QA bugs #6 / #7).
-  const anyModalOpen = showSavedPanel || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showPantryPanel || showStorePicker || showFeedbackPanel || addingToPlan != null;
+  const anyModalOpen = showSavedPanel || showOverflowMenu || showShoppingSheet || showMealPlanPanel || showPantryPanel || showStorePicker || showFeedbackPanel || showProfile || addingToPlan != null;
 
   // Lock page scroll while any bottom sheet / modal is open. The document scrolls
   // on the root <html> element (body has default overflow), so locking body alone
@@ -1583,6 +1629,75 @@ export default function App() {
   function saveMealPlanState(plan) {
     localStorage.setItem("mealPlan", JSON.stringify(plan));
   }
+
+  // ── Cloud sync (only active while signed in) ────────────────────
+  // The whole synced state is mirrored as one small JSON blob per user. Local
+  // storage stays the working copy, so the app is unchanged when signed out.
+  function currentSyncBlob() {
+    let servings = 4;
+    try { servings = parseInt(localStorage.getItem("defaultServings")) || 4; } catch {}
+    return { savedRecipes, mealPlan, stores: localStores, diet, servings, v: 1 };
+  }
+  function mergeSyncBlob(local, cloud) {
+    if (!cloud || Object.keys(cloud).length === 0) return local; // first sign-up: push local up
+    // Union saved recipes by id (cloud entries win on conflict).
+    const byId = new Map();
+    for (const r of (cloud.savedRecipes || [])) byId.set(r.id, r);
+    for (const r of (local.savedRecipes || [])) if (!byId.has(r.id)) byId.set(r.id, r);
+    const cloudPlanHasItems = Array.isArray(cloud.mealPlan) && cloud.mealPlan.some(Boolean);
+    const cloudHasStores = Array.isArray(cloud.stores) && cloud.stores.length > 0;
+    return {
+      savedRecipes: [...byId.values()],
+      mealPlan: cloudPlanHasItems ? cloud.mealPlan : local.mealPlan,
+      stores: cloudHasStores ? cloud.stores : local.stores,
+      diet: cloud.diet || local.diet,
+      servings: cloud.servings || local.servings,
+      v: 1,
+    };
+  }
+  function applySyncBlob(p) {
+    if (!p) return;
+    if (Array.isArray(p.savedRecipes)) {
+      setSavedRecipes(p.savedRecipes);
+      try { localStorage.setItem("savedRecipes", JSON.stringify(p.savedRecipes)); } catch {}
+    }
+    if (Array.isArray(p.mealPlan) && p.mealPlan.length === 7) {
+      setMealPlan(p.mealPlan);
+      saveMealPlanState(p.mealPlan);
+    }
+    if (Array.isArray(p.stores)) {
+      setLocalStores(p.stores);
+      try { localStorage.setItem("localStores", JSON.stringify(p.stores)); } catch {}
+    }
+    if (p.diet) {
+      setDiet(p.diet);
+      try { localStorage.setItem("defaultDiet", p.diet); } catch {}
+    }
+    if (p.servings) {
+      try { localStorage.setItem("defaultServings", String(p.servings)); } catch {}
+    }
+  }
+  // On sign-in: load the account's data, merge with the device, apply, push back.
+  useEffect(() => {
+    if (!supabase || !user) { cloudLoadedRef.current = null; return; }
+    if (cloudLoadedRef.current === user.id) return;
+    let cancelled = false;
+    (async () => {
+      const cloud = await loadUserData(user.id);
+      if (cancelled) return;
+      const merged = mergeSyncBlob(currentSyncBlob(), cloud);
+      applySyncBlob(merged);
+      cloudLoadedRef.current = user.id;
+      saveUserData(user.id, merged);
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  // On change while signed in: debounced save to the cloud.
+  useEffect(() => {
+    if (!supabase || !user || cloudLoadedRef.current !== user.id) return;
+    const id = setTimeout(() => { saveUserData(user.id, currentSyncBlob()); }, 1500);
+    return () => clearTimeout(id);
+  }, [savedRecipes, mealPlan, localStores, diet, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   function addToPlan(recipe, dayIdx) {
     setMealPlan(prev => {
       const next = [...prev];
@@ -2384,6 +2499,17 @@ export default function App() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
+              </button>
+              <button
+                className={`header-icon-btn header-icon-btn--desktop${user ? " header-account-btn--in" : ""}`}
+                onClick={() => setShowProfile(true)}
+                title={user ? t("Din konto") : t("Konto")}
+                aria-label={user ? t("Din konto") : t("Konto")}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                {user && <span className="header-account-dot" />}
               </button>
             </div>
           </div>
@@ -3451,6 +3577,77 @@ export default function App() {
           </svg>
           <span>{t("Indstillinger")}</span>
         </button>
+        <button className="overflow-menu-item" onClick={() => { setShowProfile(true); setShowOverflowMenu(false); }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>{user ? t("Din konto") : t("Konto")}</span>
+        </button>
+      </div>
+    </div>
+  )}
+
+  {/* ── Account / profile sheet ─────────────────────────────────── */}
+  {showProfile && (
+    <div className="mp-sheet-overlay" onClick={() => setShowProfile(false)}>
+      <div className="profile-sheet" onClick={e => e.stopPropagation()}>
+        <div className="mp-sheet-drag-handle" />
+        <div className="shopping-sheet-header">
+          <div className="shopping-sheet-title">{user ? t("Din konto") : t("Log ind eller opret konto")}</div>
+          <button className="mp-sheet-close" onClick={() => setShowProfile(false)} aria-label={t("Luk")}>×</button>
+        </div>
+
+        {!isCloudConfigured ? (
+          <div className="saved-sheet-empty">{t("Konti er ikke sat op endnu.")}</div>
+        ) : user ? (
+          <div className="profile-body">
+            <div className="profile-avatar" aria-hidden="true">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div className="profile-email-label">{t("Logget ind som")}</div>
+            <div className="profile-email">{user.email}</div>
+            <div className="profile-sync-note"><span className="profile-sync-dot" />{t("Synkroniseret")}</div>
+            <p className="profile-desc">{t("Dine opskrifter og madplan synkroniseres på tværs af dine enheder.")}</p>
+            <button className="profile-signout-btn" onClick={signOut}>{t("Log ud")}</button>
+          </div>
+        ) : (
+          <div className="profile-body">
+            <div className="profile-tabs">
+              <button
+                className={`profile-tab${authMode === "login" ? " active" : ""}`}
+                onClick={() => { setAuthMode("login"); setAuthError(""); setAuthNotice(""); }}
+              >{t("Log ind")}</button>
+              <button
+                className={`profile-tab${authMode === "signup" ? " active" : ""}`}
+                onClick={() => { setAuthMode("signup"); setAuthError(""); setAuthNotice(""); }}
+              >{t("Opret konto")}</button>
+            </div>
+            <form className="profile-form" onSubmit={e => { e.preventDefault(); submitAuth(); }}>
+              <label className="profile-field">
+                <span className="profile-field-label">{t("Email")}</span>
+                <input className="profile-input" type="email" autoComplete="email" value={authEmail} onChange={e => setAuthEmail(e.target.value)} />
+              </label>
+              <label className="profile-field">
+                <span className="profile-field-label">{t("Adgangskode")}</span>
+                <input className="profile-input" type="password" autoComplete={authMode === "signup" ? "new-password" : "current-password"} value={authPassword} onChange={e => setAuthPassword(e.target.value)} />
+              </label>
+              {authError && <div className="profile-error">{authError}</div>}
+              {authNotice && <div className="profile-notice">{authNotice}</div>}
+              <button className="profile-submit-btn" type="submit" disabled={authBusy}>
+                {authBusy ? "…" : (authMode === "signup" ? t("Opret konto") : t("Log ind"))}
+              </button>
+            </form>
+            <button
+              className="profile-switch"
+              onClick={() => { setAuthMode(m => (m === "login" ? "signup" : "login")); setAuthError(""); setAuthNotice(""); }}
+            >
+              {authMode === "login" ? t("Har du ikke en konto? Opret én") : t("Har du allerede en konto? Log ind")}
+            </button>
+            <p className="profile-desc">{t("Du kan også gemme opskrifter uden en konto — en konto gemmer dem bare på tværs af enheder.")}</p>
+          </div>
+        )}
       </div>
     </div>
   )}
