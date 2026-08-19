@@ -609,7 +609,7 @@ function buildPhotoQuery(r) {
   return `${q} food`.trim();
 }
 
-function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave, displayTitle, displayCategory, displayTime }) {
+function RecipeCard({ r, inPlan, isSaved, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave, displayTitle, displayCategory, displayTime }) {
   const photoKey = `photo_${PHOTO_CACHE_VER}_${r.id}`;
   const photoFailKey = `photo_fail_${PHOTO_CACHE_VER}_${r.id}`;
   const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(photoKey) || null);
@@ -661,11 +661,6 @@ function RecipeCard({ r, inPlan, isSaved, isPopular, availableNames, pantryTotal
         }
         <div className="card-photo-gradient" />
         <div className="recipe-category-tag card-photo-tag">{displayCategory ?? r.category}</div>
-        {isPopular && (
-          <div className="card-photo-badge">
-            <span className="popular-badge-pill">{isEn() ? "Popular" : "Populær"}</span>
-          </div>
-        )}
       </div>
       <div className="card-body">
         <div className="recipe-browse-title">{displayTitle ?? r.title}</div>
@@ -1094,6 +1089,8 @@ export default function App() {
   const [sortOrder, setSortOrder] = useState("anbefalet");
   const [visibleCounts, setVisibleCounts] = useState({ recommended: PAGE_SIZE, others: PAGE_SIZE });
   const [quickFilters, setQuickFilters] = useState(new Set());
+  // Opt-in filter: show only the week's popular recipes (was a card badge before).
+  const [popularOnly, setPopularOnly] = useState(false);
   const [showOverflowMenu, setShowOverflowMenu] = useState(false);
 
   // Collapse the sticky search when scrolling down; reveal on scroll up / near top
@@ -1260,6 +1257,7 @@ export default function App() {
     pantryItems.size > 0,
     priceMin > 0 || priceMax !== null,
     quickFilters.size > 0,
+    popularOnly,
   ].filter(Boolean).length;
 
   const maxRecipePrice = (() => {
@@ -1282,6 +1280,7 @@ export default function App() {
     // relevance sort (see applySort) so all recipes stay visible, just reordered.
     // matchRecipe only applies search / time / cuisine / price.
     if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
+    if (popularOnly && !popularityMap[r.id]) return false;
     if (search) {
       const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
       if (cuisineFromKeyword) {
@@ -1353,7 +1352,7 @@ export default function App() {
       + filteredOthers.filter(r => r.pantryMatchCount > 0).length
     : 0;
   const priceFiltered = priceMin > 0 || priceMax !== null;
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered || popularOnly) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   // Collect the recipe strings currently on screen and translate any that aren't
   // cached yet. Titles/categories for visible cards, plus the full content of an
@@ -1413,13 +1412,6 @@ export default function App() {
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, [revealSig]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const popularRecipes = Object.keys(popularityMap).length > 0
-    ? [...recipeBank]
-        .filter(r => popularityMap[r.id])
-        .sort((a, b) => (popularityMap[b.id] || 0) - (popularityMap[a.id] || 0))
-        .slice(0, 5)
-    : [];
 
   // ── Recipe selection ────────────────────────────────────────────
   function selectRecipe(r) {
@@ -1698,6 +1690,7 @@ export default function App() {
     setPriceMin(0);
     setPriceMax(null);
     setQuickFilters(new Set());
+    setPopularOnly(false);
   }
 
   function toggleSection(key) {
@@ -2051,7 +2044,6 @@ export default function App() {
   // ── Render a grid of recipe cards ──────────────────────────────
   function renderRecipeGrid(recipes, sectionKey) {
     const availableNames = getAvailableItemNames();
-    const top3Ids = new Set(popularRecipes.slice(0, 3).map(p => p.id));
     const limit = sectionKey ? (visibleCounts[sectionKey] ?? recipes.length) : recipes.length;
     return recipes.slice(0, limit).map(r => (
       <RecipeCard
@@ -2059,7 +2051,6 @@ export default function App() {
         r={r}
         inPlan={mealPlan.some(e => e?.recipe?.id === r.id)}
         isSaved={savedRecipes.some(s => s.id === r.id)}
-        isPopular={top3Ids.has(r.id)}
         availableNames={availableNames}
         pantryTotal={pantryItems.size}
         onSelect={selectRecipe}
@@ -2648,6 +2639,17 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              {Object.keys(popularityMap).length > 0 && (
+                <div className="quick-strip quick-strip-more">
+                  <button
+                    className={`qs-pill qs-popular-pill${popularOnly ? " active" : ""}`}
+                    onClick={() => setPopularOnly(v => !v)}
+                    aria-pressed={popularOnly}
+                  >
+                    <span aria-hidden="true">★</span> {t("Populær")}
+                  </button>
+                </div>
+              )}
               <div className="quick-strip quick-strip-sort">
                 <span className="quick-strip-sep">{t("Sorter")}</span>
                 {[
@@ -2664,6 +2666,16 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              {Object.keys(popularityMap).length > 0 && (
+                <div className="quick-strip quick-strip-more">
+                  <button
+                    className={`qs-pill qs-popular-pill${popularOnly ? " active" : ""}`}
+                    onClick={() => setPopularOnly(v => !v)}
+                  >
+                    ★ {t("Kun populære")}
+                  </button>
+                </div>
+              )}
               {/* Tid / Køkken inline pills — formerly only in the filter sheet. */}
               <div className="quick-strip quick-strip-more">
                 <span className="quick-strip-sep">{t("Tid")}</span>

@@ -1061,24 +1061,6 @@ html, body {
 }
 
 /* Discount badge — Dild bg, pinned top-left */
-.card-photo-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  background: #7C8F5A;
-  color: #1B1613;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 999px;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
 .card-photo-tag {
   position: absolute;
   bottom: 10px;
@@ -3816,26 +3798,6 @@ html:not(.dark) .splash-mark svg {
 }
 
 /* ─── Tilbud-mærket — signature price-tag element ── */
-/* Sennep banner tag — arrow-right shape, slight tilt */
-.popular-badge-pill {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background: #CE9F3E;
-  color: #1B1613;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 5px 14px 5px 10px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  white-space: nowrap;
-  pointer-events: none;
-  clip-path: polygon(0% 0%, 88% 0%, 100% 50%, 88% 100%, 0% 100%);
-  transform: rotate(-1.5deg);
-  transform-origin: left center;
-  border-radius: 3px 0 0 3px;
-}
 /* Tilbud price tag — rotated Sennep shape, Prisrød price */
 .tilbud-maerke {
   display: inline-flex;
@@ -4916,6 +4878,10 @@ html.dark .quick-strip-more { border-top-color: rgba(255,255,255,0.06); }
 }
 html.dark .quick-strip-more-row { border-top-color: rgba(255,255,255,0.06); }
 
+/* Popular-only toggle pill in the quick strip (replaces the old card badge) */
+.qs-popular-pill.active { background: #CE9F3E; color: #221C17; border-color: #CE9F3E; }
+html.dark .qs-popular-pill.active { background: #CE9F3E; color: #1B1613; border-color: #CE9F3E; }
+
 /* Inline price slider in the quick strip (replaces the old dropdown pill) */
 .qs-price-inline { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .qs-price-track { width: 240px; height: 28px; flex-shrink: 0; }
@@ -5652,7 +5618,6 @@ html:not(.dark) .recipe-browse-card.featured .card-body {
   background: linear-gradient(135deg, #FBF6EC 0%, #EFE4D2 100%);
 }
 html:not(.dark) .card-body { background: #FBF6EC; }
-html:not(.dark) .card-photo-badge { background: #5F7040; color: #FBF6EC; }
 html:not(.dark) .card-photo-tag { background: rgba(168,122,30,0.12); color: #7E5A0E; }
 html:not(.dark) .recipe-browse-title { color: #221C17; }
 html:not(.dark) .recipe-browse-meta { color: #6F665A; }
@@ -6025,7 +5990,6 @@ html:not(.dark) .tilbud-maerke { background: #CE9F3E; color: #221C17; }
 html:not(.dark) .tilbud-maerke::before { background: #F1E9DB; border: 1px solid #DED3C0; }
 html:not(.dark) .tilbud-maerke-price { color: #B93E29; }
 html:not(.dark) .tilbud-maerke-original { color: rgba(34,28,23,0.55); }
-html:not(.dark) .popular-badge-pill { background: #CE9F3E; color: #221C17; }
 
 /* ── deal-item tag ── */
 html:not(.dark) .deal-item-tag.available { background: #FBF6EC; color: #5F7040; border-color: rgba(95,112,64,0.3); }

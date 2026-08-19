@@ -148,6 +148,8 @@ const EN = {
   "Billigst": "Cheapest",
   "Hurtigst": "Fastest",
   "Pris": "Price",
+  "Populær": "Popular",
+  "Kun populære": "Popular only",
   "Tilføj ingrediens du har...": "Add an ingredient you have...",
   "Ryd filtre": "Clear filters",
   "Søgeresultater": "Search results",
