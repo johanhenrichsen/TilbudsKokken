@@ -2666,16 +2666,6 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              {Object.keys(popularityMap).length > 0 && (
-                <div className="quick-strip quick-strip-more">
-                  <button
-                    className={`qs-pill qs-popular-pill${popularOnly ? " active" : ""}`}
-                    onClick={() => setPopularOnly(v => !v)}
-                  >
-                    ★ {t("Kun populære")}
-                  </button>
-                </div>
-              )}
               {/* Tid / Køkken inline pills — formerly only in the filter sheet. */}
               <div className="quick-strip quick-strip-more">
                 <span className="quick-strip-sep">{t("Tid")}</span>
