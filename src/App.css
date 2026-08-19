@@ -6155,10 +6155,6 @@ html:not(.dark) .chain-section-recipe-count { color: #6F665A; }
     font-weight: 700;
     color: #CE9F3E;
   }
-  /* Filters: hide inline pill rows, show mobile filter row instead */
-  .quick-strip-wrap { display: none !important; }
-  /* Tilpas accordion is fully replaced by the Filtre bottom sheet on mobile */
-  .prefs-section { display: none !important; }
 }
 
 /* Inline card price is mobile-only (desktop shows it in the servings row) */
@@ -6421,12 +6417,10 @@ html:not(.dark) .overflow-menu-badge { background: #7E5A0E; }
     opacity: 0 !important;
   }
   /* Suppress entrance animations */
-  .prefs-body,
   .store-picker-card,
   .shopping-sheet,
   .recipe-detail-sheet,
-  .overflow-menu-sheet,
-  .filter-sheet {
+  .overflow-menu-sheet {
     animation: none !important;
   }
 }
