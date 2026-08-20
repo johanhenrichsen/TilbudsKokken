@@ -1097,11 +1097,19 @@ export default function App() {
   const [diet, setDiet] = useState(() => {
     try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
   });
+  // Allergies are stored as the Danish label (a.da), matching recipe.allergens so the
+  // results-screen dimming can compare label-to-label. Lifestyle diet stores the key
+  // (d.key) to match recipe.dietTags. Both read through try/catch like the rest of the
+  // persisted state, so a blocked localStorage (private-mode WebViews) can't crash mount.
   const [allergies, setAllergies] = useState(() => {
     try { return JSON.parse(localStorage.getItem("allergies") || "[]"); } catch { return []; }
   });
-  const [lifestyleDiet, setLifestyleDiet] = useState(() => localStorage.getItem("lifestyleDiet") || "");
-  const [defaultSupermarket, setDefaultSupermarket] = useState(() => localStorage.getItem("defaultSupermarket") || "");
+  const [lifestyleDiet, setLifestyleDiet] = useState(() => {
+    try { return localStorage.getItem("lifestyleDiet") || ""; } catch { return ""; }
+  });
+  const [defaultSupermarket, setDefaultSupermarket] = useState(() => {
+    try { return localStorage.getItem("defaultSupermarket") || ""; } catch { return ""; }
+  });
   const [copied, setCopied] = useState(false);
   const [searchHidden, setSearchHidden] = useState(false);
   const [stepsOpen, setStepsOpen] = useState(true);
