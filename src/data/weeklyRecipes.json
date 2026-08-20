@@ -6,7 +6,7 @@
     "time": "40 minutter",
     "servings_count": 3,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En japansk-inspireret ret med saftige kyllingespyd glaseret i teriyakisauce serveret på bløde soba-nudler. Edamamebønnerne tilføjer en frisk og næringsrig kontrast til den søde og salte sauce. En hurtig hverdagsret der tager dig med til Japan.",
     "ingredients": [
       {
@@ -93,7 +93,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": []
   },
   {
     "id": 1001,
@@ -102,7 +110,7 @@
     "time": "15 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Et smukt dansk frokostbord med hjemmelavet smørrebrød på sprødt rugbrød med gravad laks og klassisk remoulade. Denne opskrift hylder det bedste fra det danske køkken med råvarer af høj kvalitet. Perfekt til en søndagsfrokost eller en festlig anledning.",
     "ingredients": [
       {
@@ -187,7 +195,17 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Ingen tilberedning",
+    "allergens": [
+      "Gluten",
+      "Skaldyr",
+      "Fisk"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1002,
@@ -196,7 +214,7 @@
     "time": "30 minutter",
     "servings_count": 3,
     "category": "Indisk",
-    "cuisine": "🇮🇳 Indisk",
+    "cuisine": "indisk",
     "description": "En cremet og krydret indisk butter chicken lavet på en smagfuld færdigret sat i scene med friskkogt basmatiris og en klat creme fraiche. Retten er perfekt til en travl hverdag hvor man stadig ønsker et eksotisk og mættende måltid. Aromaerne af karry og fløde fylder hele køkkenet.",
     "ingredients": [
       {
@@ -277,7 +295,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1003,
@@ -286,7 +312,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Et smukt og overdådigt stjerneskud er en sand dansk klassiker der kombinerer sprødstegte fiskestykker med kolde rejer og frisk laks på ristet rugbrød. Denne version er enkel at sammensætte med gode tilbudsvarer fra ugens tilbud. En ret der imponerer både øjet og ganen.",
     "ingredients": [
       {
@@ -378,7 +404,18 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Skaldyr",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1004,
@@ -387,7 +424,7 @@
     "time": "3 timer (inkl. ovntid)",
     "servings_count": 3,
     "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
+    "cuisine": "amerikansk",
     "description": "Møre og saftrige spareribs marineret med røget BBQ-smag og serveret med gyldne grillede majskolber — en klassisk amerikansk grillfest på dansk jord. Ribbenene tilberedes langsomt i ovnen for maksimal mørhed inden de får den afsluttende behandling på grillen. En garanteret succes til næste haveparty.",
     "ingredients": [
       {
@@ -468,7 +505,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Mellem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1005,
@@ -477,7 +518,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En lækker japansk-inspireret ret med saftige kyllingespyd glaseret i teriyakisauce serveret over bløde udonnudler. Retten er nem at lave på hverdage og byder på autentiske asiatiske smagsoplevelser. Perfekt til dem der ønsker at udforske det japanske køkken derhjemme.",
     "ingredients": [
       {
@@ -566,7 +607,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": []
   },
   {
     "id": 1006,
@@ -575,7 +624,7 @@
     "time": "20 minutter",
     "servings_count": 2,
     "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
+    "cuisine": "amerikansk",
     "description": "En klassisk amerikansk smashburger med saftige bøffer, smeltet cheddar og hjemmelavet burgerdressing. De syltede rødløg giver den perfekte syrlige modvægt til den rige, karamelliserede bøf. Server i brioche-burgerboller for det ultimative burgereventyr.",
     "ingredients": [
       {
@@ -664,7 +713,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1007,
@@ -673,7 +729,7 @@
     "time": "30 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En varmende japansk ramensuppe baseret på rig misopaste og bouillon, toppet med dampede gyoza og friske grøntsager. Denne ret bringer det autentiske japanske restaurantkøkken hjem på spisebordet. Sobanudelerne giver en nøddeagtig smag, der matcher den salte misosoup perfekt.",
     "ingredients": [
       {
@@ -764,7 +820,17 @@
     "dietaryFilters": [
       "Vegetarisk (med vegetar-gyoza)"
     ],
-    "difficulty": "Mellem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1008,
@@ -773,7 +839,7 @@
     "time": "40 minutter",
     "servings_count": 2,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "europaeisk",
     "description": "En simpel men elegant middelhavsinspireret middag med hel ovnbagt dorade, sprøde broccoli og det lækreste hvidløgsbrød. Retten kræver minimal forberedelse, men resultatet er imponerende. Den friske fisk kombineret med smøragtig hvidløgsbaguette er et match made in heaven.",
     "ingredients": [
       {
@@ -851,7 +917,17 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1009,
@@ -860,7 +936,7 @@
     "time": "20 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En opgradering af den danske klassiker med bløde brioche-hotdogbrød, saftige grillpølser og en lækker karrydressing. Tilbehøret med ristede løg og syltede agurker giver den perfekte balance af smag og tekstur. En uimodståelig comfort food-ret til hele familien.",
     "ingredients": [
       {
@@ -938,7 +1014,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose",
+      "Sennep"
+    ],
+    "dietTags": []
   },
   {
     "id": 1010,
@@ -947,7 +1031,7 @@
     "time": "75 minutter (inkl. hviletid)",
     "servings_count": 6,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "nordisk",
     "description": "En smuk og uimodståelig dansk sommerdessert med friske, søde jordbær anrettet på en blød vaniljekagecreme i en sprød tærte. Retten er perfekt til weekenden, en fødselsdagsmiddag eller som elegant dessert til gæster. Den lyserøde farve og den friske jordbærsmag gør den til årets mest indbydende dessert.",
     "ingredients": [
       {
@@ -1027,7 +1111,17 @@
     "dietaryFilters": [
       "Vegetarisk"
     ],
-    "difficulty": "Mellem"
+    "difficulty": "Middel",
+    "mealType": "snack",
+    "cookingMethod": "Bagning",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1011,
@@ -1036,7 +1130,7 @@
     "time": "40 minutter",
     "servings_count": 4,
     "category": "Indisk",
-    "cuisine": "🇮🇳 Indisk",
+    "cuisine": "indisk",
     "description": "En klassisk indisk ret med mørt kyllingekød i en rig og krydret tomatbaseret sauce. Retten serveres med dampet basmatiris og er perfekt til en hyggelig middag. Cremefinen giver saucen en dejlig fyldig konsistens.",
     "ingredients": [
       {
@@ -1141,7 +1235,13 @@
     "dietaryFilters": [
       "Glutenfri"
     ],
-    "difficulty": "Middel"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1012,
@@ -1150,7 +1250,7 @@
     "time": "20 minutter",
     "servings_count": 3,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "mexicansk",
     "description": "En hurtig og lækker wrap med krydret gyros, friske grøntsager og en cremet dressing. Retten er inspireret af det mellemøstlige og mexicanske køkken og kan laves på under 20 minutter. Perfekt til en travl hverdagsaftensmad.",
     "ingredients": [
       {
@@ -1246,7 +1346,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": []
   },
   {
     "id": 1013,
@@ -1255,7 +1361,7 @@
     "time": "30 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "Saftige kyllingespyd marineret i teriyakisauce serveret over faste soba-nudler med sprøde edamamebønner. En enkel men smagfuld japansk inspireret ret der imponerer både til hverdag og weekend. De ristede sesamfrø giver et dejligt knasende drys.",
     "ingredients": [
       {
@@ -1352,7 +1458,15 @@
     "dietaryFilters": [
       "Mælkefri"
     ],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": []
   },
   {
     "id": 1014,
@@ -1361,7 +1475,7 @@
     "time": "50 minutter",
     "servings_count": 2,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "amerikansk",
     "description": "En imponerende grillet flanksteak der allerede er marineret i en frisk chimichurri sauce. Serveret med sprøde gigant pommes frites og en lækker grøn salat giver denne ret en rigtig argentinsk steakhouse-oplevelse. Perfekt til en festlig weekend-middag.",
     "ingredients": [
       {
@@ -1438,7 +1552,11 @@
       "Glutenfri",
       "Mælkefri"
     ],
-    "difficulty": "Middel"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1015,
@@ -1447,7 +1565,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En varmende og aromatisk japansk ramensuppe med møre kyllingespyd og bløde udonnudler. Misopaste og ramenbouillon giver en dyb umami-smag, der løfter hele retten. Perfekt til en hyggelig aften, hvor man vil forkæle sig selv med asiatisk madlavning.",
     "ingredients": [
       {
@@ -1531,7 +1649,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": []
   },
   {
     "id": 1016,
@@ -1540,7 +1666,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
+    "cuisine": "mexicansk",
     "description": "En farverig og næringsrig mexicansk inspireret tacobowl med krydret hakket kylling og sprøde mukimamebønner. Santa Maria Tex Mex-krydderiet giver den autentiske mexicanske smag, mens jasminris danner en perfekt base. En hurtig hverdagsret, der kan tilpasses efter smag.",
     "ingredients": [
       {
@@ -1632,7 +1758,11 @@
     "dietaryFilters": [
       "Glutenfri"
     ],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1017,
@@ -1641,7 +1771,7 @@
     "time": "15 minutter",
     "servings_count": 6,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Den ultimative version af den danske klassiker – hotdog med sprøde pølsehorn, saftfulde grillpølser og syrlige syltede rødløg. Böhncke hotdogdressing og sennep giver den ægte gadevognssmag, du kender og elsker. En nem og festlig middag, der passer til alle aldre.",
     "ingredients": [
       {
@@ -1713,7 +1843,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Meget nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Gluten",
+      "Sennep",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1018,
@@ -1722,7 +1860,7 @@
     "time": "20 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "Sprøde japanske gyoza serveret med en lækker teriyakisauce og frisk wakamesalat – en let og elegant ret med masser af umami. Gyozaerne steges først og dampes derefter for den perfekte tekstur med sprød bund og blød top. En fantastisk ret til forret eller en let middag.",
     "ingredients": [
       {
@@ -1795,7 +1933,16 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1019,
@@ -1804,7 +1951,7 @@
     "time": "20 minutter",
     "servings_count": 2,
     "category": "Indisk",
-    "cuisine": "🇮🇳 Indisk",
+    "cuisine": "indisk",
     "description": "En cremet og aromatisk indisk butter chicken ret, der er nemt sat sammen med Salling Nu Butter Chicken og frisk basilikum fra Bilka. Basmatiris absorberer den rige, krydrede sauce og giver en mættende og lækker middag på under 30 minutter. Retten er perfekt til en travl hverdag.",
     "ingredients": [
       {
@@ -1879,7 +2026,15 @@
     "dietaryFilters": [
       "Glutenfri"
     ],
-    "difficulty": "Meget nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1020,
@@ -1888,7 +2043,7 @@
     "time": "40 minutter",
     "servings_count": 2,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "europaeisk",
     "description": "En elegant og enkel middelhavsinspireret ret med hel stegt dorade, dampet broccoli og sprød hvidløgsbaguette. Fisken steges hel med citron og krydderurter for den mest smagfulde og saftige resultat. En imponerende ret, der er overraskende nem at lave.",
     "ingredients": [
       {
@@ -1971,7 +2126,16 @@
     "dietaryFilters": [
       "Glutenfri (undtagen baguetten)"
     ],
-    "difficulty": "Middel"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Fisk"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1021,
@@ -1980,7 +2144,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En lækker japansk-inspireret bowl med saftige teriyaki-kyllingespyd, dampet jasminris og edamame bønner. Retten er hurtig at tilberede og fuld af umami-smag. Perfekt til en nem hverdagsaftensmad med eksotisk twist.",
     "ingredients": [
       {
@@ -2077,7 +2241,14 @@
     "dietaryFilters": [
       "Glutenfri mulighed"
     ],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": []
   },
   {
     "id": 1022,
@@ -2086,7 +2257,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En varmende og dybdefuld ramensuppe inspireret af japansk madkultur med gyoza, soba-nudler og miso-bouillon. Retten kombinerer umami-rige smage med friske grøntsager for en komplet og tilfredsstillende middag. Let at lave men imponerende i smagen.",
     "ingredients": [
       {
@@ -2178,7 +2349,17 @@
     "dietaryFilters": [
       "Vegetarisk mulighed"
     ],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1023,
@@ -2187,7 +2368,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
+    "cuisine": "amerikansk",
     "description": "En saftig og klassisk hjemmelavet burger med hakket oksekød, smeltet cheddarost og alle de gode toppings. De sprøde brioche-boller løfter burgeren til et nyt niveau. En opskrift der garanterer succes ved grillen eller på panden.",
     "ingredients": [
       {
@@ -2277,7 +2458,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1024,
@@ -2286,7 +2474,7 @@
     "time": "30 minutter",
     "servings_count": 2,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En nem og sundere alternativ til sushi i form af en bowl med sushiris, frisk laks, wakamesalat og klassiske japanske toppings. Ideel til dem der elsker sushi men ønsker en hurtigere løsning. Server med wasabi og riseddike for den autentiske oplevelse.",
     "ingredients": [
       {
@@ -2383,7 +2571,17 @@
     "dietaryFilters": [
       "Glutenfri mulighed"
     ],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Ingen tilberedning",
+    "allergens": [
+      "Fisk",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1025,
@@ -2392,7 +2590,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En klassisk italiensk spaghetti bolognese lavet med saftigt hakket grisekød og rige hakkede tomater fra Mutti. Retten er enkel, velsmagt og perfekt til en travl hverdag. Serveret med nykogt spaghetti bliver det en ret, hele familien elsker.",
     "ingredients": [
       {
@@ -2485,7 +2683,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": []
   },
   {
     "id": 1026,
@@ -2494,7 +2698,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En overdådig bagt pasta med en rig og cremet sauce topet med sprød bacon. Retten er comfort food i sin reneste form og samler hele familien om bordet. Den hjemmebagte version med Rummo pasta giver en ekstra god konsistens.",
     "ingredients": [
       {
@@ -2590,7 +2794,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1027,
@@ -2599,7 +2810,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En rigtig klassiker – hjemmelavet spaghetti bolognese med saftig hakket grisekød og Mutti's polpa hakkede tomater for den autentiske italienske smag. Retten simrer langsomt, så saucen udvikler en dyb og kompleks smag. Server med friskrevet ost for det perfekte finish.",
     "ingredients": [
       {
@@ -2685,7 +2896,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1028,
@@ -2694,7 +2912,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "asiatisk",
     "description": "En kreativ fusion af dansk og koreansk madkultur med sprøde krebinetter på bløde burgerboller med syrlig kimchi og frisk spidskål. Kimchien tilføjer en fermenteret, krydret smag, der giver burgeren et helt unikt præg. En sjov og anderledes hverdagsret, der overrasker smagsløgene.",
     "ingredients": [
       {
@@ -2785,7 +3003,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1029,
@@ -2794,7 +3019,7 @@
     "time": "50 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En klassisk italiensk spaghetti bolognese lavet med frisk hakket kød, aromatisk tomatpuré og rige mutti tomater. Retten simrer langsomt for at udvikle en dyb, kompleks smag, der minder om den ægte italienske mormors opskrift. Server med en god spagetti og friskrevet parmesan.",
     "ingredients": [
       {
@@ -2872,7 +3097,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": []
   },
   {
     "id": 1030,
@@ -2881,7 +3112,7 @@
     "time": "50 minutter",
     "servings_count": 2,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "nordisk",
     "description": "En luksuriøs og imponerende ret med marineret lammecuolotte grillet til perfektion, serveret med nyopgravede danske kartofler og klassisk bearnaisesauce. Den møre lammekød kombinerer perfekt med den friske, urterige bearnaise. Perfekt til en festmiddag eller en særlig weekend.",
     "ingredients": [
       {
@@ -2963,7 +3194,14 @@
     "dietaryFilters": [
       "Glutenfri"
     ],
-    "difficulty": "Middel"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Mælk / laktose",
+      "Æg"
+    ],
+    "dietTags": []
   },
   {
     "id": 1031,
@@ -2972,7 +3210,7 @@
     "time": "15 minutter",
     "servings_count": 4,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "nordisk",
     "description": "Et elegant og næringsrigt smørrebrød på sprødt knækbrød med gravad laks, cremet avocado og friske cocktailtomater. En perfekt let frokost eller forret der ser imponerende ud men er utrolig let at lave. Frisk, sund og lækker.",
     "ingredients": [
       {
@@ -3063,7 +3301,17 @@
     "dietaryFilters": [
       "Glutenfri mulighed"
     ],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Ingen tilberedning",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Sesamfrø"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1032,
@@ -3072,7 +3320,7 @@
     "time": "35 minutter",
     "servings_count": 3,
     "category": "Asiatisk",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En varmende og dyb ramensuppe bygget op om en rig misopasta-bouillon med lækre dampede gyoza og friske grøntsager. Denne ret er inspireret af japanske ramenrestauranter og bringer autentiske smagsoplevelser hjem i dit køkken. Perfekt til kolde aftener.",
     "ingredients": [
       {
@@ -3165,7 +3413,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Mellem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": []
   },
   {
     "id": 1033,
@@ -3174,7 +3430,7 @@
     "time": "30 minutter",
     "servings_count": 2,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "asiatisk",
     "description": "En lækker og farverig poke bowl inspireret af hawaiiansk og japansk køkken med sprøde tempurarejer, friske grøntsager og duftende jasminris. Retten er nem at sammensætte og ser imponerende ud på bordet. Den sprøde tempura kombineret med friske grøntsager og syrlig dressing er en fryd for sanserne.",
     "ingredients": [
       {
@@ -3263,7 +3519,17 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Skaldyr",
+      "Soja",
+      "Sesamfrø"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1034,
@@ -3272,7 +3538,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "nordisk",
     "description": "En saftig lakseburger med hjemmelavet avocadocreme og friske grøntsager. Perfekt til en hurtig hverdagsaftensmad eller en lækker weekendmiddag. De bløde burgerboller fra Bilka giver den perfekte ramme om den sprøde laks.",
     "ingredients": [
       {
@@ -3365,7 +3631,17 @@
     "dietaryFilters": [
       "Glutenfri mulighed"
     ],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1035,
@@ -3374,7 +3650,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
+    "cuisine": "mexicansk",
     "description": "En festlig og farverig taco-aften med krydret hakket kyllingekød, sprøde grøntsager og cremede avocadoer. Retten er nem at lave og perfekt til en uformel middag med familien eller vennerne. Alle kan sammensætte deres taco præcis som de ønsker.",
     "ingredients": [
       {
@@ -3471,7 +3747,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": []
   },
   {
     "id": 1036,
@@ -3480,7 +3762,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En lækker hjemmelavet pizza med sprød surdejsbund, smeltet mozzarella og krydret pepperoni – næsten som fra en rigtig italiensk pizzeria. Mutti pizzasauce giver den perfekte tomatbase med frisk smag. En sjov ret at lave med familien, hvor alle kan vælge deres egne toppings.",
     "ingredients": [
       {
@@ -3560,7 +3842,16 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1037,
@@ -3569,7 +3860,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En klassisk og trøstende italiensk bolognese lavet med saftigt hakket oksekød og en rig tomatsauce. Serveret over nykogt rummo fusilli for den perfekte middag. En opskrift der mætter familien og smager fantastisk.",
     "ingredients": [
       {
@@ -3647,7 +3938,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1038,
@@ -3656,7 +3954,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
+    "cuisine": "mexicansk",
     "description": "En farverig og mættende mexicansk bowl med krydret kylling, friske grøntsager og cremet avocado. Retten samler de bedste tex-mex smagsoplevelser i én nem middag. Perfekt til en hurtig hverdagsaften, hvor alle kan bygge deres egen bowl.",
     "ingredients": [
       {
@@ -3745,7 +4043,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1039,
@@ -3754,7 +4059,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Verden",
-    "cuisine": "🌍 Verden",
+    "cuisine": "mellemostlig",
     "description": "En autentisk græsk gademadfavorit med krydret gyros, hjemmelavet tzatziki og sprøde grøntsager samlet i bløde pitabrød. Retten er nem at forberede og perfekt til en afslappet middag eller sammenkomst. Den fyldige gyros kombineret med den friske tzatziki er et klassisk match.",
     "ingredients": [
       {
@@ -3843,7 +4148,16 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Let"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1040,
@@ -3852,7 +4166,7 @@
     "time": "20 minutter",
     "servings_count": 6,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En ultimativ dansk hotdog med sprøde pølsehorn, saftfulde grillpølser og alle de klassiske tilbehør. Syltede rødløg og sennep giver den perfekte balance mellem surt og stærkt. Ideel til en hurtig frokost eller aftensmad i det gode vejr.",
     "ingredients": [
       {
@@ -3929,7 +4243,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "Nem"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Gluten",
+      "Sennep",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1041,
@@ -3938,7 +4260,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Hjemmelavede frikadeller af saftigt hakket svinekød serveret med kogte kartofler og en rig brun sovs. En klassisk dansk hverdagsret der samler familien om bordet. Enkel at tilberede og altid et hit hos børn og voksne.",
     "ingredients": [
       {
@@ -4017,7 +4339,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1042,
@@ -4026,7 +4356,7 @@
     "time": "55 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige kyllingelår bagt gyldne i ovnen sammen med karamelliserede rodfrugter og frisk timian. En nem ovnret der passer sig selv mens du laver andet. Fyldig smag med minimal indsats.",
     "ingredients": [
       {
@@ -4110,7 +4440,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1043,
@@ -4119,7 +4453,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Mexicansk",
-    "cuisine": "🇲🇽 Mexicansk",
+    "cuisine": "mexicansk",
     "description": "Sprøde tacos fyldt med krydret hakket oksekød og en frisk hjemmelavet tomatsalsa. En festlig hverdagsret der kan sættes på bordet på under 30 minutter. Alle kan bygge deres egne tacos – perfekt til familien.",
     "ingredients": [
       {
@@ -4209,7 +4543,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": []
   },
   {
     "id": 1044,
@@ -4218,7 +4558,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "Al dente pasta med flager af laks i en silkeblød flødesauce med frisk citron og salte kapers. En elegant ret der er klar på under 25 minutter. Perfekt til en afslappet aften hvor du vil have noget lækkert uden besvær.",
     "ingredients": [
       {
@@ -4303,7 +4643,17 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1045,
@@ -4312,7 +4662,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Indisk",
-    "cuisine": "🇮🇳 Indisk",
+    "cuisine": "indisk",
     "description": "En velsmagende kyllingekurry kogt med kokosmælk og aromatiske krydderier serveret med luftigt basmatiris. Retten er mild nok til hele familien men med masser af dybde og karakter. En aften i Indiens tegn behøver ikke tage lang tid.",
     "ingredients": [
       {
@@ -4402,7 +4752,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1046,
@@ -4411,7 +4765,7 @@
     "time": "70 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk søndagsmiddag med saftig svinekam, syrlig rødkål og søde brunede kartofler. Kombinationen af sødt og salt er typisk dansk og giver en dejlig balanceret middag. Perfekt til familiemiddagen i weekenden.",
     "ingredients": [
       {
@@ -4501,7 +4855,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "mellem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1047,
@@ -4510,7 +4868,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Amerikansk",
-    "cuisine": "🇺🇸 Amerikansk",
+    "cuisine": "amerikansk",
     "description": "Saftige hjemmelavede burgerbøffer med smeltet cheddar og søde karamelliserede løg i bløde burgerboller. Langt bedre end fast food og klar på 30 minutter. En fredag-aften favorit der gør alle glade.",
     "ingredients": [
       {
@@ -4594,7 +4952,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1048,
@@ -4603,7 +4968,7 @@
     "time": "40 minutter",
     "servings_count": 4,
     "category": "Middelhavet",
-    "cuisine": "🇬🇷 Middelhavet",
+    "cuisine": "europaeisk",
     "description": "En varmende og mættende suppe med røde linser, røget chorizo og massevis af grøntsager. Fuld af protein og smag fra de krydrede pølser. Perfekt til en kold dag og endnu bedre som rester dagen efter.",
     "ingredients": [
       {
@@ -4693,7 +5058,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Selleri"
+    ],
+    "dietTags": []
   },
   {
     "id": 1049,
@@ -4702,7 +5073,7 @@
     "time": "35 minutter",
     "servings_count": 2,
     "category": "Middelhavet",
-    "cuisine": "🇬🇷 Middelhavet",
+    "cuisine": "nordisk",
     "description": "Farverige ovnbagte grøntsager med en luftig fetacreme og ristet fuldkornsbrød. En let og nærende vegetarret der er smuk på tallerkenen og fyldig i smagen. Perfekt som et sundt hverdagsalternativ.",
     "ingredients": [
       {
@@ -4788,7 +5159,17 @@
     "dietaryFilters": [
       "Vegetar"
     ],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar",
+      "fleksitar"
+    ]
   },
   {
     "id": 1050,
@@ -4797,7 +5178,7 @@
     "time": "20 minutter",
     "servings_count": 2,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "Den klassiske romerske pasta carbonara med sprødt bacon, cremede æg og revet parmesan – lavet uden fløde som det gøres i Rom. Utrolig simpel og utrolig god. Klar på 20 minutter med ingredienser du altid har hjemme.",
     "ingredients": [
       {
@@ -4870,7 +5251,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "mellem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1051,
@@ -4879,7 +5268,7 @@
     "time": "15 minutter",
     "servings_count": 2,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassisk dansk frokost med hjemmelavet leverpostej på mørkt rugbrød toppet med syltede rødbeder og sprøde agurker. Hurtig at lave og fyldig nok til en let aftensmad. En hverdagsfavorit der aldrig går af mode.",
     "ingredients": [
       {
@@ -4937,7 +5326,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Ingen tilberedning",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1052,
@@ -4946,7 +5342,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig laksesteak grillet til perfektion serveret med sprøde grønne asparges og en frisk smørsauce med citron. En elegant men enkel ret til en særlig aften. Klar på under 30 minutter.",
     "ingredients": [
       {
@@ -5011,7 +5407,16 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1053,
@@ -5020,7 +5425,7 @@
     "time": "20 minutter",
     "servings_count": 2,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "Simpel og lækker pastarett med frisk basilikumpesto, saftige cherrytomater og bløde mozzarellaklatter. Perfekt til en hurtig vegetarisk hverdagsret. Server med ekstra parmesan for den ultimative smag.",
     "ingredients": [
       {
@@ -5092,7 +5497,16 @@
     "dietaryFilters": [
       "Vegetar"
     ],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1054,
@@ -5101,7 +5515,7 @@
     "time": "20 minutter",
     "servings_count": 2,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En frisk og mættende salat med saftig kyllingebryst, cremet avocado og en syrlig sennepsdressing. Let og nærende – perfekt til frokost eller en let aftensmad. Klar på 20 minutter.",
     "ingredients": [
       {
@@ -5178,7 +5592,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "frokost",
+    "cookingMethod": "Ingen tilberedning",
+    "allergens": [
+      "Sennep"
+    ],
+    "dietTags": []
   },
   {
     "id": 1055,
@@ -5187,7 +5607,7 @@
     "time": "60 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En kraftig oksekødsgryde med møre rodfrugter og duften af frisk rosmarin. Sæt den over ved lav varme og lad den passe sig selv mens du slapper af. Perfekt til kolde aftener og endnu bedre som rester.",
     "ingredients": [
       {
@@ -5276,7 +5696,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1056,
@@ -5285,7 +5709,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Mild torsk bagt i ovnen med en cremet sennepssauce og dampet broccoli. En sund og lækker ret der er klar på 25 minutter. Perfekt til den travle hverdag hvor du stadig vil spise ordentligt.",
     "ingredients": [
       {
@@ -5357,7 +5781,17 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose",
+      "Sennep"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1057,
@@ -5366,7 +5800,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassiske stegte svinekoteletter serveret med syrlig hjemmelavet æblemos og cremet kartoffelmos. En typisk dansk hverdagsret der smager af barndom og velstand. Nem og billig at lave til hele familien.",
     "ingredients": [
       {
@@ -5437,7 +5871,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1058,
@@ -5446,7 +5886,7 @@
     "time": "40 minutter",
     "servings_count": 4,
     "category": "Middelhavet",
-    "cuisine": "🇬🇷 Middelhavet",
+    "cuisine": "asiatisk",
     "description": "En silkeblød og krydret squashsuppe med ingefær og kokosmælk der varmer på alle de rigtige steder. Naturligt vegansk og fyldt med smag. Server med ristede solsikkekerner og et dryp olivenolie.",
     "ingredients": [
       {
@@ -5527,7 +5967,16 @@
       "Vegansk",
       "Vegetar"
     ],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [
+      "vegetar",
+      "vegansk",
+      "pescetar",
+      "fleksitar"
+    ]
   },
   {
     "id": 1069,
@@ -5536,7 +5985,7 @@
     "time": "60 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En saftig kyllingesteg med en elegant estragonbaseret flødesauce og dampede kartofler. En klassisk søndag i en lidt finere udgave. Kyllingen passer sig selv i ovnen mens du laver saucen.",
     "ingredients": [
       {
@@ -5624,7 +6073,13 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": []
   },
   {
     "id": 1070,
@@ -5633,7 +6088,7 @@
     "time": "80 minutter",
     "servings_count": 4,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En festlig oksesteg med en dyb rødvinssauce og karamelliserede ovnbagte rodfrugter. Perfekt til en lørdag hvor der er tid til at lave noget ordentligt. Imponerende resultat med overraskende lidt arbejde.",
     "ingredients": [
       {
@@ -5727,7 +6182,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "mellem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1071,
@@ -5736,7 +6195,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En rig og kødsauce til spaghetti med hakket oksekød, soffritto af grøntsager og masser af tomat. Den ultimate trøstemad der giver et dejligt overskud til frysen. Simrer sig til en dyb og afrundet smag.",
     "ingredients": [
       {
@@ -5830,7 +6289,14 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Selleri"
+    ],
+    "dietTags": []
   },
   {
     "id": 1072,
@@ -5839,7 +6305,7 @@
     "time": "30 minutter",
     "servings_count": 2,
     "category": "Middelhavet",
-    "cuisine": "🇬🇷 Middelhavet",
+    "cuisine": "nordisk",
     "description": "Ovnbagt laks med luftig couscous og en farverig blanding af ristede grøntsager med harissa. En let og nærende ret med masser af smag og kun ét fad at vaske op. Perfekt til en sund hverdagsaften.",
     "ingredients": [
       {
@@ -5927,7 +6393,15 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Fisk"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1073,
@@ -5936,7 +6410,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En elegant spaghetti med saftige rejer i en let hvidvinssauce med hvidløg og persille. En ret der smager af restaurant men er klar på 25 minutter. Perfekt til en romantisk middag for to.",
     "ingredients": [
       {
@@ -6030,7 +6504,17 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Skaldyr",
+      "Svovldioxid og sulfitter"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1074,
@@ -6039,7 +6523,7 @@
     "time": "40 minutter",
     "servings_count": 2,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En cremet og aromatisk risotto med blandede svampe, hvidvin og masser af parmesan. En vegetarisk ret der kræver opmærksomhed men belønner dig med en udsøgt smag. Perfekt til en stille aften.",
     "ingredients": [
       {
@@ -6135,7 +6619,15 @@
     "dietaryFilters": [
       "Vegetar"
     ],
-    "difficulty": "mellem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1075,
@@ -6144,7 +6636,7 @@
     "time": "30 minutter",
     "servings_count": 2,
     "category": "Mellemøstlig",
-    "cuisine": "🇲🇦 Mellemøstlig",
+    "cuisine": "mellemostlig",
     "description": "Saftigt grillet kyllingebryst marineret i citroner og krydderier serveret med frisk tabbouleh af bulgur og urter og cremet hummus. En lys og frisk ret der er mætter godt uden at virke tung.",
     "ingredients": [
       {
@@ -6232,7 +6724,11 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [],
+    "dietTags": []
   },
   {
     "id": 1076,
@@ -6241,7 +6737,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Indisk",
-    "cuisine": "🇮🇳 Indisk",
+    "cuisine": "indisk",
     "description": "En varmende og proteinrig indisk linsesuppe med krydderier, kokosmælk og tomat serveret med bløde naan og frisk raita. En komplet vegetarisk middag der mætter og varmer på alle de rigtige steder.",
     "ingredients": [
       {
@@ -6338,7 +6834,16 @@
       "Vegetar",
       "Vegansk"
     ],
-    "difficulty": "nem"
+    "difficulty": "Middel",
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose",
+      "Gluten"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "id": 1077,
@@ -6347,7 +6852,7 @@
     "time": "40 minutter",
     "servings_count": 2,
     "category": "Nordisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Paneret og sprød fiskefilet serveret med bagte kartofler og en cremet hjemmelavet tartarsauce. En klassisk ret der giver god mening på alle fronter – billig, nem og velsmagende.",
     "ingredients": [
       {
@@ -6434,7 +6939,18 @@
       }
     ],
     "dietaryFilters": [],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose",
+      "Sennep"
+    ],
+    "dietTags": [
+      "pescetar"
+    ]
   },
   {
     "id": 1078,
@@ -6443,7 +6959,7 @@
     "time": "60 minutter",
     "servings_count": 4,
     "category": "Italiensk",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En cremet og tilfredsstillende vegetarisk lasagne med lag af spinat, ricotta og tomatsugo. Ovnbagt til perfektion med smeltet ost på toppen. En klassiker der passer til alle og altid imponerer ved middagsbordet.",
     "ingredients": [
       {
@@ -6539,7 +7055,16 @@
     "dietaryFilters": [
       "Vegetar"
     ],
-    "difficulty": "nem"
+    "difficulty": "Nem",
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ]
   },
   {
     "title": "Klassisk Dansk Løgstuvning med Hakket Oksekød",
@@ -6547,7 +7072,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varmende og klassisk dansk ret med mørt hakket oksekød og karameliserede løg. Serveres traditionelt med kartofler og rødbeder – perfekt til familiens hverdagsmiddag.",
     "ingredients": [
       {
@@ -6608,7 +7133,12 @@
       "Server varm sammen med kogte kartofler, rødbeder og evt. syltet agurk."
     ],
     "tip": "Hvis løgene skal være ekstra møre og karameliserede, kan du tilføje 1 spsk. sukker og lade dem stege længere før kødet tilsættes.",
-    "id": 1079
+    "id": 1079,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt kylling med farverige peberfrugt",
@@ -6616,7 +7146,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig og sprød kyllingefilet med stegte peberfrugt i alle farver. En klassisk dansk hverdagsret der er klar på 30 minutter og passer perfekt til ris eller kartofler.",
     "ingredients": [
       {
@@ -6677,7 +7207,14 @@
       "Smag til med salt og peber og server straks med ris eller nye kartofler."
     ],
     "tip": "Hvis du er upatient efter saftig kylling kan du bankslå filetterne tynde før stegning - det reducerer kogetiden med få minutter.",
-    "id": 1080
+    "id": 1080,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Sprødt svinekam med kartoffelmos og løg",
@@ -6685,7 +7222,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassisk dansk hverdagsmad med saftig svinekam, sildeløg og cremede kartofler. En varmende ret der er perfekt til familiedagen og tilberedt på under 45 minutter.",
     "ingredients": [
       {
@@ -6765,7 +7302,14 @@
       "Serv svinekammen med kartoffelmos og rig mængde sildeløg på siden."
     ],
     "tip": "Hvis du har tiden, kan du skære sildeløgen dagen før og lade den marinere - smagen bliver endnu bedre. Sørg for at kartoffelmoset er cremet ved at tilsætte mælk langsomt.",
-    "id": 1081
+    "id": 1081,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Citronmarineret laksesteak med urter",
@@ -6773,7 +7317,7 @@
     "time": "25 minutter",
     "servings_count": 2,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Lækker og sund laksesteaks marineret i frisk citron og dild. En klassisk nordisk ret der er både hurtig og fyldt med smag – perfekt til hverdagsmiddagen.",
     "ingredients": [
       {
@@ -6833,7 +7377,16 @@
       "Server laksesteak med frisk citronskiver og tilbehør efter eget valg."
     ],
     "tip": "Hvis laksen er tyk, kan du skære den i to dele for at sikre lige tilstedeværelse. Sparer både tid og energi.",
-    "id": 1082
+    "id": 1082,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Karbonade-Pastata med Flødesauce",
@@ -6841,7 +7394,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige karbonader serveret med al dente pasta og en cremmet flødesauce med løg og timian. En klassisk dansk komfortretter der varmer sjælen på en kold hverdag.",
     "ingredients": [
       {
@@ -6913,7 +7466,15 @@
       "Fordel pasta på tallerkener, top med karbonader og flødesaucen. Server varm."
     ],
     "tip": "Hvis karbonaderne bliver for kolde, kan du varme dem op i saucen igen lige inden servering. Retten smager bedre hvis du ikke vender karbonaderne for ofte mens de steger.",
-    "id": 1083
+    "id": 1083,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stuvede kyllingelår med tomatsouce og ris",
@@ -6921,7 +7482,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Møre kyllingelår braised i en velsmagende tomatsouce med løg og hvidløg. En klassisk dansk familieretur der er nem at lave og altid vellykket. Serveres med risotto eller almindelig ris.",
     "ingredients": [
       {
@@ -6993,7 +7554,12 @@
       "Smag til med salt og peber. Server sammen med ris eller kartofler."
     ],
     "tip": "Du kan tilføje et par løveblade og lidt rosmarin for endnu mere smag. Retten bliver bedre hvis den står og trækker 30 minutter efter kogningen.",
-    "id": 1084
+    "id": 1084,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk dansk oksesteg med gulerødder",
@@ -7001,7 +7567,7 @@
     "time": "2 timer",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varm og tilforladelig dansk klassiker med mørt oksesteg og søde gulerødder. Denne rodet ret er perfekt til familieaftensmaden og serveres bedst med kartofler og grydestuvning.",
     "ingredients": [
       {
@@ -7068,7 +7634,12 @@
       "Skær stegens i skiver og server med de møre gulerødder og sovsen på tallerkenen."
     ],
     "tip": "Lad kødet hvile nogle minutter efter tilberedningen - det gør det mere mørt og saftig. Du kan også bruge rester til smørrebrød dagen efter.",
-    "id": 1085
+    "id": 1085,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Cremede rejespagetti med hvidløg og persille",
@@ -7076,7 +7647,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fiskeret",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "italiensk",
     "description": "En elegant og hurtig familieret med søde rejer i en cremet hvidløgs- og flødesauce. Spaghettien bliver perfekt al dente og binder det hele sammen til en klassisk dansk fiskeret, der både børn og voksne elsker.",
     "ingredients": [
       {
@@ -7149,7 +7720,18 @@
       "Garnér med frisk persille og en citronskive."
     ],
     "tip": "Køb rejerne i god tid, så de kan få stuetemperatur inden brug – de tilberedes hurtigere og bliver mere møre.",
-    "id": 1086
+    "id": 1086,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Skaldyr",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk dansk køtboller med gulerødssauce",
@@ -7157,7 +7739,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kødret",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige hjemmelavede køtboller med en silket gulerødssauce – en tidløs dansk klassiker der aldrig går ud af mode. Serveres bedst med kartofler og en frisk agurkesalat.",
     "ingredients": [
       {
@@ -7236,7 +7818,16 @@
       "Lægge køtbollerne tilbage i saucen og varm dem igennem i 2-3 minutter. Server varmt med kartofler eller brunede kartofler."
     ],
     "tip": "Hvis saucen bliver for tyk, kan du tynde den med lidt varm bouillon. Køtbollerne kan også frysesres helt uden sauce og varmes senere.",
-    "id": 1087
+    "id": 1087,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Stegt kylling med broccoli og smørSauce",
@@ -7244,7 +7835,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig stegt kyllingefilet med sprød broccoli og en klassisk dansk smørsauce. En hurtig og familievenlig middag, der er klar på under 30 minutter og garanteret hits på bordet.",
     "ingredients": [
       {
@@ -7304,7 +7895,14 @@
       "Anret kyllingen med den varme broccoli og hæld smørsaucen over."
     ],
     "tip": "Hvis du gerne vil have ekstra smag i saucen, kan du tilføje en klat rugbrødsskaldet eller lidt frisk timian.",
-    "id": 1088
+    "id": 1088,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt laksfilet med spinat og kartofler",
@@ -7312,7 +7910,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Dansk klassiker med sprød laksfilet og frisk spinat. En sund og lækker hverdagsmiddag, der er på bordet på under 40 minutter og sikrer hele familien får deres sund portion fisk og grøntsager.",
     "ingredients": [
       {
@@ -7372,7 +7970,17 @@
       "Fordel kartofler, laks og spinat på tallerkenerne, pres citronsaft over, og server varm."
     ],
     "tip": "Hvis du ønsker ekstra smag, kan du tilføje en klat fløde til spinaten lige før servering.",
-    "id": 1089
+    "id": 1089,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Svinesteaks med champignonsauce",
@@ -7380,7 +7988,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Mørt og saftig svinesteaks serveret med en cremmet champignonsauce – en klassisk dansk husmandskost der smelter på tungen. Perfekt til hverdag eller når der skal være noget ekstra på bordet.",
     "ingredients": [
       {
@@ -7447,7 +8055,14 @@
       "Server straks på varmede tallerkener med kartofler eller ris til siden."
     ],
     "tip": "Hvis du ønsker en tykkere sauce, kan du røre en teskefuld kartoffelstivelse ud i lidt koldt vand og tilsætte det til panden.",
-    "id": 1090
+    "id": 1090,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Hjemmelavet Farsbrød med Kartoffelmos og Bløtkål",
@@ -7455,7 +8070,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassisk dansk farsbrød med sprødt overflade serveret med silkeblødt kartoffelmos og syrlighed fra tilberedt bløtkål. En varm, mættet og hjemlig middag som hele familien elsker.",
     "ingredients": [
       {
@@ -7528,7 +8143,14 @@
       "Drysle gerne lidt frisk peber over eller garnér med persille hvis du har det."
     ],
     "tip": "Farsbrødet bliver meget saftigt hvis du ikke skærer det i alt for små stykker - lad det hvile 5 minutter efter stegening før du skærer.",
-    "id": 1091
+    "id": 1091,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Kyllingestuvning med Tomater",
@@ -7536,7 +8158,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varm og velsmag dansk klassiker med mørt kyllingelår og friske tomater i en cremet sovs. Perfekt familiemiddag serveret med kartofler eller ris.",
     "ingredients": [
       {
@@ -7615,7 +8237,14 @@
       "Rør fløden ud i stuvningen og lad det trekke i 2 minutter. Smag til med salt, peber og evt. flere krydderier."
     ],
     "tip": "Servér stuvningen med kogte kartofler eller ris og et frisk grønt salat på siden.",
-    "id": 1092
+    "id": 1092,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Mørbrad i flødesauce med kartofler",
@@ -7623,7 +8252,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Oksekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Mørt oksekød i en silkeblødt flødesauce med løg og timian. En klassisk dansk hverdagsret der smager som hjemmegavn, perfekt til famille middagen.",
     "ingredients": [
       {
@@ -7690,7 +8319,14 @@
       "Afsmag med salt og peber, server møbraden med flødesaucen og de varme kartofler."
     ],
     "tip": "Steg kødet ikke for længe - mørbrad er bedst medium rare. Du kan også servere med rødbedesalat for at få lidt syrlighed til retten.",
-    "id": 1093
+    "id": 1093,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Stegt torsk med ærter og smørristet kartoffel",
@@ -7698,7 +8334,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk husmannskost med sprød torskfilet, søde frosne ærter og gylden smørristet kartoffel. Simpel, sund og familievenlig ret der kommer på bordet på under 40 minutter.",
     "ingredients": [
       {
@@ -7771,7 +8407,19 @@
       "Anret torsk, kartofler og ærter på tallerken. Server straks med citronskiver og evt. remoulade."
     ],
     "tip": "Panering giver torsken ekstra smag og sprødhed. Undgå at vende fisken for meget, så den bliver løs og fedtet.",
-    "id": 1094
+    "id": 1094,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Oksesteg med Kartofler og Løg",
@@ -7779,7 +8427,7 @@
     "time": "2 timer",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varm og mættende dansk oksesteg, som er det perfekte valg til familiens søndagsmiddag. Det møre oksekød bliver luftigt og smagrigt, når det stiges langsomt med smør og grøntsager.",
     "ingredients": [
       {
@@ -7854,7 +8502,12 @@
       "Smager af på krydderi og tilpasser efter behov inden servering."
     ],
     "tip": "Brug en termometer til at sikre, at oksekødet når omkring 65°C indvendig temperatur for optimal mørthed. Lad kødet hvile 5 minutter efter kogning før skæring.",
-    "id": 1095
+    "id": 1095,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Citronmarineret hel kylling med kartofler",
@@ -7862,7 +8515,7 @@
     "time": "1 time 15 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En saftig og duftende hel kylling marineret i frisk citronsaft og krydderier, stegt til gyldenbrun perfektionen. Serveres med sprøde kartofler og grønne asparges til en klassisk dansk familiemiddag.",
     "ingredients": [
       {
@@ -7929,7 +8582,12 @@
       "Lad kyllingen hvile 10 minutter, server varm med de flødeagtige kartofler og citronkiler."
     ],
     "tip": "Hvis du har grønne asparges eller broccoli, steger du dem de sidste 15 minutter sammen med kartofler for et helt måltid på en plade.",
-    "id": 1096
+    "id": 1096,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt Svinekotelet med Æbleskiver og Kartofler",
@@ -7937,7 +8595,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige stegt svinekotelet serveret med sprøde kartofler og søde stegede æbler - en klassisk dansk familiemiddag fuld af rustik charme. Æblenes naturlige sødme balancerer perfekt med det aromatiske svinekød.",
     "ingredients": [
       {
@@ -7998,7 +8656,12 @@
       "Server de stegede svinekotelet med kogte kartofler og de varme stegede æbler. Drys gerne med lidt krydderurter som timian eller persille."
     ],
     "tip": "Lad koleterne hvile 2-3 minutter efter steging - det holder kødet saftigere. Vælg æbler der er lidt sure, som f.eks. Granny Smith, for bedste kontrast til det svinerod.",
-    "id": 1097
+    "id": 1097,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Cremede Havtasker i Kokossauce",
@@ -8006,7 +8669,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Skaldyr",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "asiatisk",
     "description": "Saftige havtasker blødt stegt i en silkeblødt kokossauce med hvidløg og frisk timian. En elegant og lækker familiemiddag, der serveres med risotto eller kartofler.",
     "ingredients": [
       {
@@ -8079,7 +8742,15 @@
       "Server straks med risotto eller nye kartofler og pynt med frisk timian."
     ],
     "tip": "Pas på ikke at overcook havtaskerne - de bliver gummiagtige. 3-4 minutter i saucen er maksimum.",
-    "id": 1098
+    "id": 1098,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Skaldyr",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Langtidsstegt lammekølle med rosmarin og kartofler",
@@ -8087,7 +8758,7 @@
     "time": "2 timer 30 minutter",
     "servings_count": 4,
     "category": "Lammekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Mørt og saftig lammekølle, langsomt stegt med frisk rosmarin, der bliver helt øm og fuld af smag. En klassisk dansk familiemiddag med kartofler og grøntsager.",
     "ingredients": [
       {
@@ -8172,7 +8843,12 @@
       "Når kødet er mørt og kartofler er koge møre, tager du det ud på et serveringsfad. Strain sovsen gennem en si og server varm ved siden af."
     ],
     "tip": "Lammekøllen bliver endnu mere mørt, hvis du lader den hvile i 10 minutter efter stegningen, inden du skærer i den.",
-    "id": 1099
+    "id": 1099,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Sprøde kyllingebrystfilet med parmesan og citron",
@@ -8180,7 +8856,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige kyllingebrystfilettet paneres med sprød parmesanost og panko, og steges til perfektionsgylden med smør og frisk citron. En klassisk dansk familiefavorit der er let at lave og uhyggeligt lækker.",
     "ingredients": [
       {
@@ -8246,7 +8922,16 @@
       "Anret på en tallerken, dryp med frisk citronjuice og server med kartofler eller salat."
     ],
     "tip": "Hvis du lader kyllingebrysterne hvile i fryseren i 15 minutter efter panering, bliver de ekstra sprøde.",
-    "id": 1100
+    "id": 1100,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Mexicanske Svinekød Wraps",
@@ -8254,7 +8939,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Hovedret",
-    "cuisine": "🇲🇽 Mexicansk",
+    "cuisine": "mexicansk",
     "description": "Saftige og velsmag mexicanske wraps fyldt med krydret hakket svinekød, friske grøntsager og cremete toppings. En nem og lækker familiefavorit, der bliver lavet på under 30 minutter.",
     "ingredients": [
       {
@@ -8338,7 +9023,15 @@
       "Læg svinekødet på hver wrap, top med tomat, ost og et dryp syrlig creme. Rul sammen og servér."
     ],
     "tip": "Prep løg og tomat på forhånd, så går det endnu hurtigere. Serve med guacamole eller salsa på siden for ekstra smag.",
-    "id": 1101
+    "id": 1101,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Avocado- og rejesteg med remoulade",
@@ -8346,7 +9039,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk & Skaldyr",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En elegant og nem dansk klassiker med sprøde avocadorosterede brød, blandet med søde rejer og hjemmelavet remoulade. Perfekt til familiedagen eller når gæsterne kommer.",
     "ingredients": [
       {
@@ -8425,7 +9118,18 @@
       "Garner med ekstra kapers og citronskal hvis ønsket."
     ],
     "tip": "Forbered rejerne og avocadoerne lige før servering for bedst smag. Hvis avocadoerne er for hårde, kan du modne dem ved at lægge dem i en papirpose over natten.",
-    "id": 1102
+    "id": 1102,
+    "mealType": "frokost",
+    "cookingMethod": "Ingen tilberedning",
+    "allergens": [
+      "Gluten",
+      "Skaldyr",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt laksfilet med fennikelsalat og dillmajonnaise",
@@ -8433,7 +9137,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Sprød og saftig laksfilet serveres med en frisk, krydret fennikelsalat og hjemmelavet dillmajonnaise. En klassisk dansk fiskeret der er både festlig og familievenlig.",
     "ingredients": [
       {
@@ -8505,7 +9209,19 @@
       "Anret laksfileten på tallerkener, server med fennikelsalaten til siden og dillmajonnaise på toppen eller ved siden af."
     ],
     "tip": "Laksfileten steger bedst hvis den er tørret godt af først - det giver en sprødere skorpe og mere saftig indre.",
-    "id": 1103
+    "id": 1103,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Mozzarella-fyldt kyllingebryst med tomatsalsa",
@@ -8513,7 +9229,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "italiensk",
     "description": "Saftige kyllingebryst fyldt med smeltet mozzarella og serveret med en frisk tomatsalsa. En klassisk danske familieaften på kun 30 minutter, der er både lækker og nem at lave.",
     "ingredients": [
       {
@@ -8585,7 +9301,14 @@
       "Server det varme kyllingebryst med tomatsalsa ved siden af - perfekt med rugbrød eller kartofler."
     ],
     "tip": "Hvis kyllingebrysterne er tykke, kan du banke dem tyndere først for at få mere jævn tilstegegang og sikre at mozzarellaen smelter helt igennem.",
-    "id": 1104
+    "id": 1104,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Køttboller med Tomatsauce",
@@ -8593,7 +9316,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige, hjemmelavede køtteboller med en velsmagende tomatbaseret sauce. En klassisk dansk familieretten der elskes af både børn og voksne, serveret bedst med kartofler eller rugbrød.",
     "ingredients": [
       {
@@ -8678,7 +9401,16 @@
       "Server kødbollerne varme med kartofler, rugbrød eller ris efter ønske."
     ],
     "tip": "Hvis kødbollerne bliver for tørre, kan du tilføje lidt mere bouillon. Opskriften er nem at lave dagen før og genvarmes blot før servering.",
-    "id": 1105
+    "id": 1105,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt torskeryg med ærteløg og kartofler",
@@ -8686,7 +9418,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk fiskeretten med sprød torskeryg, søde frosne ærter og rørt ærteløg. Serveres med dampede nye kartofler og smør – en lys og frisk middag der værmer hele familien.",
     "ingredients": [
       {
@@ -8759,7 +9491,17 @@
       "Servér torskeryggene med kartofler, ærteløgen og et glas koldt vand eller hvidvin."
     ],
     "tip": "Torsk skal stegges kort og ved høj varme for at blive sprød uden at blive tør. Mel det lige før steging så det bliver mest muligt sprødt.",
-    "id": 1106
+    "id": 1106,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Smørstegt Entrecôte med Kartofler",
@@ -8767,7 +9509,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Oksekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig entrecote med sprød skorpe, serveret med klassiske kartofler og løg i smør. En timeless dansk klassiker, der minder om søndagsmiddag hos bedstemor. Nem, lækker og helt uden komplikationer.",
     "ingredients": [
       {
@@ -8834,7 +9576,14 @@
       "Drys evt. grov salt og frisk timian over før servering for ekstra dansk autentisitet."
     ],
     "tip": "Lad kødet hvile efter stegning - så forbliver det saftigere og saftens fordeles jævnt gennem kødet.",
-    "id": 1107
+    "id": 1107,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Kokos-Kylling med Kartofler og Grøntsager",
@@ -8842,7 +9591,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "asiatisk",
     "description": "Møre kyllingelår blødt stuvede i silkeblødt kokosmælk med hjemmerystede kartofler og friske grøntsager. En varmende familiefavorit, der blander nordisk komfort med eksotisk flair.",
     "ingredients": [
       {
@@ -8928,7 +9677,14 @@
       "Smag til med salt, peber og frisk koriander før servering."
     ],
     "tip": "Servér med rugbrød eller ris til at opsuge den lækre kokossovs. Retten kan sagtens laves dagen før og genopvarmes – smagen bliver endnu bedre!",
-    "id": 1108
+    "id": 1108,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Tunfiskpasta med dild og fløde",
@@ -8936,7 +9692,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Pasta",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "italiensk",
     "description": "En klassisk dansk favorit med sprød tunfisk, cremede flødesauce og frisk dild. Simpel, hurtig og familievenlig pasta der smager som hjemmekost på sin bedste.",
     "ingredients": [
       {
@@ -9009,7 +9765,18 @@
       "Bland pastaen ned i saucen og strew frisk dild over. Server straks."
     ],
     "tip": "Gem lidt pastavaand tilbage - det kan fortynde saucen hvis den bliver for tyk.",
-    "id": 1109
+    "id": 1109,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Svinekam med Rødkål og Kartofler",
@@ -9017,7 +9784,7 @@
     "time": "90 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk familieretten med mørt svinekam, sprød svær og sødsyrligt rødkål. Simpel, velsmagende og perfekt til en hyggelig hverdagsmiddag.",
     "ingredients": [
       {
@@ -9089,7 +9856,12 @@
       "Lad kødet hvile i 10 minutter efter det kommer ud af ovnen, skær det i skiver og server med det varme rødkål, kartofler og lidt af svæeren fra grydjen."
     ],
     "tip": "Hvis du gerne vil have sprød svær, skal du tørre kødet grundigt af før tilberedning og salte det godt. Det virker også fint at lave retten dagen før og genvarme den.",
-    "id": 1110
+    "id": 1110,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Dansk Løgstuvning med Hakket Oksekød",
@@ -9097,7 +9869,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk komfortretter med mørt hakket oksekød, karamelliserede løg og flødesauce. Serveres traditionelt med kartofler og rødbeder - familiens yndlingsret på tallerkenen.",
     "ingredients": [
       {
@@ -9164,7 +9936,14 @@
       "Smag til med salt og peber efter behov, og server varmt med kogte kartofler og rødbeder."
     ],
     "tip": "Hvis løgene bliver for mørke, dæk gryden med låg mens de steger - det sikrer en blødere, søder smag uden brænding.",
-    "id": 1111
+    "id": 1111,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt kylling med sprøde peberfrugter",
@@ -9172,7 +9951,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig kyllingefilet med farverige peberfrugter i en let smør- og hvidvinsaus. En klassisk dansk familiemiddag der er nem at lave og møder hele familiens smag.",
     "ingredients": [
       {
@@ -9233,7 +10012,14 @@
       "Smag til med salt og peber og server straks med kartofler eller ris."
     ],
     "tip": "Hvis du ikke har hvidvin, kan du bruge grøn eller hvid bouillon i stedet. Det giver stadig en lækker saus.",
-    "id": 1112
+    "id": 1112,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt svinekød med nudler og dansk flødesauce",
@@ -9241,7 +10027,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En velsmagende og hurtig familieret med sprødt svinekød, bløde nudler og en cremmet flødesauce med løg og urter. Klassisk dansk comfort food der er klar på under 30 minutter.",
     "ingredients": [
       {
@@ -9314,7 +10100,15 @@
       "Pynt med frisk persille og server straks med en god dansk rugbrød ved siden af."
     ],
     "tip": "Pas på ikke at overkogte svinekødet - det skal være ømt og saftig. Hvis du har det hjemme, er en klat dijon-sennep i saucen skøn!",
-    "id": 1113
+    "id": 1113,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Sommerlaks med dildsmør og kartofler",
@@ -9322,7 +10116,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En elegant og let sommerrret med sprødt laksestykke, der serveres med smørblandet dild og nye kartofler. En klassisk dansk favorit der er nem at lave til både hverdag og fest.",
     "ingredients": [
       {
@@ -9382,7 +10176,17 @@
       "Fordel kartofler og laks på tallerkenerne og top laksestykket med dildssmør."
     ],
     "tip": "Hvis du ikke har nye kartofler, kan du godt bruge almindelige kartofler eller servere med rugbrød i stedet.",
-    "id": 1114
+    "id": 1114,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Tomatstuvet kylling med kartofler",
@@ -9390,7 +10194,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varm og velsmgende klassiker med mørt kyllingelår i en fyldig tomatovs. Perfekt til familiens hverdagsmiddag med kogte kartofler og frisk rugbrød.",
     "ingredients": [
       {
@@ -9468,7 +10272,12 @@
       "Smag til med salt og peber. Servér kyllingen i tomatsovsen med de varme kartofler."
     ],
     "tip": "Hvis du gerne vil have ekstra fylde, kan du tilføje en håndfuld friske spinat eller dybfrosne grønne bønner i de sidste 5 minutter.",
-    "id": 1115
+    "id": 1115,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Sprødt Farsbrød med Kartoffelmos og Løg",
@@ -9476,7 +10285,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk favoritret med sprødt, hjemmelavet farsbrød serveret med cremetet kartoffelmos og karamelliseret løg. En varm, mættende middag der hele familien elsker.",
     "ingredients": [
       {
@@ -9543,7 +10352,14 @@
       "Server farsbrødet i skiver sammen med kartoffelmoset og de karamelliserede løg på toppen."
     ],
     "tip": "Hvis du gerne vil have ekstra smag, kan du drysle lidt fleur de sel over farsbrødet lige før det kommer i ovnen.",
-    "id": 1116
+    "id": 1116,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Cremet Penne med Ricotta og Spinat",
@@ -9551,7 +10367,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Pasta",
-    "cuisine": "🇮🇹 Italiensk",
+    "cuisine": "italiensk",
     "description": "En luftig og lækker pastaret med cremede ricotta, frisk spinat og parmesan. Perfekt hurtigmad på hverdagen, der smelter på tungen og tilfredsstiller hele familien.",
     "ingredients": [
       {
@@ -9623,7 +10439,17 @@
       "Hæld pastaen over i pandens sauce og bland forsigtigt. Fordel på talerkner og topper med revet parmesan og eventuelt lidt citronraffel."
     ],
     "tip": "Gem 1 kop pastevand og tilsæt det til saucen, hvis den bliver for tyk. Det stærker smagen og giver en glat tekstur.",
-    "id": 1117
+    "id": 1117,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "vegetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Krebsehaler på ris med dillmajonnaise",
@@ -9631,7 +10457,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Skaldyr",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk ret med møre krebsehaler serveret på fluffy ris med frisk dill og hjemmelavet majonnaise. Enkel, elegant og perfekt til familiemiddagen.",
     "ingredients": [
       {
@@ -9709,7 +10535,16 @@
       "Servér den varme ris på tallerkenerne, top med de velsmagende krebsehaler og en stor klat dillmajonnaise til siden."
     ],
     "tip": "Hvis du gerne vil have mindre øl skal du tilsætte en anelse mindre vand til risen - den skal være løst men ikke klistret.",
-    "id": 1118
+    "id": 1118,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Skaldyr",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Oksesteg med Rodfrugter",
@@ -9717,7 +10552,7 @@
     "time": "90 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En traditionel dansk oksesteg, mørt og saftig, serveret med karamelliserede rodfrugter. En velsmag klassiker, der varmer både hjerte og mave på en dansk aften.",
     "ingredients": [
       {
@@ -9784,7 +10619,12 @@
       "Tag oksestegen op og lad den hvile 5 minutter før skæring. Skær i pæne skiver og server med rodfrugtene og sovsen."
     ],
     "tip": "Oksestegen bliver endnu mørtere hvis du lader den hvile ved stuetemperatur i 30 minutter før tilberedning.",
-    "id": 1119
+    "id": 1119,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Cremesteget laks med dild og kartofler",
@@ -9792,7 +10632,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig og mør lakseside steget i en cremet dildsovs - en klassisk dansk fiskeretur der er både festlig og bekvem. Serveres med kogte nye kartofler og frisk salat til en autentisk nordisk familiemiddag.",
     "ingredients": [
       {
@@ -9858,7 +10698,17 @@
       "Smag saucen til med salt og peber. Server laks med cremesaucen, varme kartofler og frisk dild som pynt."
     ],
     "tip": "Hvis laksen er for tynd til at fordele jævnt, kan du rulere portionerne op for bedre præsentation og samtidig sikrer du at den steger ligeligt.",
-    "id": 1120
+    "id": 1120,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Middel"
   },
   {
     "title": "Hjemmerøstet hel kylling med timian og kartofler",
@@ -9866,7 +10716,7 @@
     "time": "1 time 15 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk familiefavorit med sprød, gylden kylling røstet med frisk timian og duft af smør. Serveres med kartofler og stegte løg til en virkelig hjemmekoselig middag.",
     "ingredients": [
       {
@@ -9926,7 +10776,12 @@
       "Lad kyllingen hvile 10 minutter før servering. Skær den i stykker og servér med de røstede kartofler og løg direkte fra panden."
     ],
     "tip": "Dryp den lækre saft fra panden over kartofler og kylling, og prøv at tilsætte lidt varmt vand eller bouillon hvis panden bliver for tør.",
-    "id": 1121
+    "id": 1121,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Svinekød Wraps med Hjemmelavet Salsa",
@@ -9934,7 +10789,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇲🇽 Mexicansk",
+    "cuisine": "mexicansk",
     "description": "Lækre varme wraps fyldt med krydret hakket svinekød, frisk salsa og cremet avokado. En nem og familievenlig aften-klassiker der er på bordet på under 30 minutter.",
     "ingredients": [
       {
@@ -10040,7 +10895,14 @@
       "Rul wrapsene sammen og server straks med ekstra salsa til siden."
     ],
     "tip": "Frys resten af tomaterne hvis du ikke bruger dem hele. Serveringen bliver mere appetitlig hvis du arrangerer toppings i små skåle så hver deltager kan sammensætte sin egen wrap.",
-    "id": 1122
+    "id": 1122,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Sprødt Kyllingefilet med Parmesankruste og Citronsauce",
@@ -10048,7 +10910,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "europaeisk",
     "description": "Saftig kyllingefilet paneret i sprød parmesankruste med frisk citron og urter. En nem og elegant hovedret, der er perfekt til hverdagen og passer til både kartofler og grøntsager.",
     "ingredients": [
       {
@@ -10126,7 +10988,16 @@
       "Pres citron over de stekte kyllingestykker og drys med frisk persille. Server straks med kartofler, grønne bønner eller en frisk salat."
     ],
     "tip": "Hvis du banker kylingfiléerne tynd, sikrer du at de bliver saftige på indersiden og sprøde på ydersiden. Du kan også lave dette oplag dagen før og opbevare det dækket på køl.",
-    "id": 1123
+    "id": 1123,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt Torsk med Syltede Rødkål og Kartofler",
@@ -10134,7 +11005,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk fiskeretur med sprød paneret torsk, hvor den søde og sure rødkål danner det perfekte kompliment. Serveres med dampede kartofler og smør for en virkelig hjemmekoselig aften.",
     "ingredients": [
       {
@@ -10219,7 +11090,19 @@
       "Server den sprøde torsk med kartofler, syltede rødkål og en klat smør."
     ],
     "tip": "Lad rødkålen simre tyst mens fisken steges - det giver den tid til at udvikle smagen. Du kan også tilberede rødkålen dagen før for endnu bedre smag.",
-    "id": 1124
+    "id": 1124,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Middel"
   },
   {
     "title": "Svinekotelet med champignonløg og kartofler",
@@ -10227,7 +11110,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige svinekotelet med en velsmagende champignonløg og sprøde kartofler. En klassisk dansk familiemiddag der går stærkt og sætter alle til bords med glæde.",
     "ingredients": [
       {
@@ -10293,7 +11176,12 @@
       "Servér svinekoteleterne med den varme champignonløg ovenpå og dampede kartofler på siden."
     ],
     "tip": "Lad koteleterne hvile 5 minutter under oplukket aluminiumsfolie efter steging - så bliver de ekstra saftige.",
-    "id": 1125
+    "id": 1125,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Courgette-Oksefars Gryderet",
@@ -10301,7 +11189,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En velsmagende og sund gryderet med stegt oksefars og tender courgetter i en cremede flødesauce. Denne klassiske danske familiemiddag serveres bedst med nybagt brød eller kartofler.",
     "ingredients": [
       {
@@ -10380,7 +11268,14 @@
       "Server varmt i dybe tallerkener sammen med nybagt rugbrød eller kartofler."
     ],
     "tip": "Du kan tilføje 1 spsk. sennep eller et stænk rødt vin for ekstra dybde i smagen. Retten kan også frysses og opvarmes senere.",
-    "id": 1126
+    "id": 1126,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt kylling med grøntsager og kartofler",
@@ -10388,7 +11283,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk familiemiddag med sprød stegt kyllingefilet og en farverig blanding af friske grøntsager. Serveres med kartofler og en lun smørrebrødsmør til ekstra smag.",
     "ingredients": [
       {
@@ -10448,7 +11343,14 @@
       "Anret kartofler, kylling og grøntsager på tallerkenerne. Smag til med salt og peber efter behov og server straks."
     ],
     "tip": "Lad kyllingen hvile 5 minutter efter steging for at bevare safterne. Varm gerne tallerkener inden servering for at holde maden varm længere.",
-    "id": 1127
+    "id": 1127,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Lasagne",
@@ -10456,7 +11358,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kødretter",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "europaeisk",
     "description": "En varm og mættende lasagne med dansk hakket oksekød og klassisk tomatsauce. Perfekt familiemiddag der både børn og voksne elsker. Gratineres til gylden perfektion med smeltet ost på toppen.",
     "ingredients": [
       {
@@ -10535,7 +11437,15 @@
       "Sæt lasagnen i ovnen i 25-30 minutter, til den er guldgul og boblet ved kanterne."
     ],
     "tip": "Lasagnen bliver endnu bedre dagen efter, når smagen har trukket ind. Lav gerne dobbelt portion og frys halvdelen ned til senere.",
-    "id": 1128
+    "id": 1128,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Stegt Laksesteak med Kartoffelmos og Dillsauce",
@@ -10543,7 +11453,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig laksesteak med sprød skal, serveret med silkeblødt kartoffelmos og frisk dillsauce. En klassisk dansk fiskeret der er nem at lave, men føles helt restaurant-mæssig.",
     "ingredients": [
       {
@@ -10616,7 +11526,17 @@
       "Server straks mens det er varmt."
     ],
     "tip": "Laksen bliver mest saftig hvis du ikke vender den for mange gange. Stick et termometer ind - den er perfekt ved 50-55°C indeni.",
-    "id": 1129
+    "id": 1129,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Svinestuvning med Kartofler",
@@ -10624,7 +11544,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varm og mættende klassiker hvor mørt svinekød stuvets i en dejlig bouillonbaseret sovs med løg og kartofler. Denne famille-favorit er nemlig at lave og smager af rigtig dansk husmannskost.",
     "ingredients": [
       {
@@ -10697,7 +11617,12 @@
       "Smag til med salt og peber, og server varm garneret med frisk persille."
     ],
     "tip": "Du kan tilføje friske ærter eller majs i de sidste 5 minutter for ekstra farve og smagsfuldt grønt.",
-    "id": 1130
+    "id": 1130,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt kyllingelår med fyldt peberfrugt",
@@ -10705,7 +11630,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig stegt kyllingelår serveret med sprøde peberfrugter fyldt med ris og fløde. En klassisk dansk familieret der smager helt fantastisk og er nem at lave på hverdagen.",
     "ingredients": [
       {
@@ -10773,7 +11698,14 @@
       "Server straks mens det er varmt med evt. grøntsager eller salat ved siden af."
     ],
     "tip": "Hvis peberfrugterne bliver for mørke, dæk dem med et stykke stanniol. Du kan også lave retten i ovnen på 200°C i stedet for hvis du synes det er nemmere.",
-    "id": 1131
+    "id": 1131,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Klassisk Dansk Oksemørbrad med Smørstegte Kartofler",
@@ -10781,7 +11713,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En virkelig lækker dansk klassiker med mørt oksemørbrad, steget på panden med smør og serveret med kartofler og rødkål. Perfekt familiemiddag, der smager af hjemmelavet dansk køkkenkvalitet.",
     "ingredients": [
       {
@@ -10841,7 +11773,12 @@
       "Servér oksemørbradene på tallerkenen sammen med smørstegte kartofler og varm rødkål. Nyd den saftfulde dansk kvalitet!"
     ],
     "tip": "Lad kødet hvile efter tilberedning – det gør det meget mørkere og saftfuldt. Brug et kødtermometer for perfekt resultat (55-58°C for medium-rare).",
-    "id": 1132
+    "id": 1132,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt torsk med smørsmøg og ærter",
@@ -10849,7 +11786,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassisk dansk komfortmad med sprød torskfilet, cremet smørsmøg og søde frosne ærter. En familiefavorit der er nem, hurtig og utrolig lækker på bare en halv time.",
     "ingredients": [
       {
@@ -10915,7 +11852,18 @@
       "Blandingen de kogte ærter i smørsmøgen. Servér torskfileterne på en varm tallerken med smørsmøg og ærter. Pres citron over toppen."
     ],
     "tip": "Hvis du har mindre torskefilet end 300g, kan du nemt fordoble opskriften - smørsmøgen holder til dobbelt mængde fisk og ærter.",
-    "id": 1133
+    "id": 1133,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Dansk Hakket Svinekød i Tomatsovs",
@@ -10923,7 +11871,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk familieret med stegt hakket svinekød i en velsmagende tomatgruppe. Serveres bedst med kartofler eller rugbrød og en frisk salat til.",
     "ingredients": [
       {
@@ -10995,7 +11943,12 @@
       "Lad gruden småsimre i 15-20 minutter, så smagen udvikler sig fuldt ud."
     ],
     "tip": "Hvis du gerne vil have en tykkere sauce, kan du røre en spsk. kartoffelstivelse ud i lidt koldt vand og tilsætte det mod slutningen af tilberedningen.",
-    "id": 1134
+    "id": 1134,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Hummerhalesteg med flødesauce og grøntsager",
@@ -11003,7 +11956,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Skaldyr",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En festlig og elegant ret med møre hummerhalestykker i cremede flødesauce. Perfekt til en særlig dansk familiemiddag med friske grøntsager og kartofler.",
     "ingredients": [
       {
@@ -11076,7 +12029,15 @@
       "Server varmt med kogte kartofler og dampet grøntsager ved siden af."
     ],
     "tip": "Optø hummerhalehalerne langsomt i køleskabet dagen før for bedste kvalitet og tekstur.",
-    "id": 1135
+    "id": 1135,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Skaldyr",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Klassisk Entrecote med Smørfyld og Roastede Rodfrugter",
@@ -11084,7 +12045,7 @@
     "time": "35 minutter",
     "servings_count": 2,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "europaeisk",
     "description": "En elegant dansk hjemmeversion af fransk klassiker. Saftig dry aged entrecote med blommedeig og smør, serveret med sprøde rodfrugter og en sildig sauce. Perfekt til en festlig familiemiddag.",
     "ingredients": [
       {
@@ -11166,7 +12127,14 @@
       "Lad kødet hvile i 5 minutter. Server med de sprøde rodfrugter og dryp resten af smørret samt oksekraft rundt omkring på tallerkenen."
     ],
     "tip": "Dry aged entrecote skal altid hvilе efter tilberedning for at bevare safterne. Undgå at vende kødet for ofte - maksimalt to gange under steging.",
-    "id": 1136
+    "id": 1136,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Stegt laks med grøn asparges og smørsauce",
@@ -11174,7 +12142,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Vild laks fra Alaska steges til gylden perfekt med sprød hud og mørt kød, serveret sammen med friske grønne asparges og en klassisk dansk smørsauce. En elegant og lækker hverdagsret der smager som restaurant.",
     "ingredients": [
       {
@@ -11241,7 +12209,17 @@
       "Anret laks og asparges på tallerkner, drys med smørret fra panden og servér med citronspalter og evt. små nye kartofler."
     ],
     "tip": "Lad laksen hvile ved stuetemperatur i 10 minutter før stekning - det sikrer at kødet bliver lige tilpas mørt hele vejen igennem.",
-    "id": 1137
+    "id": 1137,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Middel"
   },
   {
     "title": "Estragonstegt kylling med smørsouce",
@@ -11249,7 +12227,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassisk dansk kyllingeret med frisk estragon og cremede kartofler. Den saftige kylling får sin karakteristiske smag fra det duftende krydderi og serveres med en smedet smørsouce, der bindes sammen med kyllingens naturlige safter.",
     "ingredients": [
       {
@@ -11322,7 +12300,14 @@
       "Hakk den friske estragon fint og rør det ned i sovsen lige før servering. Servér kyllingen på dybde tallerkener med sovsen og kartofler eller ris."
     ],
     "tip": "Hvis du bruger hele kyllingen, kan du spare omkring 20 procent på prisen. Frisk estragon er vigtig - den giver retten det autentiske danske præg!",
-    "id": 1138
+    "id": 1138,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Thailandsk Rejestegt med Kokosmælk",
@@ -11330,7 +12315,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Seafood",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "Saftige kæmpe rejer i silkeblødt kokosmælk med frisk lemongrass og rødt chili. En let og udemærket dansk familiemiddag der serveres perfekt over ris eller med rugbrød.",
     "ingredients": [
       {
@@ -11418,7 +12403,17 @@
       "Pres frisk limesaft i retten lige før servering."
     ],
     "tip": "Servér med jasminris eller rugbrød til at dyppe i den lækre kokosfløde.",
-    "id": 1139
+    "id": 1139,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Skaldyr",
+      "Fisk"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt iberiansk svinekam med æbleskiver og kartofler",
@@ -11426,7 +12421,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig stegt iberiansk svinekam med sprød skal, serveret med hjemmelavede æbleskiver og kartofler. En klassisk dansk familiefavorit med sødt og salt sammen.",
     "ingredients": [
       {
@@ -11499,7 +12494,16 @@
       "Lad svinekammen hvile i 5 minutter før servering. Skær den i skiver og server med kartofler, stegt æbel og en klat smør."
     ],
     "tip": "Lad svinekammen hvile efter stegning - det holder kødet mere saftig og gør det lettere at skære i pæne skiver.",
-    "id": 1140
+    "id": 1140,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Stegt torsk med spinat og smørsouce",
@@ -11507,7 +12511,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Klassisk dansk fiskeret med sprød torskeskrei og frisk spinat. Silket smørsouce binder det hele sammen til en elegant og nem familiemiddag.",
     "ingredients": [
       {
@@ -11574,7 +12578,18 @@
       "Server torsken på en varm tallerken med spinatsouen og damp fra en skive rugbrød eller nye kartofler."
     ],
     "tip": "Tag torsken ud af kølesk 15 minutter før tilberedning, så den bliver mere mørt. Pas på ikke at oversteges fiskekødet - det skal være fugtigt.",
-    "id": 1141
+    "id": 1141,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Dansk Oksebouilli med Rødvin",
@@ -11582,7 +12597,7 @@
     "time": "2 timer 30 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En varmende klassiker med mørt oksehøjreb, der langsomt steger i rødvin med danske root-grøntsager. En autentisk dansk familiemiddag der fyldes godt op.",
     "ingredients": [
       {
@@ -11667,7 +12682,14 @@
       "Smag til med salt og peber. Serveres med kogte kartofler og rugbrød."
     ],
     "tip": "Du kan forberede retten dagen før og genvarmme den - den smager endnu bedre efter at have trukket en nat.",
-    "id": 1142
+    "id": 1142,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Asiatisk Kylling med Basmati Ris og Ginger-Soja Sauce",
@@ -11675,7 +12697,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "Mørt kyllingefilet stegt med asiatiske smagsfulde krydderier, serveret på duftende basmati ris. En nem og lækker hverdagsret, der føles som en behandling og samtidig er super hurtig at lave.",
     "ingredients": [
       {
@@ -11754,7 +12776,14 @@
       "Garnér med frisk koriander og lime-skiver for ekstra flair."
     ],
     "tip": "Hvis du gerne vil have det lidt mere fuldmåne, kan du tilføje frosne grøntsager som broccoli eller snap peas sammen med sojasaucen.",
-    "id": 1143
+    "id": 1143,
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Soja"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Dansk Kødsovs med Tomater og Kartofler",
@@ -11762,7 +12791,7 @@
     "time": "40 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk kødsovs med saftig hakket oksekød og friske tomater. Serveres med kartofler og grønkål til en varm, mættet familiemiddag.",
     "ingredients": [
       {
@@ -11834,7 +12863,12 @@
       "Server kødsovsen over kartofler med dampet grønkål eller blomkål til siden."
     ],
     "tip": "Hvis du foretrækker en mere tyk sovs, kan du tilføje en spiseske maizena blandet med lidt koldt vand mod slutningen af kogetiden.",
-    "id": 1144
+    "id": 1144,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Citronsyltet laksefillet med dill og nye kartofler",
@@ -11842,7 +12876,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Frisk og smagfuld laksefillet marineret i citron og dill – en klassisk dansk fiskeret der er både elegant og nem at lave. Serveres med buttede nye kartofler og en frisk agurkesalat.",
     "ingredients": [
       {
@@ -11909,7 +12943,16 @@
       "Pynt med frisk dill og citronskiver på tallerkenen for en køn præsentation."
     ],
     "tip": "Laksefilleten bliver ekstra saftig hvis du bakker den i papillotesystem (lukket papir). Citronen kan erstattes med hvidvin hvis du foretrækker det.",
-    "id": 1145
+    "id": 1145,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Sprødt Svinekam med Kartoffelmos og Rødbedesalat",
@@ -11917,7 +12960,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig og sprød svinekam med klassisk kartoffelmos og en frisk rødbedesalat. En virkelig dansk familieRetning der varmer sjælen og fylder maven på en perfekt hverdagsaften.",
     "ingredients": [
       {
@@ -11984,7 +13027,14 @@
       "Skær svinekammen i skiver og servér med kartoffelmos og dine favoritgrøntsager."
     ],
     "tip": "Lad kødet hvile efter steging - det gør det meget mere mørt og saftig når du skærer i det.",
-    "id": 1146
+    "id": 1146,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Thai-inspireret Kyllingragu med Kokos",
@@ -11992,7 +13042,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En varm og krydret ret med mørt kyllingelår i en silkeblødt kokosmælkesauce. Serveres over ris med friske urter og en sprøjt lime - perfekt til en hyggelig familiemiddag.",
     "ingredients": [
       {
@@ -12077,7 +13127,15 @@
       "Drysle med ekstra koriander og en lime-kile ved siden af."
     ],
     "tip": "Kyl kyllingelårene dagen før og tag dem ud af kølelskabet 20 minutter før tilberedning for bedre smag. Retten kan også laves i ovnen på 180°C i stedet for på komfuret.",
-    "id": 1147
+    "id": 1147,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Middel"
   },
   {
     "title": "Klassisk Spaghetti Bolognese",
@@ -12085,7 +13143,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Pasta",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "italiensk",
     "description": "En varmende og mættende dansk udgave af italiensk klassiker med dansk hakket svinekød. Perfekt familiemiddag med tomaternes friske smag og kødet fyldte sauce.",
     "ingredients": [
       {
@@ -12159,7 +13217,14 @@
       "Aflør pasta og server med tomatbolognese-sauce på toppen."
     ],
     "tip": "Gem lidt pastevand til at tynde saucen ud med, hvis den bliver for tyk.",
-    "id": 1148
+    "id": 1148,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt torsk med broccoli og smørsauce",
@@ -12167,7 +13232,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Sprød torskfilet serveret med frisk broccoli og en klassisk dansk smørsauce. En nem og sund familiemiddag, der er på bordet på under 30 minutter og fyldt med dansk fiskekvalitet.",
     "ingredients": [
       {
@@ -12234,7 +13299,18 @@
       "Anret torskfileten på tallerkenen og drys saucen og broccoli over eller ved siden af."
     ],
     "tip": "Hvis du ønsker ekstra smag, kan du tilsætte en smule gul fløde og frisk dild til saucen lige før servering.",
-    "id": 1149
+    "id": 1149,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose",
+      "Gluten"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Røde champignon- og oksefarsboller med løggravy",
@@ -12242,7 +13318,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kød",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige oksefarsboller med fintilskårne champignoner, serveret med en klassisk dansk løggravy. En varmende og hjemmekoselig ret, der er perfekt til hverdag eller når gæsterne skal væk.",
     "ingredients": [
       {
@@ -12321,7 +13397,15 @@
       "Smag til med salt og peber, og server bollerne med kartofler eller rugbrød."
     ],
     "tip": "Hvis gravyen bliver for tyk, tilsæt lidt vand. Bollerne kan præ-formes og frysespises for senere brug.",
-    "id": 1150
+    "id": 1150,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Grillede kyllingelår med majs og BBQ-glaze",
@@ -12329,7 +13413,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftige marinerede kyllingelår møder søde grillede majskolber i denne klassiske danske sommermiddag. Det hele afsluttes med en homemade BBQ-glaze, der giver det perfekte karamelliserede lag og en fantastisk smag.",
     "ingredients": [
       {
@@ -12397,7 +13481,12 @@
       "Tag både kylling og majs af grillen og server varm med friske urter på toppen."
     ],
     "tip": "Hvis du ikke har grill, kan du sagtens bruge ovnen på 200°C i 25-30 minutter eller en grillpande på komfuret. Sørg for at kyllingelårene når omkring 75°C indvendigt.",
-    "id": 1151
+    "id": 1151,
+    "mealType": "aftensmad",
+    "cookingMethod": "Grill",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Asiatisk Svinekødwok med sprød grøntsagsblanding",
@@ -12405,7 +13494,7 @@
     "time": "30 minutter",
     "servings_count": 4,
     "category": "Svinekød",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "Saftig grillsteg fra Lidl skæres i tynde strimler og stir-fries med farverig asiatisk grøntsagsblanding. En hurtig og lækker familiemiddag med asiatisk vibe, serveret over ris eller nudler.",
     "ingredients": [
       {
@@ -12479,7 +13568,14 @@
       "Servér den varme wok over ris eller nudler på tallerkner."
     ],
     "tip": "Gør det endnu nemmere ved at købe færdigt skåret svinekød, eller fryse kødet i 15 minutter før skæring for at det bliver lettere at snitte.",
-    "id": 1152
+    "id": 1152,
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Soja"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Stegt laksesteak med dildsmør og roelslaw",
@@ -12487,7 +13583,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "Saftig atlantisk laks med sprød skal, serveret med klassisk dildsmør og frisk roelslaw. En elegant hverdagsret, der kun tager 25 minutter og smager som fra en dansk fiskerestauration.",
     "ingredients": [
       {
@@ -12572,7 +13668,17 @@
       "Drysle eventuelle dildstubbe over som garnish og nyd med rugbrød."
     ],
     "tip": "Laksestegning tager kun få minutter - pas på ikke at overudvikle den. Tørring før steging er vigtig for sprød skal.",
-    "id": 1153
+    "id": 1153,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   },
   {
     "title": "Fuldkorns Spaghetti Bolognese",
@@ -12580,7 +13686,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Pastaret",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "italiensk",
     "description": "En klassisk dansk familiemiddag med saftig oksefars og næringsrig fuldkornspasta. Denne kremet og velsmag ragù er nem at lave og elskes af hele familien.",
     "ingredients": [
       {
@@ -12665,7 +13771,15 @@
       "Hæld pasta på tallerken, top med oksefars-ragù og drys med parmasan."
     ],
     "tip": "Brug en god kvalitet fuldkornspasta, da den får mere tekstur end almindelig hvede-pasta og passer perfekt til den cremede sauce.",
-    "id": 1154
+    "id": 1154,
+    "mealType": "aftensmad",
+    "cookingMethod": "Gryde",
+    "allergens": [
+      "Gluten",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Pestomarineret kylling med kartofler og grøntsager",
@@ -12673,7 +13787,7 @@
     "time": "35 minutter",
     "servings_count": 4,
     "category": "Kylling",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "europaeisk",
     "description": "Saftig kyllingebryst marineret i aromatisk grøn pesto, serveret med sprøde kartofler og friske grøntsager. En nem og sund middagsfavorit, der er klar på under 40 minutter.",
     "ingredients": [
       {
@@ -12740,7 +13854,12 @@
       "Server kyllingen på varmt fadølj med kartofler, broccoli og et klat frisk citron over."
     ],
     "tip": "Du kan også grille kyllingen på grillen eller i en grillpande - det giver en super røget smag sammen med pestoens basilikumaroma.",
-    "id": 1155
+    "id": 1155,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Asiatiske Rejenuddler med Grøntsager",
@@ -12748,7 +13867,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Seafood",
-    "cuisine": "🇯🇵 Asiatisk",
+    "cuisine": "asiatisk",
     "description": "En hurtig og lækker asiatisk wok-ret med sprøde risnudler og saftige rejer. Perfekt til travle hverdage med både fløde og frisk smag. En klassiker der hele familien elsker.",
     "ingredients": [
       {
@@ -12834,7 +13953,16 @@
       "Server straks på dybe tallerkener mens retten er varm."
     ],
     "tip": "Frys rejerne ud dagen før for bedre friskhed, eller brug dybfrosne rejer som bare skal tines under kogningen.",
-    "id": 1156
+    "id": 1156,
+    "mealType": "aftensmad",
+    "cookingMethod": "Wok",
+    "allergens": [
+      "Skaldyr",
+      "Soja",
+      "Mælk / laktose"
+    ],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Squash og Kalkun Fad",
@@ -12842,7 +13970,7 @@
     "time": "45 minutter",
     "servings_count": 4,
     "category": "Familierets",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En velsmagende og nem familierets med sprød squash og saftig kalkunhakket. Serveres varmt fra ovnen med dansk smør og salt.",
     "ingredients": [
       {
@@ -12921,7 +14049,12 @@
       "Smag til med salt og peber og server varm med brød eller kartofler."
     ],
     "tip": "Lav gerne retten dagen før - den bliver endnu bedre efter at have hvilt natten over og kan nemt genvarmes.",
-    "id": 1157
+    "id": 1157,
+    "mealType": "aftensmad",
+    "cookingMethod": "Ovn",
+    "allergens": [],
+    "dietTags": [],
+    "difficulty": "Nem"
   },
   {
     "title": "Sprød Torskfilet med Kartoffelmos og Dild",
@@ -12929,7 +14062,7 @@
     "time": "25 minutter",
     "servings_count": 4,
     "category": "Fisk",
-    "cuisine": "🇩🇰 Nordisk",
+    "cuisine": "nordisk",
     "description": "En klassisk dansk fiskeret med sprød paneret torskfilet serveret med cremét kartoffelmos og frisk dild. Enkel, lækker og familievenlig – perfekt til hverdagsmiddagen.",
     "ingredients": [
       {
@@ -13013,6 +14146,18 @@
       "Strø den finely hakket frisk dild over kartoffelmosposen og server den med den sprøde torskfilet."
     ],
     "tip": "Hvis torsken ikke er helt tint, kan du hurtigt tø den under koldt løbende vand før tilberedning – det sikrer jævn stegning.",
-    "id": 1158
+    "id": 1158,
+    "mealType": "aftensmad",
+    "cookingMethod": "Én pande",
+    "allergens": [
+      "Gluten",
+      "Æg",
+      "Fisk",
+      "Mælk / laktose"
+    ],
+    "dietTags": [
+      "pescetar"
+    ],
+    "difficulty": "Nem"
   }
 ]
