@@ -3717,12 +3717,6 @@ export default function App() {
                 {t("Glemt adgangskode?")}
               </button>
             )}
-            <button
-              className="profile-switch"
-              onClick={() => { setAuthMode(m => (m === "login" ? "signup" : "login")); setAuthError(""); setAuthNotice(""); }}
-            >
-              {authMode === "login" ? t("Har du ikke en konto? Opret én") : t("Har du allerede en konto? Log ind")}
-            </button>
             <p className="profile-desc">{t("Du kan også gemme opskrifter uden en konto — en konto gemmer dem bare på tværs af enheder.")}</p>
           </div>
         )}
