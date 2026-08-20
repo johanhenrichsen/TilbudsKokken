@@ -262,6 +262,16 @@ const EN = {
   "Konti er ikke sat op endnu.": "Accounts aren't set up yet.",
   "Indtast email og adgangskode.": "Enter email and password.",
   "Synkroniseret": "Synced",
+  "Fortsæt med Google": "Continue with Google",
+  "eller": "or",
+  "Glemt adgangskode?": "Forgot password?",
+  "Indtast din email.": "Enter your email.",
+  "Vi har sendt et link til at nulstille din adgangskode.": "We've emailed you a password reset link.",
+  "Nulstil adgangskode": "Reset password",
+  "Ny adgangskode": "New password",
+  "Gem ny adgangskode": "Save new password",
+  "Din adgangskode er opdateret.": "Your password has been updated.",
+  "Adgangskode skal være mindst 6 tegn.": "Password must be at least 6 characters.",
 
   // ── Feedback results (admin page) ────────────────────────────────
   "Slet alle svar?": "Delete all responses?",

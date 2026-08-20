@@ -40,7 +40,25 @@ To skip that while testing: **Authentication → Providers → Email** → turn 
 Reload the app, tap the **person icon** (next to settings), and create an account.
 Your saved recipes and meal plan will sync to it and follow you across devices.
 
-## Later: add Google sign-in
-Set up a Google OAuth credential in Google Cloud, add it under Supabase
-**Authentication → Providers → Google**, and I'll wire up the "Sign in with
-Google" button.
+## Password reset
+Already wired up — no extra setup. On the log-in screen there's a **"Forgot
+password?"** link: it emails a reset link (via Supabase's built-in email), and
+clicking it opens the app with a "set new password" form. For the link to work,
+make sure your app URLs are allowlisted: Supabase → **Authentication → URL
+Configuration** → set **Site URL** to your production URL and add your Vercel
+preview URL(s) under **Redirect URLs**.
+
+## Add Google sign-in (optional)
+The "Continue with Google" button is built in but stays hidden until you enable
+it. Steps:
+
+1. **Google Cloud** → create an OAuth 2.0 Client ID (type: *Web application*).
+   - Authorised redirect URI: `https://YOUR-PROJECT.supabase.co/auth/v1/callback`
+     (find the exact value in Supabase → Authentication → Providers → Google).
+   - Copy the **Client ID** and **Client secret**.
+2. **Supabase** → **Authentication → Providers → Google** → enable it and paste
+   the Client ID + secret → Save.
+3. **Supabase** → **Authentication → URL Configuration** → make sure your app's
+   URLs are in **Redirect URLs** (production + preview).
+4. **Vercel** → add env var `VITE_GOOGLE_AUTH=1` (Production + Preview) and
+   **redeploy**. The Google button now appears on the sign-in screen.
