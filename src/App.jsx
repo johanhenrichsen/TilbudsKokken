@@ -9,6 +9,7 @@ import LogoIcon from "./LogoIcon";
 import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
 import { t, dietLabel, timeLabel, difficultyLabel, timeText, sortLabel, cuisineText, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
 import { supabase, isCloudConfigured, isGoogleEnabled, signInWithGoogle, loadUserData, saveUserData, friendlyAuthError } from "./cloud";
+import { ALLERGENS, LIFESTYLE_DIETS } from "./data/labels.js";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -1096,6 +1097,11 @@ export default function App() {
   const [diet, setDiet] = useState(() => {
     try { return localStorage.getItem("defaultDiet") || "Alle"; } catch { return "Alle"; }
   });
+  const [allergies, setAllergies] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("allergies") || "[]"); } catch { return []; }
+  });
+  const [lifestyleDiet, setLifestyleDiet] = useState(() => localStorage.getItem("lifestyleDiet") || "");
+  const [defaultSupermarket, setDefaultSupermarket] = useState(() => localStorage.getItem("defaultSupermarket") || "");
   const [copied, setCopied] = useState(false);
   const [searchHidden, setSearchHidden] = useState(false);
   const [stepsOpen, setStepsOpen] = useState(true);
@@ -1680,7 +1686,8 @@ export default function App() {
   function currentSyncBlob() {
     let servings = 4;
     try { servings = parseInt(localStorage.getItem("defaultServings")) || 4; } catch {}
-    return { savedRecipes, mealPlan, stores: localStores, diet, servings, v: 1 };
+    return { savedRecipes, mealPlan, stores: localStores, diet, servings,
+             allergies, lifestyleDiet, defaultSupermarket, v: 1 };
   }
   function mergeSyncBlob(local, cloud) {
     if (!cloud || Object.keys(cloud).length === 0) return local; // first sign-up: push local up
@@ -1696,6 +1703,9 @@ export default function App() {
       stores: cloudHasStores ? cloud.stores : local.stores,
       diet: cloud.diet || local.diet,
       servings: cloud.servings || local.servings,
+      allergies: (cloud.allergies && cloud.allergies.length) ? cloud.allergies : local.allergies,
+      lifestyleDiet: cloud.lifestyleDiet || local.lifestyleDiet,
+      defaultSupermarket: cloud.defaultSupermarket || local.defaultSupermarket,
       v: 1,
     };
   }
@@ -1720,6 +1730,9 @@ export default function App() {
     if (p.servings) {
       try { localStorage.setItem("defaultServings", String(p.servings)); } catch {}
     }
+    if (Array.isArray(p.allergies)) { setAllergies(p.allergies); try { localStorage.setItem("allergies", JSON.stringify(p.allergies)); } catch {} }
+    if (p.lifestyleDiet) { setLifestyleDiet(p.lifestyleDiet); try { localStorage.setItem("lifestyleDiet", p.lifestyleDiet); } catch {} }
+    if (p.defaultSupermarket) { setDefaultSupermarket(p.defaultSupermarket); try { localStorage.setItem("defaultSupermarket", p.defaultSupermarket); } catch {} }
   }
   // On sign-in: load the account's data, merge with the device, apply, push back.
   useEffect(() => {
@@ -1741,7 +1754,7 @@ export default function App() {
     if (!supabase || !user || cloudLoadedRef.current !== user.id) return;
     const id = setTimeout(() => { saveUserData(user.id, currentSyncBlob()); }, 1500);
     return () => clearTimeout(id);
-  }, [savedRecipes, mealPlan, localStores, diet, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [savedRecipes, mealPlan, localStores, diet, allergies, lifestyleDiet, defaultSupermarket, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   function addToPlan(recipe, dayIdx) {
     setMealPlan(prev => {
       const next = [...prev];
@@ -1835,6 +1848,9 @@ export default function App() {
     setDiet(val);
     try { localStorage.setItem("defaultDiet", val); } catch {}
   }
+  useEffect(() => { try { localStorage.setItem("allergies", JSON.stringify(allergies)); } catch {} }, [allergies]);
+  useEffect(() => { try { localStorage.setItem("lifestyleDiet", lifestyleDiet); } catch {} }, [lifestyleDiet]);
+  useEffect(() => { try { localStorage.setItem("defaultSupermarket", defaultSupermarket); } catch {} }, [defaultSupermarket]);
 
   // Reset every result-narrowing filter in one action. Leaves search (it has its
   // own clear) and the pantry/sort defaults handled by their own controls.
@@ -3670,6 +3686,44 @@ export default function App() {
             <div className="profile-sync-note"><span className="profile-sync-dot" />{t("Synkroniseret")}</div>
             <p className="profile-desc">{t("Dine opskrifter og madplan synkroniseres på tværs af dine enheder.")}</p>
             <button className="profile-signout-btn" onClick={signOut}>{t("Log ud")}</button>
+
+            <div className="profile-settings">
+              <h3 className="profile-section-title">{t("Indstillinger")}</h3>
+
+              <label className="ps-field">
+                <span className="ps-label">{t("Standardbutik")}</span>
+                <select className="ps-select" value={defaultSupermarket} onChange={e => setDefaultSupermarket(e.target.value)}>
+                  <option value="">{t("Ingen")}</option>
+                  {CHAIN_ORDER.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
+
+              <div className="ps-field">
+                <span className="ps-label">{t("Livsstilskost")}</span>
+                <div className="ps-chip-row">
+                  {LIFESTYLE_DIETS.map(d => (
+                    <button key={d.key}
+                      className={`ps-chip${lifestyleDiet === d.key ? " selected" : ""}`}
+                      onClick={() => setLifestyleDiet(lifestyleDiet === d.key ? "" : d.key)}>
+                      {en ? d.en : d.da}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ps-field">
+                <span className="ps-label">{t("Allergier / intolerancer")}</span>
+                <div className="ps-chip-row">
+                  {ALLERGENS.map(a => (
+                    <button key={a.key}
+                      className={`ps-chip${allergies.includes(a.da) ? " selected" : ""}`}
+                      onClick={() => setAllergies(allergies.includes(a.da) ? allergies.filter(x => x !== a.da) : [...allergies, a.da])}>
+                      {en ? a.en : a.da}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="profile-body">
@@ -3718,6 +3772,44 @@ export default function App() {
               </button>
             )}
             <p className="profile-desc">{t("Du kan også gemme opskrifter uden en konto — en konto gemmer dem bare på tværs af enheder.")}</p>
+
+            <div className="profile-settings">
+              <h3 className="profile-section-title">{t("Indstillinger")}</h3>
+
+              <label className="ps-field">
+                <span className="ps-label">{t("Standardbutik")}</span>
+                <select className="ps-select" value={defaultSupermarket} onChange={e => setDefaultSupermarket(e.target.value)}>
+                  <option value="">{t("Ingen")}</option>
+                  {CHAIN_ORDER.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
+
+              <div className="ps-field">
+                <span className="ps-label">{t("Livsstilskost")}</span>
+                <div className="ps-chip-row">
+                  {LIFESTYLE_DIETS.map(d => (
+                    <button key={d.key}
+                      className={`ps-chip${lifestyleDiet === d.key ? " selected" : ""}`}
+                      onClick={() => setLifestyleDiet(lifestyleDiet === d.key ? "" : d.key)}>
+                      {en ? d.en : d.da}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="ps-field">
+                <span className="ps-label">{t("Allergier / intolerancer")}</span>
+                <div className="ps-chip-row">
+                  {ALLERGENS.map(a => (
+                    <button key={a.key}
+                      className={`ps-chip${allergies.includes(a.da) ? " selected" : ""}`}
+                      onClick={() => setAllergies(allergies.includes(a.da) ? allergies.filter(x => x !== a.da) : [...allergies, a.da])}>
+                      {en ? a.en : a.da}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -6709,3 +6709,16 @@ html:not(.dark) .overflow-menu-badge { background: #7E5A0E; }
 @media (min-width: 1500px) {
   .recipe-browse-grid { gap: 26px; }
 }
+
+/* ── Profile settings panel (allergies, lifestyle diet, default store) ── */
+.profile-settings { margin-top: 20px; }
+.profile-section-title { font-size: 14px; text-transform: uppercase; letter-spacing: .04em; opacity: .7; margin: 0 0 10px; }
+.ps-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.ps-label { font-weight: 600; font-size: 14px; }
+.ps-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.ps-chip { border: 1.5px solid var(--border); background: transparent; color: inherit; padding: 7px 13px; border-radius: 999px; font-size: 13px; cursor: pointer; font-family: inherit; }
+.ps-chip.selected { border-color: var(--accent); background: var(--accent); color: var(--accent-text); }
+.ps-select { padding: 9px 12px; border-radius: 8px; border: 1.5px solid var(--border); background: transparent; color: inherit; font-size: 14px; font-family: inherit; }
+html:not(.dark) .ps-chip { border-color: var(--border); }
+html:not(.dark) .ps-chip.selected { border-color: var(--accent); background: var(--accent); color: var(--accent-text); }
+html:not(.dark) .ps-select { border-color: var(--border); background: #FFFDF8; }
