@@ -6496,6 +6496,44 @@ html:not(.dark) .profile-email-label { color: #6F665A; }
 html:not(.dark) .profile-avatar { background: rgba(126,90,14,0.12); color: #7E5A0E; }
 html:not(.dark) .profile-signout-btn { color: #221C17; border-color: #DED3C0; }
 
+/* Google sign-in button */
+.profile-google-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  border: 1px solid var(--border, rgba(238,230,216,0.16));
+  background: #fff; cursor: pointer;
+  font-family: inherit; font-size: 15px; font-weight: 600;
+  color: #1f1f1f;
+  border-radius: 10px; padding: 12px;
+  transition: filter 0.15s;
+}
+.profile-google-btn:active { filter: brightness(0.96); }
+
+/* "or" divider */
+.profile-or {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--text-faint, rgba(238,230,216,0.55));
+  font-size: 12px; font-weight: 600; text-transform: lowercase;
+}
+.profile-or::before, .profile-or::after {
+  content: ""; flex: 1; height: 1px;
+  background: var(--border, rgba(238,230,216,0.14));
+}
+
+/* Forgot-password link */
+.profile-forgot {
+  border: none; background: none; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--text-dim, rgba(238,230,216,0.7));
+  padding: 2px; text-align: center;
+}
+.profile-forgot:hover { color: var(--accent, #CE9F3E); }
+.profile-forgot:disabled { opacity: 0.6; cursor: default; }
+
+html:not(.dark) .profile-or { color: #8A8175; }
+html:not(.dark) .profile-or::before, html:not(.dark) .profile-or::after { background: #DED3C0; }
+html:not(.dark) .profile-forgot { color: #6F665A; }
+html:not(.dark) .profile-forgot:hover { color: #7E5A0E; }
+
 /* Light mode overrides for new mobile components */
 html:not(.dark) .mobile-filter-row {
   background: #FBF6EC;

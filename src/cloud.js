@@ -12,9 +12,25 @@ const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const isCloudConfigured = Boolean(url && anon);
 
+// Google sign-in is shown only when this flag is on AND cloud is configured, so
+// the button stays hidden in production until Google is set up in Supabase.
+const googleFlag = import.meta.env.VITE_GOOGLE_AUTH;
+export const isGoogleEnabled =
+  isCloudConfigured && (googleFlag === "1" || googleFlag === "true");
+
 export const supabase = isCloudConfigured
   ? createClient(url, anon, { auth: { persistSession: true, autoRefreshToken: true } })
   : null;
+
+// Start the Google OAuth redirect flow. On return, onAuthStateChange fires and
+// the normal signed-in sync kicks in. Redirects back to wherever the app runs.
+export async function signInWithGoogle() {
+  if (!supabase) return { error: new Error("Cloud not configured") };
+  return supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.origin },
+  });
+}
 
 // Load the signed-in user's synced data blob, or null if they have no row yet.
 export async function loadUserData(userId) {
