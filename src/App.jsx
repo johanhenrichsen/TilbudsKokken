@@ -7,9 +7,9 @@ const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticReci
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
-import { t, dietLabel, timeLabel, difficultyLabel, timeText, sortLabel, cuisineText, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
+import { t, dietLabel, timeLabel, difficultyLabel, timeText, sortLabel, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
 import { supabase, isCloudConfigured, isGoogleEnabled, signInWithGoogle, loadUserData, saveUserData, friendlyAuthError } from "./cloud";
-import { ALLERGENS, LIFESTYLE_DIETS } from "./data/labels.js";
+import { ALLERGENS, LIFESTYLE_DIETS, cuisineLabel } from "./data/labels.js";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -123,42 +123,39 @@ function groupCartByStore(cart) {
     .map(([store, items]) => ({ store, items }));
 }
 
-const ALL_CUISINES_ORDERED = ["🇩🇰 Nordisk", "🇮🇹 Italiensk", "🇫🇷 Fransk", "🇯🇵 Asiatisk", "🇮🇳 Indisk", "🇬🇷 Middelhavet", "🇲🇦 Mellemøstlig", "🇲🇽 Mexicansk", "🇺🇸 Amerikansk"];
+// Cuisine is stored on recipes as a canonical lowercase key (see src/data/labels.js
+// CUISINES) after the enrichment pass. Filter options, search keywords, and colors are
+// all keyed by that same canonical key; display goes through cuisineLabel() from labels.
+const ALL_CUISINES_ORDERED = ["nordisk", "italiensk", "asiatisk", "indisk", "mellemostlig", "mexicansk", "amerikansk", "europaeisk"];
 const CUISINE_SEARCH_MAP = {
-  "japan": "🇯🇵 Asiatisk", "japansk": "🇯🇵 Asiatisk", "sushi": "🇯🇵 Asiatisk",
-  "asiatisk": "🇯🇵 Asiatisk", "wok": "🇯🇵 Asiatisk", "soja": "🇯🇵 Asiatisk",
-  "italia": "🇮🇹 Italiensk", "italiensk": "🇮🇹 Italiensk", "pasta": "🇮🇹 Italiensk",
-  "carbonara": "🇮🇹 Italiensk", "bolognese": "🇮🇹 Italiensk", "lasagne": "🇮🇹 Italiensk",
-  "risotto": "🇮🇹 Italiensk", "parmesan": "🇮🇹 Italiensk", "mozzarella": "🇮🇹 Italiensk",
-  "curry": "🇮🇳 Indisk", "tikka": "🇮🇳 Indisk", "masala": "🇮🇳 Indisk", "karry": "🇮🇳 Indisk",
-  "nordisk": "🇩🇰 Nordisk", "dansk": "🇩🇰 Nordisk", "hygge": "🇩🇰 Nordisk",
-  "frikadeller": "🇩🇰 Nordisk", "kartofler": "🇩🇰 Nordisk",
-  "fransk": "🇫🇷 Fransk", "gratin": "🇫🇷 Fransk", "bechamel": "🇫🇷 Fransk",
-  "tacos": "🇲🇽 Mexicansk", "burrito": "🇲🇽 Mexicansk", "mexicansk": "🇲🇽 Mexicansk",
-  "caprese": "🇬🇷 Middelhavet", "middelhavet": "🇬🇷 Middelhavet", "hummus": "🇬🇷 Middelhavet",
+  "japan": "asiatisk", "japansk": "asiatisk", "sushi": "asiatisk",
+  "asiatisk": "asiatisk", "wok": "asiatisk", "soja": "asiatisk",
+  "italia": "italiensk", "italiensk": "italiensk", "pasta": "italiensk",
+  "carbonara": "italiensk", "bolognese": "italiensk", "lasagne": "italiensk",
+  "risotto": "italiensk", "parmesan": "italiensk", "mozzarella": "italiensk",
+  "curry": "indisk", "tikka": "indisk", "masala": "indisk", "karry": "indisk",
+  "nordisk": "nordisk", "dansk": "nordisk", "hygge": "nordisk",
+  "frikadeller": "nordisk", "kartofler": "nordisk",
+  "fransk": "europaeisk", "gratin": "europaeisk", "bechamel": "europaeisk",
+  "tacos": "mexicansk", "burrito": "mexicansk", "mexicansk": "mexicansk",
+  "caprese": "europaeisk", "middelhavet": "europaeisk", "hummus": "europaeisk",
+  "mellemøstlig": "mellemostlig", "hummus mellemøst": "mellemostlig",
 };
 const _availCuisines = new Set(recipeBank.map(r => r.cuisine).filter(Boolean));
 const CUISINE_ORDER = ["Alle", ...ALL_CUISINES_ORDERED.filter(c => _availCuisines.has(c))];
 
 // Display-only: strip the leading flag/globe emoji so "🇩🇰 Nordisk" renders as
-// "Nordisk". The emoji-prefixed string stays the canonical key everywhere else
-// (recipe data, search map, color map, filter matching), so nothing migrates.
-function cuisineLabel(c) {
-  return String(c || "").replace(/^[^\p{L}]+/u, "");
-}
-
 // Cuisine-keyed accent + monogram — a designed stand-in for emoji iconography
-// in compact list rows (meal plan, saved recipes). Uses the warm-earth palette.
+// in compact list rows (meal plan, saved recipes). Keyed by the canonical cuisine key.
 const CUISINE_COLORS = {
-  "🇩🇰 Nordisk":      "#7C8F5A",
-  "🇮🇹 Italiensk":    "#B83A24",
-  "🇫🇷 Fransk":       "#5A7888",
-  "🇯🇵 Asiatisk":     "#A83030",
-  "🇮🇳 Indisk":       "#CE9F3E",
-  "🇬🇷 Middelhavet":  "#5A9A8A",
-  "🇲🇦 Mellemøstlig": "#9C8040",
-  "🇲🇽 Mexicansk":    "#C07038",
-  "🇺🇸 Amerikansk":   "#6A8B5A",
+  "nordisk":      "#7C8F5A",
+  "italiensk":    "#B83A24",
+  "asiatisk":     "#A83030",
+  "indisk":       "#CE9F3E",
+  "mellemostlig": "#9C8040",
+  "mexicansk":    "#C07038",
+  "amerikansk":   "#6A8B5A",
+  "europaeisk":   "#5A7888",
 };
 function recipeAccent(r) {
   return (r && CUISINE_COLORS[r.cuisine]) || "#CE9F3E";
@@ -2673,7 +2670,7 @@ export default function App() {
 
             <div className="recipe-meta-bar">
               <span>{timeText(selectedRecipe.time)}</span>
-              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{cuisineText(selectedRecipe.cuisine)}</span>}
+              {selectedRecipe.cuisine && <span className="cuisine-badge-detail">{cuisineLabel(selectedRecipe.cuisine, en ? "en" : "da")}</span>}
               {selectedRecipe.difficulty && (
                 <span className={`difficulty-badge difficulty-${selectedRecipe.difficulty === "Nem" ? "nem" : selectedRecipe.difficulty === "Avanceret" ? "avanceret" : "mellem"}`}>
                   {difficultyLabel(selectedRecipe.difficulty)}
@@ -2881,7 +2878,7 @@ export default function App() {
                       className={`qs-pill${cuisineFilter === c ? " active" : ""}`}
                       onClick={() => setCuisineFilter(c)}
                     >
-                      {cuisineText(c)}
+                      {c === "Alle" ? t("Alle") : cuisineLabel(c, en ? "en" : "da")}
                     </button>
                   ))}
                 </div>
