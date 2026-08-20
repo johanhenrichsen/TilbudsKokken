@@ -7,7 +7,7 @@ DEALITEM-REGLER:
 - Kun ægte basisvarer (salt, peber, madolie/olivenolie, vand, sukker, mel, eddike, bouillon og tørrede krydderier) er noget man har hjemme.
 
 OUTPUT FORMAT — kun ren JSON, ingen markdown, ingen forklaring:
-{"recipes":[{"title":"Stegt laks med citronsmør","emoji":"🐟","time":"25 min","servings_count":4,"category":"Fisk","cuisine":"🇩🇰 Dansk","description":"En hurtig og lækker hverdagsret med frisk laks.","ingredients":[{"text":"600 g laks filet","dealItem":"laks"},{"text":"50 g smør","dealItem":null},{"text":"1 citron, saft og skal","dealItem":null}],"steps":["Krydr laksen med salt og peber på begge sider.","Smelt smørret i en pande på middel-høj varme.","Steg laksen 3-4 min på hver side til den er gyldenbrun.","Tilsæt citronsaft og server straks."],"tip":"Server med kogte kartofler eller en frisk grøn salat."}]}
+{"recipes":[{"title":"Stegt laks med citronsmør","emoji":"🐟","time":"25 min","servings_count":4,"category":"Fisk","cuisine":"nordisk","mealType":"aftensmad","cookingMethod":"Én pande","difficulty":"Nem","allergens":["Fisk","Mælk / laktose"],"dietTags":["pescetar"],"description":"En hurtig og lækker hverdagsret med frisk laks.","ingredients":[{"text":"600 g laks filet","dealItem":"laks"},{"text":"50 g smør","dealItem":null},{"text":"1 citron, saft og skal","dealItem":null}],"steps":["Krydr laksen med salt og peber på begge sider.","Smelt smørret i en pande på middel-høj varme.","Steg laksen 3-4 min på hver side til den er gyldenbrun.","Tilsæt citronsaft og server straks."],"tip":"Server med kogte kartofler eller en frisk grøn salat."}]}
 
 REGLER:
 - Generer ALTID præcis 2-3 opskrifter — aldrig mere, aldrig færre
@@ -16,7 +16,13 @@ REGLER:
 - "servings_count" skal være 2, 4 eller 6
 - Opskrifterne skal passe til en dansk familiemiddag
 - emoji skal afspejle opskriftens indhold (🐟 fisk, 🍗 kylling, 🥩 kød, 🥦 grønt, 🍝 pasta osv.)
-- Varier opskrifterne så de bruger ingredienserne på forskellig vis`;
+- Varier opskrifterne så de bruger ingredienserne på forskellig vis
+- "mealType" skal være én af: "aftensmad", "frokost", "morgenmad", "snack"
+- "cookingMethod" skal være én af: "Én pande", "Ovn", "Gryde", "Wok", "Grill", "Bagning", "Ingen tilberedning"
+- "difficulty" skal være én af: "Nem", "Middel", "Svær"
+- "cuisine" skal være én af: "nordisk", "italiensk", "asiatisk", "mellemostlig", "mexicansk", "indisk", "amerikansk", "europaeisk"
+- "allergens" er et array (kan være tomt) — brug KUN disse EU-14 danske betegnelser: Gluten, Skaldyr, Æg, Fisk, Jordnødder, Soja, Mælk / laktose, Nødder, Selleri, Sennep, Sesamfrø, Svovldioxid og sulfitter, Lupin, Bløddyr
+- "dietTags" er et array (kan være tomt) — brug KUN: "vegetar", "vegansk", "pescetar", "fleksitar", "halal", "kosher"`;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
