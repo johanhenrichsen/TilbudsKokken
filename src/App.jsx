@@ -7,9 +7,10 @@ const recipeBank = weeklyRecipesJson.length > 0 ? weeklyRecipesJson : staticReci
 const recipeIndexMap = new Map(recipeBank.map((r, i) => [r.id, i]));
 import LogoIcon from "./LogoIcon";
 import { allShoppablesInList, removeCheckedEntries, savedServingsFor } from "./shoppingLogic";
-import { t, dietLabel, timeLabel, difficultyLabel, timeText, sortLabel, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
+import { t, difficultyLabel, timeText, sortLabel, LANGUAGES, getLang, setLangGlobal, isEn } from "./i18n";
 import { supabase, isCloudConfigured, isGoogleEnabled, signInWithGoogle, loadUserData, saveUserData, friendlyAuthError } from "./cloud";
-import { ALLERGENS, LIFESTYLE_DIETS, cuisineLabel } from "./data/labels.js";
+import { ALLERGENS, LIFESTYLE_DIETS, cuisineLabel, allergenLabel } from "./data/labels.js";
+import { PREP_BUCKETS, prepBucket, normalizeDifficulty, recipeAllergens, matchesLifestyleDiet } from "./recipeMeta.js";
 
 // Muted warm-earth palette — one accent per chain.
 // Applied as a CSS custom property (--chain-color) on each badge so the
@@ -608,15 +609,16 @@ function buildPhotoQuery(r) {
   return `${q} food`.trim();
 }
 
-function RecipeCard({ r, inPlan, isSaved, availableNames, pantryTotal, onSelect, onAddToPlan, onToggleSave, displayTitle, displayCategory, displayTime }) {
+function RecipeCard({ r, inPlan, isSaved, availableNames, pantryTotal, cardServings: cardServingsProp, onSelect, onAddToPlan, onToggleSave, displayTitle, displayCategory, displayTime }) {
   const photoKey = `photo_${PHOTO_CACHE_VER}_${r.id}`;
   const photoFailKey = `photo_fail_${PHOTO_CACHE_VER}_${r.id}`;
   const [photoUrl, setPhotoUrl] = useState(() => localStorage.getItem(photoKey) || null);
   const [photoLoading, setPhotoLoading] = useState(() => {
     return !localStorage.getItem(photoKey) && !localStorage.getItem(photoFailKey);
   });
-  // Household size the user picked during onboarding — drives the total price shown.
-  const cardServings = parseInt(localStorage.getItem('defaultServings')) || r.servings_count || 4;
+  // Household size from the results-screen "persons served" control — drives the
+  // total price shown. Falls back to the recipe's own serving count, then 4.
+  const cardServings = cardServingsProp || r.servings_count || 4;
 
   useEffect(() => {
     if (localStorage.getItem(photoFailKey)) { setPhotoLoading(false); return; }
@@ -647,7 +649,7 @@ function RecipeCard({ r, inPlan, isSaved, availableNames, pantryTotal, onSelect,
 
   return (
     <div
-      className={`recipe-browse-card reveal${r.fullyMatched ? " featured" : ""}`}
+      className={`recipe-browse-card reveal${r.fullyMatched ? " featured" : ""}${r.dietConflict ? " diet-conflict" : ""}`}
       onClick={() => onSelect(r)}
     >
       <div className="card-photo-wrap">
@@ -663,6 +665,24 @@ function RecipeCard({ r, inPlan, isSaved, availableNames, pantryTotal, onSelect,
       </div>
       <div className="card-body">
         <div className="recipe-browse-title">{displayTitle ?? r.title}</div>
+        {/* Cuisine badge (replaces the removed cuisine filter) + allergy tags so users
+            can self-screen at a glance. Allergens the user flagged in their profile get
+            an alert style. */}
+        {(r.cuisine || (r.allergens || []).length > 0) && (
+          <div className="card-badge-row">
+            {r.cuisine && (
+              <span className="card-badge card-badge-cuisine">{cuisineLabel(r.cuisine, isEn() ? "en" : "da")}</span>
+            )}
+            {(r.allergens || []).map(a => (
+              <span
+                key={a}
+                className={`card-badge card-badge-allergy${(r.allergenHit || []).includes(a) ? " alert" : ""}`}
+              >
+                {allergenLabel(a, isEn() ? "en" : "da")}
+              </span>
+            ))}
+          </div>
+        )}
         {totalPrice != null && (
           <div className="card-price-line">
             {isEn() ? "approx." : "ca."} {totalPrice} kr. {isEn() ? "for" : "til"} {cardServings} {isEn() ? "ppl" : "pers."}
@@ -672,6 +692,10 @@ function RecipeCard({ r, inPlan, isSaved, availableNames, pantryTotal, onSelect,
         <div className="recipe-browse-meta">
           <span>{displayTime ?? r.time}</span>
           <span>{(r.ingredients || []).length} {isEn() ? "ingr." : "ing."}</span>
+          {normalizeDifficulty(r.difficulty) && (
+            <span>{difficultyLabel(normalizeDifficulty(r.difficulty))}</span>
+          )}
+          {r.cookingMethod && <span>{r.cookingMethod}</span>}
         </div>
 
         {/* Ingredient-match indicator — only when the user has added ingredients */}
@@ -1066,6 +1090,12 @@ export default function App() {
 
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [servings, setServings] = useState(4);
+  // Household size used to scale the prices shown on the browse cards. A secondary
+  // results-screen control (not an onboarding step); defaults to 4 and persists as
+  // `defaultServings` so the recipe detail view and cards agree.
+  const [browseServings, setBrowseServings] = useState(() => {
+    try { return parseInt(localStorage.getItem("defaultServings")) || 4; } catch { return 4; }
+  });
   const [shoppingList, setShoppingList] = useState(() => {
     try {
       const raw = JSON.parse(localStorage.getItem("shoppingList") || "[]");
@@ -1129,8 +1159,16 @@ export default function App() {
   const [dragFromDay, setDragFromDay] = useState(null);
 
   const [search, setSearch] = useState("");
-  const [timeFilter, setTimeFilter] = useState("Alle tider");
-  const [cuisineFilter, setCuisineFilter] = useState("Alle");
+  // Primary funnel picks. Persisted so a returning user sees their last session's
+  // answers pre-filled (onboarding only runs once); changeable in one tap on results.
+  const [prepFilter, setPrepFilter] = useState(() => {
+    try { return localStorage.getItem("lastPrep") || "alle"; } catch { return "alle"; }
+  });
+  const [mealTypeFilter, setMealTypeFilter] = useState(() => {
+    try { return localStorage.getItem("lastMealType") || "alle"; } catch { return "alle"; }
+  });
+  const [methodFilter, setMethodFilter] = useState("alle");     // secondary
+  const [difficultyFilter, setDifficultyFilter] = useState("alle"); // secondary
   const [priceMin, setPriceMin] = useState(0);
   const [priceMax, setPriceMax] = useState(null); // null = no upper limit
   const [planCopied, setPlanCopied] = useState(false);
@@ -1185,8 +1223,10 @@ export default function App() {
   // Drives which side each step slides in from so the sequence reads as one motion.
   const [obDir, setObDir] = useState(1);
   const [pendingChains, setPendingChains] = useState(new Set());
-  const [pendingDiet, setPendingDiet] = useState("Alle");
-  const [pendingServings, setPendingServings] = useState(4);
+  // Onboarding now stages the two new primary picks (meal type + prep time) instead
+  // of the old diet/servings steps. "alle" = no pick yet (user can skip).
+  const [pendingMealType, setPendingMealType] = useState("alle");
+  const [pendingPrep, setPendingPrep] = useState("alle");
   const [sortOrder, setSortOrder] = useState("populaer");
   const [visibleCounts, setVisibleCounts] = useState({ recommended: PAGE_SIZE, others: PAGE_SIZE });
   const [quickFilters, setQuickFilters] = useState(new Set());
@@ -1254,8 +1294,13 @@ export default function App() {
     try { localStorage.setItem("installDismissed", "1"); } catch {}
   }
 
-  const dietFilters = ["Alle", "Vegetar", "Veganer", "Glutenfri", "Mælkefri"];
-  const timeFilters = ["Alle tider", "Under 20 min", "Under 45 min", "Over 45 min"];
+  const COOKING_METHODS = ["Én pande", "Ovn", "Gryde", "Wok", "Grill", "Bagning", "Ingen tilberedning"];
+  const MEAL_TYPES = [
+    { key: "aftensmad",  da: "Aftensmad",  en: "Dinner" },
+    { key: "frokost",    da: "Frokost",    en: "Lunch" },
+    { key: "morgenmad",  da: "Morgenmad",  en: "Breakfast" },
+    { key: "snack",      da: "Snack",      en: "Snack" },
+  ];
 
   useEffect(() => {
     if (!showSplash) return;
@@ -1337,6 +1382,11 @@ export default function App() {
       })
       .map(r => {
         const pantryMatches = getPantryMatches(r, pantryItems);
+        // Optional personal preferences (profile settings) are soft signals, not gates:
+        // recipes that clash are still shown, just dimmed/flagged on the card so users
+        // can self-screen. dietConflict = clashes with the chosen lifestyle diet;
+        // allergenHit lists the user's flagged allergens the recipe contains.
+        const allergenHit = (allergies || []).filter(a => (r.allergens || []).includes(a));
         return {
           ...r,
           matchCount: (r.dealItems || []).length,
@@ -1344,17 +1394,20 @@ export default function App() {
             || (r.dealItems || []).every(di => selectedChains.has(canonicalChain(di.store))),
           pantryMatches,
           pantryMatchCount: pantryMatches.length,
+          dietConflict: lifestyleDiet ? !matchesLifestyleDiet(r, lifestyleDiet) : false,
+          allergenHit,
         };
       });
   }
 
-  const scoredRecipes = getScoredRecipes(diet);
+  // Diet is no longer a browse gate — it's folded into the optional Lifestyle-diet
+  // profile setting (applied as a soft dim/flag above). Pass no diet pattern so the
+  // scoring engine stays intact but nothing is hard-filtered out by diet.
+  const scoredRecipes = getScoredRecipes();
   const recommended = scoredRecipes.filter(r => r.fullyMatched).sort((a, b) => (b.dealItems || []).length - (a.dealItems || []).length);
   const others = scoredRecipes.filter(r => !r.fullyMatched);
   const activeFilterCount = [
-    diet !== "Alle",
-    timeFilter !== "Alle tider",
-    cuisineFilter !== "Alle",
+    prepFilter !== "alle" || mealTypeFilter !== "alle" || methodFilter !== "alle" || difficultyFilter !== "alle",
     pantryItems.size > 0,
     priceMin > 0 || priceMax !== null,
     quickFilters.size > 0,
@@ -1378,8 +1431,9 @@ export default function App() {
     // Chain split is handled by fullyMatched in getScoredRecipes.
     // Added ingredients ("tilføj ingredienser") no longer filter here — they drive a
     // relevance sort (see applySort) so all recipes stay visible, just reordered.
-    // matchRecipe only applies search / time / cuisine / price.
-    if (cuisineFilter !== "Alle" && r.cuisine !== cuisineFilter) return false;
+    // matchRecipe only applies search / prep / meal / method / difficulty / price.
+    // Cuisine is no longer a filter (card badge only), but the search box can still
+    // match on cuisine keywords/text below.
     if (search) {
       const cuisineFromKeyword = Object.entries(CUISINE_SEARCH_MAP).find(([kw]) => searchQ.includes(kw))?.[1];
       if (cuisineFromKeyword) {
@@ -1392,10 +1446,10 @@ export default function App() {
         return false;
       }
     }
-    const mins = parseMinutes(r.time);
-    if (timeFilter === "Under 20 min" && mins >= 20) return false;
-    if (timeFilter === "Under 45 min" && mins >= 45) return false;
-    if (timeFilter === "Over 45 min" && mins < 45) return false;
+    if (prepFilter !== "alle" && prepBucket(r.time) !== prepFilter) return false;
+    if (mealTypeFilter !== "alle" && r.mealType !== mealTypeFilter) return false;
+    if (methodFilter !== "alle" && r.cookingMethod !== methodFilter) return false;
+    if (difficultyFilter !== "alle" && normalizeDifficulty(r.difficulty) !== difficultyFilter) return false;
     if (priceMin > 0 || priceMax !== null) {
       const pp = calcPricePerPerson(r);
       if (pp !== null) {
@@ -1449,7 +1503,8 @@ export default function App() {
       + filteredOthers.filter(r => r.pantryMatchCount > 0).length
     : 0;
   const priceFiltered = priceMin > 0 || priceMax !== null;
-  const noResults = (search || timeFilter !== "Alle tider" || cuisineFilter !== "Alle" || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
+  const metaFiltersActive = prepFilter !== "alle" || mealTypeFilter !== "alle" || methodFilter !== "alle" || difficultyFilter !== "alle";
+  const noResults = (search || metaFiltersActive || priceFiltered) && filteredRecommended.length === 0 && filteredOthers.length === 0;
 
   // Collect the recipe strings currently on screen and translate any that aren't
   // cached yet. Titles/categories for visible cards, plus the full content of an
@@ -1849,24 +1904,24 @@ export default function App() {
     });
   }
 
-  function changeDiet(val) {
-    setDiet(val);
-    try { localStorage.setItem("defaultDiet", val); } catch {}
-  }
   useEffect(() => { try { localStorage.setItem("allergies", JSON.stringify(allergies)); } catch {} }, [allergies]);
   useEffect(() => { try { localStorage.setItem("lifestyleDiet", lifestyleDiet); } catch {} }, [lifestyleDiet]);
   useEffect(() => { try { localStorage.setItem("defaultSupermarket", defaultSupermarket); } catch {} }, [defaultSupermarket]);
+  // Primary funnel picks persist across sessions so returning users are pre-filled.
+  useEffect(() => { try { localStorage.setItem("lastPrep", prepFilter); } catch {} }, [prepFilter]);
+  useEffect(() => { try { localStorage.setItem("lastMealType", mealTypeFilter); } catch {} }, [mealTypeFilter]);
+  useEffect(() => { try { localStorage.setItem("defaultServings", String(browseServings)); } catch {} }, [browseServings]);
 
   // Reset every result-narrowing filter in one action. Leaves search (it has its
   // own clear) and the pantry/sort defaults handled by their own controls.
   function clearAllFilters() {
-    changeDiet("Alle");
-    setTimeFilter("Alle tider");
-    setCuisineFilter("Alle");
+    setPrepFilter("alle");
+    setMealTypeFilter("alle");
+    setMethodFilter("alle");
+    setDifficultyFilter("alle");
     setPriceMin(0);
     setPriceMax(null);
     setQuickFilters(new Set());
-    setPopularOnly(false);
   }
 
   function toggleSection(key) {
@@ -1959,9 +2014,9 @@ export default function App() {
         .map(ch => ({ chain: ch }));
       setLocalStores(storesArray);
       localStorage.setItem("localStores", JSON.stringify(storesArray));
-      localStorage.setItem("defaultDiet", pendingDiet);
-      setDiet(pendingDiet);
-      localStorage.setItem("defaultServings", String(pendingServings));
+      // Apply the two primary-funnel picks; they persist as the session defaults.
+      setMealTypeFilter(pendingMealType);
+      setPrepFilter(pendingPrep);
       localStorage.setItem("onboardingDone", "true");
       setOnboardingExiting(true);
       // Keep in sync with app-enter-slide: 40ms delay + 520ms duration = 560ms total.
@@ -1971,8 +2026,8 @@ export default function App() {
 
   function openSettings() {
     setPendingChains(new Set((localStores || []).map(s => s.chain)));
-    setPendingDiet(diet);
-    setPendingServings(parseInt(localStorage.getItem("defaultServings")) || 4);
+    setPendingMealType(mealTypeFilter);
+    setPendingPrep(prepFilter);
     setOnboardingStep(1);
   }
 
@@ -2229,6 +2284,7 @@ export default function App() {
         isSaved={savedRecipes.some(s => s.id === r.id)}
         availableNames={availableNames}
         pantryTotal={pantryItems.size}
+        cardServings={browseServings}
         onSelect={selectRecipe}
         onAddToPlan={setAddingToPlan}
         onToggleSave={toggleSaveRecipe}
@@ -2343,27 +2399,21 @@ export default function App() {
                 </div>
               )}
 
-              {/* Step 2 — Dietary preference */}
+              {/* Step 2 — Meal type (primary funnel pick) */}
               {onboardingStep === 2 && (
-                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s3">
-                  <h2 className="ob-title">{t("Kostpræferencer")}</h2>
-                  <p className="ob-desc">{t("Vælg din kostpræference — vi tilpasser opskrifterne.")}</p>
+                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s2">
+                  <h2 className="ob-title">{en ? "What are you making?" : "Hvad skal du lave?"}</h2>
+                  <p className="ob-desc">{en ? "Pick a meal type — you can change it anytime." : "Vælg måltid — du kan altid ændre det."}</p>
                   <div className="ob-diet-grid">
-                    {[
-                      { label: t("Ingen"),        val: "Alle" },
-                      { label: dietLabel("Vegetar"),  val: "Vegetar" },
-                      { label: dietLabel("Veganer"),  val: "Veganer" },
-                      { label: dietLabel("Glutenfri"),val: "Glutenfri" },
-                      { label: dietLabel("Mælkefri"), val: "Mælkefri" },
-                    ].map(({ label, val }) => {
-                      const sel = pendingDiet === val;
+                    {[{ key: "alle", da: "Alle", en: "Any" }, ...MEAL_TYPES].map(m => {
+                      const sel = pendingMealType === m.key;
                       return (
                         <button
-                          key={val}
+                          key={m.key}
                           className={`ob-diet-chip${sel ? " selected" : ""}`}
-                          onClick={() => setPendingDiet(val)}
+                          onClick={() => setPendingMealType(m.key)}
                         >
-                          <span className="ob-diet-label">{label}</span>
+                          <span className="ob-diet-label">{en ? m.en : m.da}</span>
                           {sel && <span className="ob-diet-check">✓</span>}
                         </button>
                       );
@@ -2372,18 +2422,25 @@ export default function App() {
                 </div>
               )}
 
-              {/* Step 3 — Serving size */}
+              {/* Step 3 — Prep time (primary funnel pick) */}
               {onboardingStep === 3 && (
-                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s4">
-                  <h2 className="ob-title">{t("Hvor mange personer?")}</h2>
-                  <p className="ob-desc">{t("Vi tilpasser portionsstørrelserne til dit husstand.")}</p>
-                  <div className="ob-servings-picker">
-                    <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.max(1, s - 1))}>−</button>
-                    <div className="ob-sv-display">
-                      <span className="ob-sv-number">{pendingServings}</span>
-                      <span className="ob-sv-label">{en ? (pendingServings !== 1 ? "people" : "person") : `person${pendingServings !== 1 ? "er" : ""}`}</span>
-                    </div>
-                    <button className="ob-sv-btn" onClick={() => setPendingServings(s => Math.min(10, s + 1))}>+</button>
+                <div className={`ob-content ob-slide-${obDir > 0 ? "fwd" : "back"}`} key="s3">
+                  <h2 className="ob-title">{en ? "How much time do you have?" : "Hvor lang tid har du?"}</h2>
+                  <p className="ob-desc">{en ? "Pick a prep time — you can change it anytime." : "Vælg tilberedningstid — du kan altid ændre det."}</p>
+                  <div className="ob-diet-grid">
+                    {[{ key: "alle", da: "Alle", en: "Any" }, ...PREP_BUCKETS].map(b => {
+                      const sel = pendingPrep === b.key;
+                      return (
+                        <button
+                          key={b.key}
+                          className={`ob-diet-chip${sel ? " selected" : ""}`}
+                          onClick={() => setPendingPrep(b.key)}
+                        >
+                          <span className="ob-diet-label">{en ? b.en : b.da}</span>
+                          {sel && <span className="ob-diet-check">✓</span>}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -2820,23 +2877,44 @@ export default function App() {
               </button>
             </div>
 
-            {/* ── Quick diet + sort strip ─────────────────── */}
+            {/* ── Primary funnel picks + sort + secondary filters ─────────────────── */}
             <div className={`quick-strip-wrap${showMobileFilters ? " mobile-open" : ""}`}>
-              <div className="quick-strip">
-                <span className="quick-strip-sep">{t("Kost")}</span>
-                {[
-                  { val: "Alle", label: dietLabel("Alle") },
-                  { val: "Vegetar", label: dietLabel("Vegetar") },
-                  { val: "Veganer", label: dietLabel("Veganer") },
-                  { val: "Glutenfri", label: dietLabel("Glutenfri") },
-                  { val: "Mælkefri", label: dietLabel("Mælkefri") },
-                ].map(f => (
+              {/* Primary funnel picks — meal type + prep time. Pre-filled from the
+                  session (onboarding runs once), changeable here in one tap. Shown
+                  first and styled as the prominent primary row. */}
+              <div className="quick-strip quick-strip-primary">
+                <span className="quick-strip-sep">{en ? "Meal" : "Måltid"}</span>
+                <button
+                  className={`qs-pill${mealTypeFilter === "alle" ? " active" : ""}`}
+                  onClick={() => setMealTypeFilter("alle")}
+                >
+                  {en ? "All" : "Alle"}
+                </button>
+                {MEAL_TYPES.map(m => (
                   <button
-                    key={f.val}
-                    className={`qs-pill${diet === f.val ? " active" : ""}`}
-                    onClick={() => changeDiet(f.val)}
+                    key={m.key}
+                    className={`qs-pill${mealTypeFilter === m.key ? " active" : ""}`}
+                    onClick={() => setMealTypeFilter(m.key)}
                   >
-                    {f.label}
+                    {en ? m.en : m.da}
+                  </button>
+                ))}
+              </div>
+              <div className="quick-strip quick-strip-primary">
+                <span className="quick-strip-sep">{en ? "Prep" : "Tid"}</span>
+                <button
+                  className={`qs-pill${prepFilter === "alle" ? " active" : ""}`}
+                  onClick={() => setPrepFilter("alle")}
+                >
+                  {en ? "All" : "Alle"}
+                </button>
+                {PREP_BUCKETS.map(b => (
+                  <button
+                    key={b.key}
+                    className={`qs-pill${prepFilter === b.key ? " active" : ""}`}
+                    onClick={() => setPrepFilter(b.key)}
+                  >
+                    {en ? b.en : b.da}
                   </button>
                 ))}
               </div>
@@ -2856,33 +2934,44 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              {/* Tid / Køkken inline pills — formerly only in the filter sheet. */}
+              {/* Secondary filters — method + difficulty (price + persons served below).
+                  Cuisine is deliberately not a filter here; it's shown as a card badge. */}
               <div className="quick-strip quick-strip-more">
-                <span className="quick-strip-sep">{t("Tid")}</span>
-                {timeFilters.map(f => (
+                <span className="quick-strip-sep">{en ? "Method" : "Tilberedning"}</span>
+                <button
+                  className={`qs-pill${methodFilter === "alle" ? " active" : ""}`}
+                  onClick={() => setMethodFilter("alle")}
+                >
+                  {en ? "All" : "Alle"}
+                </button>
+                {COOKING_METHODS.map(m => (
                   <button
-                    key={f}
-                    className={`qs-pill${timeFilter === f ? " active" : ""}`}
-                    onClick={() => setTimeFilter(f)}
+                    key={m}
+                    className={`qs-pill${methodFilter === m ? " active" : ""}`}
+                    onClick={() => setMethodFilter(m)}
                   >
-                    {timeLabel(f)}
+                    {m}
                   </button>
                 ))}
               </div>
-              {CUISINE_ORDER.length > 2 && (
-                <div className="quick-strip quick-strip-more">
-                  <span className="quick-strip-sep">{t("Køkken")}</span>
-                  {CUISINE_ORDER.map(c => (
-                    <button
-                      key={c}
-                      className={`qs-pill${cuisineFilter === c ? " active" : ""}`}
-                      onClick={() => setCuisineFilter(c)}
-                    >
-                      {c === "Alle" ? t("Alle") : cuisineLabel(c, en ? "en" : "da")}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="quick-strip quick-strip-more">
+                <span className="quick-strip-sep">{en ? "Difficulty" : "Sværhedsgrad"}</span>
+                <button
+                  className={`qs-pill${difficultyFilter === "alle" ? " active" : ""}`}
+                  onClick={() => setDifficultyFilter("alle")}
+                >
+                  {en ? "All" : "Alle"}
+                </button>
+                {["Nem", "Middel", "Svær"].map(d => (
+                  <button
+                    key={d}
+                    className={`qs-pill${difficultyFilter === d ? " active" : ""}`}
+                    onClick={() => setDifficultyFilter(d)}
+                  >
+                    {difficultyLabel(d)}
+                  </button>
+                ))}
+              </div>
               {/* Butik toggle + rich controls (Pris / Køleskab) as dropdown pills.
                   Not a .quick-strip: its overflow must stay visible so the
                   dropdown panels aren't clipped by scroll/mask. */}
@@ -2906,6 +2995,20 @@ export default function App() {
                     </div>
                   </div>
                 )}
+                <span className="quick-strip-sep qs-persons-sep">{en ? "Persons" : "Personer"}</span>
+                <div className="qs-persons">
+                  <button
+                    className="qs-persons-btn"
+                    onClick={() => setBrowseServings(s => Math.max(1, s - 1))}
+                    aria-label={en ? "Fewer persons" : "Færre personer"}
+                  >−</button>
+                  <span className="qs-persons-count">{browseServings}</span>
+                  <button
+                    className="qs-persons-btn"
+                    onClick={() => setBrowseServings(s => Math.min(10, s + 1))}
+                    aria-label={en ? "More persons" : "Flere personer"}
+                  >+</button>
+                </div>
                 {activeFilterCount > 0 && (
                   <button className="qs-clear-btn" onClick={clearAllFilters}>{t("Ryd filtre")}</button>
                 )}

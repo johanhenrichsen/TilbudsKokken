@@ -1123,7 +1123,40 @@ html, body {
   letter-spacing: var(--tracking-stamp, 0.035em);
   color: var(--text-faint);
   margin-bottom: 8px;
+  flex-wrap: wrap;
 }
+
+/* ── Card badges: cuisine (replaces cuisine filter) + allergy self-screening ── */
+.card-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.card-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  line-height: 1.35;
+}
+.card-badge-cuisine { background: var(--accent-dim); color: var(--accent); }
+.card-badge-allergy {
+  background: rgba(179, 84, 47, 0.10);
+  color: #b3542f;
+  border: 1px solid rgba(179, 84, 47, 0.22);
+}
+.card-badge-allergy.alert {
+  background: #b3542f;
+  color: #fff;
+  border-color: #b3542f;
+}
+html.dark .card-badge-allergy { background: rgba(179, 84, 47, 0.18); color: #e5a184; }
+
+/* Off-diet recipes (lifestyle-diet profile) are dimmed, not hidden — a soft signal. */
+.recipe-browse-card.diet-conflict { opacity: 0.55; }
+.recipe-browse-card.diet-conflict:hover { opacity: 1; }
 
 /* ── Ingredient-match indicator (added-ingredients relevance sort) ────── */
 .card-pantry-match {
@@ -4889,6 +4922,23 @@ html.dark .quick-strip-more-row { border-top-color: rgba(255,255,255,0.06); }
   padding: 6px 6px; opacity: 0.85; white-space: nowrap; transition: opacity 0.12s;
 }
 .qs-clear-btn:hover { opacity: 1; }
+
+/* Primary funnel picks (meal type + prep time) — emphasized above secondary filters */
+.quick-strip-primary .quick-strip-sep { color: var(--text); font-weight: 700; }
+
+/* Persons-served stepper in the secondary filter row */
+.qs-persons-sep { margin-left: 4px; }
+.qs-persons { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.qs-persons-btn {
+  width: 28px; height: 28px; border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.14); background: var(--surface, #fff);
+  color: var(--text); font-size: 16px; line-height: 1; cursor: pointer;
+  font-family: inherit; display: inline-flex; align-items: center; justify-content: center;
+  transition: border-color 0.12s, color 0.12s;
+}
+.qs-persons-btn:hover { border-color: #B83A24; color: #B83A24; }
+.qs-persons-count { min-width: 18px; text-align: center; font-weight: 600; font-size: 14px; }
+html.dark .qs-persons-btn { border-color: rgba(255,255,255,0.18); }
 
 /* Empty-state "Ryd filtre" recovery button */
 .empty-state-reset {
